@@ -3,7 +3,32 @@ import time
 import threading
 import utils.cosita_toolkit as ctkit
 import logging
-logging.basicConfig(filename='bot.log', encoding='utf-8',format='%(asctime)s : %(levelname)s >> %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p',level=logging.DEBUG)
+import coloredlogs
+# Configure colorlog with colors
+# handler = colorlog.StreamHandler()
+# handler.setFormatter(colorlog.ColoredFormatter(
+#     '%(log_color)s%(asctime)s %(levelname)s: %(message)s',
+#     datefmt='%Y-%m-%d %H:%M:%S',
+#     log_colors={
+#         'DEBUG': 'cyan',
+#         'INFO': 'green',
+#         'WARNING': 'yellow',
+#         'ERROR': 'red',
+#         'CRITICAL': 'bold_red',
+#     }
+# ))
+
+# # Create a logger
+# logger = logging.getLogger(__name__)
+# logger.addHandler(handler)
+# logger.setLevel(logging.INFO)
+
+coloredlogs.install(level='INFO', fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+
+# Create a logger
+logger = logging.getLogger(__name__)
+
+
 def update_and_run():
     update_succes = ctkit.update_script_from_github("xxcosita3czxx", "Lorelei-bot", "main.py", "./main.py")
     ctkit.update_script_from_github("xxcosita3czxx", "Cosita-ToolKit", "cosita_toolkit.py", "./utils/cosita_toolkit.py")
@@ -12,7 +37,7 @@ def update_and_run():
         os.system("pkill -f main.py")
         os.system("python3 main.py")
     else:
-        logging.info(f"no update :D (CODE: {update_succes})")
+        logger.info(f"no update :D (CODE: {update_succes})")
 def update_loop():
     while True:
         update_and_run()

@@ -2,7 +2,13 @@ from discord import app_commands
 import discord
 import logging
 import utils.cosita_toolkit as ctkit
-logging.basicConfig(filename='bot.log', encoding='utf-8',format='%(asctime)s : %(levelname)s >> %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p',level=logging.DEBUG)
+import coloredlogs
+
+coloredlogs.install(level='INFO', fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+
+# Create a logger
+logger = logging.getLogger(__name__)
+
 
 
 ## vars
