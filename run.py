@@ -25,5 +25,5 @@ if __name__ == "__main__":
     update_thread = threading.Thread(target=update_loop)
     update_thread.start()
     monitor_thread = threading.Thread(target=main_script_monitor)
-    os.system("python main.py")
     monitor_thread.start()
+    os.system("python main.py")
