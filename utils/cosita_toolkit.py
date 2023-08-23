@@ -14,8 +14,9 @@ import base64
 def update_script_from_github(owner, repo, file_path, local_file_path):
     try:
         # Specify the details for the file update
-        orig_dir = os.getcwd()
-        os.chdir(os.path.dirname(os.path.abspath(__file__)))
+        if __name__ == "__main__":
+            orig_dir = os.getcwd()
+            os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
         api_url = f"https://api.github.com/repos/{owner}/{repo}/contents/{file_path}"
         headers = {
@@ -36,21 +37,25 @@ def update_script_from_github(owner, repo, file_path, local_file_path):
                     with open(local_file_path, "w") as file:
                         file.write(github_content)
                     print("Script updated successfully.")
-                    os.chdir(orig_dir)
+                    if __name__=="__main__":
+                        os.chdir(orig_dir)
                     return 1
                 else:
                     print("No update required. Local script is up to date.")
-                    os.chdir(orig_dir)
+                    if __name__=="__main__":
+                        os.chdir(orig_dir)
                     return 2
             except FileNotFoundError:
                 with open(local_file_path, "w") as file:
                     file.write(github_content)
                 print("Script downloaded and saved successfully.")
-                os.chdir(orig_dir)
+                if __name__=="__main__":
+                    os.chdir(orig_dir)
                 return 7
         else:
             print("Failed to fetch the script from GitHub.")
-            os.chdir(orig_dir)
+            if __name__=="__main__":
+                os.chdir(orig_dir)
             return response.status_code
     except Exception as e:
         print ("updater error ->> "+str(e))
