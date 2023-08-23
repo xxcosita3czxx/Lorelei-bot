@@ -42,4 +42,6 @@ async def help(interaction: discord.Interaction):
 
 with open(".secret.key", "r") as key:
     token = key.read()
-bot.run(token=token)
+while True:
+    bot.run(token=token)
+    logging.error("connection error occured, retrying...")
