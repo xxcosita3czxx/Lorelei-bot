@@ -20,7 +20,7 @@ def update_script_from_github(owner, repo, file_path, local_file_path):
         api_url = f"https://api.github.com/repos/{owner}/{repo}/contents/{file_path}"
         headers = {
             "Accept": "application/vnd.github.v3+json",
-            "User-Agent": "Your-User-Agent"
+            "User-Agent": "Cosita-Toolkit-Updater"
         }
         response = requests.get(api_url, headers=headers)
 
@@ -51,7 +51,8 @@ def update_script_from_github(owner, repo, file_path, local_file_path):
         os.chdir(orig_dir)
     except:
         print ("updater error")
-update_script_from_github(owner = "xxcosita3czxx", repo = "Cosita-ToolKit", file_path = "cosita_toolkit.py", local_file_path = "./cosita_toolkit.py")
+if __name__== "__main__":
+    update_script_from_github(owner = "xxcosita3czxx", repo = "Cosita-ToolKit", file_path = "cosita_toolkit.py", local_file_path = "./cosita_toolkit.py")
 ## variables needed for code to work
 LICENSE = """
 MIT License
