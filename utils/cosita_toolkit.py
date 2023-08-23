@@ -53,7 +53,7 @@ def update_script_from_github(owner, repo, file_path, local_file_path):
             os.chdir(orig_dir)
             return response.status_code
     except Exception as e:
-        print ("updater error ->> "+e)
+        print ("updater error ->> "+str(e))
         os.chdir(orig_dir)
         return 400
 if __name__ == "__main__":
