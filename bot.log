@@ -1,0 +1,13 @@
+08/23/2023 02:52:30 PM : DEBUG >> Using selector: EpollSelector
+08/23/2023 02:52:30 PM : INFO >> logging in using static token
+08/23/2023 02:52:31 PM : INFO >> Shard ID None has connected to Gateway (Session ID: 6dad919637ebae2d9dc3f178445472dc).
+08/23/2023 02:52:33 PM : INFO >> Ready, logged in to Bot account
+08/23/2023 02:56:03 PM : DEBUG >> Using selector: EpollSelector
+08/23/2023 02:56:03 PM : INFO >> logging in using static token
+08/23/2023 02:56:04 PM : INFO >> Shard ID None has connected to Gateway (Session ID: f0dbb4d6a99b433903703785f302a0cd).
+08/23/2023 02:56:49 PM : DEBUG >> Using selector: EpollSelector
+08/23/2023 02:56:49 PM : INFO >> logging in using static token
+08/23/2023 02:56:50 PM : INFO >> Shard ID None has connected to Gateway (Session ID: b0ec6b6cf62dd503cdcb38e33b187ea6).
+08/23/2023 03:51:12 PM : DEBUG >> Using selector: EpollSelector
+08/23/2023 03:51:12 PM : INFO >> logging in using static token
+08/23/2023 03:51:13 PM : INFO >> Shard ID None has connected to Gateway (Session ID: efb58b79cbe71c46643396b5163a9bef).

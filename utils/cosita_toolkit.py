@@ -12,15 +12,11 @@ from dulwich.repo import Repo
 from dulwich.client import get_transport_and_path
 from dulwich.porcelain import pull
 import base64
-def update_script_from_github():
+def update_script_from_github(owner, repo, file_path, local_file_path):
     try:
         # Specify the details for the file update
         orig_dir = os.getcwd()
         os.chdir(os.path.dirname(os.path.abspath(__file__)))
-        owner = "xxcosita3czxx"
-        repo = "Cosita-ToolKit"
-        file_path = "cosita_toolkit.py"
-        local_file_path = "./cosita_toolkit.py"
 
         api_url = f"https://api.github.com/repos/{owner}/{repo}/contents/{file_path}"
         headers = {
@@ -41,18 +37,23 @@ def update_script_from_github():
                     with open(local_file_path, "w") as file:
                         file.write(github_content)
                     print("Script updated successfully.")
+                    return 1
                 else:
                     print("No update required. Local script is up to date.")
+                    return 2
             except FileNotFoundError:
                 with open(local_file_path, "w") as file:
                     file.write(github_content)
                 print("Script downloaded and saved successfully.")
+                return 7
         else:
             print("Failed to fetch the script from GitHub.")
+            return 3
         os.chdir(orig_dir)
     except:
         print ("updater error")
-update_script_from_github()
+if __name__ == "__main__":
+    update_script_from_github(owner = "xxcosita3czxx", repo = "Cosita-ToolKit", file_path = "cosita_toolkit.py", local_file_path = "./cosita_toolkit.py")
 ## variables needed for code to work
 LICENSE = """
 MIT License
