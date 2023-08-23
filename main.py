@@ -26,7 +26,7 @@ class aclient(discord.Client):
             await tree.sync()
             self.synced = True
         await bot.change_presence(status=status)
-        print("Ready, logged in to Bot account")
+        logging.info("Bot ready, logged in!")
 bot = aclient()
 tree = app_commands.CommandTree(bot)
 
@@ -42,6 +42,5 @@ async def help(interaction: discord.Interaction):
 
 with open(".secret.key", "r") as key:
     token = key.read()
-while True:
-    bot.run(token=token)
-    logging.error("connection error occured, retrying...")
+
+bot.run(token=token)

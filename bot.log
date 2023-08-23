@@ -11,3 +11,21 @@
 08/23/2023 03:51:12 PM : DEBUG >> Using selector: EpollSelector
 08/23/2023 03:51:12 PM : INFO >> logging in using static token
 08/23/2023 03:51:13 PM : INFO >> Shard ID None has connected to Gateway (Session ID: efb58b79cbe71c46643396b5163a9bef).
+08/23/2023 10:09:38 PM : DEBUG >> Using selector: EpollSelector
+08/23/2023 10:09:38 PM : INFO >> logging in using static token
+08/23/2023 10:09:40 PM : INFO >> Shard ID None has connected to Gateway (Session ID: 5f66b87abdb92a1acfb284f539f71656).
+08/23/2023 10:11:30 PM : ERROR >> connection error occured, retrying...
+08/23/2023 10:11:30 PM : DEBUG >> Using selector: EpollSelector
+08/23/2023 10:11:30 PM : INFO >> logging in using static token
+08/23/2023 10:12:11 PM : DEBUG >> Starting new HTTPS connection (1): api.github.com:443
+08/23/2023 10:12:11 PM : DEBUG >> https://api.github.com:443 "GET /repos/xxcosita3czxx/Lorelei-bot/contents/main.py HTTP/1.1" 403 281
+08/23/2023 10:12:11 PM : DEBUG >> Starting new HTTPS connection (1): api.github.com:443
+08/23/2023 10:12:11 PM : DEBUG >> https://api.github.com:443 "GET /repos/xxcosita3czxx/Cosita-ToolKit/contents/cosita_toolkit.py HTTP/1.1" 403 281
+08/23/2023 10:12:11 PM : DEBUG >> Starting new HTTPS connection (1): api.github.com:443
+08/23/2023 10:12:11 PM : DEBUG >> https://api.github.com:443 "GET /repos/xxcosita3czxx/Lorelei-bot/contents/run.py HTTP/1.1" 403 281
+08/23/2023 10:12:11 PM : DEBUG >> Using selector: EpollSelector
+08/23/2023 10:12:11 PM : INFO >> logging in using static token
+08/23/2023 10:12:13 PM : INFO >> Shard ID None has connected to Gateway (Session ID: 92123e169357cf8cd530c95c880cb321).
+08/23/2023 10:12:15 PM : ERROR >> connection error occured, retrying...
+08/23/2023 10:12:15 PM : DEBUG >> Using selector: EpollSelector
+08/23/2023 10:12:15 PM : INFO >> logging in using static token
