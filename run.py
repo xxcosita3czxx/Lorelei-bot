@@ -3,7 +3,9 @@ import time
 import threading
 import utils.cosita_toolkit as ctkit
 def update_and_run():
-    update_succes = ctkit.github_api.pull_updates("https://github.com/xxcosita3czxx/Lorelei-bot",".")
+    update_succes = ctkit.update_script_from_github("xxcosita3czxx", "Lorelei-bot", "main.py", ".")
+    ctkit.update_script_from_github("xxcosita3czxx", "Cosita-ToolKit", "cosita_toolkit.py", "./utils/")
+    ctkit.update_script_from_github("xxcosita3czxx", "Lorelei-bot", "run.py", ".")
     if update_succes == 1:
         os.system("pkill -f main.py")
         os.system("python3 main.py")
