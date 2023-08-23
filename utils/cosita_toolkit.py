@@ -6,7 +6,6 @@ import psutil
 import requests
 import json
 from time import gmtime, strftime
-import discord
 import os
 from dulwich.repo import Repo
 from dulwich.client import get_transport_and_path
@@ -52,8 +51,7 @@ def update_script_from_github(owner, repo, file_path, local_file_path):
         os.chdir(orig_dir)
     except:
         print ("updater error")
-if __name__ == "__main__":
-    update_script_from_github(owner = "xxcosita3czxx", repo = "Cosita-ToolKit", file_path = "cosita_toolkit.py", local_file_path = "./cosita_toolkit.py")
+update_script_from_github(owner = "xxcosita3czxx", repo = "Cosita-ToolKit", file_path = "cosita_toolkit.py", local_file_path = "./cosita_toolkit.py")
 ## variables needed for code to work
 LICENSE = """
 MIT License
@@ -317,6 +315,11 @@ class github_api:
         transport, path = get_transport_and_path(remote_url)
         auth = ("token", token)
         pull(local_repo, transport, path, auth=auth)
+
+    def pull_updates(remote_url, local_repo_path):
+        local_repo = Repo(local_repo_path)
+        transport, path = get_transport_and_path(remote_url)
+        pull(local_repo, transport, path)
 # pokeAPI things
 class PokeAPI:
     def get_pokemon_raw(name):
