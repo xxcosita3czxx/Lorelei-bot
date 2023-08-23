@@ -23,7 +23,7 @@ def update_script_from_github(owner, repo, file_path, local_file_path):
             "User-Agent": "Cosita-Toolkit-Updater"
         }
         response = requests.get(api_url, headers=headers)
-
+        print (response.status_code)
         if response.status_code == 200:
             github_content = response.json()["content"]
             github_content = base64.b64decode(github_content).decode("utf-8")
@@ -51,15 +51,17 @@ def update_script_from_github(owner, repo, file_path, local_file_path):
         else:
             print("Failed to fetch the script from GitHub.")
             os.chdir(orig_dir)
-            return 3
-    except:
-        print ("updater error")
+            return response.status_code
+    except Exception as e:
+        print ("updater error ->> "+e)
         os.chdir(orig_dir)
         return 400
-if __name__== "__main__":
+if __name__ == "__main__":
     update_script_from_github(owner = "xxcosita3czxx", repo = "Cosita-ToolKit", file_path = "cosita_toolkit.py", local_file_path = "./cosita_toolkit.py")
 ## variables needed for code to work
 LICENSE = """
+
+
 MIT License
 
 Copyright (c) 2023 xxcosita3czxx
@@ -82,13 +84,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-
 PROCESS_ALL_ACCESS = 0x1F0FFF
 PROCESS_VM_READ = 0x0010
 try:
     SIZEOF_INT = ctypes.sizeof(ctypes.c_int)
 except:
-    print("ctypes not workin/not a windows system, skipping...")
+    ctypeserr = "ctypes not workin/not a windows system, skipping..."
+
 # services.json
 services_json_raw = '''{
   "services": [
