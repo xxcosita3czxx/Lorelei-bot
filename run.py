@@ -35,6 +35,8 @@ def main_script_monitor():
         if not main_pid:
             logger.info("main.py is not running. Restarting...")
             os.system(f"python3 {main_script_path}")
+        else:
+            logger.info(f"Runs at ({main_pid})")
         time.sleep(10)
 
 if __name__ == "__main__":
