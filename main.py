@@ -37,7 +37,7 @@ async def ping(interaction: discord.Interaction):
 async def help(interaction: discord.Interaction):
     await interaction.response.send_message(help_list)
 
-@tree.command(name="Setup Ticket System", description="Setups ticket system")
+@tree.command(name="Setup-Ticket-System", description="Setups ticket system")
 async def setup_ticket_system(interaction: discord.Interaction, channel_id: int):
     pass
 
