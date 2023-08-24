@@ -15,7 +15,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def update_and_run():
     update_succes = ctkit.github_api.pull_repo(".")
-    if update_succes == 1:
+    if update_succes == 2:
         os.system("pkill -f main.py")
         logger.info("killing main.py...")
     else:
