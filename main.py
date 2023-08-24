@@ -16,16 +16,22 @@ status=discord.Status.dnd
 ##
 class aclient(discord.Client):
     def __init__(self):
-        super().__init__(intents=discord.Intents.all())
-        self.synced = False
+        intents = discord.Intents.default()
+        intents.message_content = True
+        super().__init__(intents = intents)
+        self.synced = False #we use this so the bot doesn't sync commands more than once
+        self.added = False
 
     async def on_ready(self):
         await self.wait_until_ready()
-        if not self.synced:
-            await tree.sync()
+        if not self.synced: #check if slash commands have been synced 
+            await tree.sync() #guild specific: leave blank if global (global registration can take 1-24 hours)
             self.synced = True
-        await bot.change_presence(status=status)
-        logging.info("Bot ready, logged in!")
+        if not self.added:
+            self.add_view(ticket_launcher())
+            self.add_view(main())
+            self.added = True
+        print(f"We have logged in as {self.user}.")
 bot = aclient()
 client = aclient()
 tree = app_commands.CommandTree(bot)
