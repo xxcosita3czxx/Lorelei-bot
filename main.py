@@ -51,13 +51,12 @@ class ticket_launcher(discord.ui.View):
                 interaction.guild.default_role: discord.PermissionOverwrite(view_channel = False),
                 interaction.user: discord.PermissionOverwrite(view_channel = True, read_message_history = True, send_messages = True, attach_files = True, embed_links = True),
                 interaction.guild.me: discord.PermissionOverwrite(view_channel = True, send_messages = True, read_message_history = True), 
-                interaction.guild.get_role("1144363946707517450"): discord.PermissionOverwrite(view_channel = True, read_message_history = True, send_messages = True, attach_files = True, embed_links = True),
             }
             try: 
                 channel = await interaction.guild.create_text_channel(name = f"ticket-for-{interaction.user.name}-{interaction.user.discriminator}", overwrites = overwrites, reason = f"Ticket for {interaction.user}")
             except Exception as e: 
                 return await interaction.response.send_message(f"Ticket creation failed! Make sure I have `manage_channels` permissions! --> {e}", ephemeral = True)
-            await channel.send(f"{bot.ticket_mod.mention}, {interaction.user.mention} created a ticket!", view = main())
+            await channel.send(f"@everyone, {interaction.user.mention} created a ticket!", view = main())
             await interaction.response.send_message(f"I've opened a ticket for you at {channel.mention}!", ephemeral = True)
 
 class confirm(discord.ui.View):
