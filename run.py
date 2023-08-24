@@ -4,9 +4,9 @@ import threading
 import utils.cosita_toolkit as ctkit
 import logging
 import coloredlogs
-import socket
+import psutil
 
-coloredlogs.install(level='INFO', fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+coloredlogs.install(level='DEBUG', fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 logger = logging.getLogger(__name__)
 
@@ -27,17 +27,18 @@ def update_loop():
     while True:
         update_and_run()
         time.sleep(60)
-
 def main_script_monitor():
     while True:
-        main_script_path = os.path.join(SCRIPT_DIR, "main.py")
-        main_pid = os.popen(f"pgrep -f '{main_script_path}'").read()
+        main_pid = None
+        for process in psutil.process_iter(['pid', 'name', 'cmdline']):
+            if 'python3' in process.info['name'] and 'main.py' in ' '.join(process.info['cmdline']):
+                main_pid = process.info['pid']
+                logger.debug("runs at: "+ main_pid)
+                break
+        
         if not main_pid:
             logger.info("main.py is not running. Restarting...")
-            os.system(f"python3 {main_script_path}")
-        else:
-            logger.info(f"Runs at ({main_pid})")
-        time.sleep(10)
+            os.system("python3 main.py")
 
 if __name__ == "__main__":
     update_thread = threading.Thread(target=update_loop)
