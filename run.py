@@ -29,7 +29,7 @@ def main_script_monitor():
         main_pid = os.popen("pgrep -f main.py").read()
         if not main_pid:
             logging.INFO("main.py is not running. Restarting...")
-            update_and_run()
+            os.system("python3 main.py")
         time.sleep(10)
 if __name__ == "__main__":
     update_thread = threading.Thread(target=update_loop)
