@@ -33,7 +33,6 @@ class aclient(discord.Client):
             self.added = True
         logger.info(f"We have logged in as {self.user}.")
 bot = aclient()
-client = aclient()
 tree = app_commands.CommandTree(bot)
 
 class ticket_launcher(discord.ui.View):
@@ -53,11 +52,11 @@ class ticket_launcher(discord.ui.View):
                 interaction.guild.default_role: discord.PermissionOverwrite(view_channel = False),
                 interaction.user: discord.PermissionOverwrite(view_channel = True, read_message_history = True, send_messages = True, attach_files = True, embed_links = True),
                 interaction.guild.me: discord.PermissionOverwrite(view_channel = True, send_messages = True, read_message_history = True), 
-                client.ticket_mod: discord.PermissionOverwrite(view_channel = True, read_message_history = True, send_messages = True, attach_files = True, embed_links = True),
+                bot.ticket_mod: discord.PermissionOverwrite(view_channel = True, read_message_history = True, send_messages = True, attach_files = True, embed_links = True),
             }
             try: channel = await interaction.guild.create_text_channel(name = f"ticket-for-{interaction.user.name}-{interaction.user.discriminator}", overwrites = overwrites, reason = f"Ticket for {interaction.user}")
             except: return await interaction.response.send_message("Ticket creation failed! Make sure I have `manage_channels` permissions!", ephemeral = True)
-            await channel.send(f"{client.ticket_mod.mention}, {interaction.user.mention} created a ticket!", view = main())
+            await channel.send(f"{bot.ticket_mod.mention}, {interaction.user.mention} created a ticket!", view = main())
             await interaction.response.send_message(f"I've opened a ticket for you at {channel.mention}!", ephemeral = True)
 
 class confirm(discord.ui.View):
@@ -93,7 +92,7 @@ class main(discord.ui.View):
                 else:
                     f.write(f"{message.author} on {created}: {message.clean_content}\n")
             generated = datetime.now().strftime("%m/%d/%Y at %H:%M:%S")
-            f.write(f"\n*Generated at {generated} by {client.user}*\n*Date Formatting: MM/DD/YY*\n*Time Zone: UTC*")
+            f.write(f"\n*Generated at {generated} by {bot.user}*\n*Date Formatting: MM/DD/YY*\n*Time Zone: UTC*")
         with open(f"{interaction.channel.id}.md", 'rb') as f:
             await interaction.followup.send(file = discord.File(f, f"{interaction.channel.name}.md"))
         os.remove(f"{interaction.channel.id}.md")
