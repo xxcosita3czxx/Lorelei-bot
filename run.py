@@ -13,13 +13,15 @@ logger = logging.getLogger(__name__)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def update_and_run():
-    update_succes = ctkit.github_api.pull_repo(".")
-    if update_succes == 2:
-        os.system("pkill -f main.py")
-        logger.info("killing main.py...")
-    else:
-        logger.info(f"no update :D (CODE: {update_succes})")
-
+    try:
+        update_succes = ctkit.github_api.pull_repo(".")
+        if update_succes == 2:
+            os.system("pkill -f main.py")
+            logger.info("killing main.py...")
+        else:
+            logger.info(f"no update :D (CODE: {update_succes})")
+    except Exception as e:
+        return f"Error while trying to update, Install git, or if issue persist after autoscheduled update, create issue page on github -->> {e}"
 def update_loop():
     while True:
         update_and_run()
