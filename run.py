@@ -5,46 +5,41 @@ import utils.cosita_toolkit as ctkit
 import logging
 import coloredlogs
 import socket
-coloredlogs.install(level='INFO', fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
+coloredlogs.install(level='INFO', fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 logger = logging.getLogger(__name__)
 
+# Get the full path to the directory of this script
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-def update_run_monitor():
+def update_and_run():
+    update_succes = ctkit.update_script_from_github("xxcosita3czxx", "Lorelei-bot", "main.py", "./main.py")
+    ctkit.update_script_from_github("xxcosita3czxx", "Cosita-ToolKit", "cosita_toolkit.py", "./utils/cosita_toolkit.py")
+    ctkit.update_script_from_github("xxcosita3czxx", "Lorelei-bot", "run.py", "./run.py")
+
+    if update_succes == 1:
+        os.system("pkill -f main.py")
+    else:
+        logger.info(f"no update :D (CODE: {update_succes})")
+
+def update_loop():
     while True:
-        try:
-            # Check network connectivity
-            host = "www.google.com"  # Change to a reliable host
-            port = 80
-            sock = socket.create_connection((host, port), timeout=5)
-            sock.close()
-            logger.info("Network connection established.")
+        update_and_run()
+        time.sleep(60)
 
-            # Update and run logic
-            update_succes = ctkit.update_script_from_github("xxcosita3czxx", "Lorelei-bot", "main.py", "./main.py")
-            ctkit.update_script_from_github("xxcosita3czxx", "Cosita-ToolKit", "cosita_toolkit.py", "./utils/cosita_toolkit.py")
-            ctkit.update_script_from_github("xxcosita3czxx", "Lorelei-bot", "run.py", "./run.py")
-
-            if update_succes == 1:
-                os.system("pkill -f main.py")
-            else:
-                logger.info(f"no update :D (CODE: {update_succes})")
-
-            # Main script monitoring
-            main_pid = os.popen("pgrep -f main.py").read()
-            if not main_pid:
-                logger.info("main.py is not running. Restarting...")
-                os.system("python3 main.py")
-
-        except (socket.error, Exception) as e:
-            logger.error(f"An error occurred: {e}")
-            logger.info("Waiting 60 seconds before retrying...")
-            time.sleep(60)
-
-        # Sleep between iterations
+def main_script_monitor():
+    while True:
+        main_script_path = os.path.join(SCRIPT_DIR, "main.py")
+        main_pid = os.popen(f"pgrep -f '{main_script_path}'").read()
+        if not main_pid:
+            logger.info("main.py is not running. Restarting...")
+            os.system(f"python3 {main_script_path}")
         time.sleep(10)
 
 if __name__ == "__main__":
-    update_thread = threading.Thread(target=update_run_monitor)
+    update_thread = threading.Thread(target=update_loop)
+    monitor_thread = threading.Thread(target=main_script_monitor)
+
     update_thread.start()
+    monitor_thread.start()
