@@ -39,7 +39,7 @@ tree = app_commands.CommandTree(bot)
 class ticket_launcher(discord.ui.View):
     def __init__(self) -> None:
         super().__init__(timeout = None)
-        self.cooldown = commands.CooldownMapping.from_cooldown(1, 600, commands.BucketType.member)
+        self.cooldown = commands.CooldownMapping.from_cooldown(1, 60, commands.BucketType.member)
     
     @discord.ui.button(label = "Create a Ticket", style = discord.ButtonStyle.blurple, custom_id = "ticket_button")
     async def ticket(self, interaction: discord.Interaction, button: discord.ui.Button):
