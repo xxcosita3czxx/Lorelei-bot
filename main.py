@@ -21,7 +21,7 @@ class aclient(discord.Client):
         super().__init__(intents = intents)
         self.synced = False #we use this so the bot doesn't sync commands more than once
         self.added = False
-
+        self.ticket_mod = 1136227591204917338
     async def on_ready(self):
         await self.wait_until_ready()
         if not self.synced: #check if slash commands have been synced 
@@ -96,6 +96,7 @@ class main(discord.ui.View):
         with open(f"{interaction.channel.id}.md", 'rb') as f:
             await interaction.followup.send(file = discord.File(f, f"{interaction.channel.name}.md"))
         os.remove(f"{interaction.channel.id}.md")
+
 @tree.command(name="ping", description="Lets play ping pong")
 async def ping(interaction: discord.Interaction):
     await interaction.response.send_message('Pong! {0}'.format(round(bot.latency, 1)))
