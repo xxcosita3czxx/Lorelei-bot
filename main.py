@@ -20,7 +20,6 @@ class aclient(discord.Client):
         super().__init__(intents = intents)
         self.synced = False #we use this so the bot doesn't sync commands more than once
         self.added = False
-        self.ticket_mod = "1144363946707517450"
     async def on_ready(self):
         await self.wait_until_ready()
         if not self.synced: #check if slash commands have been synced 
@@ -52,7 +51,7 @@ class ticket_launcher(discord.ui.View):
                 interaction.guild.default_role: discord.PermissionOverwrite(view_channel = False),
                 interaction.user: discord.PermissionOverwrite(view_channel = True, read_message_history = True, send_messages = True, attach_files = True, embed_links = True),
                 interaction.guild.me: discord.PermissionOverwrite(view_channel = True, send_messages = True, read_message_history = True), 
-                bot.ticket_mod: discord.PermissionOverwrite(view_channel = True, read_message_history = True, send_messages = True, attach_files = True, embed_links = True),
+                interaction.guild.get_role("1144363946707517450"): discord.PermissionOverwrite(view_channel = True, read_message_history = True, send_messages = True, attach_files = True, embed_links = True),
             }
             try: 
                 channel = await interaction.guild.create_text_channel(name = f"ticket-for-{interaction.user.name}-{interaction.user.discriminator}", overwrites = overwrites, reason = f"Ticket for {interaction.user}")
