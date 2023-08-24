@@ -1,2 +1,3 @@
 .secret.key
 __pycache__
+bot.log
