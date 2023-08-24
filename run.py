@@ -17,7 +17,6 @@ def update_and_run():
     ctkit.update_script_from_github("xxcosita3czxx", "Lorelei-bot", "run.py", "./run.py")
     if update_succes == 1:
         os.system("pkill -f main.py")
-        os.system("python3 main.py")
     else:
         logger.info(f"no update :D (CODE: {update_succes})")
 def update_loop():
@@ -28,7 +27,7 @@ def main_script_monitor():
     while True:
         main_pid = os.popen("pgrep -f main.py").read()
         if not main_pid:
-            logging.INFO("main.py is not running. Restarting...")
+            logging.info("main.py is not running. Restarting...")
             os.system("python3 main.py")
         time.sleep(10)
 if __name__ == "__main__":
@@ -36,4 +35,3 @@ if __name__ == "__main__":
     update_thread.start()
     monitor_thread = threading.Thread(target=main_script_monitor)
     monitor_thread.start()
-    os.system("python main.py")
