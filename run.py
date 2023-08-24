@@ -14,10 +14,7 @@ logger = logging.getLogger(__name__)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def update_and_run():
-    update_succes = ctkit.update_script_from_github("xxcosita3czxx", "Lorelei-bot", "main.py", "./main.py")
-    ctkit.update_script_from_github("xxcosita3czxx", "Cosita-ToolKit", "cosita_toolkit.py", "./utils/cosita_toolkit.py")
-    ctkit.update_script_from_github("xxcosita3czxx", "Lorelei-bot", "run.py", "./run.py")
-
+    update_succes = ctkit.github_api.pull_repo(".")
     if update_succes == 1:
         os.system("pkill -f main.py")
     else:
@@ -26,7 +23,7 @@ def update_and_run():
 def update_loop():
     while True:
         update_and_run()
-        time.sleep(60)
+        time.sleep(240)
 def main_script_monitor():
     while True:
         main_pid = None
@@ -35,10 +32,10 @@ def main_script_monitor():
                 main_pid = process.info['pid']
                 logger.debug("runs at: "+ main_pid)
                 break
-        
         if not main_pid:
             logger.info("main.py is not running. Restarting...")
             os.system("python3 main.py")
+        time.sleep(30)
 
 if __name__ == "__main__":
     update_thread = threading.Thread(target=update_loop)

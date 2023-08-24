@@ -322,13 +322,17 @@ class github_api:
         text = page.text
         text_json = json.loads(text)
         return text_json
-    def pull_changes(repo_dir):
-        try:
+    def pull_repo(repo_dir):
+        if os.path.exists(repo_dir):
             repo = Repo(repo_dir)
             origin = repo.remote()
-            origin.pull()
-        except Exception as e:
-            return f"Install Git or report this error: {e}"
+            pull_result = origin.pull()
+            if pull_result[0].flags == 4:  # Check if Fast-forward or Merge commit
+                return 1  # Successful pull with fast-forward
+            else:
+                return 2  # Successful pull with merge
+        else:
+            return 404  # Repository does not exist
 # pokeAPI things
 class PokeAPI:
     def get_pokemon_raw(name):
