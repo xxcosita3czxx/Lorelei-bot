@@ -31,7 +31,7 @@ class aclient(discord.Client):
             self.add_view(ticket_launcher())
             self.add_view(main())
             self.added = True
-        print(f"We have logged in as {self.user}.")
+        logger.info(f"We have logged in as {self.user}.")
 bot = aclient()
 client = aclient()
 tree = app_commands.CommandTree(bot)
