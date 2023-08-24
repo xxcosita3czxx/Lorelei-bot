@@ -323,16 +323,7 @@ class github_api:
         page = requests.get(url)
         text = page.text
         text_json = json.loads(text)
-    def pull_updates_with_pat(remote_url, token, local_repo_path):
-        local_repo = Repo(local_repo_path)
-        transport, path = get_transport_and_path(remote_url)
-        auth = ("token", token)
-        pull(local_repo, transport, path, auth=auth)
-
-    def pull_updates(remote_url, local_repo_path):
-        local_repo = Repo(local_repo_path)
-        transport, path = get_transport_and_path(remote_url)
-        pull(local_repo, transport, path)
+        
 # pokeAPI things
 class PokeAPI:
     def get_pokemon_raw(name):
