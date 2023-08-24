@@ -9,7 +9,6 @@ import psutil
 coloredlogs.install(level='DEBUG', fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 logger = logging.getLogger(__name__)
-
 # Get the full path to the directory of this script
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
