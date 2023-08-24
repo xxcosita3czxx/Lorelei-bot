@@ -41,5 +41,5 @@ if __name__ == "__main__":
     update_thread = threading.Thread(target=update_loop)
     monitor_thread = threading.Thread(target=main_script_monitor)
 
-    update_thread.start()
     monitor_thread.start()
+    update_thread.start()
