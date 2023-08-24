@@ -3,7 +3,6 @@ from datetime import datetime
 from discord import app_commands, utils
 from discord.ext import commands
 import logging
-import utils.cosita_toolkit as ctkit
 import coloredlogs
 
 coloredlogs.install(level="DEBUG", fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
@@ -57,8 +56,8 @@ class ticket_launcher(discord.ui.View):
             }
             try: 
                 channel = await interaction.guild.create_text_channel(name = f"ticket-for-{interaction.user.name}-{interaction.user.discriminator}", overwrites = overwrites, reason = f"Ticket for {interaction.user}")
-                logger.debug(channel)
-            except: return await interaction.response.send_message("Ticket creation failed! Make sure I have `manage_channels` permissions!", ephemeral = True)
+            except Exception as e: 
+                return await interaction.response.send_message(f"Ticket creation failed! Make sure I have `manage_channels` permissions! --> {e}", ephemeral = True)
             await channel.send(f"{bot.ticket_mod.mention}, {interaction.user.mention} created a ticket!", view = main())
             await interaction.response.send_message(f"I've opened a ticket for you at {channel.mention}!", ephemeral = True)
 
