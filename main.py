@@ -30,6 +30,7 @@ class aclient(discord.Client):
         if not self.added:
             self.add_view(ticket_launcher())
             self.add_view(main())
+            await bot.change_presence(status=status)
             self.added = True
         logger.info(f"We have logged in as {self.user}.")
 bot = aclient()
