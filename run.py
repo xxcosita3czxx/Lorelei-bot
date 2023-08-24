@@ -25,7 +25,7 @@ def update_and_run():
 def update_loop():
     while True:
         update_and_run()
-        time.sleep(240)
+        time.sleep(120)
 def main_script_monitor():
     while True:
         main_pid = None
