@@ -37,28 +37,9 @@ async def ping(interaction: discord.Interaction):
 async def help(interaction: discord.Interaction):
     await interaction.response.send_message(help_list)
 
-@tree.command()
-async def setup_ticket_system(ctx):
-    overwrites = {
-        ctx.guild.default_role: discord.PermissionOverwrite(read_messages=False),
-        ctx.author: discord.PermissionOverwrite(read_messages=True)
-    }
-
-    category = await ctx.guild.create_category_channel('Tickets', overwrites=overwrites)
-    ticket_instructions = await ctx.send("React to this message to open a ticket!")
-
-    await ticket_instructions.add_reaction('🎫')
-
-@bot.event
-async def on_reaction_add(reaction, user):
-    if user == bot.user:
-        return
-
-    if str(reaction.emoji) == '🎫':
-        category = discord.utils.get(user.guild.categories, name='Tickets')
-        ticket_channel = await category.create_text_channel(f'ticket-{user.display_name}')
-        await ticket_channel.set_permissions(user, read_messages=True)
-        await ticket_channel.send(f'{user.mention}, your ticket has been created!')
+@tree.command(name="Setup Ticket System", description="Setups ticket system")
+async def setup_ticket_system(interaction: discord.Interaction):
+    pass  
 
 with open(".secret.key", "r") as key:
     token = key.read()
