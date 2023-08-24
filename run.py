@@ -30,11 +30,13 @@ def main_script_monitor():
         for process in psutil.process_iter(['pid', 'name', 'cmdline']):
             if 'python3' in process.info['name'] and 'main.py' in ' '.join(process.info['cmdline']):
                 main_pid = process.info['pid']
-                logger.debug("runs at: "+ main_pid)
+                logger.debug("main.py is running at PID: " + str(main_pid))
                 break
+
         if not main_pid:
             logger.info("main.py is not running. Restarting...")
             os.system("python3 main.py")
+
         time.sleep(30)
 
 if __name__ == "__main__":
