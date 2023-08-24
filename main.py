@@ -21,7 +21,7 @@ class aclient(discord.Client):
         super().__init__(intents = intents)
         self.synced = False #we use this so the bot doesn't sync commands more than once
         self.added = False
-        self.ticket_mod = 1136227591204917338
+        self.ticket_mod = 1144363946707517450
     async def on_ready(self):
         await self.wait_until_ready()
         if not self.synced: #check if slash commands have been synced 
