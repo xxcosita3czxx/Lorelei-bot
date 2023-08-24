@@ -49,7 +49,7 @@ async def setup_ticket_system(ctx):
 
     await ticket_instructions.add_reaction('🎫')
 
-@tree.event
+@bot.event
 async def on_reaction_add(reaction, user):
     if user == bot.user:
         return
