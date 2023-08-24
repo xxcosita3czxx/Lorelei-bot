@@ -39,7 +39,7 @@ async def help(interaction: discord.Interaction):
 
 @tree.command(name="setup-ticket-system", description="Setups ticket system")
 async def setup_ticket_system(interaction: discord.Interaction, channel_id: int):
-    pass
+    interaction.response.send_modal("setting up...")
 
 with open(".secret.key", "r") as key:
     token = key.read()
