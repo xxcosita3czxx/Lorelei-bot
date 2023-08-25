@@ -142,9 +142,9 @@ async def help(interaction: discord.Interaction):
 
 
 @tree.command(name = 'ticket', description='Launches the ticketing system') #guild specific slash command
-@tree.default_permissions(manage_guild = True)
-@tree.checks.cooldown(3, 60, key = lambda i: (i.guild_id))
-@tree.checks.bot_has_permissions(manage_channels = True)
+@app_commands.default_permissions(manage_guild = True)
+@app_commands.checks.cooldown(3, 60, key = lambda i: (i.guild_id))
+@app_commands.checks.bot_has_permissions(manage_channels = True)
 async def ticketing(interaction: discord.Interaction):
     embed = discord.Embed(title = "If you need support, click the button below and create a ticket!", color = discord.Colour.blue())
     await interaction.channel.send(embed = embed, view = ticket_launcher())
@@ -154,7 +154,7 @@ async def ticketing(interaction: discord.Interaction):
 # kick and ban
 @tree.command(name="kick", description="Kick a user")
 @tree.describe(member="User to kick", reason="Reason for kick")
-@tree.default_permissions(kick_members=True, ban_members=True)
+@app_commands.default_permissions(kick_members=True, ban_members=True)
 async def kick(interaction: discord.Interaction, member: discord.Member, reason: str):
     if member == interaction.user or member == interaction.guild.owner:
         return await interaction.response.send_message("You can't kick this user", ephemeral=True)
@@ -174,7 +174,7 @@ async def kick(interaction: discord.Interaction, member: discord.Member, reason:
 
 @tree.command(name="ban", description="Ban a user")
 @tree.describe(reason="Reason for ban", time="Duration of ban", member="User to ban")
-@tree.default_permissions(ban_members=True)
+@app_commands.default_permissions(ban_members=True)
 async def ban(interaction: discord.Interaction, member: discord.Member, reason: str , time: app_commands.Transform[str, TimeConverter]=None):
     if member == interaction.user or member == interaction.guild.owner:
         return await interaction.response.send_message("You can't ban this user", ephemeral=True)
