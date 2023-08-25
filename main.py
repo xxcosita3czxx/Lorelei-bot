@@ -207,7 +207,7 @@ async def unban(interaction: discord.Interaction, member: discord.User, reason: 
 @tree.command(name="slowmode", description="Set slowmode for the channel")
 @app_commands.describe(time="Slowmod Time")
 async def slowmode(interaction: discord.Interaction, time: app_commands.Transform[str, TimeConverter]=None):
-    if time < 0:
+    if time <= 0:
         await interaction.channel.edit(slowmode_delay=0)
         await interaction.response.send_message("Slowmode has been disabled", ephemeral=True)
         await interaction.channel.send(embed=discord.Embed(description=f"<:octane_yes:1019957051721535618> | Slow mode has been disabled by in {interaction.channel.mention}", color=discord.Color.green()))
