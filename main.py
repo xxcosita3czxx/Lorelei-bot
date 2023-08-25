@@ -192,6 +192,18 @@ async def ban(interaction: discord.Interaction, member: discord.Member, reason: 
     await interaction.response.send_message(f"Banned {member.mention}", ephemeral=True)
     await interaction.followup.send(embed=discord.Embed(description=f"{member.mention} has been banned for {format_timespan(time)}\n**Reason**: {reason}", color=0x2f3136), ephemeral=False)
 
+@tree.command(name="unban", description="Unban a user")
+@app_commands.describe(member="User to unban", reason="Reason for unban")
+@app_commands.default_permissions(ban_members=True)
+async def unban(interaction: discord.Interaction, member: discord.User, reason: str):
+    try:
+        await interaction.guild.unban(member, reason=reason)
+    except discord.NotFound:
+        return await interaction.response.send_message("This user is not banned", ephemeral=True)
+    await interaction.response.send_message(f"Unbanned {member.mention}", ephemeral=True)
+    embed = discord.Embed(description=f"{member.mention} has been unbanned\n**Reason**: {reason}", color=0x2f3136)
+    await interaction.followup.send(embed=embed, ephemeral=False)
+
 @tree.command(name="slowmode", description="Set slowmode for the channel")
 @app_commands.describe(time="Slowmod Time")
 async def slowmode(interaction: discord.Interaction, time: app_commands.Transform[str, TimeConverter]=None):
