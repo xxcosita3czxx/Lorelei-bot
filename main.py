@@ -5,6 +5,8 @@ from discord.ext import commands
 import logging
 import coloredlogs
 import asyncio
+import re
+from humanfriendly import format_timespan
 coloredlogs.install(level="DEBUG", fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger(__name__)
 
@@ -21,6 +23,21 @@ help_list="""
 """
 status=discord.Status.dnd
 ##
+time_regex = re.compile("(?:(\d{1,5})(h|s|m|d))+?")
+time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
+class TimeConverter(app_commands.Transformer):
+    async def transform(self, interaction: discord.Interaction, argument: str) -> int:
+        args = argument.lower()
+        matches = re.findall(time_regex, args)
+        time = 0
+        for key, value in matches:
+            try:
+                time += time_dict[value] * float(key)
+            except KeyError:
+                raise app_commands.BadArgument(f"{value} is an invalid time key! h|m|s|d are valid arguments")
+            except ValueError:
+                raise app_commands.BadArgument(f"{key} is not a number!")
+        return round(time)
 async def change_status():
     while True:
         await bot.change_presence(activity=discord.Game(name="Some chords"),status=status)
@@ -140,6 +157,18 @@ async def kick(interaction: discord.Interaction, user: discord.Member.mention, r
 @app_commands.default_permissions(kick_members = True, administrator = True)
 async def ban(interaction: discord.Interaction, user, reason):
     pass
+
+async def slowmode(self, interaction: discord.Interaction, time: app_commands.Transform[str, TimeConverter]=None):
+    if time < 0:
+        await interaction.channel.edit(slowmode_delay=0)
+        await interaction.response.send_message("Slowmode has been disabled", ephemeral=True)
+        await interaction.channel.send(embed=discord.Embed(description=f"<:octane_yes:1019957051721535618> | Slow mode has been disabled by in {interaction.channel.mention}", color=discord.Color.green()))
+    elif time > 21600:
+        await interaction.response.send_message("Slowmode can't be more than 6 hours", ephemeral=True)
+    else:
+        await interaction.channel.edit(slowmode_delay=time)
+        await interaction.response.send_message(f"Slowmode has been set to {format_timespan(time)} seconds", ephemeral=True)
+        await interaction.channel.send(embed=discord.Embed(description=f"<:octane_yes:1019957051721535618> | Slow mode has been set to {format_timespan(time)} to {interaction.channel.mention}", color=discord.Color.green()))
 with open(".secret.key", "r") as key:
     token = key.read()
 
