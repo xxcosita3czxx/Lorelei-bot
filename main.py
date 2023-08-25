@@ -153,7 +153,7 @@ async def ticketing(interaction: discord.Interaction):
 
 # kick and ban
 @tree.command(name="kick", description="Kick a user")
-@tree.describe(member="User to kick", reason="Reason for kick")
+@app_commands.describe(member="User to kick", reason="Reason for kick")
 @app_commands.default_permissions(kick_members=True, ban_members=True)
 async def kick(interaction: discord.Interaction, member: discord.Member, reason: str):
     if member == interaction.user or member == interaction.guild.owner:
@@ -173,7 +173,7 @@ async def kick(interaction: discord.Interaction, member: discord.Member, reason:
 
 
 @tree.command(name="ban", description="Ban a user")
-@tree.describe(reason="Reason for ban", time="Duration of ban", member="User to ban")
+@app_commands.describe(reason="Reason for ban", time="Duration of ban", member="User to ban")
 @app_commands.default_permissions(ban_members=True)
 async def ban(interaction: discord.Interaction, member: discord.Member, reason: str , time: app_commands.Transform[str, TimeConverter]=None):
     if member == interaction.user or member == interaction.guild.owner:
@@ -193,7 +193,7 @@ async def ban(interaction: discord.Interaction, member: discord.Member, reason: 
     await interaction.followup.send(embed=discord.Embed(description=f"{member.mention} has been banned for {format_timespan(time)}\n**Reason**: {reason}", color=0x2f3136), ephemeral=False)
 
 @tree.command(name="slowmode", description="Set slowmode for the channel")
-@tree.describe(time="Slowmod Time")
+@app_commands.describe(time="Slowmod Time")
 async def slowmode(interaction: discord.Interaction, time: app_commands.Transform[str, TimeConverter]=None):
     if time < 0:
         await interaction.channel.edit(slowmode_delay=0)
