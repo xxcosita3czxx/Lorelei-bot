@@ -134,7 +134,7 @@ async def ticketing(interaction: discord.Interaction):
 # kick and ban
 @tree.command(name = "kick", description = "Kicks a member")
 @app_commands.default_permissions(kick_members = True, administrator = True)
-async def kick(interaction: discord.Interaction, user: discord.User.mention, reason: str):
+async def kick(interaction: discord.Interaction, user: discord.Member.mention, reason: str):
     interaction.guild.kick(user=user,reason=reason)
 @tree.command(name = "ban", description = "Bans a member")
 @app_commands.default_permissions(kick_members = True, administrator = True)
