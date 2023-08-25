@@ -210,7 +210,7 @@ async def slowmode(interaction: discord.Interaction, time: app_commands.Transfor
     if time <= 0:
         await interaction.channel.edit(slowmode_delay=0)
         await interaction.response.send_message("Slowmode has been disabled", ephemeral=True)
-        await interaction.channel.send(embed=discord.Embed(description=f"<:octane_yes:1019957051721535618> | Slow mode has been disabled by in {interaction.channel.mention}", color=discord.Color.green()))
+        await interaction.channel.send(embed=discord.Embed(description=f"Slow mode has been disabled by in {interaction.channel.mention}", color=discord.Color.green()))
     elif time > 21600:
         await interaction.response.send_message("Slowmode can't be more than 6 hours", ephemeral=True)
     else:
