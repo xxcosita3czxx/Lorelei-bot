@@ -21,11 +21,11 @@ status=discord.Status.dnd
 ##
 async def change_status():
     while True:
-        await bot.change_presence(activity=discord.Game(name="Some chords"))
+        await bot.change_presence(activity=discord.Game(name="Some chords"),status=status)
         await asyncio.sleep(5)
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="to !help"))
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="to !help"),status=status)
         await asyncio.sleep(5)
-        await bot.change_presence(activity=discord.Game(name="Made by cosita3cz"))
+        await bot.change_presence(activity=discord.Game(name="Made by cosita3cz"),status=status)
         await asyncio.sleep(5)
 class aclient(discord.Client):
     def __init__(self):
@@ -42,7 +42,6 @@ class aclient(discord.Client):
         if not self.added:
             self.add_view(ticket_launcher())
             self.add_view(main())
-            await bot.change_presence(status=status)
             self.added = True
         logger.info(f"We have logged in as {self.user}.")
         await change_status()
