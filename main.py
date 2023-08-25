@@ -4,7 +4,7 @@ from discord import app_commands, utils
 from discord.ext import commands
 import logging
 import coloredlogs
-
+import asyncio
 coloredlogs.install(level="DEBUG", fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger(__name__)
 
@@ -13,6 +13,14 @@ help_list="""
 """
 status=discord.Status.dnd
 ##
+async def change_status():
+    while True:
+        await bot.change_presence(activity=discord.Game(name="Some chords"))
+        await asyncio.sleep(5)
+        await bot.change_presence(discord.Activity(type=discord.ActivityType.listening, name="to !help"))
+        await asyncio.sleep(5)
+        await bot.change_presence(activity=discord.Game(name="Made by cosita3cz"))
+        await asyncio.sleep(5)
 class aclient(discord.Client):
     def __init__(self):
         intents = discord.Intents.default()
@@ -20,7 +28,6 @@ class aclient(discord.Client):
         super().__init__(intents = intents)
         self.synced = False #we use this so the bot doesn't sync commands more than once
         self.added = False
-        self.ticket_mod = "1144363946707517450"
     async def on_ready(self):
         await self.wait_until_ready()
         if not self.synced: #check if slash commands have been synced 
@@ -32,6 +39,7 @@ class aclient(discord.Client):
             await bot.change_presence(status=status)
             self.added = True
         logger.info(f"We have logged in as {self.user}.")
+        await change_status()
 bot = aclient()
 tree = app_commands.CommandTree(bot)
 
