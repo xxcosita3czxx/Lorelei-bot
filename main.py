@@ -148,16 +148,51 @@ async def ticketing(interaction: discord.Interaction):
     embed = discord.Embed(title = "If you need support, click the button below and create a ticket!", color = discord.Colour.blue())
     await interaction.channel.send(embed = embed, view = ticket_launcher())
     await interaction.response.send_message("Ticketing system launched!", ephemeral = True)
-# kick and ban
-@tree.command(name = "kick", description = "Kicks a member")
-@app_commands.default_permissions(kick_members = True, administrator = True)
-async def kick(interaction: discord.Interaction, user: discord.Member.mention, reason: str):
-    interaction.guild.kick(user=user,reason=reason)
-@tree.command(name = "ban", description = "Bans a member")
-@app_commands.default_permissions(kick_members = True, administrator = True)
-async def ban(interaction: discord.Interaction, user, reason):
-    pass
 
+
+# kick and ban
+@app_commands.command(name="kick", description="Kick a user")
+@app_commands.describe(member="User to kick", reason="Reason for kick")
+@app_commands.default_permissions(kick_members=True, ban_members=True)
+async def kick(self, interaction: discord.Interaction, member: discord.Member, reason: str):
+    if member == interaction.user or member == interaction.guild.owner:
+        return await interaction.response.send_message("You can't kick this user", ephemeral=True)
+    if member.top_role >= interaction.guild.me.top_role:
+        return await interaction.response.send_message("I can't kick this user", ephemeral=True)
+    if member.top_role >= interaction.user.top_role:
+        return await interaction.response.send_message("You can't kick this user due to role hierarchy", ephemeral=True)
+    try:
+        await member.send(embed=discord.Embed(description=f"You have been kicked from {interaction.guild.name}\n**Reason**: {reason}", color=discord.Color.red()))
+    except discord.HTTPException:
+        pass
+    await member.kick(reason=reason)
+    await interaction.response.send_message(f"Kicked {member.mention}", ephemeral=True)
+    embed = discord.Embed(description=f"{member.mention} has been kicked\n**Reason**: {reason}", color=0x2f3136)
+    await interaction.followup.send(embed=embed, ephemeral=False)
+
+
+@app_commands.command(name="ban", description="Ban a user")
+@app_commands.describe(reason="Reason for ban", time="Duration of ban", member="User to ban")
+@app_commands.default_permissions(ban_members=True)
+async def ban(self, interaction: discord.Interaction, member: discord.Member, reason: str , time: app_commands.Transform[str, TimeConverter]=None):
+    if member == interaction.user or member == interaction.guild.owner:
+        return await interaction.response.send_message("You can't ban this user", ephemeral=True)
+    if member.top_role >= interaction.guild.me.top_role:
+        return await interaction.response.send_message("I can't ban this user", ephemeral=True)
+    if member.top_role >= interaction.user.top_role:
+        return await interaction.response.send_message("You can't ban this user due to role hierarchy", ephemeral=True)
+    
+    try:
+        await member.send(embed=discord.Embed(description=f"You have been banned from {interaction.guild.name} for {format_timespan(time)}\n**Reason**: {reason}", color=0x2f3136))
+    except discord.HTTPException:
+        pass
+        
+    await interaction.guild.ban(member, reason=reason)
+    await interaction.response.send_message(f"Banned {member.mention}", ephemeral=True)
+    await interaction.followup.send(embed=discord.Embed(description=f"{member.mention} has been banned for {format_timespan(time)}\n**Reason**: {reason}", color=0x2f3136), ephemeral=False)
+
+@app_commands.command(name="slowmode", description="Set slowmode for the channel")
+@app_commands.describe(time="Slowmod Time")
 async def slowmode(self, interaction: discord.Interaction, time: app_commands.Transform[str, TimeConverter]=None):
     if time < 0:
         await interaction.channel.edit(slowmode_delay=0)
