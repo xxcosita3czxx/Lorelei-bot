@@ -133,11 +133,11 @@ async def ticketing(interaction: discord.Interaction):
     await interaction.response.send_message("Ticketing system launched!", ephemeral = True)
 # kick and ban
 @tree.command(name = "kick", description = "Kicks a member")
-@app_commands.has_permissions(kick_members = True, administrator = True)
+@app_commands.default_permissions(kick_members = True, administrator = True)
 async def kick(interaction: discord.Interaction, user, reason):
-    pass
+    interaction.guild.kick(user=user,reason=reason)
 @tree.command(name = "ban", description = "Bans a member")
-@app_commands.has_permissions(kick_members = True, administrator = True)
+@app_commands.default_permissions(kick_members = True, administrator = True)
 async def ban(interaction: discord.Interaction, user, reason):
     pass
 with open(".secret.key", "r") as key:
