@@ -15,6 +15,8 @@ help_list="""
 /help - shows this help
 /ping - pings the bot if its alive
 > Administrator
+/ban <user> <reason> - bans person
+/kick - <user <reason> - kicks person
 /ticket - Creates ticket panel
 """
 status=discord.Status.dnd
@@ -129,7 +131,15 @@ async def ticketing(interaction: discord.Interaction):
     embed = discord.Embed(title = "If you need support, click the button below and create a ticket!", color = discord.Colour.blue())
     await interaction.channel.send(embed = embed, view = ticket_launcher())
     await interaction.response.send_message("Ticketing system launched!", ephemeral = True)
-
+# kick and ban
+@tree.command(name = "kick", description = "Kicks a member")
+@app_commands.has_permissions(kick_members = True, administrator = True)
+async def kick(interaction: discord.Interaction, user, reason):
+    pass
+@tree.command(name = "ban", description = "Bans a member")
+@app_commands.has_permissions(kick_members = True, administrator = True)
+async def ban(interaction: discord.Interaction, user, reason):
+    pass
 with open(".secret.key", "r") as key:
     token = key.read()
 
