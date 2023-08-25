@@ -154,7 +154,7 @@ async def ticketing(interaction: discord.Interaction):
 @app_commands.command(name="kick", description="Kick a user")
 @app_commands.describe(member="User to kick", reason="Reason for kick")
 @app_commands.default_permissions(kick_members=True, ban_members=True)
-async def kick(self, interaction: discord.Interaction, member: discord.Member, reason: str):
+async def kick(interaction: discord.Interaction, member: discord.Member, reason: str):
     if member == interaction.user or member == interaction.guild.owner:
         return await interaction.response.send_message("You can't kick this user", ephemeral=True)
     if member.top_role >= interaction.guild.me.top_role:
@@ -174,7 +174,7 @@ async def kick(self, interaction: discord.Interaction, member: discord.Member, r
 @app_commands.command(name="ban", description="Ban a user")
 @app_commands.describe(reason="Reason for ban", time="Duration of ban", member="User to ban")
 @app_commands.default_permissions(ban_members=True)
-async def ban(self, interaction: discord.Interaction, member: discord.Member, reason: str , time: app_commands.Transform[str, TimeConverter]=None):
+async def ban(interaction: discord.Interaction, member: discord.Member, reason: str , time: app_commands.Transform[str, TimeConverter]=None):
     if member == interaction.user or member == interaction.guild.owner:
         return await interaction.response.send_message("You can't ban this user", ephemeral=True)
     if member.top_role >= interaction.guild.me.top_role:
@@ -193,7 +193,7 @@ async def ban(self, interaction: discord.Interaction, member: discord.Member, re
 
 @app_commands.command(name="slowmode", description="Set slowmode for the channel")
 @app_commands.describe(time="Slowmod Time")
-async def slowmode(self, interaction: discord.Interaction, time: app_commands.Transform[str, TimeConverter]=None):
+async def slowmode(interaction: discord.Interaction, time: app_commands.Transform[str, TimeConverter]=None):
     if time < 0:
         await interaction.channel.edit(slowmode_delay=0)
         await interaction.response.send_message("Slowmode has been disabled", ephemeral=True)
