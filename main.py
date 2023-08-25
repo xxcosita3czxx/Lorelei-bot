@@ -10,6 +10,12 @@ logger = logging.getLogger(__name__)
 
 ## vars
 help_list="""
+# HELP
+> Utilities
+/help - shows this help
+/ping - pings the bot if its alive
+> Administrator
+/ticket - Creates ticket panel
 """
 status=discord.Status.dnd
 ##
