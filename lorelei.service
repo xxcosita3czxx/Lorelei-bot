@@ -1,0 +1,12 @@
+[Unit]
+Description=Lorelei Bot
+After=network.target
+
+[Service]
+User=your_username
+WorkingDirectory=/var/lorelei-bot
+ExecStart=/usr/bin/python3 /var/lorelei-bot/run.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
