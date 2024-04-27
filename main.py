@@ -5,22 +5,22 @@ from discord.ext import commands
 import logging
 import coloredlogs
 import asyncio
+import config
 import re
 from humanfriendly import format_timespan
 coloredlogs.install(level="DEBUG", fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger(__name__)
-
-## vars
+time_regex = re.compile("(?:(\d{1,5})(h|s|m|d))+?")
+time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
 help_list="""
 # HELP
 > Utilities
 /help - shows this help
 /ping - pings the bot if its alive
 """
-status=discord.Status.online
-##
-time_regex = re.compile("(?:(\d{1,5})(h|s|m|d))+?")
-time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
+config.status
+#########################################################################################
+
 class TimeConverter(app_commands.Transformer):
     async def transform(self, interaction: discord.Interaction, argument: str) -> int:
         args = argument.lower()
