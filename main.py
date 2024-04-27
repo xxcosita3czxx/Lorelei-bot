@@ -43,9 +43,7 @@ async def change_status():
     while True:
         await bot.change_presence(activity=discord.Game(name="Some chords"),status=status)
         await asyncio.sleep(5)
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="to !help"),status=status)
-        await asyncio.sleep(5)
-        await bot.change_presence(activity=discord.Game(name="Made by cosita3cz"),status=status)
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="to /help"),status=status)
         await asyncio.sleep(5)
 class aclient(discord.Client):
     def __init__(self):
