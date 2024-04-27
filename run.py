@@ -21,7 +21,7 @@ def update_and_run():
             update_success = ctkit.github_api.update_repo_files_http("xxcosita3czxx", "lorelei-bot", "main")
         if update_succes == 2:
             os.system("pkill -f main.py")
-            logger.info("killing main.py...")
+            logger.info("success, killing main.py...")
         else:
             logger.info(f"no update :D (CODE: {update_succes})")
     except Exception as e:
