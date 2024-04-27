@@ -374,10 +374,10 @@ class github_api:
                     return file_content
                 except KeyError:
                     print("Failed to extract content from API response:", response.json())
-                    return None
+                    return "KeyError"
             else:
                 print(f"Failed to fetch file '{file_path}' from the repository '{repo}'. Response code: {response.status_code}")
-                return None
+                return response.status_code
     
         # GitHub API endpoint to fetch the latest commit
         url = f"https://api.github.com/repos/{owner}/{repo}/commits/{branch}"
@@ -412,13 +412,17 @@ class github_api:
                         print(f"Failed to download file from '{url}'. Response code: {response.status_code}")
                         return "Failed"
                     print(f"Updates for '{file_path}' downloaded successfully.")
+                    return 2
                 else:
                     print(f"No updates available for '{file_path}'.")
+                    return 0
             else:
                 print("Unable to compute file hash. Check if the file exists.")
+                return 404
         else:
             print(f"Failed to fetch commit information from GitHub. Response code: {response.status_code}")
             print("Response content:", response.text)
+            return 404
 # pokeAPI things
 class PokeAPI:
     def get_pokemon_raw(name):
