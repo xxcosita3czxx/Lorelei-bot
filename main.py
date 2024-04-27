@@ -199,7 +199,7 @@ async def unban(interaction: discord.Interaction, member: discord.User, reason: 
 
 @tree.command(name="slowmode", description="Set slowmode for the channel")
 @app_commands.describe(time="Slowmod Time")
-@app_commands.default_permissions(ban_members=True)
+@app_commands.default_permissions(manage_channels = True)
 async def slowmode(interaction: discord.Interaction, time: app_commands.Transform[str, TimeConverter]=None):
     if time <= 0:
         await interaction.channel.edit(slowmode_delay=0)
