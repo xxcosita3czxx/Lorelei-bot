@@ -22,7 +22,7 @@ help_list="""
 /ticket - Creates ticket panel
 /slowmod <time> - sets slowmode
 """
-status=discord.Status.dnd
+status=discord.Status.online
 ##
 time_regex = re.compile("(?:(\d{1,5})(h|s|m|d))+?")
 time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
