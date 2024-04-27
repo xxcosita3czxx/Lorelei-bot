@@ -16,11 +16,6 @@ help_list="""
 > Utilities
 /help - shows this help
 /ping - pings the bot if its alive
-> Administrator
-/ban <user> <reason> - bans person
-/kick - <user <reason> - kicks person
-/ticket - Creates ticket panel
-/slowmode <time> - sets slowmode
 """
 status=discord.Status.online
 ##
