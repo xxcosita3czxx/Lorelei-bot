@@ -20,7 +20,7 @@ help_list="""
 /ban <user> <reason> - bans person
 /kick - <user <reason> - kicks person
 /ticket - Creates ticket panel
-/slowmod <time> - sets slowmode
+/slowmode <time> - sets slowmode
 """
 status=discord.Status.online
 ##
@@ -204,6 +204,7 @@ async def unban(interaction: discord.Interaction, member: discord.User, reason: 
 
 @tree.command(name="slowmode", description="Set slowmode for the channel")
 @app_commands.describe(time="Slowmod Time")
+@app_commands.default_permissions(ban_members=True)
 async def slowmode(interaction: discord.Interaction, time: app_commands.Transform[str, TimeConverter]=None):
     if time <= 0:
         await interaction.channel.edit(slowmode_delay=0)
@@ -217,6 +218,7 @@ async def slowmode(interaction: discord.Interaction, time: app_commands.Transfor
         await interaction.channel.send(embed=discord.Embed(description=f"Slow mode has been set to {format_timespan(time)} to {interaction.channel.mention}", color=discord.Color.green()))
 
 @tree.command(name="clear", description="Clear n messages specific user", guild=discord.Object(id=867851000286806016))
+@app_commands.default_permissions(ban_members=True)
 async def self(interaction: discord.Interaction, amount: int, member: discord.Member):
     channel = interaction.channel
 
