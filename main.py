@@ -19,6 +19,15 @@ help_list="""
 /ping - pings the bot if its alive
 """
 config.status
+async def change_status():
+    while True:
+        await bot.change_presence(activity=discord.Game(name="Some chords"),status=status)
+        await asyncio.sleep(5)
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="/help"),status=status)
+        await asyncio.sleep(5)
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="TESTINGS"),status=status)
+        await asyncio.sleep(5)
+
 #########################################################################################
 
 class TimeConverter(app_commands.Transformer):
@@ -34,12 +43,6 @@ class TimeConverter(app_commands.Transformer):
             except ValueError:
                 raise app_commands.BadArgument(f"{key} is not a number!")
         return round(time)
-async def change_status():
-    while True:
-        await bot.change_presence(activity=discord.Game(name="Some chords"),status=status)
-        await asyncio.sleep(5)
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="to /help"),status=status)
-        await asyncio.sleep(5)
 class aclient(discord.Client):
     def __init__(self):
         intents = discord.Intents.default()
