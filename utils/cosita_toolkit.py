@@ -2,15 +2,23 @@ import platform
 if platform.system() == "Windows":
     import win32gui
     import ctypes
+import subprocess
+import netifaces
 import psutil
+import socket
+import threading
 import requests
 import json
 from time import gmtime, strftime
 import os
 import base64
-from git import Repo
+
 def update_script_from_github(owner, repo, file_path, local_file_path):
+    '''
+    Updating from github, so you dont have to download always from git
+    '''
     try:
+        from git import Repo
         # Specify the details for the file update
         if __name__ == "__main__":
             orig_dir = os.getcwd()
@@ -63,7 +71,6 @@ if __name__ == "__main__":
     update_script_from_github(owner = "xxcosita3czxx", repo = "Cosita-ToolKit", file_path = "cosita_toolkit.py", local_file_path = "./cosita_toolkit.py")
 ## variables needed for code to work
 LICENSE = """
-
 
 MIT License
 
@@ -237,12 +244,19 @@ services_json = json.loads(services_json_raw)
 
 ## end of variables
 
-# MAIN
+
 def main():
     print ("yet not supported")
-# windows memory editor
+
+
 class memMod:
+    '''
+    Requires windows, bcs linux works different way
+    '''
     def pid_by_name(target_string=[], exe_name=[]):
+        '''
+        Get proccess pid by its name, pid needed for memory editing
+        '''
         if platform.system() == "Windows":
             for proc in psutil.process_iter(['pid', 'name', 'create_time']):
                 try:
@@ -278,6 +292,9 @@ class memMod:
         else:
             return "Non-Windows system detected! skipping..."
     def modify(pid, address, new_value):
+        '''
+        Here is the actuall edit of memory
+        '''
         if platform.system()=="Windows":
             new_value = ctypes.c_int(new_value)
             process_handle = ctypes.windll.kernel32.OpenProcess(PROCESS_ALL_ACCESS, False, pid)
@@ -291,6 +308,9 @@ class memMod:
         else:
             return "Non-windows system detected! skipping..."
     def check(pid, address):
+        '''
+        get current value
+        '''
         if platform.system()=="Windows":
             process_handle = ctypes.windll.kernel32.OpenProcess(PROCESS_VM_READ, False, pid)
             buffer = ctypes.create_string_buffer(SIZEOF_INT)
@@ -407,8 +427,80 @@ class OSspecific:
                     return product_key
             except:
                 return platform.system()
+# Networking tools
+class Networking:
+    def get_lan_ip():
+        try:
+            # Create a socket to the Google DNS server (8.8.8.8)
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.connect(("8.8.8.8", 80))
+            local_ip = s.getsockname()[0]
+            s.close()
+            return local_ip
+        except socket.error:
+            return None
+
+    def check_ip_existence(ip, result_list):
+        try:
+            # Use the 'ping' command on Linux or Windows to check if the IP exists
+            if platform.system() == "Linux":
+                print(f"checking {ip}")
+                output = subprocess.check_output(["ping", "-c", "1", ip], stderr=subprocess.STDOUT, text=True)
+                if "1 packets transmitted," in output and "0 received" not in output:
+                    result_list.append(ip)
+                    print(f"Checked IP: {ip}")
+            elif platform.system() == "Windows":
+                output = subprocess.check_output(["ping", "-n", "1", ip], stderr=subprocess.STDOUT, text=True)
+                if "Received = 1" in output:
+                    result_list.append(ip)
+                    print(f"Checked IP: {ip}")
+        except subprocess.CalledProcessError as e:
+            pass
+        except Exception as e:
+            print(f"Error checking IP {ip}: {e}")
+
+    def scan_lan_ips(subnet, num_threads=4,start_ip = 1,end_ip = 255):
+        # Create a list to store results
+        if end_ip - start_ip + 1 < num_threads:
+            raise ValueError("Must be same or less threads than checked ip adresses")
+        result_list = []
+
+        # Calculate the number of IPs each thread should check
+        ips_per_thread = (end_ip - start_ip + 1) // num_threads
+
+        # Create and start threads
+        threads = []
+        for i in range(num_threads):
+            start = start_ip + i * ips_per_thread
+            end = start + ips_per_thread - 1
+            thread = threading.Thread(target=Networking.check_ip_range, args=(subnet, start, end, result_list))
+            thread.start()
+            threads.append(thread)
+
+        # Wait for all threads to finish
+        for thread in threads:
+            thread.join()
+
+        return result_list
+
+    def check_ip_range(subnet, start, end, result_list):
+        for i in range(start, end + 1):
+            ip = subnet + "." + str(i)
+            Networking.check_ip_existence(ip, result_list)
+
+    def get_router_gateway_ip():
+        try:
+            # Get the default gateway's IP address (cross-platform)
+            gateways = netifaces.gateways()
+            if 'default' in gateways and netifaces.AF_INET in gateways['default']:
+                return gateways['default'][netifaces.AF_INET][0]
+            return None
+        except Exception as e:
+            print(f"Error getting router gateway IP: {e}")
+            return None
 # Other
-def upload_to_transfer_sh(file_path):
-    with open(file_path, 'rb') as file:
-        response = requests.put('https://transfer.sh/' + file_path, data=file)
-        return response.text.strip()
+class Other:
+    def upload_to_transfer_sh(file_path):
+        with open(file_path, 'rb') as file:
+            response = requests.put('https://transfer.sh/' + file_path, data=file)
+            return response.text.strip()
