@@ -5,4 +5,5 @@ pywin32; platform_system == 'Windows'
 ctypes; platform_system == 'Windows' 
 pytest
 requests
-dulwich 
+dulwich
+netifaces
