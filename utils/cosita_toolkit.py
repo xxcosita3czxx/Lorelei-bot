@@ -353,6 +353,72 @@ class github_api:
                 return 2  # Successful pull with merge
         else:
             return 404  # Repository does not exist
+    def update_repo_files_http(owner, repo, branch, file_path):
+        def compute_file_hash(file_content):
+            # Compute the hash of the file content
+            file_hash = hashlib.sha256(file_content.encode()).hexdigest()
+            return file_hash
+    
+        def get_file_content(owner, repo, file_path):
+            # GitHub API endpoint to fetch the contents of a file
+            url = f"https://api.github.com/repos/{owner}/{repo}/contents/{file_path}"
+            
+            # Make a GET request to the GitHub API
+            response = requests.get(url)
+            
+            # Check if the request was successful
+            if response.status_code == 200:
+                # Extract the file content from the response
+                try:
+                    file_content = base64.b64decode(response.json()['content']).decode()
+                    return file_content
+                except KeyError:
+                    print("Failed to extract content from API response:", response.json())
+                    return None
+            else:
+                print(f"Failed to fetch file '{file_path}' from the repository '{repo}'. Response code: {response.status_code}")
+                return None
+    
+        # GitHub API endpoint to fetch the latest commit
+        url = f"https://api.github.com/repos/{owner}/{repo}/commits/{branch}"
+        
+        # Make a GET request to the GitHub API
+        response = requests.get(url)
+        
+        # Check if the request was successful
+        if response.status_code == 200:
+            # Extract the latest commit hash
+            latest_commit_hash = response.json().get('sha')
+            
+            # Get the hash of the file content from GitHub
+            file_content = get_file_content(owner, repo, file_path)
+            if file_content is not None:
+                file_hash = compute_file_hash(file_content)
+                if file_hash != latest_commit_hash:
+                    print(f"Updates available for '{file_path}'. Downloading...")
+    
+                    # Specify the URL of the file to download
+                    url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{file_path}"
+                    # Specify the local filename to save the downloaded file
+                    # Send a GET request to the URL
+                    response = requests.get(url)
+    
+                    # Check if the request was successful (status code 200)
+                    if response.status_code == 200:
+                        # Open the local file in binary write mode and write the content from the response
+                        with open(file_path, 'wb') as f:
+                            f.write(response.content)
+                    else:
+                        print(f"Failed to download file from '{url}'. Response code: {response.status_code}")
+                        return "Failed"
+                    print(f"Updates for '{file_path}' downloaded successfully.")
+                else:
+                    print(f"No updates available for '{file_path}'.")
+            else:
+                print("Unable to compute file hash. Check if the file exists.")
+        else:
+            print(f"Failed to fetch commit information from GitHub. Response code: {response.status_code}")
+            print("Response content:", response.text)
 # pokeAPI things
 class PokeAPI:
     def get_pokemon_raw(name):
@@ -488,7 +554,7 @@ class Networking:
             ip = subnet + "." + str(i)
             Networking.check_ip_existence(ip, result_list)
 
-    def get_router_gateway_ip():
+    def get_gateway_ip():
         try:
             # Get the default gateway's IP address (cross-platform)
             gateways = netifaces.gateways()
