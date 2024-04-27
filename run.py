@@ -22,8 +22,10 @@ def update_and_run():
         if update_succes == 2:
             os.system("pkill -f main.py")
             logger.info("success, killing main.py...")
-        else:
+        elif update_success == 1:
             logger.info(f"no update :D (CODE: {update_succes})")
+        else:
+            logger.error("UPDATE FAILED")
     except Exception as e:
         return f"Error while trying to update, Install git, or if issue persist after autoscheduled update, create issue page on github -->> {e}"
 def update_loop():
