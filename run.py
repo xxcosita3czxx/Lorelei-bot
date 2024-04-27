@@ -44,10 +44,18 @@ def main_script_monitor():
             logger.info("main.py is not running. Restarting...")
             os.system("python3 main.py")
         time.sleep(30)
-
+def update_cosita_tk():
+    while True:
+        try:
+            os.system(f"python3 utils/cosita_toolkit.py")
+        except Exception as e:
+            logger.error("CosTK update FAILED")
+        time.sleep(360)
 if __name__ == "__main__":
     update_thread = threading.Thread(target=update_loop)
     monitor_thread = threading.Thread(target=main_script_monitor)
-
+    update_costk_thread = threading.Thread(target=update_cosita_tk)
+    
     monitor_thread.start()
     update_thread.start()
+    update_costk_thread.start()
