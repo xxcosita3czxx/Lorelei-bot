@@ -215,6 +215,16 @@ async def slowmode(interaction: discord.Interaction, time: app_commands.Transfor
         await interaction.channel.edit(slowmode_delay=time)
         await interaction.response.send_message(f"Slowmode has been set to {format_timespan(time)} seconds", ephemeral=True)
         await interaction.channel.send(embed=discord.Embed(description=f"Slow mode has been set to {format_timespan(time)} to {interaction.channel.mention}", color=discord.Color.green()))
+
+@tree.command(name="clear", description="Clear n messages specific user", guild=discord.Object(id=867851000286806016))
+async def self(interaction: discord.Interaction, amount: int, member: discord.Member):
+    channel = interaction.channel
+
+    def check_author(m):
+        return m.author.id == member.id
+    await channel.purge(limit=amount, check=check_author)
+    content = f"Successfully deleted {amount} messages from {member.name}"
+    await interaction.response.send_message(content=content, ephemeral=True)
 with open(".secret.key", "r") as key:
     token = key.read()
 
