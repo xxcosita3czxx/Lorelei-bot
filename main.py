@@ -18,14 +18,13 @@ help_list="""
 /help - shows this help
 /ping - pings the bot if its alive
 """
-config.status
 async def change_status():
     while True:
         await bot.change_presence(activity=discord.Game(name="Some chords"),status=status)
         await asyncio.sleep(5)
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="/help"),status=status)
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="/help"),status=config.status)
         await asyncio.sleep(5)
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="TESTINGS"),status=status)
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="TESTINGS"),status=config.status)
         await asyncio.sleep(5)
 
 #########################################################################################
@@ -225,6 +224,7 @@ async def self(interaction: discord.Interaction, amount: int, member: discord.Me
     await channel.purge(limit=amount, check=check_author)
     content = f"Successfully deleted {amount} messages from {member.name}"
     await interaction.response.send_message(content=content, ephemeral=True)
+    
 with open(".secret.key", "r") as key:
     token = key.read()
 
