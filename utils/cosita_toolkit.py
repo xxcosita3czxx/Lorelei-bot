@@ -12,6 +12,9 @@ import json
 from time import gmtime, strftime
 import os
 import base64
+import logging
+import coloredlogs
+coloredlogs.install(level='DEBUG', fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 def update_script_from_github(owner, repo, file_path, local_file_path):
     '''
@@ -47,14 +50,14 @@ def update_script_from_github(owner, repo, file_path, local_file_path):
                         os.chdir(orig_dir)
                     return 1
                 else:
-                    print("No update required. Local script is up to date.")
+                    logging.info("No update required. Local script is up to date.")
                     if __name__=="__main__":
                         os.chdir(orig_dir)
                     return 2
             except FileNotFoundError:
                 with open(local_file_path, "w") as file:
                     file.write(github_content)
-                print("Script downloaded and saved successfully.")
+                logging.info("Script downloaded and saved successfully.")
                 if __name__=="__main__":
                     os.chdir(orig_dir)
                 return 7
@@ -64,7 +67,7 @@ def update_script_from_github(owner, repo, file_path, local_file_path):
                 os.chdir(orig_dir)
             return response.status_code
     except Exception as e:
-        print ("updater error ->> "+str(e))
+        logging.error("updater error ->> "+str(e))
         os.chdir(orig_dir)
         return 400
 if __name__ == "__main__":
@@ -246,7 +249,7 @@ services_json = json.loads(services_json_raw)
 
 
 def main():
-    print ("yet not supported")
+    logging.warning("yet not supported")
 
 
 class memMod:
@@ -276,7 +279,7 @@ class memMod:
                             parent_name = psutil.Process(parent_pid).name()
                             exe_name = psutil.Process(proc.pid).exe() if not exe_name else exe_name
                             if proc.name() == exe_name:
-                                #print(f"Found process with window title containing {target_string} and PID {pid} and name: {exe_name}")
+                                logging.debug(f"Found process with window title containing {target_string} and PID {pid} and name: {exe_name}")
                                 return pid
                         except psutil.AccessDenied:
                             # Access denied - ignore this process
@@ -287,9 +290,10 @@ class memMod:
                 except:
                     pass
             else:
-                print(f"No process found with window title containing {target_string}")
+                logging.warning(f"No process found with window title containing {target_string}")
                 return None
         else:
+            logging.warning("Non-Windows system detected! skipping...")
             return "Non-Windows system detected! skipping..."
     def modify(pid, address, new_value):
         '''
@@ -304,8 +308,9 @@ class memMod:
             value = ctypes.c_int.from_buffer(buffer)
             ctypes.windll.kernel32.WriteProcessMemory(process_handle, address, ctypes.byref(new_value), SIZEOF_INT, None)
             ctypes.windll.kernel32.CloseHandle(process_handle)
-            return "OK"
+            return 1
         else:
+            logging.warning("Non-Windows system detected! skipping...")
             return "Non-windows system detected! skipping..."
     def check(pid, address):
         '''
@@ -320,6 +325,7 @@ class memMod:
             ctypes.windll.kernel32.CloseHandle(process_handle)
             return value
         else:
+            logging.warning("Non-Windows system detected! skipping...")
             return "Non-windows system detected! skipping..."
 # github api things
 class github_api:
@@ -335,7 +341,7 @@ class github_api:
         final = str(save_place+file_name)
         with open(final, "w") as f:
             json.dump(json.loads(page.text), f, indent=4)
-        return "OK"
+        return 1
     def get_info_usr(name):
         url = f"https://api.github.com/users/{name}/events/public"
         page = requests.get(url)
@@ -347,10 +353,7 @@ class github_api:
             repo = Repo(repo_dir)
             origin = repo.remote()
             pull_result = origin.pull()
-            if pull_result[0].flags == 4:  # Check if Fast-forward or Merge commit
-                return 1  # Successful pull with fast-forward
-            else:
-                return 2  # Successful pull with merge
+            return 2  # Successful pull with merge
         else:
             return 404  # Repository does not exist
     def update_repo_files_http(owner, repo, branch, file_path):
@@ -373,10 +376,10 @@ class github_api:
                     file_content = base64.b64decode(response.json()['content']).decode()
                     return file_content
                 except KeyError:
-                    print("Failed to extract content from API response:", response.json())
+                    logging.error("Failed to extract content from API response:", response.json())
                     return "KeyError"
             else:
-                print(f"Failed to fetch file '{file_path}' from the repository '{repo}'. Response code: {response.status_code}")
+                logging.error(f"Failed to fetch file '{file_path}' from the repository '{repo}'. Response code: {response.status_code}")
                 return response.status_code
     
         # GitHub API endpoint to fetch the latest commit
@@ -389,39 +392,71 @@ class github_api:
         if response.status_code == 200:
             # Extract the latest commit hash
             latest_commit_hash = response.json().get('sha')
-            
-            # Get the hash of the file content from GitHub
-            file_content = get_file_content(owner, repo, file_path)
-            if file_content is not None:
-                file_hash = compute_file_hash(file_content)
-                if file_hash != latest_commit_hash:
-                    print(f"Updates available for '{file_path}'. Downloading...")
-    
-                    # Specify the URL of the file to download
-                    url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{file_path}"
-                    # Specify the local filename to save the downloaded file
-                    # Send a GET request to the URL
-                    response = requests.get(url)
-    
-                    # Check if the request was successful (status code 200)
-                    if response.status_code == 200:
-                        # Open the local file in binary write mode and write the content from the response
-                        with open(file_path, 'wb') as f:
-                            f.write(response.content)
+            if file_content:
+                # Get the hash of the file content from GitHub
+                file_content = get_file_content(owner, repo, file_path)
+                if file_content is not None:
+                    file_hash = compute_file_hash(file_content)
+                    if file_hash != latest_commit_hash:
+                        logging.info(f"Updates available for '{file_path}'. Downloading...")
+        
+                        # Specify the URL of the file to download
+                        url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{file_path}"
+                        # Specify the local filename to save the downloaded file
+                        # Send a GET request to the URL
+                        response = requests.get(url)
+        
+                        # Check if the request was successful (status code 200)
+                        if response.status_code == 200:
+                            # Open the local file in binary write mode and write the content from the response
+                            with open(file_path, 'wb') as f:
+                                f.write(response.content)
+                        else:
+                            logging.error(f"Failed to download file from '{url}'. Response code: {response.status_code}")
+                            return "Failed"
+                        print(f"Updates for '{file_path}' downloaded successfully.")
+                        return 2
                     else:
-                        print(f"Failed to download file from '{url}'. Response code: {response.status_code}")
-                        return "Failed"
-                    print(f"Updates for '{file_path}' downloaded successfully.")
-                    return 2
+                        logging.info(f"No updates available for '{file_path}'.")
+                        return 0
                 else:
-                    print(f"No updates available for '{file_path}'.")
-                    return 0
+                    logging.warning("Unable to compute file hash. Check if the file exists.")
+                    return 404
             else:
-                print("Unable to compute file hash. Check if the file exists.")
-                return 404
+                # If no file path is specified, iterate through every file in the current directory
+                try:
+                    for file_name in os.listdir('.'):
+                        if os.path.isfile(file_name):
+                            logging.debug(f"Checking for updates to '{file_name}'...")
+                            file_content = get_file_content(owner, repo, file_name)
+                            if file_content is not None:
+                                file_hash = compute_file_hash(file_content)
+                                if file_hash != latest_commit_hash:
+                                    logging.info(f"Updates available for '{file_name}'. Downloading...")
+                                    url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{file_name}"
+                                    # Specify the local filename to save the downloaded file
+                                    # Send a GET request to the URL
+                                    response = requests.get(url)
+                    
+                                    # Check if the request was successful (status code 200)
+                                    if response.status_code == 200:
+                                        # Open the local file in binary write mode and write the content from the response
+                                        with open(file_name, 'wb') as f:
+                                            f.write(response.content)
+                                    else:
+                                        logging.error(f"Failed to download file from '{url}'. Response code: {response.status_code}")
+                                        return "Failed"
+                                    logging.info(f"Updates for '{file_name}' downloaded successfully.")
+                                else:
+                                    logging.info(f"No updates available for '{file_name}'.")
+                            else:
+                                logging.warning("Unable to compute file hash. Check if the file exists.")
+                 except:
+                     logging.info("update successful")
+                     return 2
         else:
-            print(f"Failed to fetch commit information from GitHub. Response code: {response.status_code}")
-            print("Response content:", response.text)
+            logging.error(f"Failed to fetch commit information from GitHub. Response code: {response.status_code}")
+            logging.error("Response content:", response.text)
             return 404
 # pokeAPI things
 class PokeAPI:
@@ -514,20 +549,20 @@ class Networking:
         try:
             # Use the 'ping' command on Linux or Windows to check if the IP exists
             if platform.system() == "Linux":
-                print(f"checking {ip}")
+                logging.debug(f"checking {ip}")
                 output = subprocess.check_output(["ping", "-c", "1", ip], stderr=subprocess.STDOUT, text=True)
                 if "1 packets transmitted," in output and "0 received" not in output:
                     result_list.append(ip)
-                    print(f"Checked IP: {ip}")
+                    logging.info(f"Checked IP: {ip}")
             elif platform.system() == "Windows":
                 output = subprocess.check_output(["ping", "-n", "1", ip], stderr=subprocess.STDOUT, text=True)
                 if "Received = 1" in output:
                     result_list.append(ip)
-                    print(f"Checked IP: {ip}")
+                    logging.info(f"Checked IP: {ip}")
         except subprocess.CalledProcessError as e:
             pass
         except Exception as e:
-            print(f"Error checking IP {ip}: {e}")
+            logging.error(f"Error checking IP {ip}: {e}")
 
     def scan_lan_ips(subnet, num_threads=4,start_ip = 1,end_ip = 255):
         # Create a list to store results
@@ -566,7 +601,7 @@ class Networking:
                 return gateways['default'][netifaces.AF_INET][0]
             return None
         except Exception as e:
-            print(f"Error getting router gateway IP: {e}")
+            logging.error(f"Error getting router gateway IP: {e}")
             return None
 # Other
 class Other:
@@ -574,3 +609,4 @@ class Other:
         with open(file_path, 'rb') as file:
             response = requests.put('https://transfer.sh/' + file_path, data=file)
             return response.text.strip()
+            
