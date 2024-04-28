@@ -16,8 +16,8 @@ def update_and_run():
     try:
         try:
             update_succes = ctkit.github_api.pull_repo(".")
-        except:
-            logger.warning("git pull failed, pulling with http api")
+        except Exception as e:
+            logger.warning(f"git pull failed, pulling with http api: {e}")
             update_success = ctkit.github_api.update_repo_files_http("xxcosita3czxx", "lorelei-bot", "main")
         logger.info(update_success)
         if update_succes == 2:
@@ -28,7 +28,7 @@ def update_and_run():
         else:
             logger.error("UPDATE FAILED")
     except Exception as e:
-        return f"Error while trying to update, Install git, or if issue persist after autoscheduled update, create issue page on github -->> {e}"
+        logger.error(f"Error while trying to update, Install git, or if issue persist after autoscheduled update, create issue page on github -->> {e}")
 def update_loop():
     while True:
         update_and_run()
