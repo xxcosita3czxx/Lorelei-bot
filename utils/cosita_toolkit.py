@@ -451,7 +451,7 @@ class github_api:
                                     logging.info(f"No updates available for '{file_name}'.")
                             else:
                                 logging.warning("Unable to compute file hash. Check if the file exists.")
-                 except:
+                except:
                      logging.info("update successful")
                      return 2
         else:
