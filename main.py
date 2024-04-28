@@ -222,8 +222,7 @@ async def self(interaction: discord.Interaction, amount: int, member: discord.Me
     def check_author(m):
         return m.author.id == member.id
     await channel.purge(limit=amount, check=check_author)
-    content = f"Successfully deleted {amount} messages from {member.name}"
-    await interaction.response.send_message(content=content, ephemeral=True)
+    await interaction.response.send_message(content=f"Successfully deleted {amount} messages from {member.name}", ephemeral=True)
     
 with open(".secret.key", "r") as key:
     token = key.read()
