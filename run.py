@@ -18,7 +18,7 @@ def update_and_run():
             update_succes = ctkit.github_api.pull_repo(".")
         except Exception as e:
             logger.warning(f"git pull failed, pulling with http api: {e}")
-            update_success = ctkit.github_api.update_repo_files_http("xxcosita3czxx", "lorelei-bot", "main")
+            update_success = ctkit.github_api.update_repo_files_http("xxcosita3czxx", "lorelei-bot", "main",["run.py","main.py"])
         logger.info(update_success)
         if update_succes == 2:
             os.system("pkill -f main.py")
