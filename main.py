@@ -20,7 +20,7 @@ help_list="""
 """
 async def change_status():
     while True:
-        await bot.change_presence(activity=discord.Game(name="Some chords"),status=status)
+        await bot.change_presence(activity=discord.Game(name="Some chords"),status=config.status)
         await asyncio.sleep(5)
         await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="/help"),status=config.status)
         await asyncio.sleep(5)
