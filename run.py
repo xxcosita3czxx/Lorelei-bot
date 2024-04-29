@@ -5,7 +5,7 @@ import utils.cosita_toolkit as ctkit
 import logging
 import coloredlogs
 import psutil
-
+import config
 coloredlogs.install(level='DEBUG', fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 logger = logging.getLogger(__name__)
@@ -13,30 +13,33 @@ logger = logging.getLogger(__name__)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def update_and_run():
-    try:
+    if config.autoupdate == True:
         try:
-            update_success = ctkit.github_api.pull_repo(".")
+            try:
+                update_success = ctkit.github_api.pull_repo(".")
+            except Exception as e:
+                logger.warning(f"git pull failed, pulling with http api: {e}")
+                update_success = ctkit.github_api.update_repo_files_http("xxcosita3czxx", "lorelei-bot", "main",["run.py","main.py"])
+            logger.info(update_success)
+            if update_success == 2:
+                os.system("pkill -f main.py")
+                logger.info("success, killing main.py...")
+                main_pid = None
+                for process in psutil.process_iter(['pid', 'name', 'cmdline']):
+                    if 'python3' in process.info['name'] and 'main.py' in ' '.join(process.info['cmdline']):
+                        main_pid = process.info['pid']
+                        logger.debug("main.py is running at PID: " + str(main_pid))
+                if not main_pid:
+                    logger.info("main.py is not running. Restarting...")
+                    os.system("python3 main.py")
+            elif update_success == 1:
+                logger.info(f"no update :D (CODE: {update_succes})")
+            else:
+                logger.error("UPDATE FAILED")
         except Exception as e:
-            logger.warning(f"git pull failed, pulling with http api: {e}")
-            update_success = ctkit.github_api.update_repo_files_http("xxcosita3czxx", "lorelei-bot", "main",["run.py","main.py"])
-        logger.info(update_success)
-        if update_success == 2:
-            os.system("pkill -f main.py")
-            logger.info("success, killing main.py...")
-            main_pid = None
-            for process in psutil.process_iter(['pid', 'name', 'cmdline']):
-                if 'python3' in process.info['name'] and 'main.py' in ' '.join(process.info['cmdline']):
-                    main_pid = process.info['pid']
-                    logger.debug("main.py is running at PID: " + str(main_pid))
-            if not main_pid:
-                logger.info("main.py is not running. Restarting...")
-                os.system("python3 main.py")
-        elif update_success == 1:
-            logger.info(f"no update :D (CODE: {update_succes})")
-        else:
-            logger.error("UPDATE FAILED")
-    except Exception as e:
-        logger.error(f"Error while trying to update, Install git, or if issue persist after autoscheduled update, create issue page on github -->> {e}")
+            logger.error(f"Error while trying to update, Install git, or if issue persist after autoscheduled update, create issue page on github -->> {e}")
+    else:
+        logger.warning("UPDATER IS OFF, YOU WILL HAVE TO UPDATE MANUALLY")
 def update_loop():
     while True:
         update_and_run()

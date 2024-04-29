@@ -1,7 +1,6 @@
 import discord
 ##############################################
 
-
 ########### Log Level #############
 #
 # Available options
@@ -24,4 +23,10 @@ loglevel = "INFO"
 #
 # Do not Disturb status (default)
 status = discord.Status.dnd
+###################################
+########### AutoUpdate ############
+#
+# Only True or False
+# True is default
+autoupdate = True
 ###################################
