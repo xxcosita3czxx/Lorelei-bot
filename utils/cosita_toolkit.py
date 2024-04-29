@@ -42,71 +42,71 @@ try:
     import coloredlogs
     coloredlogs.install(level='DEBUG', fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 except:
-    logger.warning("will not be using colors, as the module cannot be found")
+    logging.warning("will not be using colors, as the module cannot be found")
 
 try:
     import platform
 except:
-    logger.fatal("Failed to import base module platform")
+    logging.fatal("Failed to import base module platform")
 
 try:
     if platform.system() == "Windows":
         import win32gui
         import ctypes
     else:
-        logger.debug("not importing windows depends")
+        logging.debug("not importing windows depends")
 except:
-    logger.warning("Windows Dependendencies not found, could have limitations")
+    logging.warning("Windows Dependendencies not found, could have limitations")
 
 try:
     import subprocess
 except:
-    logger.warning("Module smubproccess not found, could have limitations")
+    logging.warning("Module smubproccess not found, could have limitations")
 
 try:
     import netifaces
 except:
-    logger.warning("Module netifaces not found, could have limitations")
+    logging.warning("Module netifaces not found, could have limitations")
 
 try:
     import psutil
 except:
-    logger.warning("Module psutil not found, could have limitations")
+    logging.warning("Module psutil not found, could have limitations")
 
 try:
     import socket
 except:
-    logger.warning("Module socket not found, could have limitations")
+    logging.warning("Module socket not found, could have limitations")
 
 try:
     import threading
 except:
-    logger.warning("Module threading not found, could have limitations")
+    logging.warning("Module threading not found, could have limitations")
 
 try:
     import requests
 except:
-    logger.warning("Module requests not found, could have limitations")
+    logging.warning("Module requests not found, could have limitations")
 
 try:
     import json
 except:
-    logger.warning("Module json not found, could have limitations")
+    logging.warning("Module json not found, could have limitations")
 
 try:
     from time import gmtime, strftime
 except:
-    logger.warning("Module time not found, could have limitations")
+    logging.warning("Module time not found, could have limitations")
 
 try:
     import os
 except:
-    logger.warning("Module os not found, could have limitations")
+    logging.warning("Module os not found, could have limitations")
 
 try:
     import base64
 except:
-    logger.warning("Module base64 not found, could have limitations")
+    logging.warning("Module base64 not found, could have limitations")
 
 
 def update_script_from_github(owner, repo, file_path, local_file_path):
