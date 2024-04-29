@@ -23,6 +23,14 @@ def update_and_run():
         if update_success == 2:
             os.system("pkill -f main.py")
             logger.info("success, killing main.py...")
+            main_pid = None
+            for process in psutil.process_iter(['pid', 'name', 'cmdline']):
+                if 'python3' in process.info['name'] and 'main.py' in ' '.join(process.info['cmdline']):
+                    main_pid = process.info['pid']
+                    logger.debug("main.py is running at PID: " + str(main_pid))
+            if not main_pid:
+                logger.info("main.py is not running. Restarting...")
+                os.system("python3 main.py")
         elif update_success == 1:
             logger.info(f"no update :D (CODE: {update_succes})")
         else:
@@ -40,7 +48,6 @@ def main_script_monitor():
             if 'python3' in process.info['name'] and 'main.py' in ' '.join(process.info['cmdline']):
                 main_pid = process.info['pid']
                 logger.debug("main.py is running at PID: " + str(main_pid))
-                break
         if not main_pid:
             logger.info("main.py is not running. Restarting...")
             os.system("python3 main.py")
