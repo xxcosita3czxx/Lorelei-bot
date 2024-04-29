@@ -1,20 +1,113 @@
-import platform
-if platform.system() == "Windows":
-    import win32gui
-    import ctypes
-import subprocess
-import netifaces
-import psutil
-import socket
-import threading
-import requests
-import json
-from time import gmtime, strftime
-import os
-import base64
-import logging
-import coloredlogs
-coloredlogs.install(level='DEBUG', fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+#########################################
+#                                       #
+#                CosTK                  #
+#           - by cosita3cz              #
+#                                       #
+#########################################
+
+'''
+MIT License
+
+Copyright (c) 2023 xxcosita3czxx
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+'''
+
+#------------------------------------------------------#
+
+############   MODULE IMPORTS   ############
+
+try:
+    import logging
+except:
+    print ("FATAL: cannot import logging")
+
+try:
+    import coloredlogs
+    coloredlogs.install(level='DEBUG', fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+except:
+    logger.warning("will not be using colors, as the module cannot be found")
+
+try:
+    import platform
+except:
+    logger.fatal("Failed to import base module platform")
+
+try:
+    if platform.system() == "Windows":
+        import win32gui
+        import ctypes
+    else:
+        logger.debug("not importing windows depends")
+except:
+    logger.warning("Windows Dependendencies not found, could have limitations")
+
+try:
+    import subprocess
+except:
+    logger.warning("Module smubproccess not found, could have limitations")
+
+try:
+    import netifaces
+except:
+    logger.warning("Module netifaces not found, could have limitations")
+
+try:
+    import psutil
+except:
+    logger.warning("Module psutil not found, could have limitations")
+
+try:
+    import socket
+except:
+    logger.warning("Module socket not found, could have limitations")
+
+try:
+    import threading
+except:
+    logger.warning("Module threading not found, could have limitations")
+
+try:
+    import requests
+except:
+    logger.warning("Module requests not found, could have limitations")
+
+try:
+    import json
+except:
+    logger.warning("Module json not found, could have limitations")
+
+try:
+    from time import gmtime, strftime
+except:
+    logger.warning("Module time not found, could have limitations")
+
+try:
+    import os
+except:
+    logger.warning("Module os not found, could have limitations")
+
+try:
+    import base64
+except:
+    logger.warning("Module base64 not found, could have limitations")
+
 
 def update_script_from_github(owner, repo, file_path, local_file_path):
     '''
@@ -72,185 +165,13 @@ def update_script_from_github(owner, repo, file_path, local_file_path):
         return 400
 if __name__ == "__main__":
     update_script_from_github(owner = "xxcosita3czxx", repo = "Cosita-ToolKit", file_path = "cosita_toolkit.py", local_file_path = "./cosita_toolkit.py")
-## variables needed for code to work
-LICENSE = """
-
-MIT License
-
-Copyright (c) 2023 xxcosita3czxx
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-"""
-PROCESS_ALL_ACCESS = 0x1F0FFF
-PROCESS_VM_READ = 0x0010
-try:
-    SIZEOF_INT = ctypes.sizeof(ctypes.c_int)
-except:
-    ctypeserr = "ctypes not workin/not a windows system, skipping..."
-
-# services.json
-services_json_raw = '''{
-  "services": [
-    { "service": "Instagram", "endpoint": "/check/instagram/{username}" },
-    { "service": "TikTok", "endpoint": "/check/tiktok/{username}" },
-    { "service": "Twitter", "endpoint": "/check/twitter/{username}" },
-    { "service": "Facebook", "endpoint": "/check/facebook/{username}" },
-    { "service": "YouTube", "endpoint": "/check/youtube/{username}" },
-    { "service": "Medium", "endpoint": "/check/medium/{username}" },
-    { "service": "Reddit", "endpoint": "/check/reddit/{username}" },
-    { "service": "HackerNews", "endpoint": "/check/hackernews/{username}" },
-    { "service": "GitHub", "endpoint": "/check/github/{username}" },
-    { "service": "Quora", "endpoint": "/check/quora/{username}" },
-    { "service": "9GAG", "endpoint": "/check/9gag/{username}" },
-    { "service": "VK", "endpoint": "/check/vk/{username}" },
-    { "service": "GoodReads", "endpoint": "/check/goodreads/{username}" },
-    { "service": "Blogger", "endpoint": "/check/blogger/{username}" },
-    { "service": "Patreon", "endpoint": "/check/patreon/{username}" },
-    { "service": "ProductHunt", "endpoint": "/check/producthunt/{username}" },
-    { "service": "500px", "endpoint": "/check/500px/{username}" },
-    { "service": "About.me", "endpoint": "/check/about.me/{username}" },
-    { "service": "Academia.edu", "endpoint": "/check/academia.edu/{username}" },
-    { "service": "AngelList", "endpoint": "/check/angellist/{username}" },
-    { "service": "Aptoide", "endpoint": "/check/aptoide/{username}" },
-    { "service": "AskFM", "endpoint": "/check/askfm/{username}" },
-    { "service": "BLIP.fm", "endpoint": "/check/blip.fm/{username}" },
-    { "service": "Badoo", "endpoint": "/check/badoo/{username}" },
-    { "service": "Bandcamp", "endpoint": "/check/bandcamp/{username}" },
-    { "service": "Basecamp", "endpoint": "/check/basecamp/{username}" },
-    { "service": "Behance", "endpoint": "/check/behance/{username}" },
-    { "service": "BitBucket", "endpoint": "/check/bitbucket/{username}" },
-    { "service": "BitCoinForum", "endpoint": "/check/bitcoinforum/{username}" },
-    { "service": "BuzzFeed", "endpoint": "/check/buzzfeed/{username}" },
-    { "service": "Canva", "endpoint": "/check/canva/{username}" },
-    { "service": "Carbonmade", "endpoint": "/check/carbonmade/{username}" },
-    { "service": "CashMe", "endpoint": "/check/cashme/{username}" },
-    { "service": "Cloob", "endpoint": "/check/cloob/{username}" },
-    { "service": "Codecademy", "endpoint": "/check/codecademy/{username}" },
-    { "service": "Codementor", "endpoint": "/check/codementor/{username}" },
-    { "service": "Codepen", "endpoint": "/check/codepen/{username}" },
-    { "service": "Coderwall", "endpoint": "/check/coderwall/{username}" },
-    { "service": "ColourLovers", "endpoint": "/check/colourlovers/{username}" },
-    { "service": "Contently", "endpoint": "/check/contently/{username}" },
-    { "service": "Coroflot", "endpoint": "/check/coroflot/{username}" },
-    { "service": "CreativeMarket", "endpoint": "/check/creativemarket/{username}" },
-    { "service": "Crevado", "endpoint": "/check/crevado/{username}" },
-    { "service": "Crunchyroll", "endpoint": "/check/crunchyroll/{username}" },
-    { "service": "DEV Community", "endpoint": "/check/devcommunity/{username}" },
-    { "service": "DailyMotion", "endpoint": "/check/dailymotion/{username}" },
-    { "service": "Designspiration", "endpoint": "/check/designspiration/{username}" },
-    { "service": "DeviantART", "endpoint": "/check/deviantart/{username}" },
-    { "service": "Disqus", "endpoint": "/check/disqus/{username}" },
-    { "service": "Dribbble", "endpoint": "/check/dribbble/{username}" },
-    { "service": "Ebay", "endpoint": "/check/ebay/{username}" },
-    { "service": "Ello", "endpoint": "/check/ello/{username}" },
-    { "service": "Etsy", "endpoint": "/check/etsy/{username}" },
-    { "service": "EyeEm", "endpoint": "/check/eyeem/{username}" },
-    { "service": "Flickr", "endpoint": "/check/flickr/{username}" },
-    { "service": "Flipboard", "endpoint": "/check/flipboard/{username}" },
-    { "service": "Foursquare", "endpoint": "/check/foursquare/{username}" },
-    { "service": "Giphy", "endpoint": "/check/giphy/{username}" },
-    { "service": "GitLab", "endpoint": "/check/gitlab/{username}" },
-    { "service": "Gitee", "endpoint": "/check/gitee/{username}" },
-    { "service": "Gravatar", "endpoint": "/check/gravatar/{username}" },
-    { "service": "Gumroad", "endpoint": "/check/gumroad/{username}" },
-    { "service": "HackerOne", "endpoint": "/check/hackerone/{username}" },
-    { "service": "House-Mixes.com", "endpoint": "/check/house-mixes.com/{username}" },
-    { "service": "Houzz", "endpoint": "/check/houzz/{username}" },
-    { "service": "HubPages", "endpoint": "/check/hubpages/{username}" },
-    { "service": "Homescreen.me", "endpoint": "/check/homescreen.me/{username}" },
-    { "service": "IFTTT", "endpoint": "/check/ifttt/{username}" },
-    { "service": "ImageShack", "endpoint": "/check/imageshack/{username}" },
-    { "service": "Imgur", "endpoint": "/check/imgur/{username}" },
-    { "service": "Instructables", "endpoint": "/check/instructables/{username}" },
-    { "service": "Investing.com", "endpoint": "/check/investing.com/{username}" },
-    { "service": "Issuu", "endpoint": "/check/issuu/{username}" },
-    { "service": "Itch.io", "endpoint": "/check/itch.io/{username}" },
-    { "service": "Jimdo", "endpoint": "/check/jimdo/{username}" },
-    { "service": "Kaggle", "endpoint": "/check/kaggle/{username}" },
-    { "service": "KanoWorld", "endpoint": "/check/kanoworld/{username}" },
-    { "service": "Keybase", "endpoint": "/check/keybase/{username}" },
-    { "service": "Kik", "endpoint": "/check/kik/{username}" },
-    { "service": "Kongregate", "endpoint": "/check/kongregate/{username}" },
-    { "service": "Launchpad", "endpoint": "/check/launchpad/{username}" },
-    { "service": "Letterboxd", "endpoint": "/check/letterboxd/{username}" },
-    { "service": "LiveJournal", "endpoint": "/check/livejournal/{username}" },
-    { "service": "Mastodon", "endpoint": "/check/mastodon/{username}" },
-    { "service": "MeetMe", "endpoint": "/check/meetme/{username}" },
-    { "service": "MixCloud", "endpoint": "/check/mixcloud/{username}" },
-    { "service": "MyAnimeList", "endpoint": "/check/myanimelist/{username}" },
-    { "service": "NameMC", "endpoint": "/check/namemc/{username}" },
-    { "service": "Newgrounds", "endpoint": "/check/newgrounds/{username}" },
-    { "service": "Pastebin", "endpoint": "/check/pastebin/{username}" },
-    { "service": "Pexels", "endpoint": "/check/pexels/{username}" },
-    { "service": "Photobucket", "endpoint": "/check/photobucket/{username}" },
-    { "service": "Pinterest", "endpoint": "/check/pinterest/{username}" },
-    { "service": "Pixabay", "endpoint": "/check/pixabay/{username}" },
-    { "service": "Plug.DJ", "endpoint": "/check/plug.dj/{username}" },
-    { "service": "Rajce.net", "endpoint": "/check/rajce.net/{username}" },
-    { "service": "Repl.it", "endpoint": "/check/repl.it/{username}" },
-    { "service": "ReverbNation", "endpoint": "/check/reverbnation/{username}" },
-    { "service": "Roblox", "endpoint": "/check/roblox/{username}" },
-    { "service": "Scribd", "endpoint": "/check/scribd/{username}" },
-    { "service": "Signal", "endpoint": "/check/signal/{username}" },
-    { "service": "Slack", "endpoint": "/check/slack/{username}" },
-    { "service": "SlideShare", "endpoint": "/check/slideshare/{username}" },
-    { "service": "SoundCloud", "endpoint": "/check/soundcloud/{username}" },
-    { "service": "SourceForge", "endpoint": "/check/sourceforge/{username}" },
-    { "service": "Spotify", "endpoint": "/check/spotify/{username}" },
-    { "service": "Star Citizen", "endpoint": "/check/starcitizen/{username}" },
-    { "service": "Steam", "endpoint": "/check/steam/{username}" },
-    { "service": "SteamGroup", "endpoint": "/check/steamgroup/{username}" },
-    { "service": "Taringa", "endpoint": "/check/taringa/{username}" },
-    { "service": "Telegram", "endpoint": "/check/telegram/{username}" },
-    { "service": "Tinder", "endpoint": "/check/tinder/{username}" },
-    { "service": "TradingView", "endpoint": "/check/tradingview/{username}" },
-    { "service": "Trakt", "endpoint": "/check/trakt/{username}" },
-    { "service": "Trip", "endpoint": "/check/trip/{username}" },
-    { "service": "TripAdvisor", "endpoint": "/check/tripadvisor/{username}" },
-    { "service": "Twitch", "endpoint": "/check/twitch/{username}" },
-    { "service": "Unsplash", "endpoint": "/check/unsplash/{username}" },
-    { "service": "VSCO", "endpoint": "/check/vsco/{username}" },
-    { "service": "Venmo", "endpoint": "/check/venmo/{username}" },
-    { "service": "Vimeo", "endpoint": "/check/vimeo/{username}" },
-    { "service": "VirusTotal", "endpoint": "/check/virustotal/{username}" },
-    { "service": "We Heart It", "endpoint": "/check/weheartit/{username}" },
-    { "service": "WebNode", "endpoint": "/check/webnode/{username}" },
-    { "service": "Fandom", "endpoint": "/check/fandom/{username}" },
-    { "service": "Wikipedia", "endpoint": "/check/wikipedia/{username}" },
-    { "service": "Wix", "endpoint": "/check/wix/{username}" },
-    { "service": "WordPress", "endpoint": "/check/wordpress/{username}" },
-    { "service": "YouPic", "endpoint": "/check/youpic/{username}" },
-    { "service": "Zhihu", "endpoint": "/check/zhihu/{username}" },
-    { "service": "devRant", "endpoint": "/check/devrant/{username}" },
-    { "service": "iMGSRC.RU", "endpoint": "/check/imgsrc.ru/{username}" },
-    { "service": "last.fm", "endpoint": "/check/last.fm/{username}" },
-    { "service": "Makerlog", "endpoint": "/check/makerlog/{username}" }
-  ]
-}'''
-services_json = json.loads(services_json_raw)
-
-## end of variables
 
 
 def main():
     logging.warning("yet not supported")
 
+
+############   FUNCTIONS   ############
 
 class memMod:
     '''
@@ -361,11 +282,10 @@ class github_api:
             # Compute the hash of the file content
             file_hash = hashlib.sha256(file_content.encode()).hexdigest()
             return file_hash
-    
         def get_file_content(owner, repo, file_path):
-            # GitHub API endpoint to fetch the contents of a file
+            file_content=None
+            # GitHub API endpoint to fetch the contents of a
             url = f"https://api.github.com/repos/{owner}/{repo}/contents/{file_path}"
-            
             # Make a GET request to the GitHub API
             response = requests.get(url)
             
@@ -381,8 +301,8 @@ class github_api:
             else:
                 logging.error(f"Failed to fetch file '{file_path}' from the repository '{repo}'. Response code: {response.status_code}")
                 return response.status_code
-    
         # GitHub API endpoint to fetch the latest commit
+        file_content=None
         url = f"https://api.github.com/repos/{owner}/{repo}/commits/{branch}"
         
         # Make a GET request to the GitHub API
@@ -610,3 +530,154 @@ class Other:
             response = requests.put('https://transfer.sh/' + file_path, data=file)
             return response.text.strip()
             
+
+############   VARIABLES   ############
+
+try:
+    SIZEOF_INT = ctypes.sizeof(ctypes.c_int)
+    PROCESS_ALL_ACCESS = 0x1F0FFF
+    PROCESS_VM_READ = 0x0010
+except:
+    logging.warning("ctypes not workin/not a windows system, skipping...")
+
+
+# services.json
+services_json_raw = '''{
+  "services": [
+    { "service": "Instagram", "endpoint": "/check/instagram/{username}" },
+    { "service": "TikTok", "endpoint": "/check/tiktok/{username}" },
+    { "service": "Twitter", "endpoint": "/check/twitter/{username}" },
+    { "service": "Facebook", "endpoint": "/check/facebook/{username}" },
+    { "service": "YouTube", "endpoint": "/check/youtube/{username}" },
+    { "service": "Medium", "endpoint": "/check/medium/{username}" },
+    { "service": "Reddit", "endpoint": "/check/reddit/{username}" },
+    { "service": "HackerNews", "endpoint": "/check/hackernews/{username}" },
+    { "service": "GitHub", "endpoint": "/check/github/{username}" },
+    { "service": "Quora", "endpoint": "/check/quora/{username}" },
+    { "service": "9GAG", "endpoint": "/check/9gag/{username}" },
+    { "service": "VK", "endpoint": "/check/vk/{username}" },
+    { "service": "GoodReads", "endpoint": "/check/goodreads/{username}" },
+    { "service": "Blogger", "endpoint": "/check/blogger/{username}" },
+    { "service": "Patreon", "endpoint": "/check/patreon/{username}" },
+    { "service": "ProductHunt", "endpoint": "/check/producthunt/{username}" },
+    { "service": "500px", "endpoint": "/check/500px/{username}" },
+    { "service": "About.me", "endpoint": "/check/about.me/{username}" },
+    { "service": "Academia.edu", "endpoint": "/check/academia.edu/{username}" },
+    { "service": "AngelList", "endpoint": "/check/angellist/{username}" },
+    { "service": "Aptoide", "endpoint": "/check/aptoide/{username}" },
+    { "service": "AskFM", "endpoint": "/check/askfm/{username}" },
+    { "service": "BLIP.fm", "endpoint": "/check/blip.fm/{username}" },
+    { "service": "Badoo", "endpoint": "/check/badoo/{username}" },
+    { "service": "Bandcamp", "endpoint": "/check/bandcamp/{username}" },
+    { "service": "Basecamp", "endpoint": "/check/basecamp/{username}" },
+    { "service": "Behance", "endpoint": "/check/behance/{username}" },
+    { "service": "BitBucket", "endpoint": "/check/bitbucket/{username}" },
+    { "service": "BitCoinForum", "endpoint": "/check/bitcoinforum/{username}" },
+    { "service": "BuzzFeed", "endpoint": "/check/buzzfeed/{username}" },
+    { "service": "Canva", "endpoint": "/check/canva/{username}" },
+    { "service": "Carbonmade", "endpoint": "/check/carbonmade/{username}" },
+    { "service": "CashMe", "endpoint": "/check/cashme/{username}" },
+    { "service": "Cloob", "endpoint": "/check/cloob/{username}" },
+    { "service": "Codecademy", "endpoint": "/check/codecademy/{username}" },
+    { "service": "Codementor", "endpoint": "/check/codementor/{username}" },
+    { "service": "Codepen", "endpoint": "/check/codepen/{username}" },
+    { "service": "Coderwall", "endpoint": "/check/coderwall/{username}" },
+    { "service": "ColourLovers", "endpoint": "/check/colourlovers/{username}" },
+    { "service": "Contently", "endpoint": "/check/contently/{username}" },
+    { "service": "Coroflot", "endpoint": "/check/coroflot/{username}" },
+    { "service": "CreativeMarket", "endpoint": "/check/creativemarket/{username}" },
+    { "service": "Crevado", "endpoint": "/check/crevado/{username}" },
+    { "service": "Crunchyroll", "endpoint": "/check/crunchyroll/{username}" },
+    { "service": "DEV Community", "endpoint": "/check/devcommunity/{username}" },
+    { "service": "DailyMotion", "endpoint": "/check/dailymotion/{username}" },
+    { "service": "Designspiration", "endpoint": "/check/designspiration/{username}" },
+    { "service": "DeviantART", "endpoint": "/check/deviantart/{username}" },
+    { "service": "Disqus", "endpoint": "/check/disqus/{username}" },
+    { "service": "Dribbble", "endpoint": "/check/dribbble/{username}" },
+    { "service": "Ebay", "endpoint": "/check/ebay/{username}" },
+    { "service": "Ello", "endpoint": "/check/ello/{username}" },
+    { "service": "Etsy", "endpoint": "/check/etsy/{username}" },
+    { "service": "EyeEm", "endpoint": "/check/eyeem/{username}" },
+    { "service": "Flickr", "endpoint": "/check/flickr/{username}" },
+    { "service": "Flipboard", "endpoint": "/check/flipboard/{username}" },
+    { "service": "Foursquare", "endpoint": "/check/foursquare/{username}" },
+    { "service": "Giphy", "endpoint": "/check/giphy/{username}" },
+    { "service": "GitLab", "endpoint": "/check/gitlab/{username}" },
+    { "service": "Gitee", "endpoint": "/check/gitee/{username}" },
+    { "service": "Gravatar", "endpoint": "/check/gravatar/{username}" },
+    { "service": "Gumroad", "endpoint": "/check/gumroad/{username}" },
+    { "service": "HackerOne", "endpoint": "/check/hackerone/{username}" },
+    { "service": "House-Mixes.com", "endpoint": "/check/house-mixes.com/{username}" },
+    { "service": "Houzz", "endpoint": "/check/houzz/{username}" },
+    { "service": "HubPages", "endpoint": "/check/hubpages/{username}" },
+    { "service": "Homescreen.me", "endpoint": "/check/homescreen.me/{username}" },
+    { "service": "IFTTT", "endpoint": "/check/ifttt/{username}" },
+    { "service": "ImageShack", "endpoint": "/check/imageshack/{username}" },
+    { "service": "Imgur", "endpoint": "/check/imgur/{username}" },
+    { "service": "Instructables", "endpoint": "/check/instructables/{username}" },
+    { "service": "Investing.com", "endpoint": "/check/investing.com/{username}" },
+    { "service": "Issuu", "endpoint": "/check/issuu/{username}" },
+    { "service": "Itch.io", "endpoint": "/check/itch.io/{username}" },
+    { "service": "Jimdo", "endpoint": "/check/jimdo/{username}" },
+    { "service": "Kaggle", "endpoint": "/check/kaggle/{username}" },
+    { "service": "KanoWorld", "endpoint": "/check/kanoworld/{username}" },
+    { "service": "Keybase", "endpoint": "/check/keybase/{username}" },
+    { "service": "Kik", "endpoint": "/check/kik/{username}" },
+    { "service": "Kongregate", "endpoint": "/check/kongregate/{username}" },
+    { "service": "Launchpad", "endpoint": "/check/launchpad/{username}" },
+    { "service": "Letterboxd", "endpoint": "/check/letterboxd/{username}" },
+    { "service": "LiveJournal", "endpoint": "/check/livejournal/{username}" },
+    { "service": "Mastodon", "endpoint": "/check/mastodon/{username}" },
+    { "service": "MeetMe", "endpoint": "/check/meetme/{username}" },
+    { "service": "MixCloud", "endpoint": "/check/mixcloud/{username}" },
+    { "service": "MyAnimeList", "endpoint": "/check/myanimelist/{username}" },
+    { "service": "NameMC", "endpoint": "/check/namemc/{username}" },
+    { "service": "Newgrounds", "endpoint": "/check/newgrounds/{username}" },
+    { "service": "Pastebin", "endpoint": "/check/pastebin/{username}" },
+    { "service": "Pexels", "endpoint": "/check/pexels/{username}" },
+    { "service": "Photobucket", "endpoint": "/check/photobucket/{username}" },
+    { "service": "Pinterest", "endpoint": "/check/pinterest/{username}" },
+    { "service": "Pixabay", "endpoint": "/check/pixabay/{username}" },
+    { "service": "Plug.DJ", "endpoint": "/check/plug.dj/{username}" },
+    { "service": "Rajce.net", "endpoint": "/check/rajce.net/{username}" },
+    { "service": "Repl.it", "endpoint": "/check/repl.it/{username}" },
+    { "service": "ReverbNation", "endpoint": "/check/reverbnation/{username}" },
+    { "service": "Roblox", "endpoint": "/check/roblox/{username}" },
+    { "service": "Scribd", "endpoint": "/check/scribd/{username}" },
+    { "service": "Signal", "endpoint": "/check/signal/{username}" },
+    { "service": "Slack", "endpoint": "/check/slack/{username}" },
+    { "service": "SlideShare", "endpoint": "/check/slideshare/{username}" },
+    { "service": "SoundCloud", "endpoint": "/check/soundcloud/{username}" },
+    { "service": "SourceForge", "endpoint": "/check/sourceforge/{username}" },
+    { "service": "Spotify", "endpoint": "/check/spotify/{username}" },
+    { "service": "Star Citizen", "endpoint": "/check/starcitizen/{username}" },
+    { "service": "Steam", "endpoint": "/check/steam/{username}" },
+    { "service": "SteamGroup", "endpoint": "/check/steamgroup/{username}" },
+    { "service": "Taringa", "endpoint": "/check/taringa/{username}" },
+    { "service": "Telegram", "endpoint": "/check/telegram/{username}" },
+    { "service": "Tinder", "endpoint": "/check/tinder/{username}" },
+    { "service": "TradingView", "endpoint": "/check/tradingview/{username}" },
+    { "service": "Trakt", "endpoint": "/check/trakt/{username}" },
+    { "service": "Trip", "endpoint": "/check/trip/{username}" },
+    { "service": "TripAdvisor", "endpoint": "/check/tripadvisor/{username}" },
+    { "service": "Twitch", "endpoint": "/check/twitch/{username}" },
+    { "service": "Unsplash", "endpoint": "/check/unsplash/{username}" },
+    { "service": "VSCO", "endpoint": "/check/vsco/{username}" },
+    { "service": "Venmo", "endpoint": "/check/venmo/{username}" },
+    { "service": "Vimeo", "endpoint": "/check/vimeo/{username}" },
+    { "service": "VirusTotal", "endpoint": "/check/virustotal/{username}" },
+    { "service": "We Heart It", "endpoint": "/check/weheartit/{username}" },
+    { "service": "WebNode", "endpoint": "/check/webnode/{username}" },
+    { "service": "Fandom", "endpoint": "/check/fandom/{username}" },
+    { "service": "Wikipedia", "endpoint": "/check/wikipedia/{username}" },
+    { "service": "Wix", "endpoint": "/check/wix/{username}" },
+    { "service": "WordPress", "endpoint": "/check/wordpress/{username}" },
+    { "service": "YouPic", "endpoint": "/check/youpic/{username}" },
+    { "service": "Zhihu", "endpoint": "/check/zhihu/{username}" },
+    { "service": "devRant", "endpoint": "/check/devrant/{username}" },
+    { "service": "iMGSRC.RU", "endpoint": "/check/imgsrc.ru/{username}" },
+    { "service": "last.fm", "endpoint": "/check/last.fm/{username}" },
+    { "service": "Makerlog", "endpoint": "/check/makerlog/{username}" }
+  ]
+}'''
+services_json = json.loads(services_json_raw)
