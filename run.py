@@ -15,7 +15,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 def update_and_run():
     try:
         try:
-            update_succes = ctkit.github_api.pull_repo(".")
+            update_success = ctkit.github_api.pull_repo(".")
         except Exception as e:
             logger.warning(f"git pull failed, pulling with http api: {e}")
             update_success = ctkit.github_api.update_repo_files_http("xxcosita3czxx", "lorelei-bot", "main",["run.py","main.py"])
