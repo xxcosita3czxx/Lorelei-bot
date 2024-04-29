@@ -215,7 +215,6 @@ async def slowmode(interaction: discord.Interaction, time: app_commands.Transfor
         await interaction.channel.send(embed=discord.Embed(description=f"Slow mode has been set to {format_timespan(time)} to {interaction.channel.mention}", color=discord.Color.green()))
 
 @tree.command(name="clear", description="Clear n messages specific user")
-@app_commands.describe("clear messages")
 @app_commands.default_permissions(manage_messages=True)
 async def self(interaction: discord.Interaction, amount: int, member: discord.Member):
     channel = interaction.channel
