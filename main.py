@@ -84,7 +84,14 @@ class ticket_launcher(discord.ui.View):
         super().__init__(timeout = None)
         self.cooldown = commands.CooldownMapping.from_cooldown(1, 60, commands.BucketType.member)
     
-    @discord.ui.button(label = "Create a Ticket", style = discord.ButtonStyle.blurple, custom_id = "ticket_button")
+    class text_input(ui.Modal, title='Text'):
+        
+        button_text = ui.TextInput(label='Button Text')
+
+        async def on_submit(self, interaction: discord.Interaction):
+            await interaction.response.send_message(f'Thanks for your response, {self.name}!', ephemeral=True)
+    text_input()
+    @discord.ui.button(label = button_text, style = discord.ButtonStyle.blurple, custom_id = "ticket_button")
     async def ticket(self, interaction: discord.Interaction, button: discord.ui.Button):
 
         interaction.message.author = interaction.user
@@ -174,12 +181,18 @@ async def help(interaction: discord.Interaction):
     await interaction.response.send_message(help_list)
 
 
-@tree.command(name = 'ticket', description='Launches the ticketing system') #guild specific slash command
+@tree.command(name = 'ticket', description='Launches the ticketing system')
 @app_commands.default_permissions(manage_guild = True)
 @app_commands.checks.cooldown(3, 60, key = lambda i: (i.guild_id))
 @app_commands.checks.bot_has_permissions(manage_channels = True)
 async def ticketing(interaction: discord.Interaction):
-    embed = discord.Embed(title = "If you need support, click the button below and create a ticket!", color = discord.Colour.blue())
+    class text_input(ui.Modal, title='Text'):
+        
+        ticket_tittle = ui.TextInput(label='Text')
+
+        async def on_submit(self, interaction: discord.Interaction):
+            await interaction.response.send_message(f'Thanks for your response, {self.name}!', ephemeral=True)
+    embed = discord.Embed(title = ticket_tittle, color = discord.Colour.blue())
     await interaction.channel.send(embed = embed, view = ticket_launcher())
     await interaction.response.send_message("Ticketing system launched!", ephemeral = True)
 
@@ -279,7 +292,7 @@ async def self(interaction: discord.Interaction, amount: int, member: discord.Me
     
     await channel.purge(limit=amount, check=check_author)
     await interaction.channel.send(embed=discord.Embed(description=f"Successfully deleted {amount} messages from {member.name}", color=discord.Color.green()))
-    
+
 with open(".secret.key", "r") as key:
     token = key.read()
 
