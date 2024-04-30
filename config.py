@@ -30,3 +30,13 @@ status = discord.Status.dnd
 # True is default
 autoupdate = True
 ###################################
+########## Update Time ############
+#
+# EVERYTHING IN SECCONDS
+#
+# Time for CosTK update (default 3600):
+costk_update = 3600
+#
+# Time for Bot update (default 6000)
+bot_update = 6000
+###################################
