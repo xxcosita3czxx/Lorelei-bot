@@ -336,9 +336,11 @@ async def self(interaction: discord.Interaction, amount: int, member: discord.Me
 
     def check_author(m):
         return None or m.author.id == member.id
+
     if member == None:
         await channel.purge(limit=amount)
         await interaction.channel.send(embed=discord.Embed(description=f"Successfully deleted {amount} messages from {member.name}", color=discord.Color.green()))
+   
     else:
         await channel.purge(limit=amount, check=check_author)
         await interaction.channel.send(embed=discord.Embed(description=f"Successfully deleted {amount} messages from {member.name}", color=discord.Color.green()))
