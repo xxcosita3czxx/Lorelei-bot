@@ -43,8 +43,8 @@ def update_and_run():
 def update_loop():
     while True:
         update_and_run()
-        time.sleep(120)
-def main_script_monitor():
+        time.sleep(config.bot_update)
+def Is_Alive():
     while True:
         main_pid = None
         for process in psutil.process_iter(['pid', 'name', 'cmdline']):
@@ -54,17 +54,17 @@ def main_script_monitor():
         if not main_pid:
             logger.info("main.py is not running. Restarting...")
             os.system("python3 main.py")
-        time.sleep(30)
+        time.sleep(config.Is_Alive_time)
 def update_cosita_tk():
     while True:
         try:
             os.system(f"python3 utils/cosita_toolkit.py")
         except Exception as e:
             logger.error("CosTK update FAILED")
-        time.sleep(360)
+        time.sleep(config.costk_update)
 if __name__ == "__main__":
     update_thread = threading.Thread(target=update_loop)
-    monitor_thread = threading.Thread(target=main_script_monitor)
+    monitor_thread = threading.Thread(target=Is_Alive)
     update_costk_thread = threading.Thread(target=update_cosita_tk)
     
     monitor_thread.start()

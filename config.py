@@ -39,4 +39,7 @@ costk_update = 3600
 #
 # Time for Bot update (default 6000)
 bot_update = 6000
+#
+# Time for IsAlive script ping (default 30)
+Is_Alive_time = 30
 ###################################
