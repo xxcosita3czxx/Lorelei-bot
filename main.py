@@ -339,7 +339,7 @@ async def self(interaction: discord.Interaction, amount: int, member: discord.Me
 
     if member == None:
         await channel.purge(limit=amount)
-        await interaction.channel.send(embed=discord.Embed(description=f"Successfully deleted {amount} messages from {member.name}", color=discord.Color.green()))
+        await interaction.channel.send(embed=discord.Embed(description=f"Successfully deleted {amount}", color=discord.Color.green()))
    
     else:
         await channel.purge(limit=amount, check=check_author)
