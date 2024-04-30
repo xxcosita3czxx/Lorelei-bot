@@ -50,21 +50,29 @@ class TimeConverter(app_commands.Transformer):
 
         return round(time)
 
+
+
 class aclient(discord.Client):
+
+    '''
+    Main Client proccess
+
+    This connects the bot to discord
+    '''
 
     def __init__(self):
         intents = discord.Intents.default()
         intents.message_content = True
         super().__init__(intents = intents)
-        self.synced = False #we use this so the bot doesn't sync commands more than once
+        self.synced = False
         self.added = False
 
     async def on_ready(self):
 
         await self.wait_until_ready()
 
-        if not self.synced: #check if slash commands have been synced 
-            await tree.sync() #guild specific: leave blank if global (global registration can take 1-24 hours)
+        if not self.synced:
+            await tree.sync()
             self.synced = True
 
         if not self.added:
@@ -78,7 +86,13 @@ class aclient(discord.Client):
 bot = aclient()
 tree = app_commands.CommandTree(bot)
 
+
+
 class ticket_launcher(discord.ui.View):
+    
+    '''
+    This will create the ticket
+    '''
 
     def __init__(self) -> None:
         super().__init__(timeout = None)
@@ -114,6 +128,10 @@ class ticket_launcher(discord.ui.View):
 
 class confirm(discord.ui.View):
 
+    '''
+    Ticket confirm embed
+    '''
+
     def __init__(self) -> None:
         super().__init__(timeout = None)
         
@@ -127,6 +145,11 @@ class confirm(discord.ui.View):
             await interaction.response.send_message("Channel deletion failed! Make sure I have `manage_channels` permissions!", ephemeral = True)
 
 class main(discord.ui.View):
+
+    '''
+    In-Ticket embed
+    '''
+
     def __init__(self) -> None:
         super().__init__(timeout = None)
     
@@ -166,11 +189,23 @@ class main(discord.ui.View):
 
 @tree.command(name="ping", description="Lets play ping pong")
 async def ping(interaction: discord.Interaction):
+
+    '''
+    Pings the user
+    '''
+
     await interaction.response.send_message('Pong! {0}'.format(round(bot.latency, 1)))
     
     
 @tree.command(name="help", description="All the commands at one place")
 async def help(interaction: discord.Interaction):
+
+    '''
+    Help command
+
+    Will let user know what all can he do
+    '''
+
     await interaction.response.send_message(help_list)
 
 
@@ -179,6 +214,12 @@ async def help(interaction: discord.Interaction):
 @app_commands.checks.cooldown(3, 60, key = lambda i: (i.guild_id))
 @app_commands.checks.bot_has_permissions(manage_channels = True)
 async def ticketing(interaction: discord.Interaction):
+
+    '''
+    Ticket command
+
+    This will actually launch the ticket system
+    '''
 
     embed = discord.Embed(title = "Please create a ticket, if you need to help with something.", color = discord.Colour.blue())
     await interaction.channel.send(embed = embed, view = ticket_launcher())
@@ -190,6 +231,12 @@ async def ticketing(interaction: discord.Interaction):
 @app_commands.describe(member="User to kick", reason="Reason for kick")
 @app_commands.default_permissions(kick_members=True, ban_members=True)
 async def kick(interaction: discord.Interaction, member: discord.Member, reason: str):
+
+    '''
+    Kick command
+
+    Kicks user from guild and let him know why
+    '''
 
     if member == interaction.user or member == interaction.guild.owner:
         return await interaction.response.send_message("You can't kick this user", ephemeral=True)
@@ -216,7 +263,13 @@ async def kick(interaction: discord.Interaction, member: discord.Member, reason:
 @app_commands.describe(reason="Reason for ban", time="Duration of ban", member="User to ban")
 @app_commands.default_permissions(ban_members=True)
 async def ban(interaction: discord.Interaction, member: discord.Member, reason: str , time: app_commands.Transform[str, TimeConverter]=None):
-  
+    
+    '''
+    Ban command
+
+    Bans user and let him know why
+    '''
+   
     if member == interaction.user or member == interaction.guild.owner:
         return await interaction.response.send_message("You can't ban this user", ephemeral=True)
    
@@ -241,6 +294,12 @@ async def ban(interaction: discord.Interaction, member: discord.Member, reason: 
 @app_commands.default_permissions(ban_members=True)
 async def unban(interaction: discord.Interaction, member: discord.User, reason: str):
     
+    '''
+    Unban Command
+
+    This will unban person
+    '''    
+   
     try:
         await interaction.guild.unban(member, reason=reason)
     
