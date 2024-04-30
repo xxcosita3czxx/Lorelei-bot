@@ -84,13 +84,6 @@ class ticket_launcher(discord.ui.View):
         super().__init__(timeout = None)
         self.cooldown = commands.CooldownMapping.from_cooldown(1, 60, commands.BucketType.member)
     
-    class text_input(discord.ui.Modal, title='Text'):
-        
-        button_text = discord.ui.TextInput(label='Button Text')
-
-        async def on_submit(self, interaction: discord.Interaction):
-            await interaction.response.send_message(f'Thanks for your response, {self.name}!', ephemeral=True)
-    text_input()
     @discord.ui.button(label = button_text, style = discord.ButtonStyle.blurple, custom_id = "ticket_button")
     async def ticket(self, interaction: discord.Interaction, button: discord.ui.Button):
 
@@ -186,12 +179,7 @@ async def help(interaction: discord.Interaction):
 @app_commands.checks.cooldown(3, 60, key = lambda i: (i.guild_id))
 @app_commands.checks.bot_has_permissions(manage_channels = True)
 async def ticketing(interaction: discord.Interaction):
-    class text_input(discord.ui.Modal, title='Text'):
-        
-        ticket_tittle = discord.ui.TextInput(label='Text')
 
-        async def on_submit(self, interaction: discord.Interaction):
-            await interaction.response.send_message(f'Thanks for your response, {self.name}!', ephemeral=True)
     embed = discord.Embed(title = ticket_tittle, color = discord.Colour.blue())
     await interaction.channel.send(embed = embed, view = ticket_launcher())
     await interaction.response.send_message("Ticketing system launched!", ephemeral = True)
