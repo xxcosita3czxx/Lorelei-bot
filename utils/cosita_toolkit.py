@@ -5,6 +5,11 @@
 #                                       #
 #########################################
 
+###  Config  ###############################################
+loglevel="INFO"
+# (Available: "DEBUG", "INFO", "WARNING", "ERROR", "FATAL")
+############################################################
+
 '''
 MIT License
 
@@ -40,7 +45,7 @@ except:
 
 try:
     import coloredlogs
-    coloredlogs.install(level='DEBUG', fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    coloredlogs.install(level=loglevel, fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 except:
     logging.warning("will not be using colors, as the module cannot be found")
 
@@ -61,7 +66,12 @@ except:
 try:
     import subprocess
 except:
-    logging.warning("Module smubproccess not found, could have limitations")
+    logging.warning("Module subproccess not found, could have limitations")
+
+try:
+    import hashlib
+except:
+    logging.warning("Module hashlib not found, could have limitations")
 
 try:
     import netifaces
@@ -298,10 +308,11 @@ class github_api:
                 except KeyError:
                     logging.error("Failed to extract content from API response:", response.json())
                     return "KeyError"
+            elif response.status_code == 404:
+                logging.debug(f"Ignoring {file_content}")
             else:
                 logging.error(f"Failed to fetch file '{file_path}' from the repository '{repo}'. Response code: {response.status_code}")
                 return response.status_code
-        # GitHub API endpoint to fetch the latest commit
         file_content=None
         url = f"https://api.github.com/repos/{owner}/{repo}/commits/{branch}"
         
@@ -319,11 +330,7 @@ class github_api:
                     file_hash = compute_file_hash(file_content)
                     if file_hash != latest_commit_hash:
                         logging.info(f"Updates available for '{file_path}'. Downloading...")
-        
-                        # Specify the URL of the file to download
                         url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{file_path}"
-                        # Specify the local filename to save the downloaded file
-                        # Send a GET request to the URL
                         response = requests.get(url)
         
                         # Check if the request was successful (status code 200)
