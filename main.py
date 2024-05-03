@@ -342,7 +342,7 @@ async def self(interaction: discord.Interaction, amount: int, member: discord.Me
         await channel.purge(limit=amount, check=check_author)
         await interaction.response.send_message(embed=discord.Embed(description=f"Successfully deleted {amount} messages from {member.name}", color=discord.Color.green()))
     else:
-        await interaction.response.send_message("BAD SYNTAX", ephemeral=True)
+        await interaction.response.send_message("INTERACTION FAILED", ephemeral=True)
 with open(".secret.key", "r") as key:
     token = key.read()
 
