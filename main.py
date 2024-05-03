@@ -334,17 +334,15 @@ async def self(interaction: discord.Interaction, amount: int, member: discord.Me
     
     channel = interaction.channel
 
-    def check_author(m):
-        return None or m.author.id == member.id
-
     if member == None:
         await channel.purge(limit=amount)
-        await interaction.channel.send(embed=discord.Embed(description=f"Successfully deleted {amount}", color=discord.Color.green()))
+        await interaction.response.send_message(embed=discord.Embed(description=f"Successfully deleted {amount} messages.", color=discord.Color.green()))
    
-    else:
+    elif member is not None:
         await channel.purge(limit=amount, check=check_author)
-        await interaction.channel.send(embed=discord.Embed(description=f"Successfully deleted {amount} messages from {member.name}", color=discord.Color.green()))
-
+        await interaction.response.send_message(embed=discord.Embed(description=f"Successfully deleted {amount} messages from {member.name}", color=discord.Color.green()))
+    else:
+        await interaction.response.send_message("BAD SYNTAX", ephemeral=True)
 with open(".secret.key", "r") as key:
     token = key.read()
 
