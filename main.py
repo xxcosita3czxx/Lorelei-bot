@@ -120,15 +120,14 @@ tree.remove_command("help")
 help = app_commands.Group(
     name="help",
     description="I forgor command",
-    parent=help,
+    invoke_without_command=True,
 )
 
 help_command = app_commands.Group(
     name="command",
     description="Command finder",
 )
-
-@tree.command(name="help", description="All the commands at one place")
+@help.command(name="help", description="All the commands at one place")
 async def help_menu(interaction: discord.Interaction):
     '''Help command
     Will let user know what all can he do
