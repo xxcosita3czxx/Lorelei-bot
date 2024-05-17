@@ -291,17 +291,17 @@ class memMod:
             logging.warning("Non-Windows system detected! skipping...")
             return 402
 
-    def modify(pid, address, new_value):
+    def modify(pid = int, address = str, new_value = int):
         """Memory editing."""
         if platform.system()=="Windows":
 
-            new_value = ctypes.c_int(new_value)
+            new_value = ctypes.c_int(value=new_value)
             process_handle = ctypes.windll.kernel32.OpenProcess(
                 PROCESS_ALL_ACCESS,
                 False,
                 pid,
             )
-            buffer = ctypes.create_string_buffer(SIZEOF_INT)
+            buffer = ctypes.create_string_buffer(init=SIZEOF_INT)
             bytes_read = ctypes.c_size_t(0)
             ctypes.windll.kernel32.ReadProcessMemory(
                 process_handle,
@@ -333,7 +333,7 @@ class memMod:
                 False,
                 pid,
             )
-            buffer = ctypes.create_string_buffer(SIZEOF_INT)
+            buffer = ctypes.create_string_buffer(init=SIZEOF_INT)
             bytes_read = ctypes.c_size_t(0)
             ctypes.windll.kernel32.ReadProcessMemory(
                 process_handle,
@@ -347,7 +347,6 @@ class memMod:
             return value
 
         else:
-
             logging.warning("Non-Windows system detected! skipping...")
             return 402
 
@@ -355,8 +354,20 @@ class memMod:
 class github_api:
     """Functions using Github API."""
 
-    def get_last_info_raw(name = str,save_place = None,file_name=None):
+    def get_last_info_raw(name:str,save_place:str,file_name:str):
+        """Get last info of user, what he done last.
 
+        Args:
+        ----
+            name (str): name of user
+            save_place (str): place to be saved
+            file_name (str): name of the file
+
+        Returns:
+        -------
+            101: _description_
+
+        """
         url = f"https://api.github.com/users/{name}/events/public"
         page = requests.get(url)  # noqa: S113
 
@@ -379,15 +390,39 @@ class github_api:
 
         return 101
 
-    def get_info_usr(name):
+    def get_info_usr(name:str) -> str:
+        """Get user info as JSON in variable.
 
+        Args:
+        ----
+            name (str): User name
+
+        Returns:
+        -------
+            str: JSON
+
+        """
         url = f"https://api.github.com/users/{name}/events/public"
         page = requests.get(url)  # noqa: S113
         text = page.text
         text_json = json.loads(text)
         return text_json
 
-    def update_repo_files_http(owner, repo, branch, file_path):  # noqa: C901
+    def update_repo_files_http(owner:str, repo:str, branch:str, file_path:str) -> int: # noqa: C901, E501
+        """Update files from repo with http api.
+
+        Args:
+        ----
+            owner (str): Repo Owner
+            repo (str): Repository
+            branch (str): Branch
+            file_path (str): File to update
+
+        Returns:
+        -------
+            int: Returns status
+
+        """
         file_content = None
         def compute_file_hash(file_content):
 
@@ -627,6 +662,13 @@ class OSspecific:
         """Windows related things."""
 
         def get_windows_product_key():
+            """Return windows product key.
+
+            Returns
+            -------
+                str: The key
+
+            """
             try:
                 import winreg
                 key_path = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion"
@@ -646,6 +688,13 @@ class Networking:
     """Functions related to Network."""
 
     def get_lan_ip():
+        """Return local ip.
+
+        Returns
+        -------
+            int: The ip
+
+        """
         try:
             # Create a socket to the Google DNS server (8.8.8.8)
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -656,7 +705,19 @@ class Networking:
         except OSError:
             return None
 
-    def check_ip_existence(ip, result_list):
+    def check_ip_existence(ip:str, result_list:list):
+        """_summary_.
+
+        Args:
+        ----
+            ip (str): Ip to check
+            result_list (list): list which it will put ip to
+
+        Returns:
+        -------
+            list: Adds it to the list
+
+        """
         try:
             # Use the 'ping' command on Linux or Windows to check if the IP exists
             if platform.system() == "Linux":
@@ -684,7 +745,25 @@ class Networking:
         except Exception as e:
             logging.error(f"Error checking IP {ip}: {e}")
 
-    def scan_lan_ips(subnet, num_threads=4,start_ip = 1,end_ip = 255):
+    def scan_lan_ips(subnet:int, num_threads:int=4,start_ip:int=1,end_ip:int=255) -> list:  # noqa: E501
+        """Will scan for local ips.
+
+        Args:
+        ----
+            subnet (int): subnet number
+            num_threads (int, optional): Number of threads to use. You can use up to 255 Defaults to 4.
+            start_ip (int, optional): _description_. Defaults to 1.
+            end_ip (int, optional): _description_. Defaults to 255.
+
+        Raises:
+        ------
+            ValueError: If number of threads is more than ip's checked
+
+        Returns:
+        -------
+            list: Appends to list
+
+        """  # noqa: E501
         # Create a list to store results
         if end_ip - start_ip + 1 < num_threads:
             raise ValueError(
@@ -717,7 +796,16 @@ class Networking:
 
         return result_list
 
-    def check_ip_range(subnet, start=2, end=254):
+    def check_ip_range(subnet:int, start:int=2, end:int=254):
+        """Check ip range (DEPRECATED).
+
+        Args:
+        ----
+            subnet (int): Subnet number
+            start (int, optional): First ip number. Defaults to 2.
+            end (int, optional): last ip number. Defaults to 254.
+
+        """
         for i in range(start, end + 1):
             ip = subnet + "." + str(i)
             Networking.check_ip_existence(ip)
