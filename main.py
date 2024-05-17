@@ -54,6 +54,8 @@ async def change_status() -> None:
 
 #########################################################################################
 
+
+
 class TimeConverter(app_commands.Transformer):
 
     async def transform(self, interaction: discord.Interaction, argument: str) -> int:  # noqa: E501, ANN101
@@ -113,8 +115,41 @@ class aclient(discord.Client):
 bot = aclient()
 tree = app_commands.CommandTree(bot)
 
+############################### HELP COMMAND #######################################
+help = app_commands.Group(
+    name="help",
+    description="I forgor command",
+)
 
+help_command = app_commands.Group(
+    name="command",
+    description="Command finder",
+)
 
+@tree.command(name="help", description="All the commands at one place")
+async def help_menu(interaction: discord.Interaction):
+    '''Help command
+    Will let user know what all can he do
+    '''
+    embed = discord.Embed(
+        title="HELP",
+        description=help_list,
+        color=discord.colour.Color.blurple(),
+    )
+
+    await interaction.response.send_message(
+        embed=embed,
+    )
+
+@help_command.command(name="help")
+async def help_command_help(interaction: discord.Interaction):
+    interaction.response.send_message(
+        content="Gives you help message (STILL IN PROGRESS)",
+    )
+
+help.add_command(help_command)
+tree.add_command(help)
+#####################################################################################
 class ticket_launcher(discord.ui.View):
 
     '''
@@ -309,19 +344,6 @@ async def ping(interaction: discord.Interaction):
     await interaction.response.send_message(
         f'Pong! {round(bot.latency, 1)}',
     )
-
-
-@tree.command(name="help", description="All the commands at one place")
-async def help(interaction: discord.Interaction):
-
-    '''
-    Help command
-
-    Will let user know what all can he do
-    '''
-
-    await interaction.response.send_message(help_list)
-
 
 @tree.command(name = 'ticket', description='Launches the ticketing system')
 @app_commands.default_permissions(manage_guild = True)
