@@ -1,4 +1,5 @@
-import discord, os
+import discord
+import os
 from datetime import datetime
 from discord import app_commands, utils
 from discord.ext import commands
@@ -8,6 +9,7 @@ import asyncio
 import config
 import re
 from humanfriendly import format_timespan
+
 coloredlogs.install(level=config.loglevel, fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger(__name__)
 time_regex = re.compile("(?:(\d{1,5})(h|s|m|d))+?")
@@ -164,7 +166,7 @@ class main(discord.ui.View):
 
         await interaction.response.defer()
         if os.path.exists(f"{interaction.channel.id}.md"):
-            return await interaction.followup.send(f"A transcript is already being generated!", ephemeral = True)
+            return await interaction.followup.send("A transcript is already being generated!", ephemeral = True)
         
         with open(f"{interaction.channel.id}.md", 'a') as f:
             f.write(f"# Transcript of {interaction.channel.name}:\n\n")
@@ -334,12 +336,12 @@ async def self(interaction: discord.Interaction, amount: int, member: discord.Me
     
     channel = interaction.channel
 
-    if member == None:
+    if member is None:
         await channel.purge(limit=amount)
         await interaction.response.send_message(embed=discord.Embed(description=f"Successfully deleted {amount} messages.", color=discord.Color.green()))
    
     elif member is not None:
-        await channel.purge(limit=amount, check=check_author)
+        await channel.purge(limit=amount)
         await interaction.response.send_message(embed=discord.Embed(description=f"Successfully deleted {amount} messages from {member.name}", color=discord.Color.green()))
     else:
         await interaction.response.send_message("INTERACTION FAILED", ephemeral=True)
