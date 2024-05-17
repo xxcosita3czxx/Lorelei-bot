@@ -462,7 +462,7 @@ configure_sec = app_commands.Group(
     description="Security configurations",
 )
 
-@configure_sec.command(name="Anti-invites",description="No invites in the halls")
+@configure_sec.command(name="anti-invites",description="No invites in the halls")
 async def anti_invites(interaction: discord.Interaction):
     await interaction.response.send_message(
         content="STILL IN PROGRESS",
