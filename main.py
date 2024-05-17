@@ -522,6 +522,47 @@ async def slowmode(interaction: discord.Interaction,time: app_commands.Transform
             )
         )
 
+intents = discord.Intents.default()
+intents.messages = True
+intents.message_content = True
+
+bot = commands.Bot(command_prefix='/', intents=intents)
+
+@bot.event
+async def on_ready():
+    print(f'Bot is ready as {bot.user}')
+
+@bot.command(name='giveaway')
+async def giveaway(ctx, time: int, winners: int, *, prize: str):
+    """
+    /giveaway <time_in_seconds> <number_of_winners> <prize>
+    Example: /giveaway 60 2 Free Nitro
+    """
+    embed = discord.Embed(title="🎉 Giveaway 🎉", description=f"Prize: {prize}", color=0x00ff00)
+    embed.add_field(name="Time", value=f"{time} seconds", inline=False)
+    embed.add_field(name="Winners", value=str(winners), inline=False)
+    embed.set_footer(text="React with 🎉 to enter!")
+    message = await ctx.send(embed=embed)
+    
+    await message.add_reaction("🎉")
+
+    await asyncio.sleep(time)
+    
+    new_message = await ctx.channel.fetch_message(message.id)
+    users = await new_message.reactions[0].users().flatten()
+    users.pop(users.index(bot.user))  # Remove the bot from the list
+
+    if len(users) < winners:
+        winners = len(users)
+
+    selected_winners = random.sample(users, winners)
+
+    winner_mentions = ", ".join([user.mention for user in selected_winners])
+    
+    result_embed = discord.Embed(title="🎉 Giveaway Ended 🎉", description=f"Prize: {prize}", color=0xff0000)
+    result_embed.add_field(name="Winners", value=winner_mentions if winners > 0 else "No winners", inline=False)
+    await ctx.send(embed=result_embed)
+
 @tree.command(name="clear", description="Clear n messages specific user")
 @app_commands.default_permissions(manage_messages=True)
 async def self(interaction: discord.Interaction, amount: int, member: discord.Member = None):  # noqa: E501
