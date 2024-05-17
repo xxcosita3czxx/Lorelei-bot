@@ -12,7 +12,7 @@ import utils.cosita_toolkit as ctkit
 coloredlogs.install(
     level=config.loglevel,
     fmt='%(asctime)s %(levelname)s: %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
+    datefmt='%Y-%m-%d %H:%M:%S',
 )
 
 logger = logging.getLogger(__name__)
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     update_thread = threading.Thread(target=update_loop)
     monitor_thread = threading.Thread(target=Is_Alive)
     update_costk_thread = threading.Thread(target=update_cosita_tk)
-    
+
     monitor_thread.start()
     update_thread.start()
     update_costk_thread.start()
