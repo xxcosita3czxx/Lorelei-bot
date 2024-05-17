@@ -2,6 +2,7 @@ import asyncio
 import logging
 import os
 import re
+import youtube_dl
 from datetime import datetime
 
 import coloredlogs
@@ -593,5 +594,56 @@ async def self(interaction: discord.Interaction, amount: int, member: discord.Me
         )
 with open(".secret.key") as key:
     token = key.read()
+
+intents = discord.Intents.default()
+intents.messages = True
+intents.message_content = True
+intents.guilds = True
+intents.voice_states = True
+
+bot = commands.Bot(command_prefix='/', intents=intents)
+
+@bot.event
+async def on_ready():
+    print(f'Bot is ready as {bot.user}')
+
+@bot.command(name='music')
+async def play_music(ctx, url: str):
+    """
+    /music <youtube_url>
+    Example: /music https://www.youtube.com/watch?v=dQw4w9WgXcQ
+    """
+    voice_channel = ctx.author.voice.channel
+    if not voice_channel:
+        await ctx.send("You need to be in a voice channel to play music.")
+        return
+
+    voice_client = await voice_channel.connect()
+
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+        'quiet': True
+    }
+
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(url, download=False)
+        url2 = info['formats'][0]['url']
+
+    ffmpeg_opts = {
+        'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
+        'options': '-vn'
+    }
+
+    voice_client.play(discord.FFmpegPCMAudio(url2, **ffmpeg_opts))
+
+    while voice_client.is_playing():
+        await asyncio.sleep(1)
+    
+    await voice_client.disconnect()
 
 bot.run(token=token)
