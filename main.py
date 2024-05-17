@@ -452,13 +452,12 @@ async def ban(interaction: discord.Interaction, member: discord.Member, reason: 
         ),
         ephemeral=False,
     )
-@tree.command(name="test")
-@app_commands.Group(name="configure")
-def test(interaction: discord.Interaction):
-    interaction.response.send_message(content="test",ephemeral=True)
 
-@tree.command(name="test2")
-@app_commands.Group(name="configure")
+@app_commands.Group(name="configure",description="Config for server")
+def configure():
+    pass
+@tree.command(name="test2",description="just test for subcommands")
+@tree.add_command(configure)
 def test2(interaction: discord.Interaction):
     interaction.response.send_message(content="test2",ephemeral=True)
 
