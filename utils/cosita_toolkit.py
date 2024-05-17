@@ -42,14 +42,14 @@ SOFTWARE.
 try:
     import logging
 except ImportError:
-    print ("FATAL: cannot import logging")
+    print ("FATAL: cannot import logging")  # noqa: T201
 
 try:
     import coloredlogs
     coloredlogs.install(
         level=loglevel,
         fmt='%(asctime)s %(levelname)s: %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S'
+        datefmt='%Y-%m-%d %H:%M:%S',
     )
 
 except ImportError:
@@ -152,9 +152,9 @@ def update_script_from_github(owner, repo, file_path, local_file_path):
         api_url = f"https://api.github.com/repos/{owner}/{repo}/contents/{file_path}"
         headers = {
             "Accept": "application/vnd.github.v3+json",
-            "User-Agent": "Cosita-Toolkit-Updater"
+            "User-Agent": "Cosita-Toolkit-Updater",
         }
-        response = requests.get(api_url, headers=headers)
+        response = requests.get(api_url, headers=headers)  # noqa: S113
         logging.debug(response.status_code)
 
         if response.status_code == 200:  # noqa: PLR2004
@@ -181,7 +181,7 @@ def update_script_from_github(owner, repo, file_path, local_file_path):
                 else:
 
                     logging.info(
-                        "No update required. Local script is up to date."
+                        "No update required. Local script is up to date.",
                     )
 
                     if __name__=="__main__":
@@ -202,7 +202,7 @@ def update_script_from_github(owner, repo, file_path, local_file_path):
                 return 102
         else:
 
-            print("Failed to fetch the script from GitHub.")
+            logging.warn("Failed to fetch the script from GitHub.")
 
             if __name__=="__main__":
                 os.chdir(orig_dir)
@@ -219,7 +219,7 @@ if __name__ == "__main__":
         owner = "xxcosita3czxx",
         file_path = "cosita_toolkit.py",
         local_file_path = "./cosita_toolkit.py",
-        repo = "Cosita-ToolKit"
+        repo = "Cosita-ToolKit",
     )
 
 
@@ -264,26 +264,26 @@ class memMod:
                             pid = proc.pid
                             #parent_pid = proc.ppid()
                             #parent_name = psutil.Process(parent_pid).name()
-                            exe_name = psutil.Process(proc.pid).exe() if not exe_name else exe_name  # noqa: E501
+                            exe_name = exe_name if exe_name else psutil.Process(proc.pid).exe()  # noqa: E501
 
                             if proc.name() == exe_name:
                                 logging.debug(
-                                    f"Found process with window title containing {target_string} and PID {pid} and name: {exe_name}"  # noqa: E501
+                                    f"Found process with window title containing {target_string} and PID {pid} and name: {exe_name}",  # noqa: E501
                                 )
                                 return pid
 
                         except psutil.AccessDenied:
                             pass
-                        
+
                         except psutil.NoSuchProcess:
                             pass
 
-                except Exception:
+                except Exception:  # noqa: S110
                     pass
 
             else:
                 logging.warning(
-                    f"No process found with window title containing {target_string}"
+                    f"No process found with window title containing {target_string}",  # noqa: E501
                 )
                 return 404
 
@@ -299,7 +299,7 @@ class memMod:
             process_handle = ctypes.windll.kernel32.OpenProcess(
                 PROCESS_ALL_ACCESS,
                 False,
-                pid
+                pid,
             )
             buffer = ctypes.create_string_buffer(SIZEOF_INT)
             bytes_read = ctypes.c_size_t(0)
@@ -308,7 +308,7 @@ class memMod:
                 address,
                 buffer,
                 SIZEOF_INT,
-                ctypes.byref(bytes_read)
+                ctypes.byref(bytes_read),
             )
             #value = ctypes.c_int.from_buffer(buffer)
             ctypes.windll.kernel32.WriteProcessMemory(
@@ -316,7 +316,7 @@ class memMod:
                 address,
                 ctypes.byref(new_value),
                 SIZEOF_INT,
-                None
+                None,
             )
             ctypes.windll.kernel32.CloseHandle(process_handle)
             return 1
@@ -331,7 +331,7 @@ class memMod:
             process_handle = ctypes.windll.kernel32.OpenProcess(
                 PROCESS_VM_READ,
                 False,
-                pid
+                pid,
             )
             buffer = ctypes.create_string_buffer(SIZEOF_INT)
             bytes_read = ctypes.c_size_t(0)
@@ -340,7 +340,7 @@ class memMod:
                 address,
                 buffer,
                 SIZEOF_INT,
-                ctypes.byref(bytes_read)
+                ctypes.byref(bytes_read),
             )
             value = ctypes.c_int.from_buffer(buffer).value
             ctypes.windll.kernel32.CloseHandle(process_handle)
@@ -356,14 +356,14 @@ class github_api:
     """Functions using Github API."""
 
     def get_last_info_raw(name = str,save_place = None,file_name=None):
-        
+
         url = f"https://api.github.com/users/{name}/events/public"
-        page = requests.get(url)
+        page = requests.get(url)  # noqa: S113
 
         if file_name is None:
             file_name = strftime(
                 f"{name}%Y-%m-%d-%H-%M-%S-last-info-raw.json",
-                gmtime()
+                gmtime(),
             )
 
         if save_place is not None and not save_place.endswith("/"):
@@ -382,7 +382,7 @@ class github_api:
     def get_info_usr(name):
 
         url = f"https://api.github.com/users/{name}/events/public"
-        page = requests.get(url)
+        page = requests.get(url)  # noqa: S113
         text = page.text
         text_json = json.loads(text)
         return text_json
@@ -398,20 +398,20 @@ class github_api:
 
             file_content=None
             url = f"https://api.github.com/repos/{owner}/{repo}/contents/{file_path}"
-            response = requests.get(url)
-            
+            response = requests.get(url)  # noqa: S113
+
             if response.status_code == 200:  # noqa: PLR2004
 
                 try:
                     file_content = base64.b64decode(
-                        response.json()['content']
+                        response.json()['content'],
                     ).decode()
                     return file_content
 
                 except KeyError:
                     logging.error(
                         "Failed to extract content from API response:",
-                        response.json()
+                        response.json(),
                     )
                     return 401
 
@@ -420,13 +420,13 @@ class github_api:
 
             else:
                 logging.error(
-                    f"Failed to fetch file '{file_path}' from the repository '{repo}'. Response code: {response.status_code}"  # noqa: E501
+                    f"Failed to fetch file '{file_path}' from the repository '{repo}'. Response code: {response.status_code}",  # noqa: E501
                 )
                 return 400
 
         url = f"https://api.github.com/repos/{owner}/{repo}/commits/{branch}"
-        response = requests.get(url)
-        
+        response = requests.get(url)  # noqa: S113
+
         if response.status_code == 200:  # noqa: PLR2004
             latest_commit_hash = response.json().get('sha')
 
@@ -438,11 +438,11 @@ class github_api:
 
                     if file_hash != latest_commit_hash:
                         logging.info(
-                            f"Updates available for '{file_path}'. Downloading..."
+                            f"Updates available for '{file_path}'. Downloading...",
                         )
                         url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{file_path}"
-                        response = requests.get(url)
-        
+                        response = requests.get(url)  # noqa: S113
+
                         if response.status_code == 200:  # noqa: PLR2004
 
                             with open(file_path, 'wb') as f:
@@ -450,11 +450,11 @@ class github_api:
 
                         else:
                             logging.error(
-                                f"Failed to download file from '{url}'. Response code: {response.status_code}"  # noqa: E501
+                                f"Failed to download file from '{url}'. Response code: {response.status_code}",  # noqa: E501
                             )
                             return 400
 
-                        print(f"Updates for '{file_path}' downloaded successfully.")
+                        logging.info(f"Updates for '{file_path}' downloaded successfully.")  # noqa: E501
                         return 101
 
                     else:
@@ -463,7 +463,7 @@ class github_api:
 
                 else:
                     logging.warning(
-                        "Unable to compute file hash. Check if the file exists."
+                        "Unable to compute file hash. Check if the file exists.",
                     )
                     return 404
 
@@ -475,7 +475,7 @@ class github_api:
 
                         if os.path.isfile(file_name):
                             logging.debug(
-                                f"Checking for updates to '{file_name}'..."
+                                f"Checking for updates to '{file_name}'...",
                             )
                             file_content = get_file_content(owner, repo, file_name)
 
@@ -484,10 +484,10 @@ class github_api:
 
                                 if file_hash != latest_commit_hash:
                                     logging.info(
-                                        f"Updates available for '{file_name}'. Downloading..."  # noqa: E501
+                                        f"Updates available for '{file_name}'. Downloading...",  # noqa: E501
                                     )
                                     url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{file_name}"
-                                    response = requests.get(url)
+                                    response = requests.get(url)  # noqa: S113
 
                                     if response.status_code == 200:  # noqa: PLR2004
 
@@ -496,22 +496,22 @@ class github_api:
 
                                     else:
                                         logging.error(
-                                            f"Failed to download file from '{url}'. Response code: {response.status_code}"  # noqa: E501
+                                            f"Failed to download file from '{url}'. Response code: {response.status_code}",  # noqa: E501
                                         )
                                         return "Failed"
 
                                     logging.info(
-                                        f"Updates for '{file_name}' downloaded successfully."  # noqa: E501
+                                        f"Updates for '{file_name}' downloaded successfully.",  # noqa: E501
                                     )
 
                                 else:
                                     logging.info(
-                                        f"No updates available for '{file_name}'."
+                                        f"No updates available for '{file_name}'.",
                                     )
 
                             else:
                                 logging.warning(
-                                    "Unable to compute file hash. Check if the file exists."  # noqa: E501
+                                    "Unable to compute file hash. Check if the file exists.",  # noqa: E501
                                 )
 
                 except Exception:
@@ -520,16 +520,29 @@ class github_api:
 
         else:
             logging.error(
-                f"Failed to fetch commit information from GitHub. Response code: {response.status_code}"  # noqa: E501
+                f"Failed to fetch commit information from GitHub. Response code: {response.status_code}",  # noqa: E501
             )
             logging.error("Response content:", response.text)
             return 404
 
 # pokeAPI things
 class PokeAPI:
-    def get_pokemon_raw(name):
+    """PokeAPI functions from http API."""
+
+    def get_pokemon_raw(name = str):
+        """Get json of a pokemon.
+
+        Args:
+        ----
+            name (str): Name of the pokemon
+
+        Returns:
+        -------
+            str: json of the pokemon
+
+        """
         url = f"https://pokeapi.co/api/v2/pokemon/{name}"
-        page = requests.get(url)
+        page = requests.get(url)  # noqa: S113
         text = page.text
         return text
 # tools only osinters use
@@ -539,7 +552,19 @@ class osint_framework:
     class universal:
         """Universal functions, have more at once."""
 
-        def check_username(username, service_name="All"):
+        def check_username(username = str, service_name="All"):
+            """Check username using instantusername.com API.
+
+            Args:
+            ----
+                username (str): Username you want to search
+                service_name (str, optional): Name of service you want. Defaults to "All".
+
+            Returns:
+            -------
+                str: json text
+
+            """  # noqa: E501
             base_url = "http://api.instantusername.com"
             services = services_json["services"]
 
@@ -552,7 +577,7 @@ class osint_framework:
                     continue
 
                 check_url = f"{base_url}{endpoint}".replace("{username}", username)
-                response = requests.get(check_url)
+                response = requests.get(check_url)  # noqa: S113
 
                 result = {current_service_name: response.status_code == 200}  # noqa: PLR2004
                 results.append(result)
@@ -563,8 +588,19 @@ class osint_framework:
 
 # OS Specific things
 class OSspecific:
+    """Functions Specific for some systems."""
+
     class Linux:
+        """Linux specific functions."""
+
         def get_linux_distro():
+            """Get os-release from Linux System.
+
+            Returns
+            -------
+                str: Linux distro name
+
+            """
             try:
                 with open('/etc/os-release') as f:
                     lines = f.readlines()
@@ -598,7 +634,7 @@ class OSspecific:
 
                 with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, key_path) as key:
                     product_key_bytes = winreg.QueryValueEx(key, value_name)[0]
-                
+
                 product_key = ""
                 for b in product_key_bytes[52:67]:
                     product_key += f"{b:02x}"
@@ -607,6 +643,8 @@ class OSspecific:
                 return platform.system()
 # Networking tools
 class Networking:
+    """Functions related to Network."""
+
     def get_lan_ip():
         try:
             # Create a socket to the Google DNS server (8.8.8.8)
@@ -624,22 +662,23 @@ class Networking:
             if platform.system() == "Linux":
                 logging.debug(f"checking {ip}")
                 output = subprocess.check_output(
-                    ["ping", "-c", "1", ip],
+                    ["ping", "-c", "1", ip],  # noqa: S603, S607
                     stderr=subprocess.STDOUT,
-                    text=True
+                    text=True,
                 )
                 if "1 packets transmitted," in output and "0 received" not in output:  # noqa: E501
                     result_list.append(ip)
                     logging.info(f"Checked IP: {ip}")
             elif platform.system() == "Windows":
                 output = subprocess.check_output(
-                    ["ping", "-n", "1", ip],
+                    ["ping", "-n", "1", ip],  # noqa: S603, S607
                     stderr=subprocess.STDOUT,
-                    text=True
+                    text=True,
                 )
                 if "Received = 1" in output:
                     result_list.append(ip)
                     logging.info(f"Checked IP: {ip}")
+            return result_list
         except subprocess.CalledProcessError:
             pass
         except Exception as e:
@@ -649,7 +688,7 @@ class Networking:
         # Create a list to store results
         if end_ip - start_ip + 1 < num_threads:
             raise ValueError(
-                "Must be same or less threads than checked ip adresses"
+                "Must be same or less threads than checked ip adresses",
             )
         result_list = []
 
@@ -663,11 +702,11 @@ class Networking:
             end = start + ips_per_thread - 1
             thread = threading.Thread(
                 target=Networking.check_ip_range,
-                args=(subnet, 
+                args=(subnet,
                     start,
                     end,
-                    result_list
-                )
+                    result_list,
+                ),
             )
             thread.start()
             threads.append(thread)
@@ -678,14 +717,20 @@ class Networking:
 
         return result_list
 
-    def check_ip_range(subnet, start, end, result_list):
+    def check_ip_range(subnet, start=2, end=254):
         for i in range(start, end + 1):
             ip = subnet + "." + str(i)
-            Networking.check_ip_existence(ip, result_list)
+            Networking.check_ip_existence(ip)
 
     def get_gateway_ip():
+        """Get the default gateway's IP address (cross-platform).
+
+        Returns
+        -------
+            str: Ip adress
+
+        """
         try:
-            # Get the default gateway's IP address (cross-platform)
             gateways = netifaces.gateways()
             if 'default' in gateways and netifaces.AF_INET in gateways['default']:
                 return gateways['default'][netifaces.AF_INET][0]
@@ -695,11 +740,24 @@ class Networking:
             return None
 # Other
 class Upload:
-    def upload_to_transfer_sh(file_path):
+    """File uploading functions."""
+
+    def upload_to_transfer_sh(file_path = str):
+        """Will upload to transfer.sh.
+
+        Args:
+        ----
+            file_path (str): File to be uploaded
+
+        Returns:
+        -------
+            str: Response from the web
+
+        """
         with open(file_path, 'rb') as file:
-            response = requests.put('https://transfer.sh/' + file_path, data=file)
+            response = requests.put('https://transfer.sh/' + file_path, data=file)  # noqa: S113
             return response.text.strip()
-            
+
 
 ############   VARIABLES   ############
 
