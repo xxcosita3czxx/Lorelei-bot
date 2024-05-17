@@ -1,3 +1,0 @@
-[lint]
-line-length = 80
-lint.select = ["E","F","UP"]
