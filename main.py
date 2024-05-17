@@ -114,6 +114,7 @@ class aclient(discord.Client):
 
 bot = aclient()
 tree = app_commands.CommandTree(bot)
+tree.remove_command("help")
 
 ############################### HELP COMMAND #######################################
 help = app_commands.Group(
