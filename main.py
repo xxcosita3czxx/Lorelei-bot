@@ -143,7 +143,7 @@ class confirm(discord.ui.View):
         try:
             await interaction.channel.delete()
         
-        except:
+        except discord.Forbidden :
             await interaction.response.send_message("Channel deletion failed! Make sure I have `manage_channels` permissions!", ephemeral = True)
 
 class main(discord.ui.View):
