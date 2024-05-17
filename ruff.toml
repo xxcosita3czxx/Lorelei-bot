@@ -33,4 +33,4 @@ indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
 [lint]
-select = ["E","F","I","UP","PLR2004","C","B","LOG"]
+select = ["T20","SIM","PT","PYI","S","E","F","I","COM","UP","PLR2004","C","B","LOG","W"]

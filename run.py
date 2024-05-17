@@ -12,7 +12,7 @@ import utils.cosita_toolkit as ctkit
 coloredlogs.install(
     level=config.loglevel,
     fmt='%(asctime)s %(levelname)s: %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
+    datefmt='%Y-%m-%d %H:%M:%S',
 )
 
 logger = logging.getLogger(__name__)
@@ -54,8 +54,8 @@ def update_and_run():
         try:
             ctkit.update_script_from_github("xxcosita3czxx","lorelei-bot","main.py","main.py")
             ctkit.update_script_from_github("xxcosita3czxx","lorelei-bot","run.py","run.py")
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(e)
 def update_loop():
     while True:
         update_and_run()
@@ -69,12 +69,12 @@ def Is_Alive():
                 logger.debug("main.py is running at PID: " + str(main_pid))
         if not main_pid:
             logger.info("main.py is not running. Restarting...")
-            os.system("python3 main.py")
+            os.system("python3 main.py")  # noqa: S605, S607
         time.sleep(config.Is_Alive_time)
 def update_cosita_tk():
     while True:
         try:
-            os.system("python3 utils/cosita_toolkit.py")
+            os.system("python3 utils/cosita_toolkit.py")  # noqa: S605, S607
         except Exception:
             logger.error("CosTK update FAILED")
         time.sleep(config.costk_update)
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     update_thread = threading.Thread(target=update_loop)
     monitor_thread = threading.Thread(target=Is_Alive)
     update_costk_thread = threading.Thread(target=update_cosita_tk)
-    
+
     monitor_thread.start()
     update_thread.start()
     update_costk_thread.start()

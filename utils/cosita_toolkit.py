@@ -1,3 +1,4 @@
+"""COSITA TOOLKIT."""
 #########################################
 #                                       #
 #                CosTK                  #
@@ -63,8 +64,9 @@ except ImportError:
 try:
 
     if platform.system() == "Windows":
-        import win32gui
         import ctypes
+
+        import win32gui
 
     else:
         logging.debug("not importing windows depends")
@@ -140,9 +142,7 @@ except ImportError:
 
 
 def update_script_from_github(owner, repo, file_path, local_file_path):
-    '''
-    Updating from github, so you dont have to download always from git
-    '''
+    """Update from github, so you dont have to download always from git."""
     try:
 
         if __name__ == "__main__":
@@ -157,7 +157,7 @@ def update_script_from_github(owner, repo, file_path, local_file_path):
         response = requests.get(api_url, headers=headers)
         logging.debug(response.status_code)
 
-        if response.status_code == 200:
+        if response.status_code == 200:  # noqa: PLR2004
 
             github_content = response.json()["content"]
             github_content = base64.b64decode(github_content).decode("utf-8")
@@ -223,24 +223,21 @@ if __name__ == "__main__":
     )
 
 
-def main():
+def _main():
     logging.warning("yet not supported")
 
 
 ############   FUNCTIONS   ############
 
 class memMod:
+    """Requires windows, bcs linux works different way."""
 
-    '''
-    Requires windows, bcs linux works different way
-    '''
-
-    def pid_by_name(target_string=[], exe_name=[]):
-
-        '''
-        Get proccess pid by its name, pid needed for memory editing
-        '''
-
+    def pid_by_name(target_string=None, exe_name=None):  # noqa: C901
+        """Get proccess pid by its name, pid needed for memory editing."""
+        if exe_name is None:
+            exe_name = []
+        if target_string is None:
+            target_string = []
         if platform.system() == "Windows":
 
             for proc in psutil.process_iter(['pid', 'name', 'create_time']):
@@ -295,11 +292,7 @@ class memMod:
             return 402
 
     def modify(pid, address, new_value):
-
-        '''
-        Here is the actuall edit of memory
-        '''
-
+        """Memory editing."""
         if platform.system()=="Windows":
 
             new_value = ctypes.c_int(new_value)
@@ -332,11 +325,7 @@ class memMod:
             logging.warning("Non-Windows system detected! skipping...")
             return 402
     def check(pid, address):
-
-        '''
-        get current value
-        '''
-
+        """Get current value."""
         if platform.system()=="Windows":
 
             process_handle = ctypes.windll.kernel32.OpenProcess(
@@ -364,9 +353,10 @@ class memMod:
 
 # github api things
 class github_api:
+    """Functions using Github API."""
 
-    def get_last_info_raw(name,save_place=None,file_name=None):
-
+    def get_last_info_raw(name = str,save_place = None,file_name=None):
+        
         url = f"https://api.github.com/users/{name}/events/public"
         page = requests.get(url)
 
@@ -397,7 +387,7 @@ class github_api:
         text_json = json.loads(text)
         return text_json
 
-    def update_repo_files_http(owner, repo, branch, file_path):
+    def update_repo_files_http(owner, repo, branch, file_path):  # noqa: C901
         file_content = None
         def compute_file_hash(file_content):
 
@@ -410,7 +400,7 @@ class github_api:
             url = f"https://api.github.com/repos/{owner}/{repo}/contents/{file_path}"
             response = requests.get(url)
             
-            if response.status_code == 200:
+            if response.status_code == 200:  # noqa: PLR2004
 
                 try:
                     file_content = base64.b64decode(
@@ -425,7 +415,7 @@ class github_api:
                     )
                     return 401
 
-            elif response.status_code == 404:
+            elif response.status_code == 404:  # noqa: PLR2004
                 logging.debug(f"Ignoring {file_content}")
 
             else:
@@ -437,7 +427,7 @@ class github_api:
         url = f"https://api.github.com/repos/{owner}/{repo}/commits/{branch}"
         response = requests.get(url)
         
-        if response.status_code == 200:
+        if response.status_code == 200:  # noqa: PLR2004
             latest_commit_hash = response.json().get('sha')
 
             if file_content:
@@ -453,7 +443,7 @@ class github_api:
                         url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{file_path}"
                         response = requests.get(url)
         
-                        if response.status_code == 200:
+                        if response.status_code == 200:  # noqa: PLR2004
 
                             with open(file_path, 'wb') as f:
                                 f.write(response.content)
@@ -499,7 +489,7 @@ class github_api:
                                     url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{file_name}"
                                     response = requests.get(url)
 
-                                    if response.status_code == 200:
+                                    if response.status_code == 200:  # noqa: PLR2004
 
                                         with open(file_name, 'wb') as f:
                                             f.write(response.content)
@@ -544,7 +534,11 @@ class PokeAPI:
         return text
 # tools only osinters use
 class osint_framework:
+    """Anything that goes for info of users."""
+
     class universal:
+        """Universal functions, have more at once."""
+
         def check_username(username, service_name="All"):
             base_url = "http://api.instantusername.com"
             services = services_json["services"]
@@ -560,7 +554,7 @@ class osint_framework:
                 check_url = f"{base_url}{endpoint}".replace("{username}", username)
                 response = requests.get(check_url)
 
-                result = {current_service_name: response.status_code == 200}
+                result = {current_service_name: response.status_code == 200}  # noqa: PLR2004
                 results.append(result)
 
                 if service_name != "All":
@@ -594,6 +588,8 @@ class OSspecific:
                 pass
             return "Unknown"
     class Windows:
+        """Windows related things."""
+
         def get_windows_product_key():
             try:
                 import winreg
@@ -698,7 +694,7 @@ class Networking:
             logging.error(f"Error getting router gateway IP: {e}")
             return None
 # Other
-class Other:
+class Upload:
     def upload_to_transfer_sh(file_path):
         with open(file_path, 'rb') as file:
             response = requests.put('https://transfer.sh/' + file_path, data=file)
