@@ -6,7 +6,7 @@
 #########################################
 
 ###  Config  ###############################################
-loglevel="INFO"
+loglevel = "INFO"
 # (Available: "DEBUG", "INFO", "WARNING", "ERROR", "FATAL")
 ############################################################
 
@@ -38,97 +38,48 @@ SOFTWARE.
 
 ############   MODULE IMPORTS   ############
 
-try:
-    import logging
-except:
-    print ("FATAL: cannot import logging")
+import logging
+import platform
+import subprocess
+import hashlib
+import netifaces
+import psutil
+import socket
+import threading
+import requests
+import json
+from time import gmtime, strftime
+import os
+import base64
 
+# Import optional modules with error handling
 try:
     import coloredlogs
     coloredlogs.install(level=loglevel, fmt='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-except:
-    logging.warning("will not be using colors, as the module cannot be found")
+except ImportError:
+    logging.warning("Coloredlogs module not found, proceeding without it")
 
-try:
-    import platform
-except:
-    logging.fatal("Failed to import base module platform")
-
-try:
-    if platform.system() == "Windows":
+if platform.system() == "Windows":
+    try:
         import win32gui
         import ctypes
-    else:
-        logging.debug("not importing windows depends")
-except:
-    logging.warning("Windows Dependendencies not found, could have limitations")
+        SIZEOF_INT = ctypes.sizeof(ctypes.c_int)
+        PROCESS_ALL_ACCESS = 0x1F0FFF
+        PROCESS_VM_READ = 0x0010
+    except ImportError:
+        logging.warning("Windows dependencies not found, could have limitations")
 
-try:
-    import subprocess
-except:
-    logging.warning("Module subproccess not found, could have limitations")
-
-try:
-    import hashlib
-except:
-    logging.warning("Module hashlib not found, could have limitations")
-
-try:
-    import netifaces
-except:
-    logging.warning("Module netifaces not found, could have limitations")
-
-try:
-    import psutil
-except:
-    logging.warning("Module psutil not found, could have limitations")
-
-try:
-    import socket
-except:
-    logging.warning("Module socket not found, could have limitations")
-
-try:
-    import threading
-except:
-    logging.warning("Module threading not found, could have limitations")
-
-try:
-    import requests
-except:
-    logging.warning("Module requests not found, could have limitations")
-
-try:
-    import json
-except:
-    logging.warning("Module json not found, could have limitations")
-
-try:
-    from time import gmtime, strftime
-except:
-    logging.warning("Module time not found, could have limitations")
-
-try:
-    import os
-except:
-    logging.warning("Module os not found, could have limitations")
-
-try:
-    import base64
-except:
-    logging.warning("Module base64 not found, could have limitations")
-
+#------------------------------------------------------#
 
 def update_script_from_github(owner, repo, file_path, local_file_path):
-    '''
-    Updating from github, so you dont have to download always from git
-    '''
+    """
+    Update the script from GitHub to avoid manual downloads
+    """
     try:
         from git import Repo
-        # Specify the details for the file update
-        if __name__ == "__main__":
-            orig_dir = os.getcwd()
-            os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+        orig_dir = os.getcwd()
+        os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
         api_url = f"https://api.github.com/repos/{owner}/{repo}/contents/{file_path}"
         headers = {
@@ -138,8 +89,7 @@ def update_script_from_github(owner, repo, file_path, local_file_path):
         response = requests.get(api_url, headers=headers)
         logging.debug(response.status_code)
         if response.status_code == 200:
-            github_content = response.json()["content"]
-            github_content = base64.b64decode(github_content).decode("utf-8")
+            github_content = base64.b64decode(response.json()["content"]).decode("utf-8")
 
             try:
                 with open(local_file_path, "r") as file:
@@ -149,88 +99,74 @@ def update_script_from_github(owner, repo, file_path, local_file_path):
                     with open(local_file_path, "w") as file:
                         file.write(github_content)
                     logging.info("Script updated successfully.")
-                    if __name__=="__main__":
-                        os.chdir(orig_dir)
                     return 1
                 else:
                     logging.info("No update required. Local script is up to date.")
-                    if __name__=="__main__":
-                        os.chdir(orig_dir)
                     return 2
             except FileNotFoundError:
                 with open(local_file_path, "w") as file:
                     file.write(github_content)
                 logging.info("Script downloaded and saved successfully.")
-                if __name__=="__main__":
-                    os.chdir(orig_dir)
                 return 7
         else:
-            print("Failed to fetch the script from GitHub.")
-            if __name__=="__main__":
-                os.chdir(orig_dir)
+            logging.error("Failed to fetch the script from GitHub.")
             return response.status_code
     except Exception as e:
-        logging.error("updater error ->> "+str(e))
-        os.chdir(orig_dir)
+        logging.error(f"Updater error -&gt;&gt; {str(e)}")
         return 400
-if __name__ == "__main__":
-    update_script_from_github(owner = "xxcosita3czxx", repo = "Cosita-ToolKit", file_path = "cosita_toolkit.py", local_file_path = "./cosita_toolkit.py")
+    finally:
+        os.chdir(orig_dir)
 
+if __name__ == "__main__":
+    update_script_from_github(owner="xxcosita3czxx", repo="Cosita-ToolKit", file_path="cosita_toolkit.py", local_file_path="./cosita_toolkit.py")
 
 def main():
-    logging.warning("yet not supported")
-
+    logging.warning("Not supported yet")
 
 ############   FUNCTIONS   ############
 
 class memMod:
-    '''
-    Requires windows, bcs linux works different way
-    '''
+    """
+    Memory modification utilities, requires Windows
+    """
+    @staticmethod
     def pid_by_name(target_string=[], exe_name=[]):
-        '''
-        Get proccess pid by its name, pid needed for memory editing
-        '''
+        """
+        Get process PID by its name, needed for memory editing
+        """
         if platform.system() == "Windows":
             for proc in psutil.process_iter(['pid', 'name', 'create_time']):
                 try:
                     hwnds = []
-                    # Enumerate all windows and add the handle to the list if the target string is in the title
                     def callback(hwnd, hwnds):
                         if win32gui.IsWindowVisible(hwnd):
                             title = win32gui.GetWindowText(hwnd)
                             if any(t in title for t in target_string):
                                 hwnds.append(hwnd)
                     win32gui.EnumWindows(callback, hwnds)
-                    # If we found a matching window, check the parent process
                     if hwnds:
                         try:
                             pid = proc.pid
-                            parent_pid = proc.ppid()
-                            parent_name = psutil.Process(parent_pid).name()
                             exe_name = psutil.Process(proc.pid).exe() if not exe_name else exe_name
                             if proc.name() == exe_name:
                                 logging.debug(f"Found process with window title containing {target_string} and PID {pid} and name: {exe_name}")
                                 return pid
-                        except psutil.AccessDenied:
-                            # Access denied - ignore this process
-                            pass
-                        except psutil.NoSuchProcess:
-                            # Process may have terminated while iterating
+                        except (psutil.AccessDenied, psutil.NoSuchProcess):
                             pass
                 except:
                     pass
-            else:
-                logging.warning(f"No process found with window title containing {target_string}")
-                return None
+            logging.warning(f"No process found with window title containing {target_string}")
+            return None
         else:
-            logging.warning("Non-Windows system detected! skipping...")
-            return "Non-Windows system detected! skipping..."
+            logging.warning("Non-Windows system detected! Skipping...")
+            return "Non-Windows system detected! Skipping..."
+
+    @staticmethod
     def modify(pid, address, new_value):
-        '''
-        Here is the actuall edit of memory
-        '''
-        if platform.system()=="Windows":
+        """
+        Modify memory at a specific address
+        """
+        if platform.system() == "Windows":
             new_value = ctypes.c_int(new_value)
             process_handle = ctypes.windll.kernel32.OpenProcess(PROCESS_ALL_ACCESS, False, pid)
             buffer = ctypes.create_string_buffer(SIZEOF_INT)
@@ -241,13 +177,15 @@ class memMod:
             ctypes.windll.kernel32.CloseHandle(process_handle)
             return 1
         else:
-            logging.warning("Non-Windows system detected! skipping...")
-            return "Non-windows system detected! skipping..."
+            logging.warning("Non-Windows system detected! Skipping...")
+            return "Non-Windows system detected! Skipping..."
+
+    @staticmethod
     def check(pid, address):
-        '''
-        get current value
-        '''
-        if platform.system()=="Windows":
+        """
+        Check memory value at a specific address
+        """
+        if platform.system() == "Windows":
             process_handle = ctypes.windll.kernel32.OpenProcess(PROCESS_VM_READ, False, pid)
             buffer = ctypes.create_string_buffer(SIZEOF_INT)
             bytes_read = ctypes.c_size_t(0)
@@ -256,37 +194,40 @@ class memMod:
             ctypes.windll.kernel32.CloseHandle(process_handle)
             return value
         else:
-            logging.warning("Non-Windows system detected! skipping...")
-            return "Non-windows system detected! skipping..."
-# github api things
+            logging.warning("Non-Windows system detected! Skipping...")
+            return "Non-Windows system detected! Skipping..."
+
 class github_api:
-    def get_last_info_raw(name,save_place=None,file_name=None):
+    """
+    GitHub API utilities
+    """
+    @staticmethod
+    def get_last_info_raw(name, save_place=None, file_name=None):
         url = f"https://api.github.com/users/{name}/events/public"
-        page = requests.get(url)
+        response = requests.get(url)
         if file_name is None:
             file_name = strftime(f"{name}%Y-%m-%d-%H-%M-%S-last-info-raw.json", gmtime())
-        if save_place is not None and not save_place.endswith("/"):
-            save_place = save_place + "/"
-        if save_place is None:
-            save_place = ""
-        final = str(save_place+file_name)
-        with open(final, "w") as f:
-            json.dump(json.loads(page.text), f, indent=4)
+        if save_place and not save_place.endswith("/"):
+            save_place += "/"
+        final_path = f"{save_place}{file_name}" if save_place else file_name
+        with open(final_path, "w") as f:
+            json.dump(response.json(), f, indent=4)
         return 1
+
+    @staticmethod
     def get_info_usr(name):
         url = f"https://api.github.com/users/{name}/events/public"
-        page = requests.get(url)
-        text = page.text
-        text_json = json.loads(text)
-        return text_json
+        response = requests.get(url)
+        return response.json()
+
+    @staticmethod
     def pull_repo(repo_dir):
         if os.path.exists(repo_dir):
             repo = Repo(repo_dir)
             origin = repo.remote()
-            pull_result = origin.pull()
+            origin.pull()
             return 2  # Successful pull with merge
-        else:
-            return 404  # Repository does not exist
+        return 404  # Repository does not exist
     def update_repo_files_http(owner, repo, branch, file_path):
         def compute_file_hash(file_content):
             # Compute the hash of the file content
