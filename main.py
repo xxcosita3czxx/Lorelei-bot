@@ -120,7 +120,6 @@ tree.remove_command("help")
 help = app_commands.Group(
     name="help",
     description="I forgor command",
-    invoke_without_command=True,
 )
 
 help_command = app_commands.Group(
