@@ -452,15 +452,26 @@ async def ban(interaction: discord.Interaction, member: discord.Member, reason: 
         ),
         ephemeral=False,
     )
+################################### CONFIGURE COMMAND ##############################
+configure = app_commands.Group(
+    name="configure",
+    description="Config for server",
+)
+configure_sec = app_commands.Group(
+    name="security",
+    description="Security configurations",
+)
 
-configure = app_commands.Group(name="configure",description="Config for server")
-
-@configure.command(name="test2",description="just test for subcommands")
-async def test2(interaction: discord.Interaction):
-    interaction.response.send_message(content="test2",ephemeral=True)
+@configure_sec.command(name="Anti-invites",description="No invites in the halls")
+async def anti_invites(interaction: discord.Interaction):
+    await interaction.response.send_message(
+        content="STILL IN PROGRESS",
+        ephemeral=True,
+    )
 
 tree.add_command(configure)
 
+####################################################################################
 @tree.command(name="unban", description="Unban a user")
 @app_commands.describe(member="User to unban", reason="Reason for unban")
 @app_commands.default_permissions(ban_members=True)
