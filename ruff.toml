@@ -1,4 +1,4 @@
-line-length = 80
+line-length = 84
 exclude = [
     ".bzr",
     ".direnv",
@@ -33,4 +33,4 @@ indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
 [lint]
-lint.select = ["E","F","UP"]
+select = ["E","F","I","UP","PLR2004","C"]
