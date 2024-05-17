@@ -126,7 +126,16 @@ help_command = app_commands.Group(
     name="command",
     description="Command finder",
 )
-@help.command(name="help", description="All the commands at one place")
+
+@help_command.command(name="help")
+async def help_command_help(interaction: discord.Interaction):
+    await interaction.response.send_message(
+        content="Gives you help message (STILL IN PROGRESS)",
+    )
+
+help.add_command(help_command)
+tree.add_command(help)
+@tree.command(name="help", description="All the commands at one place")
 async def help_menu(interaction: discord.Interaction):
     '''Help command
     Will let user know what all can he do
@@ -141,14 +150,6 @@ async def help_menu(interaction: discord.Interaction):
         embed=embed,
     )
 
-@help_command.command(name="help")
-async def help_command_help(interaction: discord.Interaction):
-    interaction.response.send_message(
-        content="Gives you help message (STILL IN PROGRESS)",
-    )
-
-help.add_command(help_command)
-tree.add_command(help)
 #####################################################################################
 class ticket_launcher(discord.ui.View):
 
