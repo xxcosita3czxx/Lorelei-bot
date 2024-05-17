@@ -456,7 +456,7 @@ async def ban(interaction: discord.Interaction, member: discord.Member, reason: 
 configure = app_commands.Group(name="configure",description="Config for server")
 
 @configure.command(name="test2",description="just test for subcommands")
-def test2(interaction: discord.Interaction):
+async def test2(interaction: discord.Interaction):
     interaction.response.send_message(content="test2",ephemeral=True)
 
 
