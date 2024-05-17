@@ -646,4 +646,24 @@ async def play_music(ctx, url: str):
     
     await voice_client.disconnect()
 
+intents = discord.Intents.default()
+intents.messages = True
+intents.message_content = True
+intents.guilds = True
+
+bot = commands.Bot(command_prefix='/', intents=intents)
+
+@bot.event
+async def on_ready():
+    print(f'Bot is ready as {bot.user}')
+
+@bot.event
+async def on_message(message):
+    if not message.author.guild_permissions.administrator:
+        if 'discord.com' in message.content or 'discord.gg' in message.content:
+            await message.delete()
+            return
+
+    await bot.process_commands(message)
+
 bot.run(token=token)
