@@ -468,7 +468,7 @@ async def anti_invites(interaction: discord.Interaction):
         content="STILL IN PROGRESS",
         ephemeral=True,
     )
-
+configure.add_command(configure_sec)
 tree.add_command(configure)
 
 ####################################################################################
