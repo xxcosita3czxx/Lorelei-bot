@@ -120,6 +120,7 @@ tree.remove_command("help")
 help = app_commands.Group(
     name="help",
     description="I forgor command",
+    parent=help,
 )
 
 help_command = app_commands.Group(
