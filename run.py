@@ -9,6 +9,8 @@ import psutil
 import config
 import utils.cosita_toolkit as ctkit
 
+import sys
+
 coloredlogs.install(
     level=config.loglevel,
     fmt='%(asctime)s %(levelname)s: %(message)s',
@@ -86,3 +88,19 @@ if __name__ == "__main__":
     monitor_thread.start()
     update_thread.start()
     update_costk_thread.start()
+
+# Lazily import heavy modules
+import sys
+
+def heavy_module():
+    from numpy import array, dot
+    # Heavy computations here
+    print("Heavy computation done")
+
+def main():
+    if 'run-heavy' in sys.argv:
+        heavy_module()
+
+if __name__ == "__main__":
+    main()
+
