@@ -343,7 +343,6 @@ async def ticketing(interaction: discord.Interaction):
         ephemeral = True,
     )
 
-
 # kick and ban
 @tree.command(name="kick", description="Kick a user")
 @app_commands.describe(member="User to kick", reason="Reason for kick")
@@ -453,6 +452,15 @@ async def ban(interaction: discord.Interaction, member: discord.Member, reason: 
         ),
         ephemeral=False,
     )
+@tree.command(name="test")
+@app_commands.Group(name="configure")
+def test(interaction: discord.Interaction):
+    interaction.response.send_message(content="test",ephemeral=True)
+
+@tree.command(name="test2")
+@app_commands.Group(name="configure")
+def test2(interaction: discord.Interaction):
+    interaction.response.send_message(content="test2",ephemeral=True)
 
 @tree.command(name="unban", description="Unban a user")
 @app_commands.describe(member="User to unban", reason="Reason for unban")
