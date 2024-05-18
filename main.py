@@ -134,7 +134,6 @@ async def help_menu(interaction: discord.Interaction):
 help = app_commands.Group(name="help",description="Forgor commands")
 help_cmd = app_commands.Group(name="command",description="Forgor one specific")
 
-
 @help_cmd.command(name="help",description="Help command description")
 async def help_help(interaction: discord.Interaction):
     embed = discord.Embed(
@@ -146,9 +145,9 @@ async def help_help(interaction: discord.Interaction):
         embed=embed,
         ephemeral=True,
     )
-
-help.add_command(help_menu)
-help.add_command(help_cmd)
+help.add_command(command=help_menu)
+help.add_command(command=help_cmd)
+tree.add_command(command=help)
 #####################################################################################
 class ticket_launcher(discord.ui.View):
 
