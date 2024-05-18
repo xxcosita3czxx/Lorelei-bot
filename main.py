@@ -56,7 +56,7 @@ async def change_status() -> None:
 
 class TimeConverter(app_commands.Transformer):
 
-    async def transform(self, interaction: discord.Interaction, argument: str) -> int:  # noqa: E501, ANN101
+    async def transform(self,interaction:discord.Interaction,argument:str) -> int:  # noqa: E501, ANN101
 
         args = argument.lower()
         matches = re.findall(time_regex, args)
