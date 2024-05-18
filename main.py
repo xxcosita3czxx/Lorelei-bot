@@ -136,6 +136,17 @@ help = app_commands.Group(name="help",description="Forgor commands")
 help.add_command(help_menu)
 help.add_command(help_cmd)
 
+@help_cmd.command(name="help",description="Help command description")
+async def help_help(interaction: discord.Interaction):
+    embed = discord.Embed(
+        title="Help Command",
+        description="This command will gives you description about bot",
+        color=discord.colour.Color.blurple(),
+    )
+    await interaction.response.send_message(
+        embed=embed,
+        ephemeral=True,
+    )
 #####################################################################################
 class ticket_launcher(discord.ui.View):
 
