@@ -21,9 +21,9 @@ logger = logging.getLogger(__name__)
 time_regex = re.compile(r"(?:(\d{1,5})(h|s|m|d))+?")
 time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
 help_list="""
-> Utilities
-/help - shows this help
-/ping - pings the bot if its alive
+Hello!
+This is Lorelei Bot developed by cosita3cz.
+Developed in python for everyone.
 """
 
 async def change_status() -> None:
