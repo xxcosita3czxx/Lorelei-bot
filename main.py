@@ -131,8 +131,8 @@ async def help_menu(interaction: discord.Interaction):
         embed=embed,
     )
 
-help_cmd = app_commands.Group(name="command",description="Forgor one specific")
 help = app_commands.Group(name="help",description="Forgor commands")
+help_cmd = app_commands.Group(name="command",description="Forgor one specific")
 help.add_command(help_menu)
 help.add_command(help_cmd)
 
