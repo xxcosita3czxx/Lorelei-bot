@@ -43,4 +43,6 @@ bot_update = 6000
 #
 # Time for IsAlive script ping (default 30)
 Is_Alive_time = 30
-###################################
+
+# Bot Command Prefix
+command_prefix = "/"
