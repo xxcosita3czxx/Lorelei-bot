@@ -117,7 +117,7 @@ tree = app_commands.CommandTree(bot)
 tree.remove_command("help")
 
 ############################### HELP COMMAND #######################################
-@tree.command(name="help_menu", description="All the commands at one place")
+@tree.command(name="help", description="All the commands at one place")
 async def help_menu(interaction: discord.Interaction):
     '''Help command
     Will let user know what all can he do
@@ -131,26 +131,6 @@ async def help_menu(interaction: discord.Interaction):
     await interaction.response.send_message(
         embed=embed,
     )
-
-help = app_commands.Group(
-    name="help",
-    description="I forgor command",
-    parent=help_menu,
-)
-
-help_command = app_commands.Group(
-    name="command",
-    description="Command finder",
-)
-
-@help_command.command(name="help")
-async def help_command_help(interaction: discord.Interaction):
-    await interaction.response.send_message(
-        content="Gives you help message (STILL IN PROGRESS)",
-    )
-
-help.add_command(help_command)
-tree.add_command(help)
 
 #####################################################################################
 class ticket_launcher(discord.ui.View):
