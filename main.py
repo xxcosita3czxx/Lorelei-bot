@@ -145,9 +145,9 @@ async def help_help(interaction: discord.Interaction):
         embed=embed,
         ephemeral=True,
     )
-help.add_command(command=help_menu)
-help.add_command(command=help_cmd)
-tree.add_command(command=help)
+help.add_command(help_menu)
+help.add_command(help_cmd)
+tree.add_command(help)
 #####################################################################################
 class ticket_launcher(discord.ui.View):
 
