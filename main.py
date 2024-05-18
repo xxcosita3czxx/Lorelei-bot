@@ -115,6 +115,7 @@ tree = app_commands.CommandTree(bot)
 tree.remove_command("help")
 
 ############################### HELP COMMAND #######################################
+
 @tree.command(name="help", description="All the commands at one place")
 async def help_menu(interaction: discord.Interaction):
     '''Help command
@@ -129,6 +130,11 @@ async def help_menu(interaction: discord.Interaction):
     await interaction.response.send_message(
         embed=embed,
     )
+
+help_cmd = app_commands.Group(name="command",description="Forgor one specific")
+help = app_commands.Group(name="help",description="Forgor commands")
+help.add_command(help_menu)
+help.add_command(help_cmd)
 
 #####################################################################################
 class ticket_launcher(discord.ui.View):
