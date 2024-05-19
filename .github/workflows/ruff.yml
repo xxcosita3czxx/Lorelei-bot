@@ -6,7 +6,6 @@ on:
       - opened
     paths:
       - '**.py
-on:
   push:
     branches:
     - "main"
