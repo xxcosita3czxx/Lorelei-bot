@@ -549,30 +549,34 @@ async def slowmode(interaction: discord.Interaction,time: app_commands.Transform
 @tree.command(name="clear", description="Clear n messages specific user")
 @app_commands.default_permissions(manage_messages=True)
 async def clear(interaction: discord.Interaction, amount: int, member: discord.Member = None):  # noqa: E501
+    try:
+        channel = interaction.channel
 
-    channel = interaction.channel
+        if member is None:
+            await channel.purge(limit=amount)
+            await interaction.response.send_message(
+                embed=discord.Embed(
+                    description=f"Successfully deleted {amount} messages.",
+                    color=discord.Color.green(),
+                ),
+            )
 
-    if member is None:
-        await channel.purge(limit=amount)
+        elif member is not None:
+            await channel.purge(limit=amount)
+            await interaction.response.send_message(
+                embed=discord.Embed(
+                    description=f"Successfully deleted {amount} messages from {member.name}",  # noqa: E501
+                    color=discord.Color.green(),
+                ),
+            )
+        else:
+            await interaction.response.send_message(
+                content="INTERACTION FAILED",
+                ephemeral=True,
+            )
+    except discord.errors.NotFound():
         await interaction.response.send_message(
-            embed=discord.Embed(
-                description=f"Successfully deleted {amount} messages.",
-                color=discord.Color.green(),
-            ),
-        )
-
-    elif member is not None:
-        await channel.purge(limit=amount)
-        await interaction.response.send_message(
-            embed=discord.Embed(
-                description=f"Successfully deleted {amount} messages from {member.name}",  # noqa: E501
-                color=discord.Color.green(),
-            ),
-        )
-    else:
-        await interaction.response.send_message(
-            "INTERACTION FAILED",
-            ephemeral=True,
+            content="Removed all that we could, but exception happened",
         )
 with open(".secret.key") as key:
     token = key.read()
