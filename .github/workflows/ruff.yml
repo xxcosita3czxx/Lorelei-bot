@@ -1,6 +1,12 @@
 name: Ruff syntax check
 
-on: [push]
+on: 
+  pull_request:
+    types:
+      - opened
+    paths:
+      - '**.py
+	push:
 
 jobs:
   build:
