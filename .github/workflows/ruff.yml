@@ -1,4 +1,4 @@
-name: Pylint
+name: Ruff syntax check
 
 on: [push]
 
