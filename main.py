@@ -340,8 +340,8 @@ async def ticketing(interaction: discord.Interaction):
     '''
 
     embed = discord.Embed(
-        title = "Hi! If you need help or have a question, don't hesitate to create a ticket. Our support team is there for you and will do everything in their power to help you as soon as possible.",  # noqa: E501
-        color = discord.Colour.blue(),
+        title = "Hi! If you need help or have a question, don't hesitate to create a ticket.",  # noqa: E501
+        color = discord.Colour.blurple(),
     )
     await interaction.channel.send(embed = embed, view = ticket_launcher())
     await interaction.response.send_message(
