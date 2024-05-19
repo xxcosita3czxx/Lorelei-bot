@@ -5,10 +5,8 @@ on:
     types:
       - opened
     paths:
-      - '**.py
-  push:
-    branches:
-    - "main"
+      - '**.py'
+  push
 
 jobs:
   build:
