@@ -6,6 +6,7 @@ on:
       - opened
     paths:
       - '**.py
+on:
   push
 
 jobs:
