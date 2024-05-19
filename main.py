@@ -548,7 +548,7 @@ async def slowmode(interaction: discord.Interaction,time: app_commands.Transform
 
 @tree.command(name="clear", description="Clear n messages specific user")
 @app_commands.default_permissions(manage_messages=True)
-async def self(interaction: discord.Interaction, amount: int, member: discord.Member = None):  # noqa: E501
+async def clear(interaction: discord.Interaction, amount: int, member: discord.Member = None):  # noqa: E501
 
     channel = interaction.channel
 
