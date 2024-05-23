@@ -367,6 +367,10 @@ async def ticket_add(interaction: discord.Interaction, user:discord.member.Membe
         await interaction.response.send_message(
             content="You can only use one.",
         )
+    elif role is None and user is None:
+        await interaction.response.send_message(
+            content="You have to choose one stupid.",
+        )
     else:
         await interaction.response.send_message(
             content="Unknown error while parsing values",
