@@ -349,6 +349,29 @@ async def ticketing(interaction: discord.Interaction):
         ephemeral = True,
     )
 
+ticketing_group = app_commands.Group(name="ticketing",description="Ticket commands")
+
+@ticketing_group.command(name="add",description="Add user or role into ticket")
+async def ticket_add(interaction: discord.Interaction, user=None, role=None):
+    if user is None and role is not None:
+        await interaction.response.send_message(
+            content="Adding role [placeholder] to ticket",
+        )  # noqa: E501
+    elif role is None and user is not None:
+        await interaction.response.send_message(
+            content="Adding user [placeholder] to ticket",
+        )  # noqa: E501
+    elif role is not None and user is not None:
+        await interaction.response.send_message(
+            content="You can only use one.",
+        )
+    else:
+        await interaction.response.send_message(
+            content="Unknown error while parsing values",
+        )
+
+tree.add_command(ticketing_group)
+
 # kick and ban
 @tree.command(name="kick", description="Kick a user")
 @app_commands.describe(member="User to kick", reason="Reason for kick")
