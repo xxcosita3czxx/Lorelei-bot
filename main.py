@@ -362,7 +362,7 @@ async def ticket_add(interaction: discord.Interaction, user:discord.member.Membe
         )  # noqa: E501
     elif role is None and user is not None:
         await interaction.response.send_message(
-            content=f"Adding user {role.} to ticket",
+            content=f"Adding user {role} to ticket",
         )  # noqa: E501
     elif role is not None and user is not None:
         await interaction.response.send_message(
