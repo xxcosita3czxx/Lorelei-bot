@@ -399,7 +399,7 @@ async def ticket_remove(interaction: discord.Interaction, user:discord.member.Me
 @app_commands.default_permissions(manage_guild = True)
 @app_commands.checks.cooldown(3, 60, key = lambda i: (i.guild_id))
 @app_commands.checks.bot_has_permissions(manage_channels = True)
-async def ticketing(interaction: discord.Interaction):
+async def ticketing(interaction: discord.Interaction, text:str="Hi! If you need help or have a question, don't hesitate to create a ticket."):  # noqa: E501
 
     '''
     Ticket command
@@ -408,7 +408,7 @@ async def ticketing(interaction: discord.Interaction):
     '''
 
     embed = discord.Embed(
-        title = "Hi! If you need help or have a question, don't hesitate to create a ticket.",  # noqa: E501
+        title = text,
         color = discord.Colour.blurple(),
     )
     await interaction.channel.send(embed = embed, view = ticket_launcher())
