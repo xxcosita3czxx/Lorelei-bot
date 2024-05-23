@@ -6,6 +6,7 @@ from datetime import datetime
 
 import coloredlogs
 import discord
+import toml
 from discord import app_commands, utils
 from discord.ext import commands
 from humanfriendly import format_timespan
@@ -42,6 +43,23 @@ async def change_status() -> None:
         )
         await asyncio.sleep(5)
 
+def load_configs(config_dir:str):
+    configs = {}
+    for filename in os.listdir(config_dir):
+        if filename.endswith('.toml'):
+            guild_id = filename.split('.')[0].split('_')[1]
+            with open(os.path.join(config_dir, filename)) as f:
+                configs[guild_id] = toml.load(f)
+    return configs
+
+def save_config(guild_id, config, config_dir:str):
+    filename = os.path.join(config_dir, f'guild_{guild_id}.toml')
+    with open(filename, 'w') as f:
+        toml.dump(config, f)
+
+gconfig = load_configs("data/guilds")
+uconfig = load_configs("data/users")
+
 #########################################################################################
 
 
@@ -70,7 +88,15 @@ class TimeConverter(app_commands.Transformer):
         return round(time)
 
 
-
+def ensure_guild_configs(bot):
+    for guild in bot.guilds:
+        guild_id = str(guild.id)
+        if guild_id not in gconfig:
+            gconfig[guild_id] = {
+                'DEFAULT': {'color': 'Blurple'},
+                'SECURITY': {'anti_invites': True},
+            }
+            save_config(guild_id, gconfig[guild_id])
 class aclient(discord.Client):
 
     '''
@@ -105,6 +131,20 @@ class aclient(discord.Client):
 bot = aclient()
 tree = app_commands.CommandTree(bot)
 tree.remove_command("help")
+
+################################ EVENTS ############################################
+@bot.event
+async def on_message(message):
+    guild_id = str(message.guild.id)
+    if guild_id in gconfig and gconfig[guild_id].get('SECURITY', {}).get('anti_invites', True):  # noqa: SIM102, E501
+        if "discord.gg/" in message.content:
+            await message.delete()
+            await message.channel.send(
+                f'Invites are not allowed, {message.author.mention}!',
+            )
+            return
+    await bot.process_commands(message)
+
 
 ############################### HELP COMMAND #######################################
 

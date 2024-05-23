@@ -7,3 +7,4 @@ requests
 dulwich
 netifaces
 gitpython
+toml
