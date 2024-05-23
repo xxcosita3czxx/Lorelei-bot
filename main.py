@@ -41,14 +41,6 @@ async def change_status() -> None:
             status=config.status,
         )
         await asyncio.sleep(5)
-        await bot.change_presence(
-            activity=discord.Activity(
-                type=discord.ActivityType.listening,
-                name="TESTINGS",
-            ),
-            status=config.status,
-        )
-        await asyncio.sleep(5)
 
 #########################################################################################
 
