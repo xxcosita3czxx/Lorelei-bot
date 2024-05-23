@@ -663,7 +663,7 @@ async def clear(interaction: discord.Interaction, amount: int, member: discord.M
                 content="INTERACTION FAILED",
                 ephemeral=True,
             )
-    except discord.errors.NotFound():
+    except discord.errors.NotFound:
         await interaction.response.send_message(
             content="Removed all that we could, but exception happened",
         )
