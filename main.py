@@ -393,7 +393,7 @@ async def ticket_add(interaction: discord.Interaction, user:discord.member.Membe
 @app_commands.describe(user="Member to remove")
 @app_commands.describe(role="Role to remove")
 @app_commands.default_permissions(manage_messages=True)
-async def ticket_add(interaction: discord.Interaction, user:discord.member.Member=None, role:discord.role.Role=None):  # noqa: E501, F811
+async def ticket_remove(interaction: discord.Interaction, user:discord.member.Member=None, role:discord.role.Role=None):  # noqa: E501, F811
     if user is None and role is not None:
         await interaction.channel.set_permissions()
         await interaction.response.send_message(
