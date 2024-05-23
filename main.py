@@ -362,7 +362,7 @@ async def ticket_add(interaction: discord.Interaction, user:discord.member.Membe
         )  # noqa: E501
     elif role is None and user is not None:
         await interaction.response.send_message(
-            content=f"Adding user {role} to ticket",
+            content=f"Adding user {role.} to ticket",
         )  # noqa: E501
     elif role is not None and user is not None:
         await interaction.response.send_message(
@@ -440,13 +440,16 @@ async def echo(interaction: discord.Interaction,channel:discord.channel.TextChan
             description=text,
             color=discord.Color.blurple(),
         )
-        await interaction.channel.send(embed=embed,channel=channel)
+        await channel.send(embed=embed)
         await interaction.response.send_message(
             content="message sent",
             ephemeral=True,
         )
     except Exception as e:
-        await interaction.response.send_message(f"Echo Failed!: {e}")
+        await interaction.response.send_message(
+            content=f"Echo Failed!: {e}",
+            ephemeral=True,
+        )
 
 @tree.command(name="ban", description="Ban a user")
 @app_commands.describe(
