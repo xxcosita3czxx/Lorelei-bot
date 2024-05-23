@@ -358,11 +358,11 @@ ticketing_group = app_commands.Group(name="ticketing",description="Ticket comman
 async def ticket_add(interaction: discord.Interaction, user:discord.member.Member=None, role:discord.role.Role=None):  # noqa: E501
     if user is None and role is not None:
         await interaction.response.send_message(
-            content="Adding role [placeholder] to ticket",
+            content=f"Adding role {user} to ticket",
         )  # noqa: E501
     elif role is None and user is not None:
         await interaction.response.send_message(
-            content="Adding user [placeholder] to ticket",
+            content=f"Adding user {role} to ticket",
         )  # noqa: E501
     elif role is not None and user is not None:
         await interaction.response.send_message(
