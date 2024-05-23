@@ -327,27 +327,6 @@ async def ping(interaction: discord.Interaction):
         f'Pong! {round(bot.latency, 1)}',
     )
 
-@tree.command(name = 'ticket', description='Launches the ticketing system')
-@app_commands.default_permissions(manage_guild = True)
-@app_commands.checks.cooldown(3, 60, key = lambda i: (i.guild_id))
-@app_commands.checks.bot_has_permissions(manage_channels = True)
-async def ticketing(interaction: discord.Interaction):
-
-    '''
-    Ticket command
-
-    This will actually launch the ticket system
-    '''
-
-    embed = discord.Embed(
-        title = "Hi! If you need help or have a question, don't hesitate to create a ticket.",  # noqa: E501
-        color = discord.Colour.blurple(),
-    )
-    await interaction.channel.send(embed = embed, view = ticket_launcher())
-    await interaction.response.send_message(
-        "Ticketing system launched!",
-        ephemeral = True,
-    )
 
 ticketing_group = app_commands.Group(name="ticketing",description="Ticket commands")
 
@@ -415,6 +394,29 @@ async def ticket_remove(interaction: discord.Interaction, user:discord.member.Me
         await interaction.response.send_message(
             content="Unknown error while parsing values",
         )
+
+@ticketing_group.command(name = 'ticket', description='Launches the ticketing system')  # noqa: E501
+@app_commands.default_permissions(manage_guild = True)
+@app_commands.checks.cooldown(3, 60, key = lambda i: (i.guild_id))
+@app_commands.checks.bot_has_permissions(manage_channels = True)
+async def ticketing(interaction: discord.Interaction):
+
+    '''
+    Ticket command
+
+    This will actually launch the ticket system
+    '''
+
+    embed = discord.Embed(
+        title = "Hi! If you need help or have a question, don't hesitate to create a ticket.",  # noqa: E501
+        color = discord.Colour.blurple(),
+    )
+    await interaction.channel.send(embed = embed, view = ticket_launcher())
+    await interaction.response.send_message(
+        "Ticketing system launched!",
+        ephemeral = True,
+    )
+
 tree.add_command(ticketing_group)
 
 # kick and ban
