@@ -327,75 +327,86 @@ ticketing_group = app_commands.Group(name="ticketing",description="Ticket comman
 @app_commands.describe(role="Role to add")
 @app_commands.default_permissions(manage_messages=True)
 async def ticket_add(interaction: discord.Interaction, user:discord.member.Member=None, role:discord.role.Role=None):  # noqa: E501
-    overwrites = discord.PermissionOverwrite(
-        view_channel=True,
-        read_message_history=True,
-        send_messages=True,
-        attach_files=True,
-        embed_links=True,
-    )
-    if user is None and role is not None:
-        await interaction.channel.set_permissions(
-            target=role,
-            overwrite=overwrites,
+    try:
+        overwrites = discord.PermissionOverwrite(
+            view_channel=True,
+            read_message_history=True,
+            send_messages=True,
+            attach_files=True,
+            embed_links=True,
         )
+        if user is None and role is not None:
+            await interaction.channel.set_permissions(
+                target=role,
+                overwrite=overwrites,
+            )
+            await interaction.response.send_message(
+                content=f"Added role {role} to ticket",
+            )  # noqa: E501
+        elif role is None and user is not None:
+            await interaction.channel.set_permissions(
+                target=user,
+                overwrite=overwrites,
+            )
+            await interaction.response.send_message(
+                content=f"Adding user {user} to ticket",
+            )  # noqa: E501
+        elif role is not None and user is not None:
+            await interaction.response.send_message(
+                content="You can only use one.",
+            )
+        elif role is None and user is None:
+            await interaction.response.send_message(
+                content="You have to choose one stupid.",
+            )
+        else:
+            await interaction.response.send_message(
+                content="Unknown error while parsing values",
+            )
+    except Exception as e:
         await interaction.response.send_message(
-            content=f"Added role {role} to ticket",
-        )  # noqa: E501
-    elif role is None and user is not None:
-        await interaction.channel.set_permissions(
-            target=user,
-            overwrite=overwrites,
+            content=f"Error while running: {e}",
+            ephemeral=True,
         )
-        await interaction.response.send_message(
-            content=f"Adding user {user} to ticket",
-        )  # noqa: E501
-    elif role is not None and user is not None:
-        await interaction.response.send_message(
-            content="You can only use one.",
-        )
-    elif role is None and user is None:
-        await interaction.response.send_message(
-            content="You have to choose one stupid.",
-        )
-    else:
-        await interaction.response.send_message(
-            content="Unknown error while parsing values",
-        )
+
 @ticketing_group.command(name="remove",description="Remove user or role from ticket")  # noqa: E501
 @app_commands.describe(user="Member to remove")
 @app_commands.describe(role="Role to remove")
 @app_commands.default_permissions(manage_messages=True)
 async def ticket_remove(interaction: discord.Interaction, user:discord.member.Member=None, role:discord.role.Role=None):  # noqa: E501, F811
-    if user is None and role is not None:
-        await interaction.channel.set_permissions(
-            target=role,
-            overwrite=None,
-        )
+    try:
+        if user is None and role is not None:
+            await interaction.channel.set_permissions(
+                target=role,
+                overwrite=None,
+            )
+            await interaction.response.send_message(
+                content=f"Removed role {role} from ticket",
+            )  # noqa: E501
+        elif role is None and user is not None:
+            await interaction.channel.set_permissions(
+                target=user,
+                overwrite=None,
+            )
+            await interaction.response.send_message(
+                content=f"Removed user {user} from ticket",
+            )  # noqa: E501
+        elif role is not None and user is not None:
+            await interaction.response.send_message(
+                content="You can only use one.",
+            )
+        elif role is None and user is None:
+            await interaction.response.send_message(
+                content="You have to choose one stupid.",
+            )
+        else:
+            await interaction.response.send_message(
+                content="Unknown error while parsing values",
+            )
+    except Exception as e:
         await interaction.response.send_message(
-            content=f"Removed role {role} from ticket",
-        )  # noqa: E501
-    elif role is None and user is not None:
-        await interaction.channel.set_permissions(
-            target=user,
-            overwrite=None,
+            content=f"Error while running: {e}",
         )
-        await interaction.response.send_message(
-            content=f"Removed user {user} from ticket",
-        )  # noqa: E501
-    elif role is not None and user is not None:
-        await interaction.response.send_message(
-            content="You can only use one.",
-        )
-    elif role is None and user is None:
-        await interaction.response.send_message(
-            content="You have to choose one stupid.",
-        )
-    else:
-        await interaction.response.send_message(
-            content="Unknown error while parsing values",
-        )
-
 @ticketing_group.command(name = 'panel', description='Launches the ticketing system')  # noqa: E501
 @app_commands.default_permissions(manage_guild = True)
 @app_commands.checks.cooldown(3, 60, key = lambda i: (i.guild_id))
