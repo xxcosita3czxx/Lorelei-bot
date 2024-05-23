@@ -343,6 +343,13 @@ async def ticket_add(interaction: discord.Interaction, user:discord.member.Membe
             attach_files = True,
             embed_links = True,
         ),
+        interaction.role: discord.PermissionOverwrite(
+            view_channel = True,
+            read_message_history = True,
+            send_messages = True,
+            attach_files = True,
+            embed_links = True,
+        ),
     }
     if user is None and role is not None:
         await interaction.channel.set_permissions(
@@ -350,9 +357,13 @@ async def ticket_add(interaction: discord.Interaction, user:discord.member.Membe
             overwrite=overwrites,
         )
         await interaction.response.send_message(
-            content=f"Adding role {role} to ticket",
+            content=f"Added role {role} to ticket",
         )  # noqa: E501
     elif role is None and user is not None:
+        await interaction.channel.set_permissions(
+            target=user,
+            overwrite=overwrites,
+        )
         await interaction.response.send_message(
             content=f"Adding user {user} to ticket",
         )  # noqa: E501
