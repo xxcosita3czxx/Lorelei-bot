@@ -336,19 +336,12 @@ ticketing_group = app_commands.Group(name="ticketing",description="Ticket comman
 @app_commands.default_permissions(manage_messages=True)
 async def ticket_add(interaction: discord.Interaction, user:discord.member.Member=None, role:discord.role.Role=None):  # noqa: E501
     overwrites = {
-        interaction.user: discord.PermissionOverwrite(
-            view_channel = True,
-            read_message_history = True,
-            send_messages = True,
-            attach_files = True,
-            embed_links = True,
-        ),
-        interaction.role: discord.PermissionOverwrite(
-            view_channel = True,
-            read_message_history = True,
-            send_messages = True,
-            attach_files = True,
-            embed_links = True,
+        user or role: discord.PermissionOverwrite(
+            view_channel=True,
+            read_message_history=True,
+            send_messages=True,
+            attach_files=True,
+            embed_links=True,
         ),
     }
     if user is None and role is not None:
