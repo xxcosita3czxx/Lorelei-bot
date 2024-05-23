@@ -395,7 +395,7 @@ async def ticket_remove(interaction: discord.Interaction, user:discord.member.Me
             content="Unknown error while parsing values",
         )
 
-@ticketing_group.command(name = 'ticket', description='Launches the ticketing system')  # noqa: E501
+@ticketing_group.command(name = 'panel', description='Launches the ticketing system')  # noqa: E501
 @app_commands.default_permissions(manage_guild = True)
 @app_commands.checks.cooldown(3, 60, key = lambda i: (i.guild_id))
 @app_commands.checks.bot_has_permissions(manage_channels = True)
