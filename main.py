@@ -543,7 +543,7 @@ async def ban(interaction: discord.Interaction, member: discord.Member, reason: 
 
     except discord.HTTPException:
         logger.warning("UNSENT BAN MESSAGE")
-
+        await interaction.response.send_message("UNSENT BAN MESSAGE",ephemeral=True)
     await interaction.guild.ban(member, reason=reason)
     await interaction.response.send_message(
         f"Banned {member.mention}",
