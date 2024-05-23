@@ -442,7 +442,7 @@ async def echo(interaction: discord.Interaction,channel:discord.channel.TextChan
         )
         await channel.send(embed=embed)
         await interaction.response.send_message(
-            content="message sent",
+            content="Message sent succesfuly!",
             ephemeral=True,
         )
     except Exception as e:
