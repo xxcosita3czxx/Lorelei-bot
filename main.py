@@ -667,6 +667,11 @@ async def clear(interaction: discord.Interaction, amount: int, member: discord.M
         await interaction.response.send_message(
             content="Removed all that we could, but exception happened",
         )
+    except Exception as e:
+        await interaction.response.send_message(
+            content=f"Clear failed!: {e}",
+            ephemeral=True,
+        )
 with open(".secret.key") as key:
     token = key.read()
 
