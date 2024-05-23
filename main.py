@@ -431,6 +431,22 @@ async def kick(interaction: discord.Interaction, member: discord.Member, reason:
     )
     await interaction.followup.send(embed=embed, ephemeral=False)
 
+@tree.command(name="echo",description="Echoes message in embed")
+@app_commands.default_permissions(manage_messages=True)
+async def echo(interaction: discord.Interaction,channel:discord.channel.TextChannel, title:str="", text:str=""):  # noqa: E501
+    try:
+        embed = discord.Embed(
+            title=title,
+            description=text,
+            color=discord.Color.blurple(),
+        )
+        await interaction.channel.send(embed=embed,channel=channel)
+        await interaction.response.send_message(
+            content="message sent",
+            ephemeral=True,
+        )
+    except Exception as e:
+        await interaction.response.send_message(f"Echo Failed!: {e}")
 
 @tree.command(name="ban", description="Ban a user")
 @app_commands.describe(
