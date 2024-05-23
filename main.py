@@ -354,7 +354,7 @@ ticketing_group = app_commands.Group(name="ticketing",description="Ticket comman
 @ticketing_group.command(name="add",description="Add user or role into ticket")
 @app_commands.describe(user="Member to add")
 @app_commands.describe(role="Role to add")
-async def ticket_add(interaction: discord.Interaction, user=None, role=None):
+async def ticket_add(interaction: discord.Interaction, user:discord.user=None, role:discord.role=None):  # noqa: E501
     if user is None and role is not None:
         await interaction.response.send_message(
             content="Adding role [placeholder] to ticket",
