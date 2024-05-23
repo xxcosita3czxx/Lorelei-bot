@@ -232,7 +232,7 @@ def _main():
 class MemMod:
     """Requires windows, bcs linux works different way."""
 
-    def pid_by_name(self,target_string=None, exe_name=None):  # noqa: C901
+    def pid_by_name(target_string=None, exe_name=None):  # noqa: C901
         """Get proccess pid by its name, pid needed for memory editing."""
         if exe_name is None:
             exe_name = []
@@ -291,7 +291,7 @@ class MemMod:
             logging.warning("Non-Windows system detected! skipping...")
             return 402
 
-    def modify(self,pid:int, address:str, new_value:int):
+    def modify(pid:int, address:str, new_value:int):
         """Memory editing."""
         if platform.system()=="Windows":
 
@@ -354,7 +354,7 @@ class MemMod:
 class GithubApi:
     """Functions using Github API."""
 
-    def get_last_info_raw(self,name:str,save_place:str,file_name:str):
+    def get_last_info_raw(name:str,save_place:str,file_name:str):
         """Get last info of user, what he done last.
 
         Args:
@@ -386,11 +386,15 @@ class GithubApi:
         final = str(save_place+file_name)
 
         with open(final, "w") as f:
-            json.dump(json.loads(page.text), f, indent=4)
+            json.dump(
+                json.loads(page.text),
+                f,
+                indent=4,
+            )
 
         return 101
 
-    def get_info_usr(self,name:str) -> str:
+    def get_info_usr(name:str) -> str:
         """Get user info as JSON in variable.
 
         Args:
@@ -408,7 +412,7 @@ class GithubApi:
         text_json = json.loads(text)
         return text_json
 
-    def update_repo_files_http(self,owner:str, repo:str, branch:str, file_path:str) -> int: # noqa: C901, E501
+    def update_repo_files_http(owner:str, repo:str, branch:str, file_path:str) -> int: # noqa: C901, E501
         """Update files from repo with http api.
 
         Args:
@@ -564,7 +568,7 @@ class GithubApi:
 class PokeAPI:
     """PokeAPI functions from http API."""
 
-    def get_pokemon_raw(self,name:str):
+    def get_pokemon_raw(name:str):
         """Get json of a pokemon.
 
         Args:
@@ -705,7 +709,7 @@ class Networking:
         except OSError:
             return None
 
-    def check_ip_existence(self,ip:str, result_list:list):
+    def check_ip_existence(ip:str, result_list:list):
         """_summary_.
 
         Args:
@@ -745,7 +749,7 @@ class Networking:
         except Exception as e:
             logging.error(f"Error checking IP {ip}: {e}")
 
-    def scan_lan_ips(self,subnet:int, num_threads:int=4,start_ip:int=1,end_ip:int=255) -> list:  # noqa: E501
+    def scan_lan_ips(subnet:int, num_threads:int=4,start_ip:int=1,end_ip:int=255) -> list:  # noqa: E501
         """Will scan for local ips.
 
         Args:
@@ -796,7 +800,7 @@ class Networking:
 
         return result_list
 
-    def check_ip_range(self,subnet:int, start:int=2, end:int=254):
+    def check_ip_range(subnet:int, start:int=2, end:int=254):
         """Check ip range (DEPRECATED).
 
         Args:
@@ -830,7 +834,7 @@ class Networking:
 class Upload:
     """File uploading functions."""
 
-    def upload_to_transfer_sh(self,file_path:str):
+    def upload_to_transfer_sh(file_path:str):
         """Will upload to transfer.sh.
 
         Args:
@@ -843,7 +847,11 @@ class Upload:
 
         """
         with open(file_path, 'rb') as file:
-            response = requests.put('https://transfer.sh/' + file_path, data=file)  # noqa: S113
+            response = requests.put(
+                'https://transfer.sh/'+ file_path,
+                data=file,
+                timeout=60,
+            )
             return response.text.strip()
 
 

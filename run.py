@@ -79,10 +79,10 @@ def update_cosita_tk():
             logger.error("CosTK update FAILED")
         time.sleep(config.costk_update)
 if __name__ == "__main__":
-    update_thread = threading.Thread(target=update_loop)
     monitor_thread = threading.Thread(target=Is_Alive)
+    update_thread = threading.Thread(target=update_loop)
     update_costk_thread = threading.Thread(target=update_cosita_tk)
 
     monitor_thread.start()
-    update_thread.start()
+#    update_thread.start()
     update_costk_thread.start()
