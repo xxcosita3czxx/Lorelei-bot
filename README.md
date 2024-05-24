@@ -32,3 +32,5 @@ You can also run it using pterodactyl (UPTDATER DOESNT HAVE TO WORK)
 3. Set main file as `run.py`
 4. (Optional) Disable autoupdate in `config.py` for better stability, **You will have to update manually**
 5. Start
+## Config
+work in progress
