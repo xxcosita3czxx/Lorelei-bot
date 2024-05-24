@@ -29,7 +29,7 @@ Developed in python for everyone.
 """
 
 async def autocomplete_color(interaction: discord.Interaction, current: str):
-    colors = ['Blurple', 'Red', 'Green', 'Blue', 'Yellow']
+    colors = ['Blurple', 'Red', 'Green', 'Blue', 'Yellow',"Purple","White"]
     return [color for color in colors if current.lower() in color.lower()]
 
 async def change_status() -> None:
@@ -675,7 +675,7 @@ async def anti_invites(interaction: discord.Interaction,value:bool):
 @configure_appear.command(name="color",description="Changes default color of embeds.")  # noqa: E501
 @discord.app_commands.describe(color="The color to set")
 @app_commands.autocomplete(color=autocomplete_color)
-async def config_color(interaction: discord.Interaction,color: discord.Colour):
+async def config_color(interaction: discord.Interaction,color:str):
     try:
         gconfig.set(interaction.guild_id,"APPEARANCE","color",value=color)
         await interaction.response.send_message(
