@@ -151,7 +151,8 @@ async def on_message(message):
             )
         else:
             await bot.process_commands(message)
-
+    else:
+        logging.info("anti_links disabled")
 
 ############################### HELP COMMAND #######################################
 
