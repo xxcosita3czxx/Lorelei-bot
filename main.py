@@ -2,6 +2,7 @@ import asyncio
 import logging
 import os
 import re
+from collections import defaultdict
 from datetime import datetime
 
 import coloredlogs
@@ -43,26 +44,38 @@ async def change_status() -> None:
         )
         await asyncio.sleep(5)
 
-def load_configs(config_dir:str):
-    configs = {}
-    for filename in os.listdir(config_dir):
-        if filename.endswith('.toml'):
-            guild_id = filename.split('.')[0].split('_')[1]
-            with open(os.path.join(config_dir, filename)) as f:
-                configs[guild_id] = toml.load(f)
-    return configs
+class ConfigManager:
+    def __init__(self, config_dir):
+        self.config_dir = config_dir
+        self.config = defaultdict(dict)
+        self._load_all_configs()
 
-def save_config(guild_id, config, config_dir:str):
-    filename = os.path.join(config_dir, f'guild_{guild_id}.toml')
-    with open(filename, 'w') as f:
-        toml.dump(config, f)
+    def _load_all_configs(self):
+        for filename in os.listdir(self.config_dir):
+            if filename.endswith('.toml'):
+                id = filename[:-5]  # Remove the .toml extension to get the ID
+                file_path = os.path.join(self.config_dir, filename)
+                with open(file_path) as f:
+                    self.config[id] = toml.load(f)
 
-gconfig = load_configs("data/guilds")
-uconfig = load_configs("data/users")
+    def get(self, id, title, key, default=None):
+        return self.config.get(id, {}).get(title, {}).get(key, default)
 
-#########################################################################################
+    def set(self, id, title, key, value):
+        if id not in self.config:
+            self.config[id] = {}
+        if title not in self.config[id]:
+            self.config[id][title] = {}
+        self.config[id][title][key] = value
+        self._save_config(id)
 
+    def _save_config(self, id):
+        file_path = os.path.join(self.config_dir, f"{id}.toml")
+        with open(file_path, 'w') as f:
+            toml.dump(self.config[id], f)
 
+gconfig = ConfigManager("data/guilds")
+uconfig = ConfigManager("data/users")
 
 class TimeConverter(app_commands.Transformer):
 
@@ -87,16 +100,8 @@ class TimeConverter(app_commands.Transformer):
 
         return round(time)
 
+#########################################################################################
 
-def ensure_guild_configs(bot):
-    for guild in bot.guilds:
-        guild_id = str(guild.id)
-        if guild_id not in gconfig:
-            gconfig[guild_id] = {
-                'DEFAULT': {'color': 'Blurple'},
-                'SECURITY': {'anti_invites': True},
-            }
-            save_config(guild_id, gconfig[guild_id])
 class aclient(discord.Client):
 
     '''
@@ -133,17 +138,6 @@ tree = app_commands.CommandTree(bot)
 tree.remove_command("help")
 
 ################################ EVENTS ############################################
-@bot.event
-async def on_message(message):
-    guild_id = str(message.guild.id)
-    if guild_id in gconfig and gconfig[guild_id].get('SECURITY', {}).get('anti_invites', True):  # noqa: SIM102, E501
-        if "discord.gg/" in message.content:
-            await message.delete()
-            await message.channel.send(
-                f'Invites are not allowed, {message.author.mention}!',
-            )
-            return
-    await bot.process_commands(message)
 
 
 ############################### HELP COMMAND #######################################

@@ -1,5 +1,6 @@
 .secret.key
 __pycache__
 bot.log
+.pytest_cache
 .ruff_cache
 .vscode
