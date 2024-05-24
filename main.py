@@ -62,7 +62,9 @@ class ConfigManager:
 
     def get(self, id, title, key, default=None):
         logging.debug(f"Getting {id}:{title}:{key}")
-        return self.config.get(id, {}).get(title, {}).get(key, default)
+        result = self.config.get(id, {}).get(title, {}).get(key, default)
+        logging.debug(result)
+        return result
 
     def set(self, id, title, key, value):
         logging.debug(f"Setting {id}:{title}:{key} to {value}")
