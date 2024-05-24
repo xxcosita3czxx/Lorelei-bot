@@ -154,8 +154,6 @@ async def on_message(message:discord.Message):
                 await message.author.send(
                     content=f"{message.author.mention} Don't send links!",
                 )
-            else:
-                await bot.process_commands(message)
         else:
             logging.info("anti_links disabled")
 
