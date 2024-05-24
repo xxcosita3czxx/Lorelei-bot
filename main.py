@@ -617,12 +617,19 @@ configure_sec = app_commands.Group(
     description="Security configurations",
 )
 
-@configure_sec.command(name="anti-invites",description="No invites in the halls")
-async def anti_invites(interaction: discord.Interaction):
-    await interaction.response.send_message(
-        content="STILL IN PROGRESS",
-        ephemeral=True,
-    )
+@configure_sec.command(name="anti-invite",description="No invites in the halls")
+async def anti_invites(interaction: discord.Interaction,value:bool):
+    try:
+        gconfig.set(interaction.guild_id,"SECURITY","anti-invites",value=value)
+        await interaction.response.send_message(
+            content=f"Setted value {str(value)}",
+            ephemeral=True,
+        )
+    except Exception as e
+        await interaction.response.send_message(
+            content=f"Failed configuring anti-invites: {e}",
+        )
+
 configure.add_command(configure_sec)
 tree.add_command(configure)
 
