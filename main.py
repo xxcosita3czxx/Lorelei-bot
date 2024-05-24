@@ -755,7 +755,7 @@ async def clear(interaction: discord.Interaction, amount:int, member: discord.Me
                 ephemeral=True,
             )
     except discord.errors.NotFound:
-        await interaction.response.send_message(
+        await interaction.followup.send(
             content="Removed all that we could, but exception happened",
         )
     except Exception as e:
