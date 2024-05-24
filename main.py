@@ -74,7 +74,7 @@ class ConfigManager:
             self.config[id][title] = {}
         self.config[id][title][key] = value
         self._save_config(id)
-        self._load_all_configs(id)  # Reload the specific config after saving
+        self._load_all_configs()  # Reload the specific config after saving
         logging.debug(f"Set {id}:{title}:{key} to {value}")
 
     def _save_config(self, id):
