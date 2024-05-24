@@ -625,7 +625,7 @@ async def anti_invites(interaction: discord.Interaction,value:bool):
             content=f"Setted value {str(value)}",
             ephemeral=True,
         )
-    except Exception as e
+    except Exception as e:
         await interaction.response.send_message(
             content=f"Failed configuring anti-invites: {e}",
         )
