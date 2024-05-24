@@ -146,7 +146,7 @@ async def on_message(message:discord.Message):
         logging.debug(message.guild)
         logging.debug(guild_id)
         if gconfig.get(str(guild_id),"SECURITY","anti-invite") is True:
-            logging.INFO(gconfig.get(str(message.guild.id),"SECURITY","anti-invite"))
+            logging.INFO(gconfig.get(str(guild_id),"SECURITY","anti-invite"))
             if message.author == bot.user:
                 return
             if 'discord.gg' in message.content:
