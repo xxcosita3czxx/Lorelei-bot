@@ -650,6 +650,10 @@ configure_sec = app_commands.Group(
     name="security",
     description="Security configurations",
 )
+configure_appear = app_commands.Group(
+    name="appearance",
+    description="Appearance of bot on your server",
+)
 
 @configure_sec.command(name="anti-invite",description="No invites in the halls")
 async def anti_invites(interaction: discord.Interaction,value:bool):
@@ -664,7 +668,23 @@ async def anti_invites(interaction: discord.Interaction,value:bool):
             content=f"Failed configuring anti-invites: {e}",
         )
 
+@configure_appear.command(name="color",description="Changes default color of embeds.")  # noqa: E501
+async def config_color(interaction: discord.Interaction,color: discord.Color):
+    try:
+        gconfig.set(interaction.guild_id,"APPEARANCE","color",value=color)
+        await interaction.response.send_message(
+            content=f"Setted value {str(color)}",
+            ephemeral=True,
+        )
+    except Exception as e:
+        await interaction.response.send_message(
+            content=f"Exception happened: {e}",
+            ephemeral=True,
+        )
+
+
 configure.add_command(configure_sec)
+configure.add_command(configure_appear)
 tree.add_command(configure)
 
 ####################################################################################
