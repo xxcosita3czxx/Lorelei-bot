@@ -734,7 +734,7 @@ async def clear(interaction: discord.Interaction, amount:int, member: discord.Me
 
         if member is None:
             await channel.purge(limit=amount)
-            await interaction.followup.send(
+            await interaction.response.send_message(
                 embed=discord.Embed(
                     description=f"Successfully deleted {amount} messages.",
                     color=discord.Color.green(),
@@ -743,19 +743,19 @@ async def clear(interaction: discord.Interaction, amount:int, member: discord.Me
 
         elif member is not None:
             await channel.purge(limit=amount)
-            await interaction.followup.send(
+            await interaction.response.send_message(
                 embed=discord.Embed(
                     description=f"Successfully deleted {amount} messages from {member.name}",  # noqa: E501
                     color=discord.Color.green(),
                 ),
             )
         else:
-            await interaction.followup.send(
+            await interaction.response.send_message(
                 content="INTERACTION FAILED",
                 ephemeral=True,
             )
     except discord.errors.NotFound:
-        await interaction.followup.send(
+        await interaction.response.send_message(
             content="Removed all that we could, but exception happened",
         )
     except Exception as e:
