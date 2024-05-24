@@ -29,10 +29,6 @@ This is Lorelei Bot developed by cosita3cz.
 Developed in python for everyone.
 """
 
-async def autocomplete_color(interaction: discord.Interaction, current: str):
-    colors = ['Blurple', 'Red', 'Green', 'Blue', 'Yellow',"Purple","White"]
-    return [color for color in colors if current.lower() in color.lower()]
-
 async def fruit_autocomplete(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
     colors = ['Blurple', 'Red', 'Green', 'Blue', 'Yellow',"Purple","White"]
     return [app_commands.Choice(name=color, value=color) for color in colors if current.lower() in color.lower()]  # noqa: E501
