@@ -139,6 +139,19 @@ tree.remove_command("help")
 
 ################################ EVENTS ############################################
 
+@bot.event
+async def on_message(message):
+    if gconfig.get(message.guild.id,"SECURITY",key="anti_invites") is True:
+        if message.author == bot.user:
+            return
+        if 'discord.gg' in message.content:
+            await message.delete()
+            await message.channel.send(
+                f"{message.author.mention} Don't send links!",
+            )
+        else:
+            await bot.process_commands(message)
+
 
 ############################### HELP COMMAND #######################################
 
