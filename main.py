@@ -68,11 +68,20 @@ class ConfigManager:
             self.config[id][title] = {}
         self.config[id][title][key] = value
         self._save_config(id)
+        self._load_config(id)  # Reload the specific config after saving
 
     def _save_config(self, id):
         file_path = os.path.join(self.config_dir, f"{id}.toml")
         with open(file_path, 'w') as f:
             toml.dump(self.config[id], f)
+
+    def _load_config(self, id):
+        file_path = os.path.join(self.config_dir, f"{id}.toml")
+        if os.path.exists(file_path):
+            with open(file_path) as f:
+                self.config[id] = toml.load(f)
+        else:
+            self.config[id] = defaultdict(dict)
 
 gconfig = ConfigManager("data/guilds")
 uconfig = ConfigManager("data/users")
