@@ -729,12 +729,12 @@ async def slowmode(interaction: discord.Interaction,time: app_commands.Transform
 @app_commands.default_permissions(manage_messages=True)
 async def clear(interaction: discord.Interaction, amount:int, member: discord.Member = None):  # noqa: E501
     try:
-        #await interaction.response.defer()
+        await interaction.response.defer()
         channel = interaction.channel
 
         if member is None:
             await channel.purge(limit=amount)
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 embed=discord.Embed(
                     description=f"Successfully deleted {amount} messages.",
                     color=discord.Color.green(),
@@ -743,14 +743,14 @@ async def clear(interaction: discord.Interaction, amount:int, member: discord.Me
 
         elif member is not None:
             await channel.purge(limit=amount)
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 embed=discord.Embed(
                     description=f"Successfully deleted {amount} messages from {member.name}",  # noqa: E501
                     color=discord.Color.green(),
                 ),
             )
         else:
-            await interaction.response.send_message(
+            await interaction.response.followup.send(
                 content="INTERACTION FAILED",
                 ephemeral=True,
             )
