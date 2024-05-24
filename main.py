@@ -141,9 +141,10 @@ tree.remove_command("help")
 
 @bot.event
 async def on_message(message:discord.Message):
-    logging.info(message.guild)
-    logging.info(message.guild.id)
-    if gconfig.get(message.guild,"SECURITY","anti-invite") is True:
+    logging.debug(message.guild)
+    logging.debug(message.guild.id)
+    guild_id = message.guild.id
+    if gconfig.get(guild_id,"SECURITY","anti-invite") is True:
         logging.INFO(gconfig.get(message.guild,"SECURITY","anti-invite"))
         if message.author == bot.user:
             return
