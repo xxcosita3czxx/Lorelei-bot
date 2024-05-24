@@ -58,7 +58,7 @@ class ConfigManager:
                 file_path = os.path.join(self.config_dir, filename)
                 with open(file_path) as f:
                     self.config[id] = toml.load(f)
-        logging.debug("Loaded configs:", self.config)
+        logging.debug(f"Loaded configs: {self.config}")
 
     def get(self, id, title, key, default=None):
         logging.debug(f"Getting {id}:{title}:{key}")
