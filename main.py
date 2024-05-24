@@ -729,7 +729,7 @@ async def slowmode(interaction: discord.Interaction,time: app_commands.Transform
 @app_commands.default_permissions(manage_messages=True)
 async def clear(interaction: discord.Interaction, amount:int, member: discord.Member = None):  # noqa: E501
     try:
-        await interaction.response.defer()
+        #await interaction.response.defer()
         channel = interaction.channel
 
         if member is None:
