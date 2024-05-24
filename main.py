@@ -141,22 +141,23 @@ tree.remove_command("help")
 
 @bot.event
 async def on_message(message:discord.Message):
-    guild_id = message.guild.id
-    logging.debug(message.guild)
-    logging.debug(guild_id)
-    if gconfig.get(guild_id,"SECURITY","anti-invite") is True:
-        logging.INFO(gconfig.get(message.guild,"SECURITY","anti-invite"))
-        if message.author == bot.user:
-            return
-        if 'discord.gg' in message.content:
-            await message.delete()
-            await message.author.send(
-                content=f"{message.author.mention} Don't send links!",
-            )
+    if message.guild:
+        guild_id = message.guild.id
+        logging.debug(message.guild)
+        logging.debug(guild_id)
+        if gconfig.get(guild_id,"SECURITY","anti-invite") is True:
+            logging.INFO(gconfig.get(message.guild,"SECURITY","anti-invite"))
+            if message.author == bot.user:
+                return
+            if 'discord.gg' in message.content:
+                await message.delete()
+                await message.author.send(
+                    content=f"{message.author.mention} Don't send links!",
+                )
+            else:
+                await bot.process_commands(message)
         else:
-            await bot.process_commands(message)
-    else:
-        logging.info("anti_links disabled")
+            logging.info("anti_links disabled")
 
 ############################### HELP COMMAND #######################################
 
