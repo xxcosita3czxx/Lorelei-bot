@@ -624,7 +624,7 @@ configure_sec = app_commands.Group(
 @configure_sec.command(name="anti-invite",description="No invites in the halls")
 async def anti_invites(interaction: discord.Interaction,value:bool):
     try:
-        gconfig.set(interaction.guild_id,"SECURITY","anti-invites",value=value)
+        gconfig.set(interaction.guild_id,"SECURITY","anti-invite",value=value)
         await interaction.response.send_message(
             content=f"Setted value {str(value)}",
             ephemeral=True,
