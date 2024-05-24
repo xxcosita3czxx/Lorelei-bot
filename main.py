@@ -669,7 +669,7 @@ async def anti_invites(interaction: discord.Interaction,value:bool):
         )
 
 @configure_appear.command(name="color",description="Changes default color of embeds.")  # noqa: E501
-async def config_color(interaction: discord.Interaction,color: discord.Color):
+async def config_color(interaction: discord.Interaction,color: discord.Colour):
     try:
         gconfig.set(interaction.guild_id,"APPEARANCE","color",value=color)
         await interaction.response.send_message(
