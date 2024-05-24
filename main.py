@@ -140,14 +140,14 @@ tree.remove_command("help")
 ################################ EVENTS ############################################
 
 @bot.event
-async def on_message(message):
-    if gconfig.get(message.guild,"SECURITY",key="anti_invites") is True:
+async def on_message(message:discord.Message):
+    if gconfig.get(message.guild.id,"SECURITY","anti_invites") is True:
         if message.author == bot.user:
             return
         if 'discord.gg' in message.content:
             await message.delete()
-            await message.channel.send(
-                f"{message.author.mention} Don't send links!",
+            await message.author.send(
+                content=f"{message.author.mention} Don't send links!",
             )
         else:
             await bot.process_commands(message)
@@ -739,7 +739,7 @@ async def clear(interaction: discord.Interaction, amount: int, member: discord.M
             content=f"Clear failed!: {e}",
             ephemeral=True,
         )
-with open(".secret.key") as key:
-    token = key.read()
-
-bot.run(token=token)
+if __name__=="__main__":
+    with open(".secret.key") as key:
+        token = key.read()
+    bot.run(token=token)
