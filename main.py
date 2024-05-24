@@ -622,7 +622,7 @@ async def ban(interaction: discord.Interaction, member: discord.Member, reason: 
         await member.send(
             embed=discord.Embed(
                 description=f"You have been banned from {interaction.guild.name} for {format_timespan(time)}\n**Reason**: {reason}",  # noqa: E501
-                color=0x2f3136,
+                color=discord.Color.blurple(),
             ),
         )
 
