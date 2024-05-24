@@ -172,6 +172,17 @@ async def on_message(message:discord.Message):
             if 'discord.gg' in message.content:
                 await message.delete()
                 await message.author.send(
+                    content=f"{message.author.mention} Don't send invites!",
+                )
+        else:
+            logging.info("anti-invite disabled")
+        if gconfig.get(str(guild_id),"SECURITY","anti-links") is True:
+            logging.debug(gconfig.get(str(guild_id),"SECURITY","anti-links"))
+            if message.author == bot.user:
+                return
+            if 'https://' or "http://" in message.content:  # noqa: SIM222
+                await message.delete()
+                await message.author.send(
                     content=f"{message.author.mention} Don't send links!",
                 )
         else:
