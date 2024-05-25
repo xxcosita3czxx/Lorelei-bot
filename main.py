@@ -192,13 +192,13 @@ async def on_message(message:discord.Message):
                 )
         else:
             logging.info("anti_links disabled")
+
+############################# User Command #########################################
+
 @tree.context_menu(name="User Info")
 async def user_info(interaction: discord.Interaction):
     interaction.response.send_message(content="it worked!", ephemeral=True)
 
-############################# User Command #########################################
-
-@
 
 ############################### HELP COMMAND #######################################
 
