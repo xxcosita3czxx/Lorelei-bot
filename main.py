@@ -197,7 +197,7 @@ async def on_message(message:discord.Message):
 
 @tree.context_menu(name="User Info")
 async def user_info(interaction: discord.Interaction, user:discord.User):
-    interaction.response.send_message(content="it worked!", ephemeral=True)
+    await interaction.response.send_message(content="it worked!", ephemeral=True)
 
 
 ############################### HELP COMMAND #######################################
