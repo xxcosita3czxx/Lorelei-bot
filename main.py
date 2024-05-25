@@ -200,11 +200,11 @@ async def on_message(message:discord.Message):
 @tree.context_menu(name="User Info")
 async def user_info(interaction: discord.Interaction, user:discord.User):
     usr_avatar = user.avatar.url
+    logger.debug(usr_avatar)
     embed = discord.Embed(
         title=f"Info About {user.global_name}",
         description="Info about this user:",
     )
-    embed.set_image(f"{usr_avatar}")
     embed.add_field(
         name="Created at",
         value=f"{user.created_at.date()},{user.created_at.ctime()}",
