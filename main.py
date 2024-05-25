@@ -195,13 +195,21 @@ async def on_message(message:discord.Message):
             logging.debug("anti_links disabled")
             return
 
-############################# User Command #########################################
+############################# Context Commands #####################################
 
 @tree.context_menu(name="User Info")
 async def user_info(interaction: discord.Interaction, user:discord.User):
+    embed = discord.Embed(
+        title=f"Info About {user.global_name.capitalize}",
+        description="Info about this user:",
+    )
+    embed.add_field(
+        name="Created at",
+        value=f"{user.created_at.combine()}"
+    )
+    embed.set_image(user.avatar.url)
     await interaction.response.send_message(
-        content=f"{user.name.capitalize()}, {user.created_at.date()}",
-        ephemeral=True,
+        embed=embed,
     )
 
 
