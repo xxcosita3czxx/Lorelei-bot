@@ -180,7 +180,8 @@ async def on_message(message:discord.Message):
                     content=f"{message.author.mention} Don't send invites!",
                 )
         else:
-            logging.info("anti-invite disabled")
+            logging.debug("anti-invite disabled")
+            return
         if gconfig.get(str(guild_id),"SECURITY","anti-links") is True:
             logging.debug(gconfig.get(str(guild_id),"SECURITY","anti-links"))
             if message.author == bot.user:
@@ -191,7 +192,8 @@ async def on_message(message:discord.Message):
                     content=f"{message.author.mention} Don't send links!",
                 )
         else:
-            logging.info("anti_links disabled")
+            logging.debug("anti_links disabled")
+            return
 
 ############################# User Command #########################################
 
