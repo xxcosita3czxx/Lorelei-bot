@@ -203,7 +203,7 @@ async def user_info(interaction: discord.Interaction, user:discord.User):
         title=f"Info About {user.global_name.capitalize}",
         description="Info about this user:",
     )
-    embed.set_image(f"{user.avatar.url.lower()}")
+    embed.set_image(f"{user.avatar.url}")
     embed.add_field(
         name="Created at",
         value=f"{user.created_at.date()},{user.created_at.ctime()}",
