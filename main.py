@@ -428,12 +428,15 @@ async def ping(interaction: discord.Interaction):
     )
 
 
-ticketing_group = app_commands.Group(name="ticketing",description="Ticket commands")
-ticketing_group.default_permissions(administrator = True)
+ticketing_group = app_commands.Group(
+    name="ticketing",
+    description="Ticket commands",
+    default_permissions=discord.Permissions.manage_channels,
+)
+
 @ticketing_group.command(name="add",description="Add user or role into ticket")
 @app_commands.describe(user="Member to add")
 @app_commands.describe(role="Role to add")
-@app_commands.default_permissions(manage_messages=True)
 async def ticket_add(interaction: discord.Interaction, user:discord.member.Member=None, role:discord.role.Role=None):  # noqa: E501
     try:
         overwrites = discord.PermissionOverwrite(
@@ -480,7 +483,6 @@ async def ticket_add(interaction: discord.Interaction, user:discord.member.Membe
 @ticketing_group.command(name="remove",description="Remove user or role from ticket")  # noqa: E501
 @app_commands.describe(user="Member to remove")
 @app_commands.describe(role="Role to remove")
-@app_commands.default_permissions(manage_messages=True)
 async def ticket_remove(interaction: discord.Interaction, user:discord.member.Member=None, role:discord.role.Role=None):  # noqa: E501, F811
     try:
         if user is None and role is not None:
@@ -517,7 +519,6 @@ async def ticket_remove(interaction: discord.Interaction, user:discord.member.Me
         )
 @ticketing_group.command(name = 'panel', description='Launches the ticketing system')  # noqa: E501
 @app_commands.checks.cooldown(3, 60, key = lambda i: (i.guild_id))
-@app_commands.checks.bot_has_permissions(manage_channels = True)
 async def ticketing(interaction: discord.Interaction, text:str="Hi! If you need help or have a question, don't hesitate to create a ticket."):  # noqa: E501
 
     '''
