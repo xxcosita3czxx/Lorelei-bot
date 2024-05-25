@@ -200,7 +200,7 @@ async def on_message(message:discord.Message):
 @tree.context_menu(name="User Info")
 async def user_info(interaction: discord.Interaction, user:discord.User):
     embed = discord.Embed(
-        title=f"Info About {user.global_name.capitalize}",
+        title=f"Info About {user.global_name}",
         description="Info about this user:",
     )
     embed.set_image(f"{user.avatar.url}")
