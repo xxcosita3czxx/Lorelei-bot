@@ -516,7 +516,7 @@ async def ticket_remove(interaction: discord.Interaction, user:discord.member.Me
             content=f"Error while running: {e}",
         )
 @ticketing_group.command(name = 'panel', description='Launches the ticketing system')  # noqa: E501
-@app_commands.default_permissions(manage_guild = True)
+@app_commands.default_permissions(administrator = True)
 @app_commands.checks.cooldown(3, 60, key = lambda i: (i.guild_id))
 @app_commands.checks.bot_has_permissions(manage_channels = True)
 async def ticketing(interaction: discord.Interaction, text:str="Hi! If you need help or have a question, don't hesitate to create a ticket."):  # noqa: E501
