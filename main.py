@@ -205,7 +205,7 @@ async def user_info(interaction: discord.Interaction, user:discord.User):
     )
     embed.add_field(
         name="Created at",
-        value=f"{user.created_at.combine()}"
+        value=f"{user.created_at.ctime()}",
     )
     embed.set_image(user.avatar.url)
     await interaction.response.send_message(
