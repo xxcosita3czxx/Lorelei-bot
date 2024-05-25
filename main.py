@@ -192,33 +192,13 @@ async def on_message(message:discord.Message):
                 )
         else:
             logging.info("anti_links disabled")
+@tree.context_menu(name="User Info")
+async def user_info(interaction: discord.Interaction):
+    interaction.response.send_message(content="it worked!", ephemeral=True)
 
-@bot.event
-async def on_interaction(interaction: discord.Interaction):
-    if interaction.type == discord.InteractionType.application_command:  # noqa: SIM102
-        if interaction.data["name"] == "userinfo":
-            user_id = interaction.data["target_id"]
-            user = await bot.fetch_user(user_id)
-            embed = discord.Embed(
-                title=f"User Info - {user.name}",
-                description=f"Here is some info about {user.mention}",
-                color=discord.Color.blue(),
-            )
-            embed.add_field(name="ID", value=user.id, inline=False)
-            embed.add_field(name="Name", value=user.name, inline=False)
-            embed.add_field(
-                name="Discriminator",
-                value=user.discriminator,
-                inline=False,
-            )
-            embed.add_field(name="Created At", value=user.created_at, inline=False)
-            await interaction.response.send_message(embed=embed, ephemeral=True)
+############################# User Command #########################################
 
-@bot.event
-async def setup_hook():
-    user_command = discord.UserCommand(name="userinfo")
-    bot.tree.add_command(user_command)
-    await bot.tree.sync()  # Sync global commands
+@
 
 ############################### HELP COMMAND #######################################
 
