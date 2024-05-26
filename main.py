@@ -539,6 +539,8 @@ class ticketing_group(app_commands.Group):
 
 tree.add_command(ticketing_group())
 
+####################################################################################
+
 # kick and ban
 @tree.command(name="kick", description="Kick a user")
 @app_commands.describe(member="User to kick", reason="Reason for kick")
