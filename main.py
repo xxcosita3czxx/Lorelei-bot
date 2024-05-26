@@ -431,7 +431,9 @@ async def ping(interaction: discord.Interaction):
 ticketing_group = app_commands.Group(
     name="ticketing",
     description="Ticket commands",
-    default_permissions=discord.Permissions.manage_channels,
+    default_permissions=[
+        discord.Permissions.manage_channels,
+    ],
 )
 
 @ticketing_group.command(name="add",description="Add user or role into ticket")
@@ -672,17 +674,23 @@ async def ban(interaction: discord.Interaction, member: discord.Member, reason: 
 configure = app_commands.Group(
     name="configure",
     description="Config for server",
-    default_permissions=discord.Permissions.administrator,
+    default_permissions=[
+        discord.Permissions.administrator,
+    ],
 )
 configure_sec = app_commands.Group(
     name="security",
     description="Security configurations",
-    default_permissions=discord.Permissions.administrator,
+    default_permissions=[
+        discord.Permissions.administrator,
+    ],
 )
 configure_appear = app_commands.Group(
     name="appearance",
     description="Appearance of bot on your server",
-    default_permissions=discord.Permissions.administrator,
+    default_permissions=[
+        discord.Permissions.administrator,
+    ],
 )
 
 @configure_sec.command(name="anti-invite",description="No invites in the halls")
