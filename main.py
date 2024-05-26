@@ -722,7 +722,7 @@ class configure_members(app_commands.Group):
         self.name="members"
         self.description="Config for users"
 
-    app_commands.Command(
+    @app_commands.Command(
         name="auto-role",
         description="Automatic role on join",
     )
