@@ -731,7 +731,7 @@ class configure_members(app_commands.Group):
             gconfig.set(interaction.guild_id,"MEMBERS","autorole-role",role)
             gconfig.set(interaction.guild_id,"MEMBERS","autorole-enabled",enabled)
             await interaction.response.send_message(
-                content=f"Setted value {str(color)}",
+                content=f"Setted value {str(role.name)}, {str(enabled)}",
                 ephemeral=True,
             )
         except Exception as e:
