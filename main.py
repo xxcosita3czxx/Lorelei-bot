@@ -435,7 +435,7 @@ class ticketing_group(app_commands.Group):
         self.name="ticketing"
         self.description="Ticket commands"
 
-@ticketing_group.command(name="add",description="Add user or role into ticket")
+@ticketing_group.command(self=ticketing_group,name="add",description="Add user or role into ticket")
 @app_commands.describe(user="Member to add")
 @app_commands.describe(role="Role to add")
 async def ticket_add(interaction: discord.Interaction, user:discord.member.Member=None, role:discord.role.Role=None):  # noqa: E501
