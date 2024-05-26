@@ -670,13 +670,6 @@ async def ban(interaction: discord.Interaction, member: discord.Member, reason: 
 ################################### CONFIGURE COMMAND ##############################
 
 @app_commands.default_permissions(administrator=True)
-class configure(app_commands.Group):
-    def __init__(self):
-        super().__init__()
-        self.name="configure"
-        self.description="Config for server"
-
-@app_commands.default_permissions(administrator=True)
 class configure_sec(app_commands.Group):
     def __init__(self):
         super().__init__()
@@ -720,9 +713,15 @@ class configure_appear(app_commands.Group):
                 ephemeral=True,
             )
 
+@app_commands.default_permissions(administrator=True)
+class configure(app_commands.Group):
+    def __init__(self):
+        super().__init__()
+        self.name="configure"
+        self.description="Config for server"
+        self.add_command(configure_sec())
+        self.add_command(configure_appear())
 
-configure.add_command(configure_sec)
-configure.add_command(configure_appear)
 tree.add_command(configure)
 
 ####################################################################################
