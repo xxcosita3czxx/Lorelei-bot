@@ -166,6 +166,7 @@ tree.remove_command("help")
 
 @bot.event
 async def on_message(message:discord.Message):
+    logging.debug("on_message was triggered")
     if message.guild:
         guild_id = message.guild.id
         logging.debug(message.guild)
@@ -196,12 +197,12 @@ async def on_message(message:discord.Message):
             return
 @bot.event
 async def on_member_join(member:discord.Member):
+    logging.debug("on_member_join was triggered!")
     logging.debug(member.guild + " / " + member.guild.id)
-    if member.guild:  # noqa: SIM102
-        if gconfig.get(str(member.guild.id),"MEMBERS","autorole-enabled") is True:
-            role = gconfig.get(str(member.guild.id),"MEMBERS","autorole-role")
-            logging.debug(role)
-            member.add_roles(role)
+    if gconfig.get(str(member.guild.id),"MEMBERS","autorole-enabled") is True:
+        role = gconfig.get(str(member.guild.id),"MEMBERS","autorole-role")
+        logging.debug(role)
+        await member.add_roles(role)
 
 ############################# Context Commands #####################################
 
