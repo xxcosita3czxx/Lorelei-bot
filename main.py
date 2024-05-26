@@ -704,21 +704,21 @@ class configure_appear(app_commands.Group):
         self.description="Appearance of bot on your server"
 
 
-@configure_appear.command(name="color",description="Changes default color of embeds.")  # noqa: E501
-@discord.app_commands.describe(color="The color to set")
-@app_commands.autocomplete(color=autocomplete_color)
-async def config_color(interaction: discord.Interaction,color:str):
-    try:
-        gconfig.set(interaction.guild_id,"APPEARANCE","color",value=color)
-        await interaction.response.send_message(
-            content=f"Setted value {str(color)}",
-            ephemeral=True,
-        )
-    except Exception as e:
-        await interaction.response.send_message(
-            content=f"Exception happened: {e}",
-            ephemeral=True,
-        )
+    @app_commands.command(name="color",description="Changes default color of embeds.")  # noqa: E501
+    @app_commands.describe(color="The color to set")
+    @app_commands.autocomplete(color=autocomplete_color)
+    async def config_color(self,interaction: discord.Interaction,color:str):
+        try:
+            gconfig.set(interaction.guild_id,"APPEARANCE","color",value=color)
+            await interaction.response.send_message(
+                content=f"Setted value {str(color)}",
+                ephemeral=True,
+            )
+        except Exception as e:
+            await interaction.response.send_message(
+                content=f"Exception happened: {e}",
+                ephemeral=True,
+            )
 
 
 configure.add_command(configure_sec)
