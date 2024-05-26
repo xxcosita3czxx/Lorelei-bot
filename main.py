@@ -480,64 +480,64 @@ class ticketing_group(app_commands.Group):
                 ephemeral=True,
             )
 
-@ticketing_group.command(name="remove",description="Remove user or role from ticket")  # noqa: E501
-@app_commands.describe(user="Member to remove")
-@app_commands.describe(role="Role to remove")
-async def ticket_remove(interaction: discord.Interaction, user:discord.member.Member=None, role:discord.role.Role=None):  # noqa: E501, F811
-    try:
-        if user is None and role is not None:
-            await interaction.channel.set_permissions(
-                target=role,
-                overwrite=None,
-            )
+    @app_commands.command(name="remove",description="Remove user or role from ticket")  # noqa: E501
+    @app_commands.describe(user="Member to remove")
+    @app_commands.describe(role="Role to remove")
+    async def ticket_remove(interaction: discord.Interaction, user:discord.member.Member=None, role:discord.role.Role=None):  # noqa: E501, F811
+        try:
+            if user is None and role is not None:
+                await interaction.channel.set_permissions(
+                    target=role,
+                    overwrite=None,
+                )
+                await interaction.response.send_message(
+                    content=f"Removed role {role} from ticket",
+                )  # noqa: E501
+            elif role is None and user is not None:
+                await interaction.channel.set_permissions(
+                    target=user,
+                    overwrite=None,
+                )
+                await interaction.response.send_message(
+                    content=f"Removed user {user} from ticket",
+                )  # noqa: E501
+            elif role is not None and user is not None:
+                await interaction.response.send_message(
+                    content="You can only use one.",
+                )
+            elif role is None and user is None:
+                await interaction.response.send_message(
+                    content="You have to choose one stupid.",
+                )
+            else:
+                await interaction.response.send_message(
+                    content="Unknown error while parsing values",
+                )
+        except Exception as e:
             await interaction.response.send_message(
-                content=f"Removed role {role} from ticket",
-            )  # noqa: E501
-        elif role is None and user is not None:
-            await interaction.channel.set_permissions(
-                target=user,
-                overwrite=None,
+                content=f"Error while running: {e}",
             )
-            await interaction.response.send_message(
-                content=f"Removed user {user} from ticket",
-            )  # noqa: E501
-        elif role is not None and user is not None:
-            await interaction.response.send_message(
-                content="You can only use one.",
-            )
-        elif role is None and user is None:
-            await interaction.response.send_message(
-                content="You have to choose one stupid.",
-            )
-        else:
-            await interaction.response.send_message(
-                content="Unknown error while parsing values",
-            )
-    except Exception as e:
-        await interaction.response.send_message(
-            content=f"Error while running: {e}",
+    @app_commands.command(name = 'panel', description='Launches the ticketing system')  # noqa: E501
+    @app_commands.checks.cooldown(3, 60, key = lambda i: (i.guild_id))
+    async def ticketing(interaction: discord.Interaction, text:str="Hi! If you need help or have a question, don't hesitate to create a ticket."):  # noqa: E501
+
+        '''
+        Ticket command
+
+        This will actually launch the ticket system
+        '''
+
+        embed = discord.Embed(
+            title = text,
+            color = discord.Colour.blurple(),
         )
-@ticketing_group.command(name = 'panel', description='Launches the ticketing system')  # noqa: E501
-@app_commands.checks.cooldown(3, 60, key = lambda i: (i.guild_id))
-async def ticketing(interaction: discord.Interaction, text:str="Hi! If you need help or have a question, don't hesitate to create a ticket."):  # noqa: E501
+        await interaction.channel.send(embed = embed, view = ticket_launcher())
+        await interaction.response.send_message(
+            "Ticketing system launched!",
+            ephemeral = True,
+        )
 
-    '''
-    Ticket command
-
-    This will actually launch the ticket system
-    '''
-
-    embed = discord.Embed(
-        title = text,
-        color = discord.Colour.blurple(),
-    )
-    await interaction.channel.send(embed = embed, view = ticket_launcher())
-    await interaction.response.send_message(
-        "Ticketing system launched!",
-        ephemeral = True,
-    )
-
-tree.add_command(self=ticketing_group)
+tree.add_command(ticketing_group())
 
 # kick and ban
 @tree.command(name="kick", description="Kick a user")
