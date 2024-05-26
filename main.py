@@ -430,8 +430,12 @@ async def ping(interaction: discord.Interaction):
 
 @tree.Group(name="ticketing",description="Ticket commands")
 @app_commands.default_permissions(manage_guild=True)
-async def ticketing_group(interaction:discord.Interaction):
-    pass
+class ticketing_group(app_commands.Group):
+    def __init__(self):
+        super().__init__()
+        self.name="ticketing"
+        self.description="Ticket commands"
+
 @ticketing_group.command(name="add",description="Add user or role into ticket")
 @app_commands.describe(user="Member to add")
 @app_commands.describe(role="Role to add")
@@ -674,7 +678,6 @@ class configure(app_commands.Group):
         self.name="configure"
         self.description="Config for server"
 
-@configure.Group(name="security",description="Security configurations")  # noqa: E501
 @app_commands.default_permissions(administrator=True)
 class configure_sec(app_commands.Group):
     def __init__(self):
@@ -682,7 +685,6 @@ class configure_sec(app_commands.Group):
         self.name="security"
         self.description="Security configurations"
 
-@configure.Group(name="appearance",description="Appearance of bot on your server")  # noqa: E501
 @app_commands.default_permissions(administrator=True)
 class configure_appear(app_commands.Group):
     def __init__(self):
