@@ -428,14 +428,10 @@ async def ping(interaction: discord.Interaction):
     )
 
 
-ticketing_group = app_commands.Group(
-    name="ticketing",
-    description="Ticket commands",
-    default_permissions=[
-        discord.Permissions.manage_channels,
-    ],
-)
-
+@tree.Group(name="ticketing",description="Ticket commands")
+@app_commands.default_permissions(manage_guild=True)
+async def ticketing_group(interaction:discord.Interaction):
+    pass
 @ticketing_group.command(name="add",description="Add user or role into ticket")
 @app_commands.describe(user="Member to add")
 @app_commands.describe(role="Role to add")
@@ -671,27 +667,20 @@ async def ban(interaction: discord.Interaction, member: discord.Member, reason: 
     )
 ################################### CONFIGURE COMMAND ##############################
 
-configure = app_commands.Group(
-    name="configure",
-    description="Config for server",
-    default_permissions=[
-        discord.Permissions.administrator,
-    ],
-)
-configure_sec = app_commands.Group(
-    name="security",
-    description="Security configurations",
-    default_permissions=[
-        discord.Permissions.administrator,
-    ],
-)
-configure_appear = app_commands.Group(
-    name="appearance",
-    description="Appearance of bot on your server",
-    default_permissions=[
-        discord.Permissions.administrator,
-    ],
-)
+@tree.Group(name="configure",description="Config for server")
+@app_commands.default_permissions(administrator=True)
+async def configure(interaction:discord.Interaction):
+    pass
+
+@configure.Group(name="security",description="Security configurations")  # noqa: E501
+@app_commands.default_permissions(administrator=True)
+async def configure_sec(interaction:discord.Interaction):
+    pass
+
+@configure.Group(name="appearance",description="Appearance of bot on your server")  # noqa: E501
+@app_commands.default_permissions(administrator=True)
+async def configure_appear(interaction:discord.Interaction):
+    pass
 
 @configure_sec.command(name="anti-invite",description="No invites in the halls")
 async def anti_invites(interaction: discord.Interaction,value:bool):
