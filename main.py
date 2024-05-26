@@ -683,6 +683,19 @@ class configure_sec(app_commands.Group):
         self.name="security"
         self.description="Security configurations"
 
+    @app_commands.command(name="anti-invite",description="No invites in the halls")
+    async def anti_invites(self,interaction: discord.Interaction,value:bool):
+        try:
+            gconfig.set(interaction.guild_id,"SECURITY","anti-invite",value=value)
+            await interaction.response.send_message(
+                content=f"Setted value {str(value)}",
+                ephemeral=True,
+            )
+        except Exception as e:
+            await interaction.response.send_message(
+                content=f"Failed configuring anti-invites: {e}",
+            )
+
 @app_commands.default_permissions(administrator=True)
 class configure_appear(app_commands.Group):
     def __init__(self):
@@ -690,18 +703,6 @@ class configure_appear(app_commands.Group):
         self.name="appearance"
         self.description="Appearance of bot on your server"
 
-@configure_sec.command(name="anti-invite",description="No invites in the halls")
-async def anti_invites(interaction: discord.Interaction,value:bool):
-    try:
-        gconfig.set(interaction.guild_id,"SECURITY","anti-invite",value=value)
-        await interaction.response.send_message(
-            content=f"Setted value {str(value)}",
-            ephemeral=True,
-        )
-    except Exception as e:
-        await interaction.response.send_message(
-            content=f"Failed configuring anti-invites: {e}",
-        )
 
 @configure_appear.command(name="color",description="Changes default color of embeds.")  # noqa: E501
 @discord.app_commands.describe(color="The color to set")
