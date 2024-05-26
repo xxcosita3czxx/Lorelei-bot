@@ -434,52 +434,51 @@ class ticketing_group(app_commands.Group):
         super().__init__()
         self.name="ticketing"
         self.description="Ticket commands"
-
-@ticketing_group.command(self=ticketing_group,name="add",description="Add user or role into ticket")
-@app_commands.describe(user="Member to add")
-@app_commands.describe(role="Role to add")
-async def ticket_add(interaction: discord.Interaction, user:discord.member.Member=None, role:discord.role.Role=None):  # noqa: E501
-    try:
-        overwrites = discord.PermissionOverwrite(
-            view_channel=True,
-            read_message_history=True,
-            send_messages=True,
-            attach_files=True,
-            embed_links=True,
-        )
-        if user is None and role is not None:
-            await interaction.channel.set_permissions(
-                target=role,
-                overwrite=overwrites,
+    @app_commands.command(name="add",description="Add user or role into ticket")
+    @app_commands.describe(user="Member to add")
+    @app_commands.describe(role="Role to add")
+    async def ticket_add(self,interaction: discord.Interaction, user:discord.member.Member=None, role:discord.role.Role=None):  # noqa: E501
+        try:
+            overwrites = discord.PermissionOverwrite(
+                view_channel=True,
+                read_message_history=True,
+                send_messages=True,
+                attach_files=True,
+                embed_links=True,
             )
+            if user is None and role is not None:
+                await interaction.channel.set_permissions(
+                    target=role,
+                    overwrite=overwrites,
+                )
+                await interaction.response.send_message(
+                    content=f"Added role {role} to ticket",
+                )  # noqa: E501
+            elif role is None and user is not None:
+                await interaction.channel.set_permissions(
+                    target=user,
+                    overwrite=overwrites,
+                )
+                await interaction.response.send_message(
+                    content=f"Adding user {user} to ticket",
+                )  # noqa: E501
+            elif role is not None and user is not None:
+                await interaction.response.send_message(
+                    content="You can only use one.",
+                )
+            elif role is None and user is None:
+                await interaction.response.send_message(
+                    content="You have to choose one stupid.",
+                )
+            else:
+                await interaction.response.send_message(
+                    content="Unknown error while parsing values",
+                )
+        except Exception as e:
             await interaction.response.send_message(
-                content=f"Added role {role} to ticket",
-            )  # noqa: E501
-        elif role is None and user is not None:
-            await interaction.channel.set_permissions(
-                target=user,
-                overwrite=overwrites,
+                content=f"Error while running: {e}",
+                ephemeral=True,
             )
-            await interaction.response.send_message(
-                content=f"Adding user {user} to ticket",
-            )  # noqa: E501
-        elif role is not None and user is not None:
-            await interaction.response.send_message(
-                content="You can only use one.",
-            )
-        elif role is None and user is None:
-            await interaction.response.send_message(
-                content="You have to choose one stupid.",
-            )
-        else:
-            await interaction.response.send_message(
-                content="Unknown error while parsing values",
-            )
-    except Exception as e:
-        await interaction.response.send_message(
-            content=f"Error while running: {e}",
-            ephemeral=True,
-        )
 
 @ticketing_group.command(name="remove",description="Remove user or role from ticket")  # noqa: E501
 @app_commands.describe(user="Member to remove")
