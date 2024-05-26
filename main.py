@@ -538,7 +538,7 @@ async def ticketing(interaction: discord.Interaction, text:str="Hi! If you need 
         ephemeral = True,
     )
 
-tree.add_command(ticketing_group)
+tree.add_command(self=ticketing_group)
 
 # kick and ban
 @tree.command(name="kick", description="Kick a user")
