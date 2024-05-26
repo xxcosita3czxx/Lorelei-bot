@@ -722,7 +722,7 @@ class configure(app_commands.Group):
         self.add_command(configure_sec())
         self.add_command(configure_appear())
 
-tree.add_command(configure)
+tree.add_command(configure())
 
 ####################################################################################
 @tree.command(name="unban", description="Unban a user")
