@@ -428,7 +428,6 @@ async def ping(interaction: discord.Interaction):
     )
 
 
-@tree.Group(name="ticketing",description="Ticket commands")
 @app_commands.default_permissions(manage_guild=True)
 class ticketing_group(app_commands.Group):
     def __init__(self):
