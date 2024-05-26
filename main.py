@@ -716,6 +716,30 @@ class configure_appear(app_commands.Group):
             )
 
 @app_commands.default_permissions(administrator=True)
+class configure_members(app_commands.Group):
+    def __init__(self):
+        super().__init__()
+        self.name="members"
+        self.description="Config for users"
+
+    app_commands.Command(
+        name="auto-role",
+        description="Automatic role on join",
+    )
+    async def autorole(self, interaction:discord.Interaction, role:discord.Role, enabled:bool):  # noqa: E501
+        try:
+            gconfig.set(interaction.guild_id,"MEMBERS","autorole-role",role)
+            gconfig.set(interaction.guild_id,"MEMBERS","autorole-enabled",enabled)
+            await interaction.response.send_message(
+                content=f"Setted value {str(color)}",
+                ephemeral=True,
+            )
+        except Exception as e:
+            await interaction.response.send_message(
+                content=f"Exception happened: {e}",
+                ephemeral=True,
+            )
+@app_commands.default_permissions(administrator=True)
 class configure(app_commands.Group):
     def __init__(self):
         super().__init__()
@@ -723,6 +747,7 @@ class configure(app_commands.Group):
         self.description="Config for server"
         self.add_command(configure_sec())
         self.add_command(configure_appear())
+        self.add_command(configure_members())
 
 tree.add_command(configure())
 
