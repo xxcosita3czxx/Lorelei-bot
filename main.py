@@ -483,7 +483,7 @@ class ticketing_group(app_commands.Group):
     @app_commands.command(name="remove",description="Remove user or role from ticket")  # noqa: E501
     @app_commands.describe(user="Member to remove")
     @app_commands.describe(role="Role to remove")
-    async def ticket_remove(interaction: discord.Interaction, user:discord.member.Member=None, role:discord.role.Role=None):  # noqa: E501, F811
+    async def ticket_remove(self,interaction: discord.Interaction, user:discord.member.Member=None, role:discord.role.Role=None):  # noqa: E501, F811
         try:
             if user is None and role is not None:
                 await interaction.channel.set_permissions(
@@ -519,7 +519,7 @@ class ticketing_group(app_commands.Group):
             )
     @app_commands.command(name = 'panel', description='Launches the ticketing system')  # noqa: E501
     @app_commands.checks.cooldown(3, 60, key = lambda i: (i.guild_id))
-    async def ticketing(interaction: discord.Interaction, text:str="Hi! If you need help or have a question, don't hesitate to create a ticket."):  # noqa: E501
+    async def ticketing(self,interaction: discord.Interaction, text:str="Hi! If you need help or have a question, don't hesitate to create a ticket."):  # noqa: E501
 
         '''
         Ticket command
