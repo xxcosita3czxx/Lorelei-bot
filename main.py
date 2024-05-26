@@ -667,20 +667,28 @@ async def ban(interaction: discord.Interaction, member: discord.Member, reason: 
     )
 ################################### CONFIGURE COMMAND ##############################
 
-@tree.Group(name="configure",description="Config for server")
 @app_commands.default_permissions(administrator=True)
-async def configure(interaction:discord.Interaction):
-    pass
+class configure(app_commands.Group):
+    def __init__(self):
+        super().__init__()
+        self.name="configure"
+        self.description="Config for server"
 
 @configure.Group(name="security",description="Security configurations")  # noqa: E501
 @app_commands.default_permissions(administrator=True)
-async def configure_sec(interaction:discord.Interaction):
-    pass
+class configure_sec(app_commands.Group):
+    def __init__(self):
+        super().__init__()
+        self.name="security"
+        self.description="Security configurations"
 
 @configure.Group(name="appearance",description="Appearance of bot on your server")  # noqa: E501
 @app_commands.default_permissions(administrator=True)
-async def configure_appear(interaction:discord.Interaction):
-    pass
+class configure_appear(app_commands.Group):
+    def __init__(self):
+        super().__init__()
+        self.name="appearance"
+        self.description="Appearance of bot on your server"
 
 @configure_sec.command(name="anti-invite",description="No invites in the halls")
 async def anti_invites(interaction: discord.Interaction,value:bool):
