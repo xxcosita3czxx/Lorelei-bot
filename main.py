@@ -722,11 +722,14 @@ class configure_members(app_commands.Group):
         self.name="members"
         self.description="Config for users"
 
-    @app_commands.Command(
+    @app_commands.command(
         name="auto-role",
         description="Automatic role on join",
     )
-    async def autorole(self, interaction:discord.Interaction, role:discord.Role, enabled:bool):  # noqa: E501
+    @app_commands.describe(
+        role="Role to add on join",
+        enabled="Should it be enabled?")
+    async def autorole(self, interaction:discord.Interaction, enabled:bool, role:discord.Role = None):  # noqa: E501
         try:
             gconfig.set(interaction.guild_id,"MEMBERS","autorole-role",role)
             gconfig.set(interaction.guild_id,"MEMBERS","autorole-enabled",enabled)
