@@ -194,6 +194,14 @@ async def on_message(message:discord.Message):
         else:
             logging.debug("anti_links disabled")
             return
+@bot.event
+async def on_member_join(member:discord.Member):
+    logging.debug(member.guild + " / " + member.guild.id)
+    if member.guild:  # noqa: SIM102
+        if gconfig.get(str(member.guild.id),"MEMBERS","autorole-enabled") is True:
+            role = gconfig.get(str(member.guild.id),"MEMBERS","autorole-role")
+            logging.debug(role)
+            member.add_roles(role)
 
 ############################# Context Commands #####################################
 
