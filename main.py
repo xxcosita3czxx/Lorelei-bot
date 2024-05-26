@@ -672,14 +672,17 @@ async def ban(interaction: discord.Interaction, member: discord.Member, reason: 
 configure = app_commands.Group(
     name="configure",
     description="Config for server",
+    default_permissions=discord.Permissions.administrator,
 )
 configure_sec = app_commands.Group(
     name="security",
     description="Security configurations",
+    default_permissions=discord.Permissions.administrator,
 )
 configure_appear = app_commands.Group(
     name="appearance",
     description="Appearance of bot on your server",
+    default_permissions=discord.Permissions.administrator,
 )
 
 @configure_sec.command(name="anti-invite",description="No invites in the halls")
