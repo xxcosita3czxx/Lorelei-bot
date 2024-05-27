@@ -938,13 +938,13 @@ async def clear(interaction: discord.Interaction, amount:int, member: discord.Me
 
 class help(app_commands.Group):
     @app_commands.command(name="help",description="test")
-    def __init__(self,interaction:discord.Interaction):
+    async def __init__(self,interaction:discord.Interaction):
         super().__init__()
         self.name="help"
         self.description="Help command"
         interaction.response.send_message("IT WORKS")
     @app_commands.command(name="user",description="User Help")
-    def help_user():
+    async def help_user():
         pass
 tree.add_command(help())
 ####################################################################################
