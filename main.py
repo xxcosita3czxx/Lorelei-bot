@@ -709,7 +709,9 @@ async def ban(interaction: discord.Interaction, member: discord.Member, reason: 
         ),
         ephemeral=False,
     )
-################################### CONFIGURE COMMAND ##############################
+################################ Giveaway Command ##################################
+
+#TODO logic for all
 
 @app_commands(administrator=True)
 class giveaway(app_commands.Group):
@@ -719,27 +721,27 @@ class giveaway(app_commands.Group):
         self.description="Giveaway commands"
 
     @app_commands.command(name="create", description="Create giveaway")
-    def giveaway_create(interaction:discord.Interaction):
+    async def giveaway_create(interaction:discord.Interaction):
         pass
 
     @app_commands.command(name="reroll",description="Rerolls user")
-    def giveaway_reroll(interaction:discord.Interaction):
+    async def giveaway_reroll(interaction:discord.Interaction):
         pass
 
     @app_commands.command(name="edit",description="Edits giveaway")
-    def giveaway_change(interaction:discord.Interaction):
+    async def giveaway_change(interaction:discord.Interaction):
         pass
 
     @app_commands.command(name="remove",description="Removes giveaway.")
-    def giveaway_remove(interaction:discord.Interaction):
+    async def giveaway_remove(interaction:discord.Interaction):
         pass
 
     @app_commands.command(name="list",description="Lists all running Giveaways.")
-    def giveaway_list(interaction:discord.Interaction):
+    async def giveaway_list(interaction:discord.Interaction):
         pass
 
 
-####################################################################################
+################################### CONFIGURE COMMAND ##############################
 
 @app_commands.default_permissions(administrator=True)
 class configure_sec(app_commands.Group):
@@ -931,6 +933,17 @@ async def clear(interaction: discord.Interaction, amount:int, member: discord.Me
             content=f"Clear failed!: {e}",
             ephemeral=True,
         )
+
+############################ HELP COMMAND ##########################################
+
+class help(app_commands.Group):
+    def __init__(self,interaction:discord.Interaction):
+        super().__init__()
+        self.name="help"
+        self.description="Help command"
+        interaction.response.send_message("IT WORKS")
+
+####################################################################################
 
 @tree.command(name="user-info",description="Info about user")
 async def user_info(interaction: discord.Interaction, member:discord.User):
