@@ -10,6 +10,9 @@ import config
 import utils.cosita_toolkit as ctkit
 from main import ConfigManager as cm
 
+lang = cm("data/lang/")
+conflang = f"{config.language}"
+
 coloredlogs.install(
     level=config.loglevel,
     fmt='%(asctime)s %(levelname)s: %(message)s',
@@ -67,9 +70,11 @@ def Is_Alive():
         for process in psutil.process_iter(['pid', 'name', 'cmdline']):
             if 'python3' in process.info['name'] and 'main.py' in ' '.join(process.info['cmdline']):  # noqa: E501
                 main_pid = process.info['pid']
-                logger.debug("main.py is running at PID: " + str(main_pid))
+
+                logger.debug(
+                    lang.get(conflang,"RunnerLogs","debug_on_pid_log") + str(main_pid))
         if not main_pid:
-            logger.info("main.py is not running. Restarting...")
+            logger.info(conflang,"RunnerLogs","info_not_running")
             os.system("python3 main.py")  # noqa: S605, S607
         time.sleep(config.Is_Alive_time)
 def update_cosita_tk():
@@ -77,7 +82,7 @@ def update_cosita_tk():
         try:
             os.system("python3 utils/cosita_toolkit.py")  # noqa: S605, S607
         except Exception:
-            logger.error("CosTK update FAILED")
+            logger.error(lang.get(conflang,"RunnerLogs","err_costk_update_fail"))
         time.sleep(config.costk_update)
 if __name__ == "__main__":
     monitor_thread = threading.Thread(target=Is_Alive)
