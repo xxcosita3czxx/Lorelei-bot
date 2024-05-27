@@ -944,7 +944,7 @@ class help(app_commands.Group):
         self.description="Help command"
         interaction.response.send_message("IT WORKS")
     @app_commands.command(name="user",description="User Help")
-    async def help_user():
+    async def help_user(self, interaction:discord.Interaction):
         pass
 tree.add_command(help())
 ####################################################################################
