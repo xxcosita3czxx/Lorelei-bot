@@ -23,7 +23,7 @@ coloredlogs.install(
 logger = logging.getLogger(__name__)
 time_regex = re.compile(r"(?:(\d{1,5})(h|s|m|d))+?")
 time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
-help_list="""
+info_text="""
 Hello!
 This is Lorelei Bot developed by cosita3cz.
 Developed in python for everyone.
@@ -256,16 +256,15 @@ async def user_info_context(interaction: discord.Interaction, member:discord.Use
     )
 
 
-############################### HELP COMMAND #######################################
 
-@tree.command(name="help", description="Help")
-async def help_menu(interaction: discord.Interaction):
+@tree.command(name="info", description="Info about bot")
+async def info(interaction: discord.Interaction):
     '''Help command
     Will let user know what all can he do
     '''
     embed = discord.Embed(
-        title="HELP",
-        description=help_list,
+        title="Lorelei-bot",
+        description=info_text,
         color=discord.colour.Color.blurple(),
     )
 
@@ -273,7 +272,6 @@ async def help_menu(interaction: discord.Interaction):
         embed=embed,
     )
 
-#####################################################################################
 class ticket_launcher(discord.ui.View):
 
     '''
