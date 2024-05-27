@@ -209,7 +209,7 @@ async def on_member_join(member:discord.Member):
 
 @tree.context_menu(name="User Info")
 async def user_info(interaction: discord.Interaction, member:discord.User):
-    logger.debug(member.avatar_url)
+    logger.debug(member.avatar.url())
     embed = discord.Embed(title="Info about", color=0x00ff00)
     embed.set_thumbnail(url=member.avatar.url())
 
