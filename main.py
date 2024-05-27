@@ -711,6 +711,36 @@ async def ban(interaction: discord.Interaction, member: discord.Member, reason: 
     )
 ################################### CONFIGURE COMMAND ##############################
 
+@app_commands(administrator=True)
+class giveaway(app_commands.Group):
+    def __init__(self):
+        super().__init__()
+        self.name="giveaway"
+        self.description="Giveaway commands"
+
+    @app_commands.command(name="create", description="Create giveaway")
+    def giveaway_create(interaction:discord.Interaction):
+        pass
+
+    @app_commands.command(name="reroll",description="Rerolls user")
+    def giveaway_reroll(interaction:discord.Interaction):
+        pass
+
+    @app_commands.command(name="edit",description="Edits giveaway")
+    def giveaway_change(interaction:discord.Interaction):
+        pass
+
+    @app_commands.command(name="remove",description="Removes giveaway.")
+    def giveaway_remove(interaction:discord.Interaction):
+        pass
+
+    @app_commands.command(name="list",description="Lists all running Giveaways.")
+    def giveaway_list(interaction:discord.Interaction):
+        pass
+
+
+####################################################################################
+
 @app_commands.default_permissions(administrator=True)
 class configure_sec(app_commands.Group):
     def __init__(self):
