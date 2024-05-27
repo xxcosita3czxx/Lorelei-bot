@@ -777,7 +777,6 @@ class configure_appear(app_commands.Group):
         self.name="appearance"
         self.description="Appearance of bot on your server"
 
-
     @app_commands.command(name="color",description="Changes default color of embeds.")  # noqa: E501
     @app_commands.describe(color="The color to set")
     @app_commands.autocomplete(color=autocomplete_color)
@@ -794,12 +793,50 @@ class configure_appear(app_commands.Group):
                 ephemeral=True,
             )
 
+class configure_user(app_commands.Group):
+    def __init__(self):
+        super().__init__()
+        self.name="user"
+        self.description="User Config"
+
+    @app_commands.command(name="Color",description="Default color bot will respond for you")  # noqa: E501
+    @app_commands.autocomplete(color=autocomplete_color)
+    async def conf_user_def_color(self,interaction:discord.Interaction, color:str):
+        try:
+            gconfig.set(interaction.user.id,"Appearance","color",color)
+            await interaction.response.send_message(
+                content=f"Setted value {str(color)}",
+                ephemeral=True,
+            )
+        except Exception as e:
+            await interaction.response.send_message(
+                content=f"Exception happened: {e}",
+                ephemeral=True,
+            )
+
+    @app_commands.command(
+        name="language",
+        description="Language the bot will respond to you",
+    )
+    async def conf_user_lang(self,interaction:discord.Interaction,language:str):
+        try:
+            gconfig.set(interaction.user.id,"Appearance","language",language)
+            await interaction.response.send_message(
+                content=f"Setted value {str(language)}",
+                ephemeral=True,
+            )
+        except Exception as e:
+            await interaction.response.send_message(
+                content=f"Exception happened: {e}",
+                ephemeral=True,
+            )
+
 @app_commands.default_permissions(administrator=True)
 class configure_members(app_commands.Group):
     def __init__(self):
         super().__init__()
         self.name="members"
-        self.description="Config for users"
+        self.description="Configure bot actions on user"
 
     @app_commands.command(
         name="auto-role",
@@ -821,7 +858,7 @@ class configure_members(app_commands.Group):
                 content=f"Exception happened: {e}",
                 ephemeral=True,
             )
-@app_commands.default_permissions(administrator=True)
+#@app_commands.default_permissions(administrator=True)
 class configure(app_commands.Group):
     def __init__(self):
         super().__init__()
@@ -830,7 +867,7 @@ class configure(app_commands.Group):
         self.add_command(configure_sec())
         self.add_command(configure_appear())
         self.add_command(configure_members())
-
+        self.add_command(configure_user())
 tree.add_command(configure())
 
 ####################################################################################
