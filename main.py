@@ -799,7 +799,7 @@ class configure_user(app_commands.Group):
         self.name="user"
         self.description="User Config"
 
-    @app_commands.command(name="Color",description="Default color bot will respond for you")  # noqa: E501
+    @app_commands.command(name="color",description="Default color bot will respond for you")  # noqa: E501
     @app_commands.autocomplete(color=autocomplete_color)
     async def conf_user_def_color(self,interaction:discord.Interaction, color:str):
         try:
