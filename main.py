@@ -992,7 +992,7 @@ class Help(app_commands.Group):
         pass
 
 
-tree.add_command(help())
+tree.add_command(Help())
 ####################################################################################
 
 @tree.command(name="user-info",description="Info about user")
