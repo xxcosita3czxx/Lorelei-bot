@@ -13,3 +13,6 @@ err_costk_update_fail = "Update of CtKIT Failed!"
 [Bot]
 debug_status_chng = "Status Changed."
 info_logged = "We have logged in as {user}."
+
+[Responds]
+no_links = "{author}, Don't send links!"

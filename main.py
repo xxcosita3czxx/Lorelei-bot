@@ -207,10 +207,14 @@ async def on_message(message:discord.Message):
             )
             if message.author == bot.user:
                 return
-            if 'https://' or "http://" in message.content:  # noqa: SIM222
+            if 'https://' or "http://" or "www." in message.content.lower():  # noqa: SIM222
                 await message.delete()
                 await message.author.send(
-                    content=f"{message.author.mention} Don't send links!",
+                    content=lang.get(
+                        conflang,
+                        "Responds",
+                        "no_links",
+                    ).format(author=message.author.mention),
                 )
         else:
             logging.debug("anti_links disabled")
