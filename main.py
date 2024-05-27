@@ -21,6 +21,7 @@ coloredlogs.install(
     fmt='%(asctime)s %(levelname)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
 )
+
 logger = logging.getLogger(__name__)
 time_regex = re.compile(r"(?:(\d{1,5})(h|s|m|d))+?")
 time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
@@ -40,6 +41,7 @@ async def change_status() -> None:
             activity=discord.Game(name="Some chords"),
             status=config.status,
         )
+        logging.debug("Changed status")
         await asyncio.sleep(5)
         await bot.change_presence(
             activity=discord.Activity(
@@ -48,8 +50,8 @@ async def change_status() -> None:
             ),
             status=config.status,
         )
+        logging.info("Changed status")
         await asyncio.sleep(5)
-
 class ConfigManager:
     def __init__(self, config_dir):
         self.config_dir = config_dir
@@ -174,7 +176,9 @@ async def on_message(message:discord.Message):
         logging.debug(message.guild)
         logging.debug(guild_id)
         if gconfig.get(str(guild_id),"SECURITY","anti-invite") is True:
-            logging.debug(gconfig.get(str(guild_id),"SECURITY","anti-invite"))
+            logging.debug("Anti-invite status:"+str(gconfig.get(
+                str(guild_id),"SECURITY","anti-invite")),
+            )
             if message.author == bot.user:
                 return
             if 'discord.gg' in message.content:
@@ -186,7 +190,9 @@ async def on_message(message:discord.Message):
             logging.debug("anti-invite disabled")
             return
         if gconfig.get(str(guild_id),"SECURITY","anti-links") is True:
-            logging.debug(gconfig.get(str(guild_id),"SECURITY","anti-links"))
+            logging.debug("Anti-links Status:"+str(
+                gconfig.get(str(guild_id),"SECURITY","anti-links")),
+            )
             if message.author == bot.user:
                 return
             if 'https://' or "http://" in message.content:  # noqa: SIM222
@@ -203,7 +209,7 @@ async def on_member_join(member:discord.Member):
     logging.debug(str(member.guild) + " / " + str(member.guild.id))
     if gconfig.get(str(member.guild.id),"MEMBERS","autorole-enabled") is True:
         role_id = gconfig.get(str(member.guild.id),"MEMBERS","autorole-role")
-        logging.debug(role_id)
+        logging.debug("Role_id:"+str(role_id))
         role = member.guild.get_role(role_id)
         await member.add_roles(role)
 
