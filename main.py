@@ -37,6 +37,7 @@ Hello!
 This is Lorelei Bot developed by cosita3cz.
 Developed in python for everyone.
 """
+conflang=config.language
 
 async def autocomplete_color(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
     colors = ['Blurple', 'Red', 'Green', 'Blue', 'Yellow',"Purple","White"]
@@ -44,13 +45,14 @@ async def autocomplete_color(interaction: discord.Interaction,current: str) -> L
 async def autocomplete_lang(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
     languages = ["en","cz","sk"]
     return [app_commands.Choice(name=language, value=language) for language in languages if current.lower() in language.lower()]  # noqa: E501
+
 async def change_status() -> None:
     while True:
         await bot.change_presence(
             activity=discord.Game(name="Some chords"),
             status=config.status,
         )
-        logging.debug("Changed status")
+        logging.debug(lang.get(conflang,"MainLogs","debug_status_chng"))
         await asyncio.sleep(5)
         await bot.change_presence(
             activity=discord.Activity(
@@ -59,7 +61,7 @@ async def change_status() -> None:
             ),
             status=config.status,
         )
-        logging.debug("Changed status")
+        logging.debug(lang.get(conflang,"MainLogs","debug_status_chng"))
         await asyncio.sleep(5)
 class ConfigManager:
     def __init__(self, config_dir):
@@ -68,7 +70,7 @@ class ConfigManager:
         self._load_all_configs()
 
     def _load_all_configs(self):
-        logging.debug("Loading all configs...")
+        logging.debug(lang.get(conflang,"CMLogs","debug_load_all"))
         for filename in os.listdir(self.config_dir):
             if filename.endswith('.toml'):
                 id = filename[:-5]  # Remove the .toml extension to get the ID
@@ -92,7 +94,7 @@ class ConfigManager:
         self.config[id][title][key] = value
         self._save_config(id)
         self._load_all_configs()  # Reload the specific config after saving
-        logging.debug(f"Set {id}:{title}:{key} to {value}")
+        logging.debug(lang.get(conflang,"CMLogs","debug_set").format(id=id,title=title,key=key,value=value))
 
     def _save_config(self, id):
         file_path = os.path.join(self.config_dir, f"{id}.toml")
@@ -113,7 +115,7 @@ class ConfigManager:
 
 gconfig = ConfigManager("data/guilds")
 uconfig = ConfigManager("data/users")
-
+lang = ConfigManager("data/lang")
 class TimeConverter(app_commands.Transformer):
 
     async def transform(self,interaction:discord.Interaction,argument:str) -> int:  # noqa: E501, ANN101
