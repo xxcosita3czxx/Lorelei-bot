@@ -950,7 +950,7 @@ class Help_Pages(discord.ui.View):
         )
 
     @discord.ui.button(label='Previous', style=discord.ButtonStyle.primary)
-    async def previous_button(self, interaction: discord.Interaction):  # noqa: E501
+    async def previous_button(self, button:discord.ui.Button, interaction: discord.Interaction):  # noqa: E501
         if self.current_page > 0:
             self.current_page -= 1
             await interaction.response.edit_message(
@@ -959,7 +959,7 @@ class Help_Pages(discord.ui.View):
             )
 
     @discord.ui.button(label='Next', style=discord.ButtonStyle.primary)
-    async def next_button(self, interaction: discord.Interaction):  # noqa: E501
+    async def next_button(self, button:discord.ui.Button, interaction: discord.Interaction):  # noqa: E501
         if self.current_page < self.total_pages - 1:
             self.current_page += 1
             await interaction.response.edit_message(
