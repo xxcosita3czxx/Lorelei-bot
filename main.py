@@ -199,7 +199,7 @@ async def on_message(message:discord.Message):
 @bot.event
 async def on_member_join(member:discord.Member):
     logging.debug("on_member_join was triggered!")
-    logging.debug(member.guild + " / " + member.guild.id)
+    logging.debug(str(member.guild) + " / " + str(member.guild.id))
     if gconfig.get(str(member.guild.id),"MEMBERS","autorole-enabled") is True:
         role = gconfig.get(str(member.guild.id),"MEMBERS","autorole-role")
         logging.debug(role)
@@ -211,7 +211,7 @@ async def on_member_join(member:discord.Member):
 async def user_info(interaction: discord.Interaction, member:discord.User):
     logger.debug(member.avatar_url)
     embed = discord.Embed(title="Info about", color=0x00ff00)
-    embed.set_thumbnail(url=member.avatar_url)
+    embed.set_thumbnail(url=member.avatar.url())
 
     embed.add_field(
         name="Username",
