@@ -483,11 +483,14 @@ class main(discord.ui.View):
 async def ping(interaction: discord.Interaction):
 
     '''
-    Pings the user
+    Ping Pong the bot
     '''
-
+    embed = discord.Embed(
+        title=lang.get(conflang,"Responses","ping")
+        description=lang.get(conflang,"Responses","ping_latency").format(latency=round(bot.latency,2))
+    )
     await interaction.response.send_message(
-        f'Pong! {round(bot.latency, 1)}',
+        embed=embed
     )
 
 
