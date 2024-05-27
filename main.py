@@ -793,10 +793,49 @@ class configure_appear(app_commands.Group):
                 ephemeral=True,
             )
 
+
+@app_commands.default_permissions(administrator=True)
+class configure_members(app_commands.Group):
+    def __init__(self):
+        super().__init__()
+        self.name="members"
+        self.description="Configure bot actions on user"
+
+    @app_commands.command(
+        name="auto-role",
+        description="Automatic role on join",
+    )
+    @app_commands.describe(
+        role="Role to add on join",
+        enabled="Should it be enabled?")
+    async def autorole(self, interaction:discord.Interaction, enabled:bool, role:discord.Role = None):  # noqa: E501
+        try:
+            gconfig.set(interaction.guild_id,"MEMBERS","autorole-role",role.id)
+            gconfig.set(interaction.guild_id,"MEMBERS","autorole-enabled",enabled)
+            await interaction.response.send_message(
+                content=f"Setted value {str(role.name)}, {str(enabled)}",
+                ephemeral=True,
+            )
+        except Exception as e:
+            await interaction.response.send_message(
+                content=f"Exception happened: {e}",
+                ephemeral=True,
+            )
+@app_commands.default_permissions(administrator=True)
+class configure(app_commands.Group):
+    def __init__(self):
+        super().__init__()
+        self.name="guildconfigure"
+        self.description="Config for server"
+        self.add_command(configure_sec())
+        self.add_command(configure_appear())
+        self.add_command(configure_members())
+tree.add_command(configure())
+
 class configure_user(app_commands.Group):
     def __init__(self):
         super().__init__()
-        self.name="user"
+        self.name="userconfigure"
         self.description="User Config"
 
     @app_commands.command(name="color",description="Default color bot will respond for you")  # noqa: E501
@@ -831,45 +870,7 @@ class configure_user(app_commands.Group):
                 ephemeral=True,
             )
 
-@app_commands.default_permissions(administrator=True)
-class configure_members(app_commands.Group):
-    def __init__(self):
-        super().__init__()
-        self.name="members"
-        self.description="Configure bot actions on user"
-
-    @app_commands.command(
-        name="auto-role",
-        description="Automatic role on join",
-    )
-    @app_commands.describe(
-        role="Role to add on join",
-        enabled="Should it be enabled?")
-    async def autorole(self, interaction:discord.Interaction, enabled:bool, role:discord.Role = None):  # noqa: E501
-        try:
-            gconfig.set(interaction.guild_id,"MEMBERS","autorole-role",role.id)
-            gconfig.set(interaction.guild_id,"MEMBERS","autorole-enabled",enabled)
-            await interaction.response.send_message(
-                content=f"Setted value {str(role.name)}, {str(enabled)}",
-                ephemeral=True,
-            )
-        except Exception as e:
-            await interaction.response.send_message(
-                content=f"Exception happened: {e}",
-                ephemeral=True,
-            )
-#@app_commands.default_permissions(administrator=True)
-class configure(app_commands.Group):
-    def __init__(self):
-        super().__init__()
-        self.name="configure"
-        self.description="Config for server"
-        self.add_command(configure_sec())
-        self.add_command(configure_appear())
-        self.add_command(configure_members())
-        self.add_command(configure_user())
-tree.add_command(configure())
-
+tree.add_command(configure_user())
 ####################################################################################
 @tree.command(name="unban", description="Unban a user")
 @app_commands.describe(member="User to unban", reason="Reason for unban")
