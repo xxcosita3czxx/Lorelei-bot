@@ -138,6 +138,7 @@ class aclient(discord.Client):
     def __init__(self) -> None:  # noqa: ANN101
         intents = discord.Intents.default()
         intents.message_content = True
+        intents.members = True
         super().__init__(intents = intents)
         self.synced = False
         self.added = False
