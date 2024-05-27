@@ -739,7 +739,7 @@ class giveaway(app_commands.Group):
     @app_commands.command(name="list",description="Lists all running Giveaways.")
     async def giveaway_list(self,interaction:discord.Interaction):
         pass
-
+tree.add_command(giveaway())
 
 ################################### CONFIGURE COMMAND ##############################
 
@@ -943,6 +943,7 @@ class help(app_commands.Group):
         self.description="Help command"
         interaction.response.send_message("IT WORKS")
 
+tree.add_command(help())
 ####################################################################################
 
 @tree.command(name="user-info",description="Info about user")
