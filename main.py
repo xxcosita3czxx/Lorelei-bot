@@ -485,9 +485,10 @@ async def ping(interaction: discord.Interaction):
     '''
     Ping Pong the bot
     '''
+    language = uconfig.get(interaction.member.id,"Appearance","language")
     embed = discord.Embed(
-        title=lang.get(conflang,"Responses","ping")
-        description=lang.get(conflang,"Responses","ping_latency").format(latency=round(bot.latency,2))
+        title=lang.get(language,"Responses","ping")
+        description=lang.get(language,"Responses","ping_latency").format(latency=round(bot.latency,2))
     )
     await interaction.response.send_message(
         embed=embed
