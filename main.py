@@ -35,6 +35,7 @@ time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
 info_text="""
 Hello!
 This is Lorelei Bot developed by cosita3cz.
+And constributor Apoliak.
 Developed in python for everyone.
 """
 conflang=config.language
