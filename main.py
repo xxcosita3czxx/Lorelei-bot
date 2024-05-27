@@ -950,7 +950,7 @@ class Help_Pages(discord.ui.View):
         )
 
     @discord.ui.button(label='Previous', style=discord.ButtonStyle.primary)
-    async def previous_button(self, button:discord.ui.Button, interaction: discord.Interaction):  # noqa: E501
+    async def previous_button(self, button: discord.ui.Button, interaction: discord.Interaction):  # noqa: E501
         if self.current_page > 0:
             self.current_page -= 1
             await interaction.response.edit_message(
@@ -959,7 +959,7 @@ class Help_Pages(discord.ui.View):
             )
 
     @discord.ui.button(label='Next', style=discord.ButtonStyle.primary)
-    async def next_button(self, button:discord.ui.Button, interaction: discord.Interaction):  # noqa: E501
+    async def next_button(self, button: discord.ui.Button, interaction: discord.Interaction):  # noqa: E501
         if self.current_page < self.total_pages - 1:
             self.current_page += 1
             await interaction.response.edit_message(
@@ -967,14 +967,14 @@ class Help_Pages(discord.ui.View):
                 view=self,
             )
 
-class help(app_commands.Group):
+class Help(app_commands.Group):
     def __init__(self):
         super().__init__()
-        self.name="help"
-        self.description="Help command"
+        self.name = "help"
+        self.description = "Help command"
 
-    @app_commands.command(name="user",description="User Help")
-    async def help_user(self,interaction:discord.Interaction):
+    @app_commands.command(name="user", description="User Help")
+    async def help_user(self, interaction: discord.Interaction):
         embeds = HelpEmbed.help_user
         view = Help_Pages(embeds=embeds)
         await view.send_initial_message(interaction)
