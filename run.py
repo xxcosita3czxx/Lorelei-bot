@@ -8,6 +8,7 @@ import psutil
 
 import config
 import utils.cosita_toolkit as ctkit
+from main import ConfigManager as cm
 
 coloredlogs.install(
     level=config.loglevel,

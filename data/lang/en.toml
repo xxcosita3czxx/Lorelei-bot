@@ -1,4 +1,5 @@
 [HelpCommand]
 [ConfigureCommand]
 [TicketingCommand]
-[Other]
+[RunnerLogs]
+[MainLogs]

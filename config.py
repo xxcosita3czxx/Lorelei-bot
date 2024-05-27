@@ -31,6 +31,12 @@ status = discord.Status.dnd
 # True is default
 autoupdate = True
 ###################################
+############ Language #############
+#
+# Changes language
+# en is default
+language = "en"
+###################################
 ########## Update Time ############
 #
 # EVERYTHING IN SECCONDS
