@@ -2,7 +2,11 @@
 debug_on_pid_log = "main.py is running at PID: "
 info_not_running = "main.py is not running. Restarting..."
 err_costk_update_fail = "Update of CtKIT Failed!"
+
 [MainLogs]
+
 [ConfigureCommand]
+
 [TicketingCommand]
+
 [HelpCommand]

@@ -72,9 +72,10 @@ def Is_Alive():
                 main_pid = process.info['pid']
 
                 logger.debug(
-                    lang.get(conflang,"RunnerLogs","debug_on_pid_log") + str(main_pid))
+                    lang.get(conflang,"RunnerLogs","debug_on_pid_log") + str(main_pid),  # noqa: E501
+                )
         if not main_pid:
-            logger.info(conflang,"RunnerLogs","info_not_running")
+            logger.info(lang.get(conflang,"RunnerLogs","info_not_running"))
             os.system("python3 main.py")  # noqa: S605, S607
         time.sleep(config.Is_Alive_time)
 def update_cosita_tk():
