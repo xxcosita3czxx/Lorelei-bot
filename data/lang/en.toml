@@ -17,3 +17,4 @@ info_logged = "We have logged in as {user}."
 [Responds]
 no_links = "{author}, Don't send links!"
 pong = "Pong!"
+ping_latency = "Latency: {latency}"
