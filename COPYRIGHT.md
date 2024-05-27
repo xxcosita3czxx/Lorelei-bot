@@ -1,0 +1,1 @@
+# © 2023 Cosita Development. All rights reserved. Contact: cosita3cz@proton.me

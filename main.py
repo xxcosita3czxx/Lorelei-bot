@@ -14,13 +14,20 @@ from discord.ext import commands
 from humanfriendly import format_timespan
 
 import config
-import utils.embeds.HelpEmbed as HelpEmbed
 
 coloredlogs.install(
     level=config.loglevel,
     fmt='%(asctime)s %(levelname)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
 )
+
+help_user1=discord.Embed(
+    title="User Help",
+    description="Page 1",
+)
+
+help_user = [help_user1]
+
 
 logger = logging.getLogger(__name__)
 time_regex = re.compile(r"(?:(\d{1,5})(h|s|m|d))+?")
@@ -34,7 +41,9 @@ Developed in python for everyone.
 async def autocomplete_color(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
     colors = ['Blurple', 'Red', 'Green', 'Blue', 'Yellow',"Purple","White"]
     return [app_commands.Choice(name=color, value=color) for color in colors if current.lower() in color.lower()]  # noqa: E501
-
+async def autocomplete_lang(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
+    languages = ["en","cz","sk"]
+    return [app_commands.Choice(name=language, value=language) for language in languages if current.lower() in language.lower()]  # noqa: E501
 async def change_status() -> None:
     while True:
         await bot.change_presence(
@@ -1019,7 +1028,7 @@ class Help(app_commands.Group):
 
     @app_commands.command(name="user", description="User Help")
     async def help_user(self, interaction: discord.Interaction):
-        embeds = HelpEmbed.help_user
+        embeds = help_user
         view = Help_Pages(embeds=embeds)
         await view.send_initial_message(interaction)
 
