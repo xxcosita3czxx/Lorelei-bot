@@ -1,0 +1,18 @@
+
+[ConfigureCommand]
+
+[TicketingCommand]
+
+[HelpCommand]
+
+[RunnerLogs]
+debug_on_pid_log = "main.py läuft mit PID: "
+info_not_running = "main.py läuft nicht. Neustart..."
+err_costk_update_fail = "Update von CtKIT fehlgeschlagen!"
+
+[Bot]
+debug_status_chng = "Status geändert."
+info_logged = "Wir haben uns angemeldet als {user}."
+
+[Responds]
+no_links = "{author}, Senden Sie keine Links!"
