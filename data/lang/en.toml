@@ -5,13 +5,11 @@
 
 [HelpCommand]
 
-[CMLogs]
-debug_load_all = "Loading all configs..."
-debug_set = "Set {id}:{title}:{key} to {value}"
 [RunnerLogs]
 debug_on_pid_log = "main.py is running at PID: "
 info_not_running = "main.py is not running. Restarting..."
 err_costk_update_fail = "Update of CtKIT Failed!"
 
-[MainLogs]
+[Bot]
 debug_status_chng = "Status Changed."
+info_logged = "We have logged in as {user}."
