@@ -50,7 +50,7 @@ async def change_status() -> None:
             ),
             status=config.status,
         )
-        logging.info("Changed status")
+        logging.debug("Changed status")
         await asyncio.sleep(5)
 class ConfigManager:
     def __init__(self, config_dir):
