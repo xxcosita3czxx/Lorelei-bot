@@ -825,7 +825,7 @@ class configure_members(app_commands.Group):
 class configure(app_commands.Group):
     def __init__(self):
         super().__init__()
-        self.name="guildconfigure"
+        self.name="guildconfig"
         self.description="Config for server"
         self.add_command(configure_sec())
         self.add_command(configure_appear())
@@ -835,7 +835,7 @@ tree.add_command(configure())
 class configure_user(app_commands.Group):
     def __init__(self):
         super().__init__()
-        self.name="userconfigure"
+        self.name="userconfig"
         self.description="User Config"
 
     @app_commands.command(name="color",description="Default color bot will respond for you")  # noqa: E501
