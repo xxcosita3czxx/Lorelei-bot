@@ -43,3 +43,5 @@ Cosita Development reserves the right to change this license at any time without
 ### 9. Miscellaneous
 This license constitutes the entire agreement between you and Cosita Development concerning the subject matter hereof.  
 If any provision of this license is held to be unenforceable, such provision shall be reformed only to the extent necessary to make it enforceable.
+
+# You agree to this license by using the code
