@@ -1,2 +1,4 @@
-[Commands]
-
+[HelpCommand]
+[ConfigureCommand]
+[TicketingCommand]
+[Other]
