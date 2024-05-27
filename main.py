@@ -208,17 +208,47 @@ async def on_member_join(member:discord.Member):
 ############################# Context Commands #####################################
 
 @tree.context_menu(name="User Info")
-async def user_info(interaction: discord.Interaction, user:discord.User):
-    usr_avatar = user.avatar.url
-    logger.debug(usr_avatar)
-    embed = discord.Embed(
-        title=f"Info About {user.global_name}",
-        description="Info about this user:",
-    )
+async def user_info(interaction: discord.Interaction, member:discord.User):
+    logger.debug(member.avatar.url)
+    embed = discord.Embed(title="Info about", color=0x00ff00)
+    embed.set_thumbnail(url=member.avatar.url)
+
     embed.add_field(
-        name="Created at",
-        value=f"{user.created_at.date()},{user.created_at.ctime()}",
+        name="Username",
+        value=member.name,
+        inline=True,
     )
+
+    embed.add_field(
+        name="Discriminator",
+        value=member.discriminator,
+        inline=True,
+    )
+
+    embed.add_field(
+        name="ID",
+        value=member.id,
+        inline=True,
+    )
+
+    embed.add_field(
+        name="Joined Discord",
+        value=member.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+        inline=True,
+    )
+
+    embed.add_field(
+        name="Joined Server",
+        value=member.joined_at.strftime("%Y-%m-%d %H:%M:%S"),
+        inline=True,
+    )
+
+    embed.add_field(
+        name="Roles",
+        value=", ".join([role.name for role in member.roles]),
+        inline=False,
+    )
+
     await interaction.response.send_message(
         embed=embed,
     )
