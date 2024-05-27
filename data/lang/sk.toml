@@ -1,0 +1,18 @@
+
+[ConfigureCommand]
+
+[TicketingCommand]
+
+[HelpCommand]
+
+[RunnerLogs]
+debug_on_pid_log = "main.py is running at PID: "
+info_not_running = "main.py is not running. Reštartujem..."
+err_costk_update_fail = "Update od CtKIT Zlihalo!"
+
+[Bot]
+debug_status_chng = "Status bol pozmenený."
+info_logged = "We have logged in as {user}."
+
+[Responds]
+no_links = "{author}, Nezasielajte linky!"
