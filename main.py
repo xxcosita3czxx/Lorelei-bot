@@ -713,7 +713,7 @@ async def ban(interaction: discord.Interaction, member: discord.Member, reason: 
 
 #TODO logic for all
 
-@app_commands(administrator=True)
+@app_commands.default_permissions(administrator=True)
 class giveaway(app_commands.Group):
     def __init__(self):
         super().__init__()
