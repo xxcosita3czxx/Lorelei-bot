@@ -201,8 +201,9 @@ async def on_member_join(member:discord.Member):
     logging.debug("on_member_join was triggered!")
     logging.debug(str(member.guild) + " / " + str(member.guild.id))
     if gconfig.get(str(member.guild.id),"MEMBERS","autorole-enabled") is True:
-        role = gconfig.get(str(member.guild.id),"MEMBERS","autorole-role")
-        logging.debug(role)
+        role_id = gconfig.get(str(member.guild.id),"MEMBERS","autorole-role")
+        logging.debug(role_id)
+        role = member.guild.get_role(role_id)
         await member.add_roles(role)
 
 ############################# Context Commands #####################################
@@ -772,7 +773,7 @@ class configure_members(app_commands.Group):
         enabled="Should it be enabled?")
     async def autorole(self, interaction:discord.Interaction, enabled:bool, role:discord.Role = None):  # noqa: E501
         try:
-            gconfig.set(interaction.guild_id,"MEMBERS","autorole-role",role)
+            gconfig.set(interaction.guild_id,"MEMBERS","autorole-role",role.id)
             gconfig.set(interaction.guild_id,"MEMBERS","autorole-enabled",enabled)
             await interaction.response.send_message(
                 content=f"Setted value {str(role.name)}, {str(enabled)}",
