@@ -192,6 +192,7 @@ tree.remove_command("help")
 async def on_message(message:discord.Message):
     logging.debug("on_message was triggered")
     ulanguage = uconfig.get(message.author.id,"Appearance","language")
+    evmember = message.guild.get_member(message.author.id)
     if message.guild:
         guild_id = message.guild.id
         logging.debug(message.guild)
@@ -202,7 +203,7 @@ async def on_message(message:discord.Message):
             )
             if message.author == bot.user:
                 return
-            if message.author.guild_permissions.administrator:
+            if evmember.guild_permissions.administrator:
                 logging.debug(lang.get(conflang,"MainLogs","debug_user_admin"))
             if 'discord.gg' in message.content:
                 await message.delete()
@@ -218,7 +219,7 @@ async def on_message(message:discord.Message):
             )
             if message.author == bot.user:
                 return
-            if message.author.guild_permissions.administrator:
+            if evmember.guild_permissions.administrator:
                 logging.debug(lang.get(conflang,"MainLogs","debug_user_admin"))
                 return
             if 'https://' or "http://" or "www." in message.content.lower():  # noqa: SIM222
