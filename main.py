@@ -35,7 +35,7 @@ mowner,mrepo = config.repository.split("/")
 logger = logging.getLogger(__name__)
 time_regex = re.compile(r"(?:(\d{1,5})(h|s|m|d))+?")
 time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
-def info_text_gen(owner):
+def info_text_gen():
     info_text_raw="""
 Hello!
 This is Lorelei Bot developed by cosita3cz.
@@ -44,13 +44,16 @@ Developed in python for everyone.
 Thanks to all contributors:
 """
     contributors = ctkit.GithubApi.get_repo_contributors(owner=mowner,repo=mrepo)
-
+    contributors = [
+        contributor for contributor in contributors if contributor != mowner
+    ]
     for contributor in contributors:
-        if contributor is not owner:
+        if contributor is not str(mowner):
             info_text_raw += f"- {contributor}\n"
     return info_text_raw
 
-info_text = info_text_gen(owner=mowner)
+
+info_text = info_text_gen()
 
 class ConfigManager:
     def __init__(self, config_dir, fallback_file=None):
