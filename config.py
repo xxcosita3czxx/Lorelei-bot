@@ -37,6 +37,12 @@ autoupdate = True
 # en is default
 language = "en"
 ###################################
+########### Repository ############
+#
+# Repository url
+# default is "https://github.com/xxcosita3czxx/Cosita-Toolkit"
+repository = "https://github.com/xxcosita3czxx/Cosita-Toolkit"
+###################################
 ########## Update Time ############
 #
 # EVERYTHING IN SECCONDS
