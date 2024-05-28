@@ -59,11 +59,13 @@ class ConfigManager:
         logging.debug(f"Getting {id}:{title}:{key}")
         result = self.config.get(id, {}).get(title, {}).get(key, default)
         if result is None and self.fallback_file:
-            fallback_config = toml.load(open(self.fallback_file))  # noqa: SIM115
-            result = fallback_config.get(title, {}).get(key, default)
-        else:
-            result = default
-        logging.debug("Result is: "+str(result))
+            with open(self.fallback_file) as f:
+                fallback_config = toml.load(f)
+            fallback_result = fallback_config.get(title, {}).get(key, default)
+            if fallback_result is not None:
+                logging.debug("Giving fallback result...")
+                result = fallback_result
+        logging.debug("Final result: " + str(result))
         return result
 
     def set(self, id, title, key, value):
@@ -92,6 +94,7 @@ class ConfigManager:
         else:
             self.config[id] = defaultdict(dict)
         logging.debug(f"Reloaded config for {id}:", self.config[id])
+
 gconfig = ConfigManager("data/guilds")
 uconfig = ConfigManager("data/users")
 lang = ConfigManager("data/lang","data/lang/en.toml")
