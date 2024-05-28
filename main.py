@@ -95,8 +95,9 @@ async def autocomplete_color(interaction: discord.Interaction,current: str) -> L
     return [app_commands.Choice(name=color, value=color) for color in colors if current.lower() in color.lower()]  # noqa: E501
 
 async def autocomplete_lang(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
-    languages = ["en","cz","sk"]
-    return [app_commands.Choice(name=language, value=language) for language in languages if current.lower() in language.lower()]  # noqa: E501
+    directory = "data/lang"
+    toml_files = [f[:-5] for f in os.listdir(directory) if f.endswith('.toml')]
+    return [app_commands.Choice(name=language, value=language) for language in toml_files if current.lower() in language.lower()]  # noqa: E501
 
 async def change_status() -> None:
     while True:
