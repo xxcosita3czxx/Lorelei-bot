@@ -205,6 +205,7 @@ async def on_message(message:discord.Message):
                 return
             if evmember.guild_permissions.administrator:
                 logging.debug(lang.get(conflang,"MainLogs","debug_user_admin"))
+                return
             if 'discord.gg' in message.content:
                 await message.delete()
                 await message.author.send(
