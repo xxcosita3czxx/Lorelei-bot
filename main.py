@@ -39,9 +39,10 @@ Developed in python for everyone.
 """
 conflang=config.language
 class ConfigManager:
-    def __init__(self, config_dir):
+    def __init__(self, config_dir, fallback_file=None):
         self.config_dir = config_dir
         self.config = defaultdict(dict)
+        self.fallback_file = fallback_file
         self._load_all_configs()
 
     def _load_all_configs(self):
@@ -57,6 +58,11 @@ class ConfigManager:
     def get(self, id, title, key, default=None):
         logging.debug(f"Getting {id}:{title}:{key}")
         result = self.config.get(id, {}).get(title, {}).get(key, default)
+        if result is None and self.fallback_file:
+            fallback_config = toml.load(open(self.fallback_file))  # noqa: SIM115
+            result = fallback_config.get(title, {}).get(key, default)
+        else:
+            result = default
         logging.debug("Result is: "+str(result))
         return result
 
@@ -88,7 +94,7 @@ class ConfigManager:
         logging.debug(f"Reloaded config for {id}:", self.config[id])
 gconfig = ConfigManager("data/guilds")
 uconfig = ConfigManager("data/users")
-lang = ConfigManager("data/lang")
+lang = ConfigManager("data/lang","data/lang/en.toml")
 
 async def autocomplete_color(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
     colors = ['Blurple', 'Red', 'Green', 'Blue', 'Yellow',"Purple","White"]
