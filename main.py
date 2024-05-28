@@ -7,9 +7,10 @@ from datetime import datetime
 from typing import List
 
 import coloredlogs
+from __future__ import unicode_literals
+import youtube_dl
 import discord
 import toml
-import youtube_dl
 from discord import app_commands, utils
 from discord.ext import commands
 from humanfriendly import format_timespan
@@ -844,26 +845,35 @@ class music_player(app_commands.Group):
 
         else:
             vc = await voice_channel.connect()
+            class MyLogger(object):
+                def debug(self, msg):
+                    pass
+
+                def warning(self, msg):
+                    pass
+
+                def error(self, msg):
+                    logging.error(msg)
+
+
+            def my_hook(d):
+                if d['status'] == 'finished':
+                    logging.debug('Done downloading, now converting ...')
+
+
             ydl_opts = {
                 'format': 'bestaudio/best',
-                'outtmpl': 'audio_file.mp3',  # Save the audio file as "audio_file.mp3"
+                'postprocessors': [{
+                    'key': 'FFmpegExtractAudio',
+                    'preferredcodec': 'mp3',
+                    'preferredquality': '192',
+                }],
+                'logger': MyLogger(),
+                'progress_hooks': [my_hook],
             }
-
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
 
-            if not vc.is_playing():
-                vc.play(
-                    discord.FFmpegPCMAudio('audio_file.mp3', **{'options': '-vn'}),
-                )
-                while vc.is_playing():
-                    await asyncio.sleep(1)
-                await vc.disconnect()
-                os.remove("audio_file.mp3")  # Remove the downloaded
-            else:
-                await interaction.response.send_message(
-                    "The bot is already playing music.",
-                )
 
         @app_commands.command(name="stop",description="Stop music")
         async def stop(self,interaction:discord.Interaction):

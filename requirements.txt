@@ -8,4 +8,4 @@ dulwich
 netifaces
 gitpython
 toml
-youtube_dl
+yt-dlp
