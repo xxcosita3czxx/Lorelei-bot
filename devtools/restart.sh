@@ -2,7 +2,7 @@
 
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 cd "$SCRIPT_DIR/.." || exit
-
+sudo pip install -r requirements.txt --break
 sudo cp config.py devtools/config.py.bak
 sudo git stash
 sudo git pull
