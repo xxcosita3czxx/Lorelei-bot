@@ -40,8 +40,8 @@ language = "en"
 ########### Repository ############
 #
 # Repository url
-# default is "https://github.com/xxcosita3czxx/Cosita-Toolkit"
-repository = "https://github.com/xxcosita3czxx/Cosita-Toolkit"
+# default is "xxcosita3czxx/Cosita-Toolkit"
+repository = "xxcosita3czxx/Cosita-Toolkit"
 ###################################
 ########## Update Time ############
 #
