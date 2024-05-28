@@ -6,13 +6,19 @@
 [HelpCommand]
 
 [RunnerLogs]
-debug_on_pid_log = "main.py läuft mit PID: "
-info_not_running = "main.py läuft nicht. Neustart..."
+debug_on_pid_log = "main.py läuft bei PID: "
+info_not_running = "main.py wird nicht ausgeführt. Neu startend..."
 err_costk_update_fail = "Update von CtKIT fehlgeschlagen!"
 
 [Bot]
 debug_status_chng = "Status geändert."
-info_logged = "Wir haben uns angemeldet als {user}."
+info_logged = "Wir haben uns als {user} angemeldet."
 
 [Responds]
 no_links = "{author}, Senden Sie keine Links!"
+no_invites = "{author} Senden Sie keine Einladungen!"
+ping = "Pong!"
+ping_latency = "Latenz: {latency}"
+
+[MainLogs]
+debug_user_admin = "Der Benutzer ist Administrator und ignoriert ..."
