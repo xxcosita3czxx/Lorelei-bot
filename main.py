@@ -191,6 +191,7 @@ tree.remove_command("help")
 @bot.event
 async def on_message(message:discord.Message):
     logging.debug("on_message was triggered")
+    ulanguage = uconfig.get(message.author.id,"Appearance","language")
     if message.guild:
         guild_id = message.guild.id
         logging.debug(message.guild)
@@ -206,7 +207,7 @@ async def on_message(message:discord.Message):
             if 'discord.gg' in message.content:
                 await message.delete()
                 await message.author.send(
-                    content=f"{message.author.mention} Don't send invites!",
+                    content=lang.get(ulanguage,"Responds","no_invites"),
                 )
         else:
             logging.debug("anti-invite disabled")
@@ -223,7 +224,7 @@ async def on_message(message:discord.Message):
                 await message.delete()
                 await message.author.send(
                     content=lang.get(
-                        conflang,
+                        ulanguage,
                         "Responds",
                         "no_links",
                     ).format(author=message.author.mention),
