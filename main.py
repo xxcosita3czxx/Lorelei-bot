@@ -786,23 +786,42 @@ class giveaway(app_commands.Group):
         self.description="Giveaway commands"
 
     @app_commands.command(name="create", description="Create giveaway")
-    async def giveaway_create(self,interaction:discord.Interaction):
+    async def giveaway_create(
+        self,
+        interaction:discord.Interaction,
+        channel:discord.TextChannel,
+    ):
         pass
 
     @app_commands.command(name="reroll",description="Rerolls user")
-    async def giveaway_reroll(self,interaction:discord.Interaction):
+    async def giveaway_reroll(
+        self,
+        interaction:discord.Interaction,
+        message:discord.Message,
+    ):
         pass
 
     @app_commands.command(name="edit",description="Edits giveaway")
-    async def giveaway_change(self,interaction:discord.Interaction):
+    async def giveaway_change(
+        self,
+        interaction:discord.Interaction,
+        message:discord.Message,
+    ):
         pass
 
     @app_commands.command(name="remove",description="Removes giveaway.")
-    async def giveaway_remove(self,interaction:discord.Interaction):
+    async def giveaway_remove(
+        self,
+        interaction:discord.Interaction,
+        message:discord.Message,
+    ):
         pass
 
     @app_commands.command(name="list",description="Lists all running Giveaways.")
-    async def giveaway_list(self,interaction:discord.Interaction):
+    async def giveaway_list(
+        self,
+        interaction:discord.Interaction,
+    ):
         pass
 tree.add_command(giveaway())
 
