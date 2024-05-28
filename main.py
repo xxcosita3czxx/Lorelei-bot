@@ -833,6 +833,7 @@ class music_player(app_commands.Group):
         super().__init__()
         self.name="music"
         self.description="Music Player"
+
     @app_commands.command(name="play",description="Play music")
     async def play(self,interaction:discord.Interaction, url:str):
         voice_channel = interaction.user.voice.channel
@@ -1162,7 +1163,7 @@ class Help(app_commands.Group):
         pass
 
 @tree.command(name="help", description="User Help")
-async def help_user(self, interaction: discord.Interaction):
+async def help_user(interaction: discord.Interaction):
     embeds = help_user
     view = Help_Pages(embeds=embeds)
     await view.send_initial_message(interaction)
