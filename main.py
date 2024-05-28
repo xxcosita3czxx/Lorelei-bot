@@ -847,6 +847,7 @@ class music_player(app_commands.Group):
             # Search for the track on SoundCloud
             url = f'http://api.soundcloud.com/tracks?q={query}'
             response = requests.get(url,timeout=60)
+            logging.debug(response)
             if response.status_code == 200:  # noqa: PLR2004
                 tracks = response.json()
                 if tracks:
