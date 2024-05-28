@@ -1,4 +1,3 @@
-
 [ConfigureCommand]
 
 [TicketingCommand]
@@ -15,4 +14,10 @@ debug_status_chng = "Status bol pozmenený."
 info_logged = "Ste prihlásený ako {user}."
 
 [Responds]
-no_links = "{author}, Nezasielajte linky!"
+no_links = "{author},Nezasielajte linky!"
+no_invites = "{author} Nezasielajte pozvánky!"
+ping = "Pong!"
+ping_latency = "Ping: {latency}"
+
+[MainLogs]
+debug_user_admin = "Používateľ je správca, ignoruje ..."
