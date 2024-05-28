@@ -877,6 +877,7 @@ class configure_user(app_commands.Group):
         name="language",
         description="Language the bot will respond to you",
     )
+    @app_commands.autocomplete(language=autocomplete_lang)
     async def conf_user_lang(self,interaction:discord.Interaction,language:str):
         try:
             gconfig.set(interaction.user.id,"Appearance","language",language)
