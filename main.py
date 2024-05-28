@@ -9,6 +9,7 @@ from typing import List
 import coloredlogs
 import discord
 import toml
+import youtube_dl
 from discord import app_commands, utils
 from discord.ext import commands
 from humanfriendly import format_timespan
@@ -824,6 +825,58 @@ class giveaway(app_commands.Group):
     ):
         pass
 tree.add_command(giveaway())
+
+################################## Youtube Music Player ############################
+
+class music_player(app_commands.Group):
+    def __init__(self):
+        super().__init__()
+        self.name="music"
+        self.description="Music Player"
+    @app_commands.command(name="play",description="Play music")
+    async def play(interaction:discord.Interaction, url:str):
+        voice_channel = interaction.user.voice.channel
+        if voice_channel is None:
+            await interaction.response.send_message(
+                "You need to be in a voice channel to use this command!",
+            )
+
+        else:
+            vc = await voice_channel.connect()
+            with youtube_dl.YoutubeDL() as ydl:
+                info = ydl.extract_info(url, download=False)
+                url2 = info['formats'][0]['url']
+                vc.play(discord.FFmpegPCMAudio(
+                    url2, **{
+                        'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',  # noqa: E501
+                        'options': '-vn',
+                    },
+                ))
+
+    @app_commands.command(name="stop",description="Stop music")
+    async def stop(interaction:discord.Interaction):
+        voice_client = interaction.guild.voice_client
+        if voice_client.is_playing():
+            voice_client.stop()
+            await interaction.response.send_message("Music stopped!")
+        else:
+            await interaction.response.send_message(
+                "No music is currently playing.",
+            )
+
+    @app_commands.command(name="disconnect",description="Disconnects bot from channel")  # noqa: E501
+    async def disconnect(interaction:discord.Interaction):
+        voice_client = interaction.guild.voice_client
+        if voice_client.is_connected():
+            await voice_client.disconnect()
+            await interaction.response.send_message(
+                "Disconnected from voice channel.",
+            )
+        else:
+            await interaction.response.send_message(
+                "I'm not connected to a voice channel.",
+            )
+
 
 ################################### CONFIGURE COMMAND ##############################
 
