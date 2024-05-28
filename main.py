@@ -834,7 +834,7 @@ class music_player(app_commands.Group):
         self.name="music"
         self.description="Music Player"
     @app_commands.command(name="play",description="Play music")
-    async def play(interaction:discord.Interaction, url:str):
+    async def play(self,interaction:discord.Interaction, url:str):
         voice_channel = interaction.user.voice.channel
         if voice_channel is None:
             await interaction.response.send_message(
@@ -854,7 +854,7 @@ class music_player(app_commands.Group):
                 ))
 
     @app_commands.command(name="stop",description="Stop music")
-    async def stop(interaction:discord.Interaction):
+    async def stop(self,interaction:discord.Interaction):
         voice_client = interaction.guild.voice_client
         if voice_client.is_playing():
             voice_client.stop()
@@ -865,7 +865,7 @@ class music_player(app_commands.Group):
             )
 
     @app_commands.command(name="disconnect",description="Disconnects bot from channel")  # noqa: E501
-    async def disconnect(interaction:discord.Interaction):
+    async def disconnect(self,interaction:discord.Interaction):
         voice_client = interaction.guild.voice_client
         if voice_client.is_connected():
             await voice_client.disconnect()
