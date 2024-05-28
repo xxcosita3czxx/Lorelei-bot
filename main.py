@@ -836,50 +836,52 @@ class music_player(app_commands.Group):
 
     @app_commands.command(name="play",description="Play music")
     async def play(self,interaction:discord.Interaction, query:str):
-        voice_channel = interaction.user.voice.channel
-        if voice_channel is None:
-            await interaction.response.send_message(
-                "You need to be in a voice channel to use this command!",
-            )
-
-        else:
-            vc = voice_channel.connect()
-            # Search for the track on SoundCloud
-            url = f'http://api.soundcloud.com/tracks?q={query}'
-            response = requests.get(url,timeout=60)
-            logging.debug(response)
-            if response.status_code == 200:  # noqa: PLR2004
-                tracks = response.json()
-                if tracks:
-                    track = tracks[0]
-                    stream_url = track.get('stream_url')
-                    if stream_url:
-                        await interaction.response.send_message(
-                            f'Now playing: {track["title"]}',
-                        )
-                        voice_channel = interaction.user.voice.channel
-                        if voice_channel:
-                            voice_client = await voice_channel.connect()
-                            voice_client.play(
-                                discord.FFmpegPCMAudio(
-                                    stream_url + '?client_id=YOUR_CLIENT_ID',
-                                ),
-                            )
-                        else:
-                            await interaction.response.send_message(
-                                "You need to be in a voice channel to use this command.",  # noqa: E501
-                            )
-                    else:
-                        await interaction.response.send_message(
-                            "Track is not available for streaming.",
-                        )
-                else:
-                    await interaction.response.send_message("No results found.")
-            else:
+        try:
+            voice_channel = interaction.user.voice.channel
+            if voice_channel is None:
                 await interaction.response.send_message(
-                    "Failed to fetch data from SoundCloud.",
+                    "You need to be in a voice channel to use this command!",
                 )
 
+            else:
+                voice_channel.connect()
+                # Search for the track on SoundCloud
+                url = f'http://api.soundcloud.com/tracks?q={query}'
+                response = requests.get(url,timeout=60)
+                logging.debug(response)
+                if response.status_code == 200:  # noqa: PLR2004
+                    tracks = response.json()
+                    if tracks:
+                        track = tracks[0]
+                        stream_url = track.get('stream_url')
+                        if stream_url:
+                            await interaction.response.send_message(
+                                f'Now playing: {track["title"]}',
+                            )
+                            voice_channel = interaction.user.voice.channel
+                            if voice_channel:
+                                voice_client = await voice_channel.connect()
+                                voice_client.play(
+                                    discord.FFmpegPCMAudio(
+                                        stream_url + '?client_id=YOUR_CLIENT_ID',
+                                    ),
+                                )
+                            else:
+                                await interaction.response.send_message(
+                                    "You need to be in a voice channel to use this command.",  # noqa: E501
+                                )
+                        else:
+                            await interaction.response.send_message(
+                                "Track is not available for streaming.",
+                            )
+                    else:
+                        await interaction.response.send_message("No results found.")
+                else:
+                    await interaction.response.send_message(
+                        "Failed to fetch data from SoundCloud.",
+                    )
+        except Exception as e:
+            interaction.response.send_message("Exception: " + e)
 
     @app_commands.command(name="stop",description="Stop music")
     async def stop(self,interaction:discord.Interaction):
