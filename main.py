@@ -843,7 +843,7 @@ class music_player(app_commands.Group):
             )
 
         else:
-            voice_channel.connect()
+            vc = voice_channel.connect()
             # Search for the track on SoundCloud
             url = f'http://api.soundcloud.com/tracks?q={query}'
             response = requests.get(url,timeout=60)
