@@ -798,7 +798,7 @@ class giveaway(app_commands.Group):
     async def giveaway_reroll(
         self,
         interaction:discord.Interaction,
-        message:discord.Message,
+        message:str,
     ):
         pass
 
@@ -806,7 +806,7 @@ class giveaway(app_commands.Group):
     async def giveaway_change(
         self,
         interaction:discord.Interaction,
-        message:discord.Message,
+        message:str,
     ):
         pass
 
@@ -814,7 +814,7 @@ class giveaway(app_commands.Group):
     async def giveaway_remove(
         self,
         interaction:discord.Interaction,
-        message:discord.Message,
+        message:str,
     ):
         pass
 
