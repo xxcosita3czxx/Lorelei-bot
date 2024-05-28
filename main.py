@@ -201,6 +201,8 @@ async def on_message(message:discord.Message):
             )
             if message.author == bot.user:
                 return
+            if message.author.guild_permissions.administrator:
+                return
             if 'discord.gg' in message.content:
                 await message.delete()
                 await message.author.send(
@@ -214,6 +216,8 @@ async def on_message(message:discord.Message):
                 gconfig.get(str(guild_id),"SECURITY","anti-links")),
             )
             if message.author == bot.user:
+                return
+            if message.author.guild_permissions.administrator:
                 return
             if 'https://' or "http://" or "www." in message.content.lower():  # noqa: SIM222
                 await message.delete()
