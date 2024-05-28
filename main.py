@@ -826,7 +826,7 @@ class giveaway(app_commands.Group):
         pass
 tree.add_command(giveaway())
 
-################################## Youtube Music Player ############################
+################################## Music Player ####################################
 
 class music_player(app_commands.Group):
     def __init__(self):
@@ -1247,6 +1247,7 @@ async def user_info(interaction: discord.Interaction, member:discord.User):
     await interaction.response.send_message(
         embed=embed,
         ephemeral=True,
+
     )
 
 if __name__=="__main__":
