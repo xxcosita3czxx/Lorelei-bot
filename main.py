@@ -881,16 +881,16 @@ class music_player(app_commands.Group):
                 )
 
 
-        @app_commands.command(name="stop",description="Stop music")
-        async def stop(self,interaction:discord.Interaction):
-            voice_client = interaction.guild.voice_client
-            if voice_client.is_playing():
-                voice_client.stop()
-                await interaction.response.send_message("Music stopped!")
-            else:
-                await interaction.response.send_message(
-                    "No music is currently playing.",
-                )
+    @app_commands.command(name="stop",description="Stop music")
+    async def stop(self,interaction:discord.Interaction):
+        voice_client = interaction.guild.voice_client
+        if voice_client.is_playing():
+            voice_client.stop()
+            await interaction.response.send_message("Music stopped!")
+        else:
+            await interaction.response.send_message(
+                "No music is currently playing.",
+            )
 
     @app_commands.command(name="disconnect",description="Disconnects bot from channel")  # noqa: E501
     async def disconnect(self,interaction:discord.Interaction):
