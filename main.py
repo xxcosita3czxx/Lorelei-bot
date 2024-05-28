@@ -21,6 +21,7 @@ coloredlogs.install(
     fmt='%(asctime)s %(levelname)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
 )
+conflang=config.language
 
 help_user1=discord.Embed(
     title="User Help",
@@ -34,15 +35,23 @@ mowner,mrepo = config.repository.split("/")
 logger = logging.getLogger(__name__)
 time_regex = re.compile(r"(?:(\d{1,5})(h|s|m|d))+?")
 time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
-info_text=f"""
+def info_text_gen(owner):
+    info_text_raw="""
 Hello!
 This is Lorelei Bot developed by cosita3cz.
 Developed in python for everyone.
 
 Thanks to all contributors:
-{str(ctkit.GithubApi.get_repo_contributors(owner=mowner,repo=mrepo))}
 """
-conflang=config.language
+    contributors = ctkit.GithubApi.get_repo_contributors(owner=mowner,repo=mrepo)
+
+    for contributor in contributors:
+        if contributor is not owner:
+            info_text_raw += f"- {contributor}\n"
+    return info_text_raw
+
+info_text = info_text_gen(owner=mowner)
+
 class ConfigManager:
     def __init__(self, config_dir, fallback_file=None):
         self.config_dir = config_dir
