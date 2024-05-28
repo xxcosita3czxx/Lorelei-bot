@@ -40,8 +40,8 @@ language = "en"
 ########### Repository ############
 #
 # Repository url
-# default is "xxcosita3czxx/Cosita-Toolkit"
-repository = "xxcosita3czxx/Cosita-Toolkit"
+# default is "xxcosita3czxx/Lorelei-bot"
+repository = "xxcosita3czxx/Lorelei-bot"
 ###################################
 ########## Update Time ############
 #
