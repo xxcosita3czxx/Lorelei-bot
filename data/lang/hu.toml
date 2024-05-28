@@ -1,0 +1,24 @@
+
+[ConfigureCommand]
+
+[TicketingCommand]
+
+[HelpCommand]
+
+[RunnerLogs]
+debug_on_pid_log = "A main.py PID-n fut: "
+info_not_running = "A main.py nem fut. Újraindítás..."
+err_costk_update_fail = "A CtKIT frissítése nem sikerült!"
+
+[Bot]
+debug_status_chng = "Állapot megváltozott."
+info_logged = "{user} néven jelentkeztünk be."
+
+[Responds]
+no_links = "{author}, Ne küldj linkeket!"
+no_invites = "{author} Ne küldj meghívókat!"
+ping = "Pong!"
+ping_latency = "Késleltetés: {latency}"
+
+[MainLogs]
+debug_user_admin = "A felhasználó adminisztrátor, figyelmen kívül hagyja..."
