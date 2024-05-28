@@ -211,7 +211,7 @@ async def on_message(message:discord.Message):
                 )
         else:
             logging.debug("anti-invite disabled")
-            return
+
         if gconfig.get(str(guild_id),"SECURITY","anti-links") is True:
             logging.debug("Anti-links Status:"+str(
                 gconfig.get(str(guild_id),"SECURITY","anti-links")),
@@ -231,7 +231,6 @@ async def on_message(message:discord.Message):
                 )
         else:
             logging.debug("anti_links disabled")
-            return
 @bot.event
 async def on_member_join(member:discord.Member):
     logging.debug("on_member_join was triggered!")
