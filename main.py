@@ -844,7 +844,7 @@ class music_player(app_commands.Group):
                 )
 
             else:
-                voice_channel.connect()
+                vc = await voice_channel.connect()
                 # Search for the track on SoundCloud
                 url = f'http://api.soundcloud.com/tracks?q={query}'
                 response = requests.get(url,timeout=60)
@@ -877,6 +877,7 @@ class music_player(app_commands.Group):
                     else:
                         await interaction.response.send_message("No results found.")
                 else:
+                    await vc.disconnect()
                     await interaction.response.send_message(
                         "Failed to fetch data from SoundCloud.",
                     )
