@@ -844,26 +844,37 @@ class music_player(app_commands.Group):
 
         else:
             vc = await voice_channel.connect()
-            with youtube_dl.YoutubeDL() as ydl:
-                info = ydl.extract_info(url, download=False)
-                url2 = info['formats'][0]['url']
-                vc.play(discord.FFmpegPCMAudio(
-                    url2, **{
-                        'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',  # noqa: E501
-                        'options': '-vn',
-                    },
-                ))
+            ydl_opts = {
+                'format': 'bestaudio/best',
+                'outtmpl': 'audio_file.mp3',  # Save the audio file as "audio_file.mp3"
+            }
 
-    @app_commands.command(name="stop",description="Stop music")
-    async def stop(self,interaction:discord.Interaction):
-        voice_client = interaction.guild.voice_client
-        if voice_client.is_playing():
-            voice_client.stop()
-            await interaction.response.send_message("Music stopped!")
-        else:
-            await interaction.response.send_message(
-                "No music is currently playing.",
-            )
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                ydl.download([url])
+
+            if not vc.is_playing():
+                vc.play(
+                    discord.FFmpegPCMAudio('audio_file.mp3', **{'options': '-vn'}),
+                )
+                while vc.is_playing():
+                    await asyncio.sleep(1)
+                await vc.disconnect()
+                os.remove("audio_file.mp3")  # Remove the downloaded
+            else:
+                await interaction.response.send_message(
+                    "The bot is already playing music.",
+                )
+
+        @app_commands.command(name="stop",description="Stop music")
+        async def stop(self,interaction:discord.Interaction):
+            voice_client = interaction.guild.voice_client
+            if voice_client.is_playing():
+                voice_client.stop()
+                await interaction.response.send_message("Music stopped!")
+            else:
+                await interaction.response.send_message(
+                    "No music is currently playing.",
+                )
 
     @app_commands.command(name="disconnect",description="Disconnects bot from channel")  # noqa: E501
     async def disconnect(self,interaction:discord.Interaction):
