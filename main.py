@@ -486,7 +486,7 @@ async def ping(interaction: discord.Interaction):
     '''
     Ping Pong the bot
     '''
-    language = uconfig.get(interaction.user.id,"Appearance","language")
+    language = uconfig.get(interaction.user.id,"Appearance","language",default="en")
     embed = discord.Embed(
         title=lang.get(language,"Responses","ping"),
         description=lang.get(language,"Responses","ping_latency").format(latency=round(bot.latency,2)),
@@ -863,7 +863,7 @@ class configure_user(app_commands.Group):
     @app_commands.autocomplete(color=autocomplete_color)
     async def conf_user_def_color(self,interaction:discord.Interaction, color:str):
         try:
-            gconfig.set(interaction.user.id,"Appearance","color",color)
+            uconfig.set(interaction.user.id,"Appearance","color",color)
             await interaction.response.send_message(
                 content=f"Setted value {str(color)}",
                 ephemeral=True,
