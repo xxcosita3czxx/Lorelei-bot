@@ -14,6 +14,7 @@ from discord.ext import commands
 from humanfriendly import format_timespan
 
 import config
+import utils.cosita_toolkit as ctkit
 
 coloredlogs.install(
     level=config.loglevel,
@@ -28,14 +29,18 @@ help_user1=discord.Embed(
 
 help_user = [help_user1]
 
+mowner,mrepo = config.repository.split("/")
 
 logger = logging.getLogger(__name__)
 time_regex = re.compile(r"(?:(\d{1,5})(h|s|m|d))+?")
 time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
-info_text="""
+info_text=f"""
 Hello!
 This is Lorelei Bot developed by cosita3cz.
 Developed in python for everyone.
+
+Thanks to all contributors:
+{str(ctkit.GithubApi.get_repo_contributors(owner=mowner,repo=mrepo))}
 """
 conflang=config.language
 class ConfigManager:
