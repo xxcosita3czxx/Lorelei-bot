@@ -1089,17 +1089,12 @@ class Help_Pages(discord.ui.View):
                 view=self,
             )
 
+@app_commands.default_permissions(administrator=True)
 class Help(app_commands.Group):
     def __init__(self):
         super().__init__()
-        self.name = "help"
+        self.name = "helpadmin"
         self.description = "Help command"
-
-    @app_commands.command(name="user", description="User Help")
-    async def help_user(self, interaction: discord.Interaction):
-        embeds = help_user
-        view = Help_Pages(embeds=embeds)
-        await view.send_initial_message(interaction)
 
     @app_commands.command(name="configure",description="Configuring help")
     async def help_configure(self,interaction:discord.Interaction):
@@ -1113,6 +1108,11 @@ class Help(app_commands.Group):
     async def help_other(self,interaction:discord.Interaction):
         pass
 
+@tree.command(name="help", description="User Help")
+async def help_user(self, interaction: discord.Interaction):
+    embeds = help_user
+    view = Help_Pages(embeds=embeds)
+    await view.send_initial_message(interaction)
 
 tree.add_command(Help())
 ####################################################################################
