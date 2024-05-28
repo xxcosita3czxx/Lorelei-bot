@@ -878,7 +878,7 @@ class music_player(app_commands.Group):
                 "I'm not connected to a voice channel.",
             )
 
-
+tree.add_command(music_player())
 ################################### CONFIGURE COMMAND ##############################
 
 @app_commands.default_permissions(administrator=True)
