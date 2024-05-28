@@ -1,4 +1,11 @@
 # Lorelei
+Open-Source discord bot in python, for people
+
+## Support the creator
+You can support me by contributing to the repo
+
+Or donating me any eth-based crypto to this wallet:
+`0xAC0de1b07AF535B8a2ac060259E2d49d5c1DAfd5`
 
 ## Installation
 
