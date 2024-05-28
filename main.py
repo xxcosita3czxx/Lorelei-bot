@@ -892,7 +892,7 @@ class configure_user(app_commands.Group):
     @app_commands.autocomplete(language=autocomplete_lang)
     async def conf_user_lang(self,interaction:discord.Interaction,language:str):
         try:
-            gconfig.set(interaction.user.id,"Appearance","language",language)
+            uconfig.set(interaction.user.id,"Appearance","language",language)
             await interaction.response.send_message(
                 content=f"Setted value {str(language)}",
                 ephemeral=True,
