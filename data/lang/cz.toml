@@ -1,0 +1,25 @@
+
+[ConfigureCommand]
+
+[TicketingCommand]
+
+[HelpCommand]
+
+[RunnerLogs]
+debug_on_pid_log = "main.py Běží na PID: "
+info_not_running = "main.py Neběží. Restartuji..."
+err_costk_update_fail = "Aktualizace CtKIT Selhala!"
+
+[Bot]
+debug_status_chng = "Status Pozměněn."
+info_logged = "Přihlásili jsem se za {user}."
+
+[Responds]
+no_links = "{author}, Neposílej linky!"
+no_invites = "{author} Neposílej invity!"
+ping = "Pong!"
+ping_latency = "Latence: {latency}"
+
+[MainLogs]
+debug_user_admin = "User je admin! Ignoruji..."
+
