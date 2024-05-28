@@ -863,7 +863,7 @@ class music_player(app_commands.Group):
                                 voice_client = await voice_channel.connect()
                                 voice_client.play(
                                     discord.FFmpegPCMAudio(
-                                        stream_url + '?client_id=YOUR_CLIENT_ID',
+                                        stream_url + '?client_id=hKP7kcwGL0q6weES7f6X5qOjGnWfyOVX',
                                     ),
                                 )
                             else:
