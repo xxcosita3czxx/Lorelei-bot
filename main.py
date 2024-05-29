@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+import random
 import re
 from collections import defaultdict
 from datetime import datetime
@@ -1200,6 +1201,49 @@ async def help_user(interaction: discord.Interaction):
     await view.send_initial_message(interaction)
 
 tree.add_command(Help())
+############################ e621.net commands #####################################
+
+class e6_commands(app_commands.Group):
+    def __init__(self):
+        super().__init__()
+        self.name = "e6"
+        self.description = "e621 Images"
+        self.nsfw = True
+
+    @app_commands.command(
+        name="random-post",
+        description="Gives you random post from e6",
+    )
+    async def e6_random_post(interaction:discord.Interaction,tags:str=None):
+        try:
+            tags = tags.replace(" ","+")
+            url = "https://e621.net/posts.json_?limit=100"
+            if tags is not None:
+                url += f"&tags={tags}"
+            response = requests.get(
+                url,
+                timeout=60,
+                headers={"User-Agent": "Lorelei-bot/cosita3cz"},
+            )
+            data = response.json
+            if not data["posts"]:
+                if tags is not None:
+                    interaction.response.send_message(
+                        content=f"No images found for these tags: {tags}",
+                    )
+                else:
+                    interaction.response.send_message(content="No image found.")
+            post = random.choice(data["posts"]) # noqa: S311
+
+            embed = discord.Embed(
+                title = f"Post {post['id']}, by {post['tags']['artist']}",
+                image = post["file_url"],
+            )
+            interaction.response.send_message(embed=embed)
+        except Exception as e:
+            interaction.response.send_message(content=f"Exception: {e}")
+
+tree.add_command(e6_commands())
 ####################################################################################
 
 @tree.command(name="user-info",description="Info about user")
