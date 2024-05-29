@@ -1239,8 +1239,9 @@ class e6_commands(app_commands.Group):
 
             embed = discord.Embed(
                 title = f"Post {post['id']}, by {post['tags']['artist']}",
-                image = post["file"]["url"],
+                
             )
+            embed.set_image(url = post["file"]["url"])
             await interaction.response.send_message(embed=embed)
         except Exception as e:
             await interaction.response.send_message(content=f"Exception: {e}")
