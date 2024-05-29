@@ -462,11 +462,11 @@ class main(discord.ui.View):
         style = discord.ButtonStyle.red,
         custom_id = "close",
     )
-    async def close(self, interaction, button) -> None:  # noqa: ANN101, ANN001
+    async def close(self, interaction:discord.Interaction, button) -> None:  # noqa: ANN101, ANN001
 
         embed = discord.Embed(
-            title = "Are you sure you want to close this ticket?",
-            color = discord.Colour.blurple(),
+            title = lang.get(uconfig.get(interaction.user.id, "Appearance","")),
+            color = discord.Colour.blurple()   ,  
         )
         await interaction.response.send_message(
             embed = embed,

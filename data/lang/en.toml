@@ -4,6 +4,7 @@
 [TicketingCommand]
 embed_review_title = "Would you like to review our system?"
 embed_review_description = "Take a while and give us a star based on how well you were served:"
+ticket_close_confirm = "Are you sure you want to close this ticket?"
 
 [HelpCommand]
 
