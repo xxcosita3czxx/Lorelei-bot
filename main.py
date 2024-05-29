@@ -1225,7 +1225,7 @@ class e6_commands(app_commands.Group):
                 timeout=60,
                 headers={"User-Agent": "Lorelei-bot"},
             )
-            data = response.json
+            data = response.json()
             if not data["posts"]:
                 if tags is not None:
                     await interaction.response.send_message(
