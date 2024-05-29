@@ -1,0 +1,24 @@
+
+[ConfigureCommand]
+
+[TicketingCommand]
+
+[HelpCommand]
+
+[RunnerLogs]
+debug_on_pid_log = "main.py toimii PID:llä:"
+info_not_running = "main.py ei ole käynnissä. Käynnistetään uudelleen..."
+err_costk_update_fail = "CtKIT:n päivitys epäonnistui!"
+
+[Bot]
+debug_status_chng = "Tila muutettu."
+info_logged = "Olemme kirjautuneet sisään käyttäjänä {user}."
+
+[Responds]
+no_links = "{author}, älä lähetä linkkejä!"
+no_invites = "{author} Älä lähetä kutsuja!"
+ping = "Pong!"
+ping_latency = "Viive: {latency}"
+
+[MainLogs]
+debug_user_admin = "Käyttäjä on järjestelmänvalvoja, ohittaa..."

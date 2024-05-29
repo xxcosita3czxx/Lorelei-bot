@@ -1,0 +1,24 @@
+
+[ConfigureCommand]
+
+[TicketingCommand]
+
+[HelpCommand]
+
+[RunnerLogs]
+debug_on_pid_log = "main.py PID'de çalışıyor:"
+info_not_running = "main.py çalışmıyor. Yeniden başlatma..."
+err_costk_update_fail = "CtKIT Güncellemesi Başarısız!"
+
+[Bot]
+debug_status_chng = "Durum Değiştirildi."
+info_logged = "{user} olarak oturum açtık."
+
+[Responds]
+no_links = "{author}, Bağlantı göndermeyin!"
+no_invites = "{author} Davet göndermeyin!"
+ping = "Pong!"
+ping_latency = "Gecikme: {latency}"
+
+[MainLogs]
+debug_user_admin = "Kullanıcı yönetici, görmezden geliniyor..."
