@@ -220,10 +220,6 @@ tree.remove_command("help")
 async def on_message(message:discord.Message):
     logging.debug("on_message was triggered")
     ulanguage = uconfig.get(message.author.id,"Appearance","language")
-    evmember = message.guild.get_member(message.author.id)
-    if evmember.guild_permissions.administrator:
-        logging.debug(lang.get(conflang,"MainLogs","debug_user_admin"))
-        return
     if message.guild:
         guild_id = message.guild.id
         logging.debug(message.guild)
