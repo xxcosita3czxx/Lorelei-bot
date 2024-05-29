@@ -141,6 +141,14 @@ async def change_status() -> None:
             status=config.status,
         )
         logging.debug(lang.get(conflang,"Bot","debug_status_chng"))
+        await bot.change_presence(
+            activity=discord.Activity(
+                type=discord.ActivityType.watching,
+                name=f"On {bot.guilds.count()} servers",
+            ),
+            status=config.status,
+        )
+        logging.debug(lang.get(conflang,"Bot","debug_status_chng"))
         await asyncio.sleep(5)
         await bot.change_presence(
             activity=discord.Activity(
@@ -424,10 +432,15 @@ class confirm(discord.ui.View):
         style = discord.ButtonStyle.red,
         custom_id = "confirm",
     )
-    async def confirm_button(self, interaction, button) -> None:  # noqa: ANN101, ANN001
-
+    async def confirm_button(self, interaction:discord.Interaction, button) -> None:  # noqa: ANN101, ANN001
+        embed=discord.Embed(
+            title=lang.get(interaction.user.id,"TicketingCommand","embed_rewiew_title"),
+            description=lang.get(interaction.user.id,"TicketingCommand","embed_rewiew_description"),
+        )
         try:
             await interaction.channel.delete()
+            if gconfig.get():
+                await interaction.user.send(embed=embed)
 
         except discord.Forbidden :
             await interaction.response.send_message(
@@ -952,7 +965,51 @@ class configure_appear(app_commands.Group):
                 ephemeral=True,
             )
 
+@app_commands.default_permissions(administrator=True)
+class configure_ticketing(app_commands.Group):
+    def __init__(self):
+        super().__init__()
+        self.name="ticketing"
+        self.description="Configure ticketing options"
 
+    @app_commands.command(name="rewiews",description="Rewiew system")
+    async def conf_ticketing_rewiews(
+        self,
+        interaction:discord.Interaction,
+        channel:discord.TextChannel=None,
+        value:bool=None,
+    ):
+        try:
+            if channel and value is not None:
+                gconfig.set(interaction.guild_id,"Ticketing","rewiews-enabled",value=value)
+                gconfig.set(interaction.guild_id,"Ticketing","rewiews-channel",value=channel)
+                await interaction.response.send_message(
+                    content=f"Setted value {str(value)},{str(channel)}",
+                    ephemeral=True,
+                )
+
+            if channel is None and value is not None:
+                gconfig.set(interaction.guild_id,"Ticketing","rewiews-enabled",value=value)
+                await interaction.response.send_message(
+                    content=f"Setted value {str(value)}",
+                    ephemeral=True,
+                )
+            if channel is not None and value is None:
+                gconfig.set(interaction.guild_id,"Ticketing","rewiews-channel",value=channel)
+                await interaction.response.send_message(
+                    content=f"Setted value {str(value)},{str(channel)}",
+                    ephemeral=True,
+                )
+            if channel and value is None:
+                await interaction.response.send_message(
+                    content="You have to choose",
+                    ephemeral=True,
+                )
+        except Exception as e:
+            await interaction.response.send_message(
+                content=f"Exception happened: {e}",
+                ephemeral=True,
+            )
 @app_commands.default_permissions(administrator=True)
 class configure_members(app_commands.Group):
     def __init__(self):
@@ -989,6 +1046,7 @@ class configure(app_commands.Group):
         self.add_command(configure_sec())
         self.add_command(configure_appear())
         self.add_command(configure_members())
+        self.add_command(configure_ticketing())
 tree.add_command(configure())
 
 class configure_user(app_commands.Group):
