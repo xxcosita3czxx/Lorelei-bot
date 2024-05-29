@@ -21,7 +21,8 @@ no_links = "{author}, Don't send links!"
 no_invites = "{author} Don't send invites!"
 ping = "Pong!"
 ping_latency = "Latency: {latency}"
+value_set = "Value/s Set: {values}"
+noperms_manage_channels = "Make sure I have `{perms}` permissions!"
 
 [MainLogs]
 debug_user_admin = "User is admin, ignoring..."
-

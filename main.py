@@ -444,7 +444,7 @@ class confirm(discord.ui.View):
 
         except discord.Forbidden :
             await interaction.response.send_message(
-                "Channel deletion failed! Make sure I have `manage_channels` permissions!",  # noqa: E501
+                content="Channel deletion failed! Make sure I have `manage_channels` permissions!",  # noqa: E501
                 ephemeral = True,
             )
 
@@ -981,21 +981,21 @@ class configure_ticketing(app_commands.Group):
     ):
         try:
             if channel is not None and value is not None:
-                gconfig.set(interaction.guild_id,"Ticketing","rewiews-enabled",value=value)
-                gconfig.set(interaction.guild_id,"Ticketing","rewiews-channel",value=channel)
+                gconfig.set(interaction.guild_id,"Ticketing","reviews-enabled",value=value)
+                gconfig.set(interaction.guild_id,"Ticketing","reviews-channel",value=channel)
                 await interaction.response.send_message(
                     content=f"Setted value {str(value)},{str(channel)}",
                     ephemeral=True,
                 )
 
             if channel is None and value is not None:
-                gconfig.set(interaction.guild_id,"Ticketing","rewiews-enabled",value=value)
+                gconfig.set(interaction.guild_id,"Ticketing","reviews-enabled",value=value)
                 await interaction.response.send_message(
                     content=f"Setted value {str(value)}",
                     ephemeral=True,
                 )
             if channel is not None and value is None:
-                gconfig.set(interaction.guild_id,"Ticketing","rewiews-channel",value=channel)
+                gconfig.set(interaction.guild_id,"Ticketing","reviews-channel",value=channel)
                 await interaction.response.send_message(
                     content=f"Setted value {str(channel)}",
                     ephemeral=True,
@@ -1061,7 +1061,7 @@ class configure_user(app_commands.Group):
         try:
             uconfig.set(interaction.user.id,"Appearance","color",color)
             await interaction.response.send_message(
-                content=f"Setted value {str(color)}",
+                content=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","value_set").format(values=color),
                 ephemeral=True,
             )
         except Exception as e:
