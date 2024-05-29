@@ -1,0 +1,24 @@
+
+[ConfigureCommand]
+
+[TicketingCommand]
+
+[HelpCommand]
+
+[RunnerLogs]
+debug_on_pid_log = "main.py is running at PID: "
+info_not_running = "main.py is not running. Restarting..."
+err_costk_update_fail = "Update of CtKIT Failed!"
+
+[Bot]
+debug_status_chng = "Status Changed."
+info_logged = "We have logged in as {user}."
+
+[Responds]
+no_links = "{author}, Don't send links!"
+no_invites = "{author} Don't send invites!"
+ping = "Pong!"
+ping_latency = "Latency: {latency}"
+
+[MainLogs]
+debug_user_admin = "User is admin, ignoring..."
