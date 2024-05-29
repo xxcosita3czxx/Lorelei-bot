@@ -997,7 +997,7 @@ class configure_ticketing(app_commands.Group):
             if channel is not None and value is None:
                 gconfig.set(interaction.guild_id,"Ticketing","rewiews-channel",value=channel)
                 await interaction.response.send_message(
-                    content=f"Setted value {str(value)},{str(channel)}",
+                    content=f"Setted value {str(channel)}",
                     ephemeral=True,
                 )
             if channel is None and value is None:
