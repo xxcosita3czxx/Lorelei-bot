@@ -1,0 +1,24 @@
+
+[ConfigureCommand]
+
+[TicketingCommand]
+
+[HelpCommand]
+
+[RunnerLogs]
+debug_on_pid_log = "main.py funksionon në PID:"
+info_not_running = "main.py nuk po funksionon. Po riniset..."
+err_costk_update_fail = "Përditësimi i CtKIT dështoi!"
+
+[Bot]
+debug_status_chng = "Statusi u ndryshua."
+info_logged = "Ne jemi identifikuar si {user}."
+
+[Responds]
+no_links = "{autor}, Mos dërgo lidhje!"
+no_invites = "{autor} Mos dërgo ftesa!"
+ping = "Pong!"
+ping_latency = "Vonesa: {latency}"
+
+[MainLogs]
+debug_user_admin = "Përdoruesi është administrator, duke injoruar..."
