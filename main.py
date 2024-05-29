@@ -1228,20 +1228,20 @@ class e6_commands(app_commands.Group):
             data = response.json
             if not data["posts"]:
                 if tags is not None:
-                    interaction.response.send_message(
+                    await interaction.response.send_message(
                         content=f"No images found for these tags: {tags}",
                     )
                 else:
-                    interaction.response.send_message(content="No image found.")
+                    await interaction.response.send_message(content="No image found.")
             post = random.choice(data["posts"]) # noqa: S311
 
             embed = discord.Embed(
                 title = f"Post {post['id']}, by {post['tags']['artist']}",
                 image = post["file_url"],
             )
-            interaction.response.send_message(embed=embed)
+            await interaction.response.send_message(embed=embed)
         except Exception as e:
-            interaction.response.send_message(content=f"Exception: {e}")
+            await interaction.response.send_message(content=f"Exception: {e}")
 
 tree.add_command(e6_commands())
 ####################################################################################
