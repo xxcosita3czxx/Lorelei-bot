@@ -144,7 +144,7 @@ async def change_status() -> None:
         await bot.change_presence(
             activity=discord.Activity(
                 type=discord.ActivityType.watching,
-                name=f"On {bot.guilds.count()} servers",
+                name=f"On {len(bot.guilds)} servers",
             ),
             status=config.status,
         )
