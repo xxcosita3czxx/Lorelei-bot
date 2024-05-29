@@ -1218,12 +1218,12 @@ class e6_commands(app_commands.Group):
         try:
             tags = tags.replace(" ","+")
             url = "https://e621.net/posts.json_?limit=100"
-            if tags is not None:
+            if tags != "":
                 url += f"&tags={tags}"
             response = requests.get(
                 url,
                 timeout=60,
-                headers={"User-Agent": "Lorelei-bot/cosita3cz"},
+                headers={"User-Agent": "Lorelei-bot"},
             )
             data = response.json
             if not data["posts"]:
@@ -1232,7 +1232,9 @@ class e6_commands(app_commands.Group):
                         content=f"No images found for these tags: {tags}",
                     )
                 else:
-                    await interaction.response.send_message(content="No image found.")
+                    await interaction.response.send_message(
+                    content="No image found.",
+                )
             post = random.choice(data["posts"]) # noqa: S311
 
             embed = discord.Embed(
