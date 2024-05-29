@@ -439,7 +439,7 @@ class confirm(discord.ui.View):
         )
         try:
             await interaction.channel.delete()
-            if gconfig.get():
+            if gconfig.get(interaction.guild.id,"Ticketing","rewiews-enabled") is True:  # noqa: E501
                 await interaction.user.send(embed=embed)
 
         except discord.Forbidden :
