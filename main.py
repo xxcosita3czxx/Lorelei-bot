@@ -434,12 +434,12 @@ class confirm(discord.ui.View):
     )
     async def confirm_button(self, interaction:discord.Interaction, button) -> None:  # noqa: ANN101, ANN001
         embed=discord.Embed(
-            title=lang.get(interaction.user.id,"TicketingCommand","embed_rewiew_title"),
-            description=lang.get(interaction.user.id,"TicketingCommand","embed_rewiew_description"),
+            title=lang.get(interaction.user.id,"TicketingCommand","embed_review_title"),
+            description=lang.get(interaction.user.id,"TicketingCommand","embed_review_description"),
         )
         try:
             await interaction.channel.delete()
-            if gconfig.get(interaction.guild.id,"Ticketing","rewiews-enabled") is True:  # noqa: E501
+            if gconfig.get(interaction.guild.id,"Ticketing","reviews-enabled") is True:  # noqa: E501
                 await interaction.user.send(embed=embed)
 
         except discord.Forbidden :
