@@ -1217,7 +1217,7 @@ class e6_commands(app_commands.Group):
     async def e6_random_post(self,interaction:discord.Interaction,tags:str=""):
         try:
             tags = tags.replace(" ","+")
-            url = "https://e621.net/posts.json_?limit=100"
+            url = "https://e621.net/posts.json?limit=100"
             if tags != "":
                 url += f"&tags={tags}"
             response = requests.get(
