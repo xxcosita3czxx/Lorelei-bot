@@ -38,7 +38,7 @@ logger = logging.getLogger(__name__)
 time_regex = re.compile(r"(?:(\d{1,5})(h|s|m|d))+?")
 time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
 def info_text_gen(userid):
-    info_text_raw=lang.get(uconfig.get(userid,"Appearance","language"),"Responds",info_text_raw)
+    info_text_raw = lang.get(uconfig.get(userid,"Appearance","language"),"Responds","info_text_raw")
     contributors = ctkit.GithubApi.get_repo_contributors(owner=mowner,repo=mrepo)
     contributors = [
         contributor for contributor in contributors if contributor != mowner
@@ -318,6 +318,7 @@ async def user_info_context(interaction: discord.Interaction, member:discord.Use
     )
 
 
+############################ Basic ########################
 
 @tree.command(name="info", description="Info about bot")
 async def info(interaction: discord.Interaction):
@@ -326,7 +327,7 @@ async def info(interaction: discord.Interaction):
     '''
     embed = discord.Embed(
         title="Lorelei-bot",
-        description=info_text,
+        description=info_text_gen(interaction.user.id),
         color=discord.colour.Color.blurple(),
     )
 

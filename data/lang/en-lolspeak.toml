@@ -1,0 +1,44 @@
+
+[ConfigureCommand]
+
+[TicketingCommand]
+embed_review_title = "Would u liek to review our system?"
+embed_review_description = "Take a while and give us a star based on how well you were served:"
+ticket_close_confirm = "Are you sure you want to close this ticket?"
+
+[HelpCommand]
+
+[RunnerLogs]
+debug_on_pid_log = "main.py is running at PID: "
+info_not_running = "main.py is not running. Restarting..."
+err_costk_update_fail = "Update of CtKIT Failed!"
+
+[Bot]
+debug_status_chng = "Statuz Changd."
+info_logged = "We haz logd in az {user}."
+
+[Responds]
+no_links = "{author}, Don't send links!"
+no_invites = "{author} Don't send invites!"
+ping = "Pong!"
+ping_latency = "Latency: {latency}"
+value_set = "Value/s Set: {values}"
+noperms_manage_channels = "Make sure I have `{perms}` permissions!"
+info_text_raw ="""
+Hello!
+This is Lorelei Bot developed by cosita3cz.
+Developed in python for everyone.
+
+Thanks to all contributors:
+"""
+
+[UserInfo]
+username="Usrneme"
+display_name="Displai Neme"
+id="ID"
+joined_dsc="Joind Discord"
+joined_guild="Joind Servr"
+roles="Rolez"
+
+[MainLogs]
+debug_user_admin = "Usr r admin, ignorjng..."
