@@ -37,14 +37,8 @@ mowner,mrepo = config.repository.split("/")
 logger = logging.getLogger(__name__)
 time_regex = re.compile(r"(?:(\d{1,5})(h|s|m|d))+?")
 time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
-def info_text_gen():
-    info_text_raw="""
-Hello!
-This is Lorelei Bot developed by cosita3cz.
-Developed in python for everyone.
-
-Thanks to all contributors:
-"""
+def info_text_gen(userid):
+    info_text_raw=lang.get(uconfig.get(userid,"Appearance","language"),"Responds",info_text_raw)
     contributors = ctkit.GithubApi.get_repo_contributors(owner=mowner,repo=mrepo)
     contributors = [
         contributor for contributor in contributors if contributor != mowner
