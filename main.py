@@ -280,39 +280,40 @@ async def user_info_context(interaction: discord.Interaction, member:discord.Use
     logger.debug(member.display_avatar.key)
     embed = discord.Embed(title="Info about", color=discord.Color.blurple())
     embed.set_thumbnail(url=member.display_avatar.url)
+    ulang = uconfig.get(interaction.user.id,"Appearance","language")
 
     embed.add_field(
-        name="Username",
+        name=lang.get(ulang,"UserInfo","username"),
         value=member.name,
         inline=True,
     )
 
     embed.add_field(
-        name="Display Name",
+        name=lang.get(ulang,"UserInfo","display_name"),
         value=member.display_name,
         inline=True,
     )
 
     embed.add_field(
-        name="ID",
+        name=lang.get(ulang,"UserInfo","id"),
         value=member.id,
         inline=True,
     )
 
     embed.add_field(
-        name="Joined Discord",
+        name=lang.get(ulang,"UserInfo","joined_dsc"),
         value=member.created_at.strftime("%Y-%m-%d %H:%M:%S"),
         inline=True,
     )
 
     embed.add_field(
-        name="Joined Server",
+        name=lang.get(ulang,"UserInfo","joined_guild"),
         value=member.joined_at.strftime("%Y-%m-%d %H:%M:%S"),
         inline=True,
     )
 
     embed.add_field(
-        name="Roles",
+        name=lang.get(ulang,"UserInfo","roles"),
         value=", ".join([role.name for role in member.roles]),
         inline=False,
     )
@@ -466,7 +467,7 @@ class main(discord.ui.View):
 
         embed = discord.Embed(
             title = lang.get(uconfig.get(interaction.user.id, "Appearance","")),
-            color = discord.Colour.blurple()   ,  
+            color = discord.Colour.blurple(),
         )
         await interaction.response.send_message(
             embed = embed,
@@ -696,8 +697,8 @@ async def kick(interaction: discord.Interaction, member: discord.Member, reason:
         )
 
     except discord.HTTPException as e:
-        interaction.response.send_message(content="UNSEND KICK MESSAGE: {e}")
-        logger.warning("UNSENT KICK MESSAGE: {e})
+        await interaction.response.send_message(content=f"UNSEND KICK MESSAGE: {e}")
+        logger.warning(f"UNSENT KICK MESSAGE: {e}")
 
     await member.kick(reason=reason)
     await interaction.response.send_message(
@@ -1308,47 +1309,42 @@ async def user_info(interaction: discord.Interaction, member:discord.User):
     logger.debug(member.display_avatar.key)
     embed = discord.Embed(title="Info about", color=discord.Color.blurple())
     embed.set_thumbnail(url=member.display_avatar.url)
+    ulang = uconfig.get(interaction.user.id,"Appearance","language")
 
     embed.add_field(
-        name="Username",
+        name=lang.get(ulang,"UserInfo","username"),
         value=member.name,
         inline=True,
     )
 
     embed.add_field(
-        name="Display Name",
+        name=lang.get(ulang,"UserInfo","display_name"),
         value=member.display_name,
         inline=True,
     )
 
     embed.add_field(
-        name="ID",
+        name=lang.get(ulang,"UserInfo","id"),
         value=member.id,
         inline=True,
     )
 
     embed.add_field(
-        name="Joined Discord",
+        name=lang.get(ulang,"UserInfo","joined_dsc"),
         value=member.created_at.strftime("%Y-%m-%d %H:%M:%S"),
         inline=True,
     )
 
     embed.add_field(
-        name="Joined Server",
+        name=lang.get(ulang,"UserInfo","joined_guild"),
         value=member.joined_at.strftime("%Y-%m-%d %H:%M:%S"),
         inline=True,
     )
 
     embed.add_field(
-        name="Roles",
+        name=lang.get(ulang,"UserInfo","roles"),
         value=", ".join([role.name for role in member.roles]),
         inline=False,
-    )
-
-    await interaction.response.send_message(
-        embed=embed,
-        ephemeral=True,
-
     )
 
 if __name__=="__main__":

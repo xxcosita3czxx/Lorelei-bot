@@ -25,5 +25,13 @@ ping_latency = "Latency: {latency}"
 value_set = "Value/s Set: {values}"
 noperms_manage_channels = "Make sure I have `{perms}` permissions!"
 
+[UserInfo]
+username="Username"
+display_name="Display Name"
+id="ID"
+joined_dsc="Joined Discord"
+joined_guild="Joined Server"
+roles="Roles"
+
 [MainLogs]
 debug_user_admin = "User is admin, ignoring..."
