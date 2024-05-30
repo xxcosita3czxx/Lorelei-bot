@@ -485,7 +485,7 @@ class main(discord.ui.View):
         if os.path.exists(f"{interaction.channel.id}.md"):
             return await interaction.followup.send(
                 "A transcript is already being generated!",
-                ephemeral = True,
+                 ephemeral = True,
             )
 
         with open(f"{interaction.channel.id}.md", 'a') as f:
@@ -695,8 +695,9 @@ async def kick(interaction: discord.Interaction, member: discord.Member, reason:
             ),
         )
 
-    except discord.HTTPException:
-        logger.warning("UNSENT KICK MESSAGE")
+    except discord.HTTPException as e:
+        interaction.response.send_message(content="UNSEND KICK MESSAGE: {e}")
+        logger.warning("UNSENT KICK MESSAGE: {e})
 
     await member.kick(reason=reason)
     await interaction.response.send_message(
