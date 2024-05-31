@@ -25,13 +25,6 @@ coloredlogs.install(
 )
 conflang=config.language
 
-help_user1=discord.Embed(
-    title="User Help",
-    description="Page 1",
-)
-
-help_user = [help_user1]
-
 mowner,mrepo = config.repository.split("/")
 
 logger = logging.getLogger(__name__)
