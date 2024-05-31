@@ -326,6 +326,48 @@ async def user_info_context(interaction: discord.Interaction, member:discord.Use
 ############################ Basic ########################
 
 
+@tree.command(name="user-info",description="Info about user")
+async def user_info(interaction: discord.Interaction, member:discord.User):
+    logger.debug(member.display_avatar.key)
+    embed = discord.Embed(title="Info about", color=discord.Color.blurple())
+    embed.set_thumbnail(url=member.display_avatar.url)
+    ulang = uconfig.get(interaction.user.id,"Appearance","language")
+
+    embed.add_field(
+        name=lang.get(ulang,"UserInfo","username"),
+        value=member.name,
+        inline=True,
+    )
+
+    embed.add_field(
+        name=lang.get(ulang,"UserInfo","display_name"),
+        value=member.display_name,
+        inline=True,
+    )
+
+    embed.add_field(
+        name=lang.get(ulang,"UserInfo","id"),
+        value=member.id,
+        inline=True,
+    )
+
+    embed.add_field(
+        name=lang.get(ulang,"UserInfo","joined_dsc"),
+        value=member.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+        inline=True,
+    )
+
+    embed.add_field(
+        name=lang.get(ulang,"UserInfo","joined_guild"),
+        value=member.joined_at.strftime("%Y-%m-%d %H:%M:%S"),
+        inline=True,
+    )
+
+    embed.add_field(
+        name=lang.get(ulang,"UserInfo","roles"),
+        value=", ".join([role.name for role in member.roles]),
+        inline=False,
+    )
 
 @tree.command(name="info", description="Info about bot")
 async def info(interaction: discord.Interaction):
@@ -1119,50 +1161,6 @@ class e6_commands(app_commands.Group):
             await interaction.response.send_message(content=f"Exception: {e}")
 
 tree.add_command(e6_commands())
-####################################################################################
-
-@tree.command(name="user-info",description="Info about user")
-async def user_info(interaction: discord.Interaction, member:discord.User):
-    logger.debug(member.display_avatar.key)
-    embed = discord.Embed(title="Info about", color=discord.Color.blurple())
-    embed.set_thumbnail(url=member.display_avatar.url)
-    ulang = uconfig.get(interaction.user.id,"Appearance","language")
-
-    embed.add_field(
-        name=lang.get(ulang,"UserInfo","username"),
-        value=member.name,
-        inline=True,
-    )
-
-    embed.add_field(
-        name=lang.get(ulang,"UserInfo","display_name"),
-        value=member.display_name,
-        inline=True,
-    )
-
-    embed.add_field(
-        name=lang.get(ulang,"UserInfo","id"),
-        value=member.id,
-        inline=True,
-    )
-
-    embed.add_field(
-        name=lang.get(ulang,"UserInfo","joined_dsc"),
-        value=member.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-        inline=True,
-    )
-
-    embed.add_field(
-        name=lang.get(ulang,"UserInfo","joined_guild"),
-        value=member.joined_at.strftime("%Y-%m-%d %H:%M:%S"),
-        inline=True,
-    )
-
-    embed.add_field(
-        name=lang.get(ulang,"UserInfo","roles"),
-        value=", ".join([role.name for role in member.roles]),
-        inline=False,
-    )
 
 ############################### discord.Views ######################################
 
