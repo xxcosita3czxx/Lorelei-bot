@@ -67,6 +67,7 @@ class ConfigManager:
         logging.debug(f"Loaded configs: {self.config}")
 
     def get(self, id, title, key, default=None):
+        id = str(id)
         logging.debug(f"Getting {id}:{title}:{key}")
         result = self.config.get(id, {}).get(title, {}).get(key, default)
         if result is None and self.fallback_file:
@@ -80,6 +81,7 @@ class ConfigManager:
         return result
 
     def set(self, id, title, key, value):
+        id = str(id)
         logging.debug(f"Setting {id}:{title}:{key} to {value}")
         if id not in self.config:
             self.config[id] = {}
@@ -87,24 +89,15 @@ class ConfigManager:
             self.config[id][title] = {}
         self.config[id][title][key] = value
         self._save_config(id)
-        self._load_all_configs()  # Reload the specific config after saving
+        self._load_all_configs()  # Reload all configs after saving
         logging.debug(f"Set {id}:{title}:{key} to {value}")
 
     def _save_config(self, id):
+        id = str(id)
         file_path = os.path.join(self.config_dir, f"{id}.toml")
         logging.debug(f"Saving config for {id} to {file_path}")
         with open(file_path, 'w') as f:
             toml.dump(self.config[id], f)
-
-    def _load_config(self, id):
-        file_path = os.path.join(self.config_dir, f"{id}.toml")
-        logging.debug(f"Reloading config for {id} from {file_path}")
-        if os.path.exists(file_path):
-            with open(file_path) as f:
-                self.config[id] = toml.load(f)
-        else:
-            self.config[id] = defaultdict(dict)
-        logging.debug(f"Reloaded config for {id}:", self.config[id])
 
 gconfig = ConfigManager("data/guilds")
 uconfig = ConfigManager("data/users")
