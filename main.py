@@ -1250,31 +1250,30 @@ class reviews(discord.ui.View):
             title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_resp_title"),
         )
         return response_embed
-    @discord.ui.button(
-        label="1 star",
-    )
-    async def rev_star1(self, interaction:discord.Interaction,button:discord.Button):  # noqa: E501
-        pass
-    @discord.ui.button(
-        label="2 star",
-    )
-    async def rev_star2(self, interaction:discord.Interaction,button:discord.Button):  # noqa: E501
-        pass
-    @discord.ui.button(
-        label="3 star",
-    )
-    async def rev_star3(self, interaction:discord.Interaction,button:discord.Button):  # noqa: E501
-        pass
-    @discord.ui.button(
-        label="4 star",
-    )
-    async def rev_star4(self, interaction:discord.Interaction,button:discord.Button):  # noqa: E501
-        pass
-    @discord.ui.button(
-        label="5 star",
-    )
-    async def rev_star5(self, interaction:discord.Interaction,button:discord.Button):  # noqa: E501
-        pass
+    async def disable_all_buttons(self, interaction: discord.Interaction):
+        for child in self.children:
+            if isinstance(child, discord.ui.Button):
+                child.disabled = True
+        await interaction.response.edit_message(view=self)
+    @discord.ui.button(label="1 star")
+    async def rev_star1(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
+        await self.disable_all_buttons(interaction)
+
+    @discord.ui.button(label="2 star")
+    async def rev_star2(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
+        await self.disable_all_buttons(interaction)
+
+    @discord.ui.button(label="3 star")
+    async def rev_star3(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
+        await self.disable_all_buttons(interaction)
+
+    @discord.ui.button(label="4 star")
+    async def rev_star4(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
+        await self.disable_all_buttons(interaction)
+
+    @discord.ui.button(label="5 star")
+    async def rev_star5(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
+        await self.disable_all_buttons(interaction)
 class confirm(discord.ui.View):
 
     '''
