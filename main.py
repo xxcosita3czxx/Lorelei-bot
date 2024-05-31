@@ -325,6 +325,8 @@ async def user_info_context(interaction: discord.Interaction, member:discord.Use
 
 ############################ Basic ########################
 
+
+
 @tree.command(name="info", description="Info about bot")
 async def info(interaction: discord.Interaction):
     '''Help command
@@ -340,195 +342,6 @@ async def info(interaction: discord.Interaction):
         embed=embed,
     )
 
-class ticket_launcher(discord.ui.View):
-
-    '''
-    This will create the ticket
-    '''
-
-    def __init__(self) -> None:  # noqa: ANN101
-        super().__init__(timeout = None)
-        self.cooldown = commands.CooldownMapping.from_cooldown(
-            1,
-            60,
-            commands.BucketType.member,
-        )
-
-    @discord.ui.button(
-        label = "Open Ticket",
-        style = discord.ButtonStyle.blurple,
-        custom_id = "ticket_button",
-    )
-    async def ticket(self, interaction: discord.Interaction, button: discord.ui.Button):  # noqa: E501, ANN201, ANN101
-
-        interaction.message.author = interaction.user
-        retry = self.cooldown.get_bucket(interaction.message).update_rate_limit()
-
-        if retry:
-            return await interaction.response.send_message(
-                f"Slow down! Try again in {round(retry, 1)} seconds!",
-                ephemeral = True,
-            )
-        ticket = utils.get(
-            interaction.guild.text_channels,
-            name = f"ticket-for-{interaction.user.name.lower().replace(' ', '-')}-{interaction.user.discriminator}")  # noqa: E501
-
-        if ticket is not None:
-            await interaction.response.send_message(
-                f"You already have a ticket open at {ticket.mention}!",
-                ephemeral = True,
-            )
-
-        else:
-            overwrites = {
-                interaction.guild.default_role: discord.PermissionOverwrite(
-                    view_channel = False,
-                ),
-                interaction.user: discord.PermissionOverwrite(
-                    view_channel = True,
-                    read_message_history = True,
-                    send_messages = True,
-                    attach_files = True,
-                    embed_links = True,
-                ),
-                interaction.guild.me: discord.PermissionOverwrite(
-                    view_channel = True,
-                    send_messages = True,
-                    read_message_history = True,
-                ),
-            }
-            try:
-                channel = await interaction.guild.create_text_channel(
-                    name = f"ticket-for-{interaction.user.name}-{interaction.user.discriminator}",  # noqa: E501
-                    overwrites = overwrites,
-                    reason = f"Ticket for {interaction.user}",
-                )
-
-            except Exception as e:
-                return await interaction.response.send_message(
-                    f"Ticket creation failed! Make sure I have `manage_channels` permissions! --> {e}",  # noqa: E501
-                    ephemeral = True,
-                )
-
-            await channel.send(
-                f"@everyone, {interaction.user.mention} created a ticket!",
-                view = main(),
-            )
-            await interaction.response.send_message(
-                f"I've opened a ticket for you at {channel.mention}!",
-                ephemeral = True,
-            )
-
-class confirm(discord.ui.View):
-
-    '''
-    Ticket confirm embed
-    '''
-
-    def __init__(self) -> None:  # noqa: ANN101
-        super().__init__(timeout = None)
-
-    @discord.ui.button(
-        label = "Confirm",
-        style = discord.ButtonStyle.red,
-        custom_id = "confirm",
-    )
-    async def confirm_button(self, interaction:discord.Interaction, button) -> None:  # noqa: ANN101, ANN001
-        embed=discord.Embed(
-            title=lang.get(interaction.user.id,"TicketingCommand","embed_review_title"),
-            description=lang.get(interaction.user.id,"TicketingCommand","embed_review_description"),
-        )
-        try:
-            await interaction.channel.delete()
-            if gconfig.get(interaction.guild.id,"Ticketing","reviews-enabled") is True:  # noqa: E501
-                await interaction.user.send(embed=embed)
-
-        except discord.Forbidden :
-            await interaction.response.send_message(
-                content="Channel deletion failed! Make sure I have `manage_channels` permissions!",  # noqa: E501
-                ephemeral = True,
-            )
-
-class main(discord.ui.View):
-
-    '''
-    In-Ticket embed
-    '''
-
-    def __init__(self) -> None:  # noqa: ANN101
-        super().__init__(timeout = None)
-
-    @discord.ui.button(
-        label = "Close Ticket",
-        style = discord.ButtonStyle.red,
-        custom_id = "close",
-    )
-    async def close(self, interaction:discord.Interaction, button) -> None:  # noqa: ANN101, ANN001
-
-        embed = discord.Embed(
-            title = lang.get(uconfig.get(interaction.user.id, "Appearance","")),
-            color = discord.Colour.blurple(),
-        )
-        await interaction.response.send_message(
-            embed = embed,
-            view = confirm(),
-            ephemeral = True,
-        )
-
-    @discord.ui.button(
-        label = "Transcript",
-        style = discord.ButtonStyle.blurple,
-        custom_id = "transcript",
-    )
-    async def transcript(self, interaction, button):
-
-        await interaction.response.defer()
-        if os.path.exists(f"{interaction.channel.id}.md"):
-            return await interaction.followup.send(
-                "A transcript is already being generated!",
-                 ephemeral = True,
-            )
-
-        with open(f"{interaction.channel.id}.md", 'a') as f:
-            f.write(f"# Transcript of {interaction.channel.name}:\n\n")
-            async for message in interaction.channel.history(
-                limit = None,
-                oldest_first = True,
-            ):
-
-                created = datetime.strftime(
-                    message.created_at,
-                    "%m/%d/%Y at %H:%M:%S",
-                )
-
-                if message.edited_at:
-                    edited = datetime.strftime(
-                        message.edited_at,
-                        "%m/%d/%Y at %H:%M:%S",
-                    )
-                    f.write(
-                        f"{message.author} on {created}: {message.clean_content} (Edited at {edited})\n",  # noqa: E501
-                    )
-
-                else:
-                    f.write(
-                        f"{message.author} on {created}: {message.clean_content}\n",
-                    )
-
-            generated = datetime.now().strftime("%m/%d/%Y at %H:%M:%S")
-            f.write(
-                f"\n*Generated at {generated} by {bot.user}*\n*Date Formatting: MM/DD/YY*\n*Time Zone: UTC*",  # noqa: E501
-            )
-
-        with open(f"{interaction.channel.id}.md", 'rb') as f:
-            await interaction.followup.send(
-                file = discord.File(
-                    f,
-                    f"{interaction.channel.name}.md"),
-            )
-
-        os.remove(f"{interaction.channel.id}.md")
-
 @tree.command(name="ping", description="Lets play ping pong")
 async def ping(interaction: discord.Interaction):
 
@@ -543,6 +356,26 @@ async def ping(interaction: discord.Interaction):
     await interaction.response.send_message(
         embed=embed,
     )
+
+@tree.command(name="echo",description="Echoes message in embed")
+@app_commands.default_permissions(manage_messages=True)
+async def echo(interaction: discord.Interaction,channel:discord.channel.TextChannel, title:str="", text:str=""):  # noqa: E501
+    try:
+        embed = discord.Embed(
+            title=title,
+            description=text,
+            color=discord.Color.blurple(),
+        )
+        await channel.send(embed=embed)
+        await interaction.response.send_message(
+            content="Message sent succesfuly!",
+            ephemeral=True,
+        )
+    except Exception as e:
+        await interaction.response.send_message(
+            content=f"Echo Failed!: {e}",
+            ephemeral=True,
+        )
 
 
 @app_commands.default_permissions(manage_guild=True)
@@ -656,9 +489,8 @@ class ticketing_group(app_commands.Group):
 
 tree.add_command(ticketing_group())
 
-####################################################################################
+############################# Admin Essentials #####################################
 
-# kick and ban
 @tree.command(name="kick", description="Kick a user")
 @app_commands.describe(member="User to kick", reason="Reason for kick")
 @app_commands.default_permissions(kick_members=True, ban_members=True)
@@ -711,25 +543,6 @@ async def kick(interaction: discord.Interaction, member: discord.Member, reason:
     )
     await interaction.followup.send(embed=embed, ephemeral=False)
 
-@tree.command(name="echo",description="Echoes message in embed")
-@app_commands.default_permissions(manage_messages=True)
-async def echo(interaction: discord.Interaction,channel:discord.channel.TextChannel, title:str="", text:str=""):  # noqa: E501
-    try:
-        embed = discord.Embed(
-            title=title,
-            description=text,
-            color=discord.Color.blurple(),
-        )
-        await channel.send(embed=embed)
-        await interaction.response.send_message(
-            content="Message sent succesfuly!",
-            ephemeral=True,
-        )
-    except Exception as e:
-        await interaction.response.send_message(
-            content=f"Echo Failed!: {e}",
-            ephemeral=True,
-        )
 
 @tree.command(name="ban", description="Ban a user")
 @app_commands.describe(
@@ -787,6 +600,37 @@ async def ban(interaction: discord.Interaction, member: discord.Member, reason: 
         ),
         ephemeral=False,
     )
+
+@tree.command(name="unban", description="Unban a user")
+@app_commands.describe(member="User to unban", reason="Reason for unban")
+@app_commands.default_permissions(ban_members=True)
+async def unban(interaction: discord.Interaction, member: discord.User, reason: str):  # noqa: E501
+
+    '''
+    Unban Command
+
+    This will unban person
+    '''
+
+    try:
+        await interaction.guild.unban(member, reason=reason)
+
+    except discord.NotFound:
+        return await interaction.response.send_message(
+            "This user is not banned",
+            ephemeral=True,
+        )
+
+    await interaction.response.send_message(
+        f"Unbanned {member.mention}",
+        ephemeral=True,
+    )
+    embed = discord.Embed(
+        description=f"{member.mention} has been unbanned\n**Reason**: {reason}",
+        color=0x2f3136,
+    )
+    await interaction.followup.send(embed=embed, ephemeral=False)
+
 ################################ Giveaway Command ##################################
 
 #TODO logic for all
@@ -922,6 +766,8 @@ class music_player(app_commands.Group):
             )
 
 tree.add_command(music_player())
+
+
 ################################### CONFIGURE COMMAND ##############################
 
 @app_commands.default_permissions(administrator=True)
@@ -1092,35 +938,6 @@ class configure_user(app_commands.Group):
 
 tree.add_command(configure_user())
 ####################################################################################
-@tree.command(name="unban", description="Unban a user")
-@app_commands.describe(member="User to unban", reason="Reason for unban")
-@app_commands.default_permissions(ban_members=True)
-async def unban(interaction: discord.Interaction, member: discord.User, reason: str):  # noqa: E501
-
-    '''
-    Unban Command
-
-    This will unban person
-    '''
-
-    try:
-        await interaction.guild.unban(member, reason=reason)
-
-    except discord.NotFound:
-        return await interaction.response.send_message(
-            "This user is not banned",
-            ephemeral=True,
-        )
-
-    await interaction.response.send_message(
-        f"Unbanned {member.mention}",
-        ephemeral=True,
-    )
-    embed = discord.Embed(
-        description=f"{member.mention} has been unbanned\n**Reason**: {reason}",
-        color=0x2f3136,
-    )
-    await interaction.followup.send(embed=embed, ephemeral=False)
 
 @tree.command(name="slowmode", description="Set slowmode for the channel")
 @app_commands.describe(time="Slowmod Time")
@@ -1346,6 +1163,202 @@ async def user_info(interaction: discord.Interaction, member:discord.User):
         value=", ".join([role.name for role in member.roles]),
         inline=False,
     )
+
+############################### discord.Views ######################################
+
+
+class ticket_launcher(discord.ui.View):
+
+    '''
+    This will create the ticket
+    '''
+
+    def __init__(self) -> None:  # noqa: ANN101
+        super().__init__(timeout = None)
+        self.cooldown = commands.CooldownMapping.from_cooldown(
+            1,
+            60,
+            commands.BucketType.member,
+        )
+
+    @discord.ui.button(
+        label = "Open Ticket",
+        style = discord.ButtonStyle.blurple,
+        custom_id = "ticket_button",
+    )
+    async def ticket(self, interaction: discord.Interaction, button: discord.ui.Button):  # noqa: E501, ANN201, ANN101
+
+        interaction.message.author = interaction.user
+        retry = self.cooldown.get_bucket(interaction.message).update_rate_limit()
+
+        if retry:
+            return await interaction.response.send_message(
+                f"Slow down! Try again in {round(retry, 1)} seconds!",
+                ephemeral = True,
+            )
+        ticket = utils.get(
+            interaction.guild.text_channels,
+            name = f"ticket-for-{interaction.user.name.lower().replace(' ', '-')}-{interaction.user.discriminator}")  # noqa: E501
+
+        if ticket is not None:
+            await interaction.response.send_message(
+                f"You already have a ticket open at {ticket.mention}!",
+                ephemeral = True,
+            )
+
+        else:
+            overwrites = {
+                interaction.guild.default_role: discord.PermissionOverwrite(
+                    view_channel = False,
+                ),
+                interaction.user: discord.PermissionOverwrite(
+                    view_channel = True,
+                    read_message_history = True,
+                    send_messages = True,
+                    attach_files = True,
+                    embed_links = True,
+                ),
+                interaction.guild.me: discord.PermissionOverwrite(
+                    view_channel = True,
+                    send_messages = True,
+                    read_message_history = True,
+                ),
+            }
+            try:
+                channel = await interaction.guild.create_text_channel(
+                    name = f"ticket-for-{interaction.user.name}-{interaction.user.discriminator}",  # noqa: E501
+                    overwrites = overwrites,
+                    reason = f"Ticket for {interaction.user}",
+                )
+
+            except Exception as e:
+                return await interaction.response.send_message(
+                    f"Ticket creation failed! Make sure I have `manage_channels` permissions! --> {e}",  # noqa: E501
+                    ephemeral = True,
+                )
+
+            await channel.send(
+                f"@everyone, {interaction.user.mention} created a ticket!",
+                view = main(),
+            )
+            await interaction.response.send_message(
+                f"I've opened a ticket for you at {channel.mention}!",
+                ephemeral = True,
+            )
+
+class confirm(discord.ui.View):
+
+    '''
+    Ticket confirm embed
+    '''
+
+    def __init__(self) -> None:  # noqa: ANN101
+        super().__init__(timeout = None)
+
+    @discord.ui.button(
+        label = "Confirm",
+        style = discord.ButtonStyle.red,
+        custom_id = "confirm",
+    )
+    async def confirm_button(self, interaction:discord.Interaction, button) -> None:  # noqa: ANN101, ANN001
+        embed=discord.Embed(
+            title=lang.get(interaction.user.id,"TicketingCommand","embed_review_title"),
+            description=lang.get(interaction.user.id,"TicketingCommand","embed_review_description"),
+        )
+        try:
+            await interaction.channel.delete()
+            if gconfig.get(interaction.guild.id,"Ticketing","reviews-enabled") is True:  # noqa: E501
+                await interaction.user.send(embed=embed)
+
+        except discord.Forbidden :
+            await interaction.response.send_message(
+                content="Channel deletion failed! Make sure I have `manage_channels` permissions!",  # noqa: E501
+                ephemeral = True,
+            )
+
+class main(discord.ui.View):
+
+    '''
+    In-Ticket embed
+    '''
+
+    def __init__(self) -> None:  # noqa: ANN101
+        super().__init__(timeout = None)
+
+    @discord.ui.button(
+        label = "Close Ticket",
+        style = discord.ButtonStyle.red,
+        custom_id = "close",
+    )
+    async def close(self, interaction:discord.Interaction, button) -> None:  # noqa: ANN101, ANN001
+
+        embed = discord.Embed(
+            title = lang.get(uconfig.get(interaction.user.id, "Appearance","")),
+            color = discord.Colour.blurple(),
+        )
+        await interaction.response.send_message(
+            embed = embed,
+            view = confirm(),
+            ephemeral = True,
+        )
+
+    @discord.ui.button(
+        label = "Transcript",
+        style = discord.ButtonStyle.blurple,
+        custom_id = "transcript",
+    )
+    async def transcript(self, interaction, button):
+
+        await interaction.response.defer()
+        if os.path.exists(f"{interaction.channel.id}.md"):
+            return await interaction.followup.send(
+                "A transcript is already being generated!",
+                 ephemeral = True,
+            )
+
+        with open(f"{interaction.channel.id}.md", 'a') as f:
+            f.write(f"# Transcript of {interaction.channel.name}:\n\n")
+            async for message in interaction.channel.history(
+                limit = None,
+                oldest_first = True,
+            ):
+
+                created = datetime.strftime(
+                    message.created_at,
+                    "%m/%d/%Y at %H:%M:%S",
+                )
+
+                if message.edited_at:
+                    edited = datetime.strftime(
+                        message.edited_at,
+                        "%m/%d/%Y at %H:%M:%S",
+                    )
+                    f.write(
+                        f"{message.author} on {created}: {message.clean_content} (Edited at {edited})\n",  # noqa: E501
+                    )
+
+                else:
+                    f.write(
+                        f"{message.author} on {created}: {message.clean_content}\n",
+                    )
+
+            generated = datetime.now().strftime("%m/%d/%Y at %H:%M:%S")
+            f.write(
+                f"\n*Generated at {generated} by {bot.user}*\n*Date Formatting: MM/DD/YY*\n*Time Zone: UTC*",  # noqa: E501
+            )
+
+        with open(f"{interaction.channel.id}.md", 'rb') as f:
+            await interaction.followup.send(
+                file = discord.File(
+                    f,
+                    f"{interaction.channel.name}.md"),
+            )
+
+        os.remove(f"{interaction.channel.id}.md")
+
+
+########################## Main Runner #############################################
+
 
 if __name__=="__main__":
     with open(".secret.key") as key:
