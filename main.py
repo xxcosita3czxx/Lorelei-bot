@@ -1322,7 +1322,15 @@ class main(discord.ui.View):
     async def close(self, interaction:discord.Interaction, button) -> None:  # noqa: ANN101, ANN001
 
         embed = discord.Embed(
-            title = lang.get(uconfig.get(interaction.user.id, "Appearance","")),
+            title = lang.get(
+                uconfig.get(
+                    interaction.user.id,
+                    "Appearance",
+                    "language",
+                ),
+                "TicketingCommand",
+                "ticket_close_confirm",
+            ),
             color = discord.Colour.blurple(),
         )
         await interaction.response.send_message(
