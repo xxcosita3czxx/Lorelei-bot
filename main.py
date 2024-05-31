@@ -316,8 +316,7 @@ async def user_info_context(interaction: discord.Interaction, member:discord.Use
     )
 
 
-############################ Basic ########################
-
+############################ Basic ##############################################
 
 @tree.command(name="user-info",description="Info about user")
 async def user_info(interaction: discord.Interaction, member:discord.User):
@@ -1237,6 +1236,45 @@ class ticket_launcher(discord.ui.View):
                 ephemeral = True,
             )
 
+class reviews(discord.ui.View):
+    def __init__(self) -> None:  # noqa: ANN101
+        super().__init__(timeout = None)
+    def rev_embed(interaction:discord.Interaction):
+        review_embed = discord.Embed(
+            title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_rev_title"),
+            description=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_rev_desc"),
+        )
+        return review_embed
+    def resp_embed(interaction:discord.Interaction):
+        response_embed = discord.Embed(
+            title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_resp_title"),
+        )
+        return response_embed
+    @discord.ui.button(
+        label="1 star",
+    )
+    async def rev_star1(self, interaction:discord.Interaction):
+        pass
+    @discord.ui.button(
+        label="2 star",
+    )
+    async def rev_star2(self, interaction:discord.Interaction):
+        pass
+    @discord.ui.button(
+        label="3 star",
+    )
+    async def rev_star3(self, interaction:discord.Interaction):
+        pass
+    @discord.ui.button(
+        label="4 star",
+    )
+    async def rev_star4(self, interaction:discord.Interaction):
+        pass
+    @discord.ui.button(
+        label="5 star",
+    )
+    async def rev_star5(self, interaction:discord.Interaction):
+        pass
 class confirm(discord.ui.View):
 
     '''
@@ -1259,7 +1297,7 @@ class confirm(discord.ui.View):
         try:
             await interaction.channel.delete()
             if gconfig.get(interaction.guild.id,"Ticketing","reviews-enabled") is True:  # noqa: E501
-                await interaction.user.send(embed=embed)
+                await interaction.user.send(embed=embed,view=reviews())
 
         except discord.Forbidden :
             await interaction.response.send_message(
