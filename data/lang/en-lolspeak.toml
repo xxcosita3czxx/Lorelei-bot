@@ -22,8 +22,8 @@ no_links = "{author}, Don't send links!"
 no_invites = "{author} Don't send invites!"
 ping = "Pong!"
 ping_latency = "Latency: {latency}"
-value_set = "Value/s Set: {values}"
-noperms_manage_channels = "Make sure I have `{perms}` permissions!"
+value_set = "Value/z Set: {values}"
+noperms_manage_channels = "Mek sur me hav `{perms}` permishunz!1!"
 info_text_raw ="""
 Hello!
 This is Lorelei Bot developed by cosita3cz.
