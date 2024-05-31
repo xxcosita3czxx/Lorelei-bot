@@ -7,6 +7,7 @@ sudo cp config.py ../config.py.bak
 sudo cp -r data ../data.bak/
 sudo git stash
 sudo git pull
+sudo rm -rf data/
 sudo mv ../config.py.bak config.py
 sudo mv ../data.bak ./data
 sudo systemctl restart lorelei.service
