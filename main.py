@@ -1253,27 +1253,27 @@ class reviews(discord.ui.View):
     @discord.ui.button(
         label="1 star",
     )
-    async def rev_star1(self, interaction:discord.Interaction,button:discord.Button):
+    async def rev_star1(self, interaction:discord.Interaction,button:discord.Button):  # noqa: E501
         pass
     @discord.ui.button(
         label="2 star",
     )
-    async def rev_star2(self, interaction:discord.Interaction,button:discord.Button):
+    async def rev_star2(self, interaction:discord.Interaction,button:discord.Button):  # noqa: E501
         pass
     @discord.ui.button(
         label="3 star",
     )
-    async def rev_star3(self, interaction:discord.Interaction,button:discord.Button):
+    async def rev_star3(self, interaction:discord.Interaction,button:discord.Button):  # noqa: E501
         pass
     @discord.ui.button(
         label="4 star",
     )
-    async def rev_star4(self, interaction:discord.Interaction,button:discord.Button):
+    async def rev_star4(self, interaction:discord.Interaction,button:discord.Button):  # noqa: E501
         pass
     @discord.ui.button(
         label="5 star",
     )
-    async def rev_star5(self, interaction:discord.Interaction,button:discord.Button):
+    async def rev_star5(self, interaction:discord.Interaction,button:discord.Button):  # noqa: E501
         pass
 class confirm(discord.ui.View):
 
