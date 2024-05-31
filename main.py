@@ -56,9 +56,6 @@ def info_text_gen(userid):
             info_text_raw += f"- {contributor}\n"
     return info_text_raw
 
-
-info_text = info_text_gen()
-
 class ConfigManager:
     def __init__(self, config_dir, fallback_file=None):
         self.config_dir = config_dir
@@ -335,7 +332,7 @@ async def info(interaction: discord.Interaction):
     '''
     embed = discord.Embed(
         title="Lorelei-bot",
-        description=info_text_gen(interaction.user.id),
+        description=info_text_gen(userid=interaction.user.id),
         color=discord.colour.Color.blurple(),
     )
 
