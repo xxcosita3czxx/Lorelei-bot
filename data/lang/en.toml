@@ -27,13 +27,7 @@ ping = "Pong!"
 ping_latency = "Latency: {latency}"
 value_set = "Value/s Set: {values}"
 noperms_manage_channels = "Make sure I have `{perms}` permissions!"
-info_text_raw ="""
-Hello!
-This is Lorelei Bot developed by cosita3cz.
-Developed in python for everyone.
-
-Thanks to all contributors:
-"""
+info_text_raw ="Hello!\nThis is Lorelei Bot developed by cosita3cz.\nDeveloped in python for everyone.\n\nThanks to all contributors:\n"
 
 [UserInfo]
 username="Username"
