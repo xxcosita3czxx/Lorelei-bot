@@ -32,9 +32,9 @@ info_text_raw = "Hello!\nThis is Lorelei Bot developed by cosita3cz.\nDeveloped 
 debug_user_admin = "User is admin, ignoring..."
 
 [UserInfo]
-username = "Username"
-display_name = "Display Name"
-id = "ID"
-joined_dsc = "Joined Discord"
-joined_guild = "Joined Server"
-roles = "Roles"
+username = "Имя пользователя"
+display_name = "Отображаемое Имя"
+id = "Идентификатор"
+joined_dsc = "Присоединился к Discord"
+joined_guild = "Присоединился к сервер"
+roles = "Роли"
