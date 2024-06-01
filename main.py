@@ -729,7 +729,7 @@ class music_player(app_commands.Group):
             else:
                 vc = await voice_channel.connect()
                 # Search for the track on SoundCloud
-                url = f'http://api.soundcloud.com/tracks?q={query}?client_id=hKP7kcwGL0q6weES7f6X5qOjGnWfyOVX'
+                url = f'http://api.soundcloud.com/tracks?q={query}&client_id=hKP7kcwGL0q6weES7f6X5qOjGnWfyOVX'
                 response = requests.get(url,timeout=60)
                 logging.debug(response)
                 if response.status_code == 200:  # noqa: PLR2004
@@ -766,7 +766,7 @@ class music_player(app_commands.Group):
                         "Failed to fetch data from SoundCloud.",
                     )
         except Exception as e:
-            interaction.response.send_message("Exception: " + e)
+            interaction.response.send_message("Exception: " + str(e))
 
     @app_commands.command(name="stop",description="Stop music")
     async def stop(self,interaction:discord.Interaction):
