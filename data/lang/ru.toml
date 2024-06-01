@@ -1,7 +1,12 @@
-
 [ConfigureCommand]
 
 [TicketingCommand]
+embed_review_title = "Would you like to review our system?"
+embed_review_description = "Take a while and give us a star based on how well you were served:"
+ticket_close_confirm = "Are you sure you want to close this ticket?"
+embed_review_resp_title = "Thanks for rating!"
+embed_review_rev_title = "Review response!"
+embed_review_rev_desc = "User responded to review action!"
 
 [HelpCommand]
 
@@ -19,6 +24,17 @@ no_links = "{author}, Don't send links!"
 no_invites = "{author} Don't send invites!"
 ping = "Вонь!"
 ping_latency = "Задержка: {latency}"
+value_set = "Value/s Set: {values}"
+noperms_manage_channels = "Make sure I have `{perms}` permissions!"
+info_text_raw = "Hello!\nThis is Lorelei Bot developed by cosita3cz.\nDeveloped in python for everyone.\n\nThanks to all contributors:\n"
 
 [MainLogs]
 debug_user_admin = "User is admin, ignoring..."
+
+[UserInfo]
+username = "Username"
+display_name = "Display Name"
+id = "ID"
+joined_dsc = "Joined Discord"
+joined_guild = "Joined Server"
+roles = "Roles"

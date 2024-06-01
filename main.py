@@ -859,20 +859,30 @@ class configure_ticketing(app_commands.Group):
                 gconfig.set(interaction.guild_id,"Ticketing","reviews-enabled",value=value)
                 gconfig.set(interaction.guild_id,"Ticketing","reviews-channel",value=channel)
                 await interaction.response.send_message(
-                    content=f"Setted value {str(value)},{str(channel)}",
+                    content=str(
+                        lang.get(
+                            uconfig.get(
+                                interaction.user.id,
+                                "Appearance",
+                                "language",
+                            ),
+                            "Responds",
+                            "value_set",
+                        ),
+                    ).format(value + ", "+ channel),
                     ephemeral=True,
                 )
 
             if channel is None and value is not None:
                 gconfig.set(interaction.guild_id,"Ticketing","reviews-enabled",value=value)
                 await interaction.response.send_message(
-                    content=f"Setted value {str(value)}",
+                    content=str(lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","value_set")).format(value),
                     ephemeral=True,
                 )
             if channel is not None and value is None:
                 gconfig.set(interaction.guild_id,"Ticketing","reviews-channel",value=channel)
                 await interaction.response.send_message(
-                    content=f"Setted value {str(channel)}",
+                    content=str(lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","value_set")).format(channel),
                     ephemeral=True,
                 )
             if channel is None and value is None:
