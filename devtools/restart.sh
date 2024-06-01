@@ -9,6 +9,6 @@ sudo rm -rf ../data.bak/lang
 sudo git stash
 sudo git pull
 sudo mv ../config.py.bak config.py
-sudo mv ../data.bak ./data
+sudo mv ../data.bak/* ./data
 sudo systemctl restart lorelei.service
 journalctl -xfu lorelei.service
