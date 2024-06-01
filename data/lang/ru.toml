@@ -21,10 +21,10 @@ info_logged = "We have logged in as {user}."
 
 [Responds]
 no_links = "{author}, Don't send links!"
-no_invites = "{author} Don't send invites!"
+no_invites = "{author}, Don't send invites!"
 ping = "Вонь!"
 ping_latency = "Задержка: {latency}"
-value_set = "Value/s Set: {values}"
+value_set = "Набор значений/ов: {values}"
 noperms_manage_channels = "Make sure I have `{perms}` permissions!"
 info_text_raw = "Hello!\nThis is Lorelei Bot developed by cosita3cz.\nDeveloped in python for everyone.\n\nThanks to all contributors:\n"
 

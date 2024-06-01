@@ -22,7 +22,7 @@ info_logged = "We have logged in as {user}."
 
 [Responds]
 no_links = "{author}, Don't send links!"
-no_invites = "{author} Don't send invites!"
+no_invites = "{author}, Don't send invites!"
 ping = "Pong!"
 ping_latency = "Latency: {latency}"
 value_set = "Value/s Set: {values}"
