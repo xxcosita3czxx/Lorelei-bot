@@ -717,21 +717,20 @@ class music_player(app_commands.Group):
         self.name="music"
         self.description="Music Player"
 
-    @app_commands.command(name="play",description="Play music")
-    async def play(self,interaction:discord.Interaction, query:str):
+    @app_commands.command(name="play", description="Play music")
+    async def play(self, interaction: discord.Interaction, query: str):
         try:
             voice_channel = interaction.user.voice.channel
             if voice_channel is None:
                 await interaction.response.send_message(
                     "You need to be in a voice channel to use this command!",
                 )
-
             else:
                 vc = await voice_channel.connect()
                 # Search for the track on SoundCloud
                 url = f'http://api.soundcloud.com/tracks?q={query}&client_id=hKP7kcwGL0q6weES7f6X5qOjGnWfyOVX'
-                response = requests.get(url,timeout=60)
-                logging.debug(response)
+                response = requests.get(url, timeout=60)
+                logging.debug(f"Response from SoundCloud: {response.status_code}, {response.text}")  # noqa: E501
                 if response.status_code == 200:  # noqa: PLR2004
                     tracks = response.json()
                     if tracks:
@@ -747,7 +746,6 @@ class music_player(app_commands.Group):
                                 voice_client.play(
                                     discord.FFmpegPCMAudio(
                                         stream_url + '?client_id=hKP7kcwGL0q6weES7f6X5qOjGnWfyOVX', # noqa: E501
-
                                     ),
                                 )
                             else:
@@ -766,8 +764,8 @@ class music_player(app_commands.Group):
                         "Failed to fetch data from SoundCloud.",
                     )
         except Exception as e:
-            interaction.response.send_message("Exception: " + str(e))
-
+            logging.error(f"Exception occurred: {str(e)}")
+            await interaction.response.send_message(f"Exception: {str(e)}")
     @app_commands.command(name="stop",description="Stop music")
     async def stop(self,interaction:discord.Interaction):
         voice_client = interaction.guild.voice_client
