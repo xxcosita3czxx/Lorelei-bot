@@ -837,7 +837,21 @@ class configure_appear(app_commands.Group):
                 content=f"Exception happened: {e}",
                 ephemeral=True,
             )
-
+    @app_commands.command(name="language",description="What language should server defaultly respond with")  # noqa: E501
+    @app_commands.describe(language="")
+    @app_commands.autocomplete(language=autocomplete_lang)
+    async def config_lang_guild(self,interaction: discord.Interaction,language:str):
+        try:
+            gconfig.set(interaction.guild_id,"APPEARANCE","color",value=language)
+            await interaction.response.send_message(
+                content=f"Setted value {str(language)}",
+                ephemeral=True,
+            )
+        except Exception as e:
+            await interaction.response.send_message(
+                content=f"Exception happened: {e}",
+                ephemeral=True,
+            )
 @app_commands.default_permissions(administrator=True)
 class configure_ticketing(app_commands.Group):
     def __init__(self):
