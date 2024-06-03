@@ -724,7 +724,6 @@ class music_player(app_commands.Group):
             response = requests.get(url,timeout=60)
             soup = bs4.BeautifulSoup(response.content, 'html.parser')
             track_info = soup.find('meta', {'property': 'og:audio'})
-            logging.debug(str(soup))
             if track_info:
                 logging.debug(track_info)
                 return track_info['content']
