@@ -1138,10 +1138,14 @@ class e6_commands(app_commands.Group):
         name="random-post",
         description="Gives you random post from e6",
     )
-    async def e6_random_post(self,interaction:discord.Interaction,tags:str=""):
+    async def e6_random_post(self,interaction:discord.Interaction,tags:str="",web:str="https://e621.net"):
         try:
             tags = tags.replace(" ","+")
-            url = "https://e621.net/posts.json?limit=100"
+            if web.endswith("/"):
+                web[:-1]
+            if not web.startswith("http"):
+                web = "https://" + web
+            url = "{web}/posts.json?limit=100"
             if tags != "":
                 url += f"&tags={tags}"
             response = requests.get(
