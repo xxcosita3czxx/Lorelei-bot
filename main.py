@@ -7,7 +7,6 @@ from collections import defaultdict
 from datetime import datetime
 from typing import List
 
-import bs4
 import coloredlogs
 import discord
 import requests
@@ -709,89 +708,6 @@ class giveaway(app_commands.Group):
     ):
         pass
 tree.add_command(giveaway())
-
-################################## Music Player ####################################
-
-class music_player(app_commands.Group):
-    def __init__(self):
-        super().__init__()
-        self.name="music"
-        self.description="Music Player"
-
-    def get_bandcamp_stream_url(self, url):
-        # Scrape the Bandcamp page for the audio stream URL
-        try:
-            response = requests.get(url,timeout=60)
-            soup = bs4.BeautifulSoup(response.content, 'html.parser')
-            track_info = soup.find('meta', {'property': 'og:audio'})
-            if track_info:
-                logging.debug(track_info)
-                return track_info['content']
-            else:
-                logging.debug(track_info)
-                return None
-        except Exception as e:
-            logging.error(f"Error fetching Bandcamp URL: {str(e)}")
-            return None
-
-    @app_commands.command(name="play", description="Play music from Bandcamp")
-    async def play(self, interaction: discord.Interaction, url: str):
-        try:
-            voice_channel = interaction.user.voice.channel
-            if voice_channel is None:
-                await interaction.response.send_message(
-                    "You need to be in a voice channel to use this command!",
-                )
-                return
-
-            stream_url = self.get_bandcamp_stream_url(url)
-            if not stream_url:
-                await interaction.response.send_message(
-                    "Could not fetch stream URL from Bandcamp.",
-                )
-                return
-
-            vc = await voice_channel.connect()
-            await interaction.response.send_message(f'Now playing: {url}')
-
-            # Use FFmpeg to play the audio from Bandcamp
-            ffmpeg_options = {
-                'options': '-vn',
-            }
-            vc.play(discord.FFmpegPCMAudio(stream_url, **ffmpeg_options))
-
-            while vc.is_playing():
-                await asyncio.sleep(1)
-            await vc.disconnect()
-
-        except Exception as e:
-            logging.error(f"Exception occurred: {str(e)}")
-            await interaction.response.send_message(f"Exception: {str(e)}")
-    @app_commands.command(name="stop",description="Stop music")
-    async def stop(self,interaction:discord.Interaction):
-        voice_client = interaction.guild.voice_client
-        if voice_client.is_playing():
-            voice_client.stop()
-            await interaction.response.send_message("Music stopped!")
-        else:
-            await interaction.response.send_message(
-                "No music is currently playing.",
-            )
-
-    @app_commands.command(name="disconnect",description="Disconnects bot from channel")  # noqa: E501
-    async def disconnect(self,interaction:discord.Interaction):
-        voice_client = interaction.guild.voice_client
-        if voice_client.is_connected():
-            await voice_client.disconnect()
-            await interaction.response.send_message(
-                "Disconnected from voice channel.",
-            )
-        else:
-            await interaction.response.send_message(
-                "I'm not connected to a voice channel.",
-            )
-
-tree.add_command(music_player())
 
 
 ################################### CONFIGURE COMMAND ##############################
