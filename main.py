@@ -838,7 +838,7 @@ class configure_appear(app_commands.Group):
                 ephemeral=True,
             )
     @app_commands.command(name="language",description="What language should server defaultly respond with")  # noqa: E501
-    @app_commands.describe(language="")
+    @app_commands.describe(language="Language to set")
     @app_commands.autocomplete(language=autocomplete_lang)
     async def config_lang_guild(self,interaction: discord.Interaction,language:str):
         try:
