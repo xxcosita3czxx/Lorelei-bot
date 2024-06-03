@@ -8,4 +8,3 @@ dulwich
 netifaces
 gitpython
 toml
-beautifulsoup4
