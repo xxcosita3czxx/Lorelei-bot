@@ -7,6 +7,7 @@ from collections import defaultdict
 from datetime import datetime
 from typing import List
 
+import bs4
 import coloredlogs
 import discord
 import requests
@@ -720,8 +721,8 @@ class music_player(app_commands.Group):
     def get_bandcamp_stream_url(self, url):
         # Scrape the Bandcamp page for the audio stream URL
         try:
-            response = requests.get(url)
-            soup = BeautifulSoup(response.content, 'html.parser')
+            response = requests.get(url,timeout=60)
+            soup = bs4.BeautifulSoup(response.content, 'html.parser')
             track_info = soup.find('meta', {'property': 'og:audio'})
             if track_info:
                 return track_info['content']
@@ -737,13 +738,15 @@ class music_player(app_commands.Group):
             voice_channel = interaction.user.voice.channel
             if voice_channel is None:
                 await interaction.response.send_message(
-                    "You need to be in a voice channel to use this command!"
+                    "You need to be in a voice channel to use this command!",
                 )
                 return
 
             stream_url = self.get_bandcamp_stream_url(url)
             if not stream_url:
-                await interaction.response.send_message("Could not fetch stream URL from Bandcamp.")
+                await interaction.response.send_message(
+                    "Could not fetch stream URL from Bandcamp.",
+                )
                 return
 
             vc = await voice_channel.connect()
@@ -751,9 +754,9 @@ class music_player(app_commands.Group):
 
             # Use FFmpeg to play the audio from Bandcamp
             ffmpeg_options = {
-                'options': '-vn'
+                'options': '-vn',
             }
-            vc.play(FFmpegPCMAudio(stream_url, **ffmpeg_options))
+            vc.play(discord.FFmpegPCMAudio(stream_url, **ffmpeg_options))
 
             while vc.is_playing():
                 await asyncio.sleep(1)
