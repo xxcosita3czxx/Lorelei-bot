@@ -1177,14 +1177,14 @@ class reviews(discord.ui.View):
     def __init__(self) -> None:  # noqa: ANN101
         super().__init__(timeout = None)
 
-    def rev_embed(interaction:discord.Interaction):
+    def rev_embed(self,interaction:discord.Interaction):
         review_embed = discord.Embed(
             title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_rev_title"),
             description=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_rev_desc"),
         )
         return review_embed
 
-    def resp_embed(interaction:discord.Interaction):
+    def resp_embed(self,interaction:discord.Interaction):
         response_embed = discord.Embed(
             title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_resp_title"),
         )
