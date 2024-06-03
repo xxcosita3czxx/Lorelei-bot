@@ -717,52 +717,48 @@ class music_player(app_commands.Group):
         self.name="music"
         self.description="Music Player"
 
-    @app_commands.command(name="play", description="Play music")
-    async def play(self, interaction: discord.Interaction, query: str):
+    def get_bandcamp_stream_url(self, url):
+        # Scrape the Bandcamp page for the audio stream URL
+        try:
+            response = requests.get(url)
+            soup = BeautifulSoup(response.content, 'html.parser')
+            track_info = soup.find('meta', {'property': 'og:audio'})
+            if track_info:
+                return track_info['content']
+            else:
+                return None
+        except Exception as e:
+            logging.error(f"Error fetching Bandcamp URL: {str(e)}")
+            return None
+
+    @app_commands.command(name="play", description="Play music from Bandcamp")
+    async def play(self, interaction: discord.Interaction, url: str):
         try:
             voice_channel = interaction.user.voice.channel
             if voice_channel is None:
                 await interaction.response.send_message(
-                    "You need to be in a voice channel to use this command!",
+                    "You need to be in a voice channel to use this command!"
                 )
-            else:
-                vc = await voice_channel.connect()
-                # Search for the track on SoundCloud
-                url = f'http://api.soundcloud.com/tracks?q={query}&client_id=hKP7kcwGL0q6weES7f6X5qOjGnWfyOVX'
-                response = requests.get(url, timeout=60)
-                logging.debug(f"Response from SoundCloud: {response.status_code}, {response.text}")  # noqa: E501
-                if response.status_code == 200:  # noqa: PLR2004
-                    tracks = response.json()
-                    if tracks:
-                        track = tracks[0]
-                        stream_url = track.get('stream_url')
-                        if stream_url:
-                            await interaction.response.send_message(
-                                f'Now playing: {track["title"]}',
-                            )
-                            voice_channel = interaction.user.voice.channel
-                            if voice_channel:
-                                voice_client = await voice_channel.connect()
-                                voice_client.play(
-                                    discord.FFmpegPCMAudio(
-                                        stream_url + '?client_id=hKP7kcwGL0q6weES7f6X5qOjGnWfyOVX', # noqa: E501
-                                    ),
-                                )
-                            else:
-                                await interaction.response.send_message(
-                                    "You need to be in a voice channel to use this command.",  # noqa: E501
-                                )
-                        else:
-                            await interaction.response.send_message(
-                                "Track is not available for streaming.",
-                            )
-                    else:
-                        await interaction.response.send_message("No results found.")
-                else:
-                    await vc.disconnect()
-                    await interaction.response.send_message(
-                        "Failed to fetch data from SoundCloud.",
-                    )
+                return
+
+            stream_url = self.get_bandcamp_stream_url(url)
+            if not stream_url:
+                await interaction.response.send_message("Could not fetch stream URL from Bandcamp.")
+                return
+
+            vc = await voice_channel.connect()
+            await interaction.response.send_message(f'Now playing: {url}')
+
+            # Use FFmpeg to play the audio from Bandcamp
+            ffmpeg_options = {
+                'options': '-vn'
+            }
+            vc.play(FFmpegPCMAudio(stream_url, **ffmpeg_options))
+
+            while vc.is_playing():
+                await asyncio.sleep(1)
+            await vc.disconnect()
+
         except Exception as e:
             logging.error(f"Exception occurred: {str(e)}")
             await interaction.response.send_message(f"Exception: {str(e)}")
@@ -852,6 +848,7 @@ class configure_appear(app_commands.Group):
                 content=f"Exception happened: {e}",
                 ephemeral=True,
             )
+
 @app_commands.default_permissions(administrator=True)
 class configure_ticketing(app_commands.Group):
     def __init__(self):
