@@ -1061,7 +1061,7 @@ class e6_commands(app_commands.Group):
                 web[:-1]
             if not web.startswith("http"):
                 web = "https://" + web
-            url = "{web}/posts.json?limit=100"
+            url = f"{web}/posts.json?limit=100"
             if tags != "":
                 url += f"&tags={tags}"
             response = requests.get(
