@@ -1199,7 +1199,7 @@ class reviews(discord.ui.View):
     @discord.ui.button(label="1 star")
     async def rev_star1(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
         await self.disable_all_buttons(interaction)
-        await interaction.response.send_message(
+        await interaction.user.send(
             discord.Embed(
                 title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_resp_title"),
             ),
@@ -1207,7 +1207,7 @@ class reviews(discord.ui.View):
     @discord.ui.button(label="2 star")
     async def rev_star2(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
         await self.disable_all_buttons(interaction)
-        await interaction.response.send_message(
+        await interaction.user.send(
             discord.Embed(
                 title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_resp_title"),
             ),
@@ -1215,7 +1215,7 @@ class reviews(discord.ui.View):
     @discord.ui.button(label="3 star")
     async def rev_star3(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
         await self.disable_all_buttons(interaction)
-        await interaction.response.send_message(
+        await interaction.user.send(
             discord.Embed(
                 title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_resp_title"),
             ),
@@ -1223,7 +1223,7 @@ class reviews(discord.ui.View):
     @discord.ui.button(label="4 star")
     async def rev_star4(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
         await self.disable_all_buttons(interaction)
-        await interaction.response.send_message(
+        await interaction.user.send(
             discord.Embed(
                 title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_resp_title"),
             ),
@@ -1231,7 +1231,7 @@ class reviews(discord.ui.View):
     @discord.ui.button(label="5 star")
     async def rev_star5(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
         await self.disable_all_buttons(interaction)
-        await interaction.response.send_message(
+        await interaction.user.send(
             discord.Embed(
                 title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_resp_title"),
             ),
