@@ -26,7 +26,10 @@ coloredlogs.install(
 conflang=config.language
 
 async def fetch_tags(query):
-    response = requests.get(f'https://e621.net/tags.json?search[name_matches]={query}*',timeout=60)
+    headers = {
+        'User-Agent': 'Lorelei-bot/1.0 (by cosita3cz on e621)',
+    }
+    response = requests.get(f'https://e621.net/tags.json?search[name_matches]={query}*',timeout=60,headers=headers)
     if response.status_code == 200:  # noqa: PLR2004
         return [tag['name'] for tag in response.json()]
     return []
