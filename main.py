@@ -25,6 +25,12 @@ coloredlogs.install(
 )
 conflang=config.language
 
+async def fetch_tags(query):
+    response = requests.get(f'https://e621.net/tags.json?search[name_matches]={query}*',timeout=60)
+    if response.status_code == 200:  # noqa: PLR2004
+        return [tag['name'] for tag in response.json()]
+    return []
+
 mowner,mrepo = config.repository.split("/")
 
 logger = logging.getLogger(__name__)
@@ -118,6 +124,15 @@ async def autocomplete_lang(interaction: discord.Interaction,current: str) -> Li
         return toml_files
     toml_files = get_toml_files(directory)
     return [app_commands.Choice(name=language, value=language) for language in toml_files if current.lower() in language.lower()]  # noqa: E501
+
+async def autocomplete_tags(interaction: discord.Interaction, current: str):
+    tags = await fetch_tags(current)
+    return [
+        app_commands.Choice(
+            name=tag,
+            value=tag,
+        ) for tag in tags if current.lower() in tag.lower()
+    ]
 
 async def change_status() -> None:
     while True:
@@ -1054,6 +1069,7 @@ class e6_commands(app_commands.Group):
         name="random-post",
         description="Gives you random post from e6",
     )
+    @app_commands.autocomplete(tags=autocomplete_tags)
     async def e6_random_post(self,interaction:discord.Interaction,tags:str="",web:str="https://e621.net"):
         try:
             tags = tags.replace(" ","+")
