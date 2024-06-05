@@ -129,14 +129,14 @@ async def autocomplete_lang(interaction: discord.Interaction,current: str) -> Li
     return [app_commands.Choice(name=language, value=language) for language in toml_files if current.lower() in language.lower()]  # noqa: E501
 
 async def autocomplete_tags(interaction: discord.Interaction, current: str):
-    tags = await fetch_tags(current)
+    last_word = current.split()[-1]
+    tags = await fetch_tags(last_word)
     return [
         app_commands.Choice(
             name=tag,
             value=tag,
-        ) for tag in tags if current.lower() in tag.lower()
+        ) for tag in tags if last_word.lower() in tag.lower()
     ]
-
 async def change_status() -> None:
     while True:
         await bot.change_presence(
