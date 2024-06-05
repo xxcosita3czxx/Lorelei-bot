@@ -1,5 +1,6 @@
 [ConfigureCommand]
-                                                                                                                                                             [TicketingCommand]
+
+[TicketingCommand]
 embed_review_title = "Хотите просмотреть нашу систему?"
 embed_review_description = "Потратьте немного времени и поставьте нам оценку в зависимости от того, насколько хорошо мы вас обслужили:"
 ticket_close_confirm = "Вы уверены, что хотите закрыть этот тикет?"
