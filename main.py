@@ -129,17 +129,32 @@ async def autocomplete_lang(interaction: discord.Interaction,current: str) -> Li
     return [app_commands.Choice(name=language, value=language) for language in toml_files if current.lower() in language.lower()]  # noqa: E501
 
 async def autocomplete_tags(interaction: discord.Interaction, current: str):
-    if current == "":
-        tags = await fetch_tags(current)
-    else:
-        last_word = current.split()[-1]
-        tags = await fetch_tags(last_word)
-    return [
-        app_commands.Choice(
-            name=tag,
-            value=tag,
-        ) for tag in tags if last_word.lower() in tag.lower()
-    ]
+    *previous_words, last_word = current.split()
+    tags = await fetch_tags(last_word)
+    choices = []
+
+    for tag in tags:
+        if last_word.lower() in tag.lower():
+            full_completion = " ".join(previous_words + [tag])
+            choices.append(
+                app_commands.Choice(
+                    name=full_completion,
+                    value=full_completion,
+                ),
+            )
+
+    return choices
+#    if current == "":
+#        tags = await fetch_tags(current)
+#    else:
+#        last_word = current.split()[-1]
+#        tags = await fetch_tags(last_word)
+#    return [
+#        app_commands.Choice(
+#            name=tag,
+#            value=tag,
+#        ) for tag in tags if last_word.lower() in tag.lower()
+#    ]
 async def change_status() -> None:
     while True:
         await bot.change_presence(
@@ -699,7 +714,11 @@ class giveaway(app_commands.Group):
         self,
         interaction:discord.Interaction,
         channel:discord.TextChannel,
-    ):
+        duration:int,
+        winners:int,
+        title:str,
+        description:str,
+        ):
         pass
 
     @app_commands.command(name="reroll",description="Rerolls user")
@@ -715,6 +734,8 @@ class giveaway(app_commands.Group):
         self,
         interaction:discord.Interaction,
         message:str,
+        title:str,
+        description:str,
     ):
         pass
 
