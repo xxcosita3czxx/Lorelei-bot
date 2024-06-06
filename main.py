@@ -129,20 +129,22 @@ async def autocomplete_lang(interaction: discord.Interaction,current: str) -> Li
     return [app_commands.Choice(name=language, value=language) for language in toml_files if current.lower() in language.lower()]  # noqa: E501
 
 async def autocomplete_tags(interaction: discord.Interaction, current: str):
-    *previous_words, last_word = current.split()
-    tags = await fetch_tags(last_word)
-    choices = []
+    try:
+        *previous_words, last_word = current.split()
+        tags = await fetch_tags(last_word)
+        choices = []
 
-    for tag in tags:
-        if last_word.lower() in tag.lower():
-            full_completion = " ".join(previous_words + [tag])
-            choices.append(
-                app_commands.Choice(
-                    name=full_completion,
-                    value=full_completion,
-                ),
-            )
-
+        for tag in tags:
+            if last_word.lower() in tag.lower():
+                full_completion = " ".join(previous_words + [tag])
+                choices.append(
+                    app_commands.Choice(
+                        name=full_completion,
+                        value=full_completion,
+                    ),
+                )
+    except Exception as e:
+        logger.warning(f"Autocomplete tags failed! {e}")
     return choices
 #    if current == "":
 #        tags = await fetch_tags(current)
