@@ -158,7 +158,7 @@ async def autocomplete_tags(interaction: discord.Interaction, current: str):
             ]
         except Exception as e:
             logger.warning(f"Fallback autocomplete failed! {e}")
-            return "AUTOCOMPLETE FAILED"
+            return [ f"AUTOCOMPLETE FAILED, {e}" ]
 #    if current == "":
 #        tags = await fetch_tags(current)
 #    else:
