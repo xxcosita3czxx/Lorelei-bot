@@ -517,7 +517,7 @@ class ticketing_group(app_commands.Group):
             )
     @app_commands.command(name = 'panel', description='Launches the ticketing system')  # noqa: E501
     @app_commands.checks.cooldown(3, 60, key = lambda i: (i.guild_id))
-    async def ticketing(self,interaction: discord.Interaction, text:str="Hi! If you need help or have a question, don't hesitate to create a ticket."):  # noqa: E501
+    async def ticketing(self,interaction: discord.Interaction,title:str="Hi! If you need help or have a question, don't hesitate to create a ticket.", text:str=""):  # noqa: E501
 
         '''
         Ticket command
@@ -526,12 +526,16 @@ class ticketing_group(app_commands.Group):
         '''
 
         embed = discord.Embed(
-            title = text,
+            title = title,
+            description = text,
             color = discord.Colour.blurple(),
         )
         await interaction.channel.send(embed = embed, view = ticket_launcher())
+        embed = discord.Embed(
+            title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","panel_launch"),
+        )
         await interaction.response.send_message(
-            "Ticketing system launched!",
+            embed=embed,
             ephemeral = True,
         )
 
@@ -707,7 +711,7 @@ class giveaway(app_commands.Group):
         pass
 
     @app_commands.command(name="edit",description="Edits giveaway")
-    async def giveaway_change(
+    async def giveaway_edit(
         self,
         interaction:discord.Interaction,
         message:str,
