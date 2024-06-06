@@ -129,9 +129,11 @@ async def autocomplete_lang(interaction: discord.Interaction,current: str) -> Li
     return [app_commands.Choice(name=language, value=language) for language in toml_files if current.lower() in language.lower()]  # noqa: E501
 
 async def autocomplete_tags(interaction: discord.Interaction, current: str):
-    *previous_words, last_word = current.split()
-    tags = await fetch_tags(last_word)
-
+    try:
+        *previous_words, last_word = current.split()
+        tags = await fetch_tags(last_word)
+    except Exception:
+        tags = await fetch_tags(current)
     choices = []
     for tag in tags:
         if not last_word or last_word.lower() in tag.lower():
