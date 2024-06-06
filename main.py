@@ -130,7 +130,7 @@ async def autocomplete_lang(interaction: discord.Interaction,current: str) -> Li
 
 async def autocomplete_tags(interaction: discord.Interaction, current: str):
     *previous_words, last_word = current.split()
-    tags = await fetch_tags(last_word if last_word else "")
+    tags = await fetch_tags(last_word)
 
     choices = []
     for tag in tags:
