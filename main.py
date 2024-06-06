@@ -148,7 +148,8 @@ async def autocomplete_tags(interaction: discord.Interaction, current: str):
                     ),
                 )
         return choices
-    except Exception:
+    except Exception as e:
+        logger.debug(f"Using fallback tag autocomplete: {e}")
         try:
             tags = await fetch_tags(current)
             return [
