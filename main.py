@@ -130,12 +130,16 @@ async def autocomplete_lang(interaction: discord.Interaction,current: str) -> Li
 
 async def autocomplete_tags(interaction: discord.Interaction, current: str):
     try:
-        *previous_words, last_word = current.split()
+        if current.strip():
+            *previous_words, last_word = current.split()
+        else:
+            previous_words, last_word = [], ""
+
         tags = await fetch_tags(last_word)
         choices = []
         for tag in tags:
-            if not last_word or last_word.lower() in tag.lower():
-                full_completion = " ".join(previous_words + [tag])
+            if not last_word or last_word.lower() in tag['name'].lower():
+                full_completion = " ".join(previous_words + [tag['name']])
                 choices.append(
                     app_commands.Choice(
                         name=full_completion,
@@ -143,15 +147,18 @@ async def autocomplete_tags(interaction: discord.Interaction, current: str):
                     ),
                 )
         return choices
-    except Exception as e:
-        logger.debug(f"Using Fallback tag autocomplete {e}")
-        tags = await fetch_tags(current)
-        return [
-            app_commands.Choice(
-                name=tag['name'],
-                value=tag['name'],
-            ) for tag in tags if current.lower() in tag['name'].lower()
-        ]
+    except Exception:
+        try:
+            tags = await fetch_tags(current)
+            return [
+                app_commands.Choice(
+                    name=tag['name'],
+                    value=tag['name'],
+                ) for tag in tags if current.lower() in tag['name'].lower()
+            ]
+        except Exception as e:
+            logger.warning(f"Fallback autocomplete failed! {e}")
+            return "AUTOCOMPLETE FAILED"
 #    if current == "":
 #        tags = await fetch_tags(current)
 #    else:
