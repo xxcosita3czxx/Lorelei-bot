@@ -132,17 +132,25 @@ async def autocomplete_tags(interaction: discord.Interaction, current: str):
     try:
         *previous_words, last_word = current.split()
         tags = await fetch_tags(last_word)
+        choices = []
+        for tag in tags:
+            if not last_word or last_word.lower() in tag.lower():
+                full_completion = " ".join(previous_words + [tag])
+                choices.append(
+                    app_commands.Choice(
+                        name=full_completion,
+                        value=full_completion,
+                    ),
+                )
+        return choices
     except Exception:
         tags = await fetch_tags(current)
-    choices = []
-    for tag in tags:
-        if not last_word or last_word.lower() in tag.lower():
-            full_completion = " ".join(previous_words + [tag])
-            choices.append(
-                app_commands.Choice(name=full_completion, value=full_completion),
-            )
-
-    return choices
+        return [
+            app_commands.Choice(
+                name=tag['name'],
+                value=tag['name'],
+            ) for tag in tags if current.lower() in tag['name'].lower()
+        ]
 #    if current == "":
 #        tags = await fetch_tags(current)
 #    else:
