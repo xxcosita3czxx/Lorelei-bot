@@ -143,9 +143,10 @@ async def autocomplete_tags(interaction: discord.Interaction, current: str):
                         value=full_completion,
                     ),
                 )
+        return choices
     except Exception as e:
         logger.warning(f"Autocomplete tags failed! {e}")
-    return choices
+        return [ "autocomplete failed!" ]
 #    if current == "":
 #        tags = await fetch_tags(current)
 #    else:
