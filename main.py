@@ -25,23 +25,15 @@ coloredlogs.install(
 )
 conflang=config.language
 
-#async def fetch_tags(query):
-#    headers = {
-#        'User-Agent': 'Lorelei-bot/1.0 (by cosita3cz on e621)',
-#    }
-#    response = requests.get(f'https://e621.net/tags.json?search[name_matches]={query}*&search[order]=count&limit=20',timeout=60,headers=headers)
-#    if response.status_code == 200:  # noqa: PLR2004
-#        return [tag['name'] for tag in response.json()]
-#    return []
-def fetch_tags(query):
+async def fetch_tags(query):
     headers = {
         'User-Agent': 'Lorelei-bot/1.0 (by cosita3cz on e621)',
     }
-    response = requests.get(f"https://e621.net/tags.json?search[name_matches]={query}*&search[order]=count&limit=20",timeout=60,headers=headers)
-    data = response.json()
-    if isinstance(data, list):
-        return data
+    response = requests.get(f'https://e621.net/tags.json?search[name_matches]={query}*&search[order]=count&limit=20',timeout=60,headers=headers)
+    if response.status_code == 200:  # noqa: PLR2004
+        return [tag['name'] for tag in response.json()]
     return []
+
 mowner,mrepo = config.repository.split("/")
 
 logger = logging.getLogger(__name__)
@@ -137,38 +129,21 @@ async def autocomplete_lang(interaction: discord.Interaction,current: str) -> Li
     return [app_commands.Choice(name=language, value=language) for language in toml_files if current.lower() in language.lower()]  # noqa: E501
 
 async def autocomplete_tags(interaction: discord.Interaction, current: str):
-    try:
-        if current.strip():
-            *previous_words, last_word = current.split()
-        else:
-            previous_words, last_word = [], ""
+    *previous_words, last_word = current.split()
+    tags = await fetch_tags(last_word)
+    choices = []
 
-        tags = await fetch_tags(last_word)
-        choices = []
-        for tag in tags:
-            tag_name = tag.get('name', '')
-            if not last_word or last_word.lower() in tag_name.lower():
-                full_completion = " ".join(previous_words + [tag_name])
-                choices.append(
-                    app_commands.Choice(
-                        name=full_completion,
-                        value=full_completion,
-                    ),
-                )
-        return choices
-    except Exception as e:
-        logger.debug(f"Using fallback tag autocomplete: {e}")
-        try:
-            tags = await fetch_tags(current)
-            return [
+    for tag in tags:
+        if last_word.lower() in tag.lower():
+            full_completion = " ".join(previous_words + [tag])
+            choices.append(
                 app_commands.Choice(
-                    name=tag['name'],
-                    value=tag['name'],
-                ) for tag in tags if current.lower() in tag['name'].lower()
-            ]
-        except Exception as e:
-            logger.warning(f"Fallback autocomplete failed! {e}")
-            return [ f"AUTOCOMPLETE FAILED, {e}" ]
+                    name=full_completion,
+                    value=full_completion,
+                ),
+            )
+
+    return choices
 #    if current == "":
 #        tags = await fetch_tags(current)
 #    else:
