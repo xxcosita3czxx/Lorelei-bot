@@ -138,8 +138,9 @@ async def autocomplete_tags(interaction: discord.Interaction, current: str):
         tags = await fetch_tags(last_word)
         choices = []
         for tag in tags:
-            if not last_word or last_word.lower() in tag['name'].lower():
-                full_completion = " ".join(previous_words + [tag['name']])
+            tag_name = tag.get('name', '')
+            if not last_word or last_word.lower() in tag_name.lower():
+                full_completion = " ".join(previous_words + [tag_name])
                 choices.append(
                     app_commands.Choice(
                         name=full_completion,
