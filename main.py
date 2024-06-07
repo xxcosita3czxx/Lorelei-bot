@@ -112,6 +112,7 @@ gconfig = ConfigManager("data/guilds")
 uconfig = ConfigManager("data/users")
 lang = ConfigManager("data/lang","data/lang/en.toml")
 
+
 async def autocomplete_color(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
     colors = ['Blurple', 'Red', 'Green', 'Blue', 'Yellow',"Purple","White"]
     return [app_commands.Choice(name=color, value=color) for color in colors if current.lower() in color.lower()]  # noqa: E501
@@ -126,7 +127,12 @@ async def autocomplete_lang(interaction: discord.Interaction,current: str) -> Li
                 toml_files.append(filename_without_extension)
         return toml_files
     toml_files = get_toml_files(directory)
-    return [app_commands.Choice(name=language, value=language) for language in toml_files if current.lower() in language.lower()]  # noqa: E501
+    return [
+        app_commands.Choice(
+            name=language,
+            value=language,
+        ) for language in toml_files if current.lower() in language.lower()
+    ]  # noqa: E501
 
 async def autocomplete_tags(interaction: discord.Interaction, current: str):
     try:
@@ -147,6 +153,7 @@ async def autocomplete_tags(interaction: discord.Interaction, current: str):
     except Exception as e:
         logger.warning(f"Autocomplete tags failed! {e}")
         return [ "autocomplete failed!" ]
+
 #    if current == "":
 #        tags = await fetch_tags(current)
 #    else:
@@ -158,6 +165,8 @@ async def autocomplete_tags(interaction: discord.Interaction, current: str):
 #            value=tag,
 #        ) for tag in tags if last_word.lower() in tag.lower()
 #    ]
+
+
 async def change_status() -> None:
     while True:
         await bot.change_presence(
