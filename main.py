@@ -1082,7 +1082,9 @@ class Help(app_commands.Group):
 
     @app_commands.command(name="configure",description="Configuring help")
     async def help_configure(self,interaction:discord.Interaction):
-        pass
+        embed = discord.Embed(
+            title=
+        )
 
     @app_commands.command(name="admin",description="Admin help")
     async def help_admin(self,interaction:discord.Interaction):

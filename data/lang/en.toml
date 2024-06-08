@@ -1,4 +1,3 @@
-
 [ConfigureCommand]
 
 [TicketingCommand]
@@ -11,6 +10,8 @@ embed_review_rev_desc="User responded to review action!"
 panel_launch = "Ticketing system launched!"
 
 [HelpCommand]
+adminhelp_title="Admin-Tools Help"
+adminhelp_ban="/ban user=(discord.User)"
 
 [RunnerLogs]
 debug_on_pid_log = "main.py is running at PID: "
