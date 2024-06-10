@@ -516,7 +516,7 @@ class ticketing_group(app_commands.Group):
                     overwrite=None,
                 )
                 await interaction.response.send_message(
-                    content=f"Removed role {role} from ticket",
+                    content=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","remove_role").format(role=role),
                 )  # noqa: E501
             elif role is None and user is not None:
                 await interaction.channel.set_permissions(
@@ -534,7 +534,7 @@ class ticketing_group(app_commands.Group):
                 await interaction.response.send_message(
                     content="You have to choose one stupid.",
                 )
-            else:
+           else:
                 await interaction.response.send_message(
                     content="Unknown error while parsing values",
                 )
@@ -1278,6 +1278,7 @@ class reviews(discord.ui.View):
         await interaction.user.send(
             embed=response_embed,
         )
+
     @discord.ui.button(label="4 star")
     async def rev_star4(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
         await self.disable_all_buttons(interaction)
@@ -1287,6 +1288,7 @@ class reviews(discord.ui.View):
         await interaction.user.send(
             embed=response_embed,
         )
+
     @discord.ui.button(label="5 star")
     async def rev_star5(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
         await self.disable_all_buttons(interaction)
@@ -1296,6 +1298,7 @@ class reviews(discord.ui.View):
         await interaction.user.send(
             embed=response_embed,
         )
+
 class confirm(discord.ui.View):
 
     '''

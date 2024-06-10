@@ -8,6 +8,10 @@ embed_review_resp_title="Thanks for rating!"
 embed_review_rev_title="Review response!"
 embed_review_rev_desc="User responded to review action!"
 panel_launch = "Ticketing system launched!"
+remove_role = "Removed role {role} from ticket"
+remove_user = "Removed user {user} from ticket"
+only_one = "You can only use one."
+parse_error = "Unknown error while parsing values"
 
 [HelpCommand]
 adminhelp_title="Admin-Tools Help"
