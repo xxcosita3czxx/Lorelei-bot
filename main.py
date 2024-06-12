@@ -534,7 +534,7 @@ class ticketing_group(app_commands.Group):
                 await interaction.response.send_message(
                     content="You have to choose one stupid.",
                 )
-           else:
+            else:
                 await interaction.response.send_message(
                     content="Unknown error while parsing values",
                 )
@@ -1082,9 +1082,7 @@ class Help(app_commands.Group):
 
     @app_commands.command(name="configure",description="Configuring help")
     async def help_configure(self,interaction:discord.Interaction):
-        embed = discord.Embed(
-            title=
-        )
+        pass
 
     @app_commands.command(name="admin",description="Admin help")
     async def help_admin(self,interaction:discord.Interaction):
