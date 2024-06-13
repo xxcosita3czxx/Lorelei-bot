@@ -34,6 +34,8 @@ ping_latency = "Latency: {latency}"
 value_set = "Value/s Set: {values}"
 noperms_manage_channels = "Make sure I have `{perms}` permissions!"
 info_text_raw ="Hello!\nThis is Lorelei Bot developed by cosita3cz.\nDeveloped in python for everyone.\n\nThanks to all contributors:\n"
+slowmode_disable="Slow mode has been disabled by {user}"
+slowmode_max_reach="Slowmode can't be more than 6 hours"
 
 [UserInfo]
 username="Username"

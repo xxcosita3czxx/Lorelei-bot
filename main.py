@@ -800,7 +800,7 @@ class configure_appear(app_commands.Group):
     @app_commands.command(name="color",description="Changes default color of embeds.")  # noqa: E501
     @app_commands.describe(color="The color to set")
     @app_commands.autocomplete(color=autocomplete_color)
-    async def config_color(self,interaction: discord.Interaction,color:str):
+    async def config_color_guild(self,interaction: discord.Interaction,color:str):
         try:
             gconfig.set(interaction.guild_id,"APPEARANCE","color",value=color)
             await interaction.response.send_message(
@@ -817,7 +817,7 @@ class configure_appear(app_commands.Group):
     @app_commands.autocomplete(language=autocomplete_lang)
     async def config_lang_guild(self,interaction: discord.Interaction,language:str):
         try:
-            gconfig.set(interaction.guild_id,"APPEARANCE","color",value=language)
+            gconfig.set(interaction.guild_id,"APPEARANCE","language",value=language)
             await interaction.response.send_message(
                 content=f"Setted value {str(language)}",
                 ephemeral=True,
@@ -973,19 +973,19 @@ async def slowmode(interaction: discord.Interaction,time: app_commands.Transform
     if time <= 0:
         await interaction.channel.edit(slowmode_delay=0)
         await interaction.response.send_message(
-            "Slowmode has been disabled",
+            content="Slowmode has been disabled",
             ephemeral=True,
         )
         await interaction.channel.send(
             embed=discord.Embed(
-                description=f"Slow mode has been disabled by in {interaction.channel.mention}",  # noqa: E501
+                description=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","slowmode_disable").format(interaction.channel.mention),  # noqa: E501
                 color=discord.Color.green(),
             ),
         )
 
     elif time > max_time:
         await interaction.response.send_message(
-            "Slowmode can't be more than 6 hours",
+            content=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","slowmode_max_reach"),
             ephemeral=True,
         )
 
