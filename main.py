@@ -1151,7 +1151,7 @@ class e6_commands(app_commands.Group):
 tree.add_command(e6_commands())
 
 ############################### Verify System ######################################
-@tree.command(name="Verify System",description="No bots in the server")
+@tree.command(name="verify-system",description="No bots in the server")
 @app_commands.default_permissions(administrator=True)
 async def verify_system(
     interaction: discord.Interaction,
