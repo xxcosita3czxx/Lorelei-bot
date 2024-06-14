@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 # SAVE FOR LATER
-#def update_and_run():
+#def update():
 #    if config.autoupdate == True:
 #        try:
 #            try:
@@ -52,7 +52,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 #        logger.warning("UPDATER IS OFF, YOU WILL HAVE TO UPDATE MANUALLY")
 
 
-def update_and_run():
+def update():
     if config.autoupdate:
         try:
 #            ctkit.update_script_from_github("xxcosita3czxx","lorelei-bot","main.py","main.py") # noqa: E501
@@ -63,7 +63,7 @@ def update_and_run():
             logger.warning(e)
 def update_loop():
     while True:
-        update_and_run()
+        update()
         time.sleep(config.bot_update)
 def Is_Alive():
     while True:
@@ -86,7 +86,14 @@ def update_cosita_tk():
         except Exception:
             logger.error(lang.get(conflang,"RunnerLogs","err_costk_update_fail"))
         time.sleep(config.costk_update)
-if __name__ == "__main__":
+
+@click.command()
+@click.option("--update",is_flag=True, help="Updates the bot and exits")
+def main(update):
+    if update:
+        update()
+        os.system("/bin/python3 utils/cosita_toolkit.py")
+        sys.exit()
     monitor_thread = threading.Thread(target=Is_Alive)
     update_thread = threading.Thread(target=update_loop)
     update_costk_thread = threading.Thread(target=update_cosita_tk)
@@ -94,3 +101,5 @@ if __name__ == "__main__":
     monitor_thread.start()
     update_thread.start()
     update_costk_thread.start()
+if __name__ == "__main__":
+    main()

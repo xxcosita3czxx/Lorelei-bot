@@ -1163,20 +1163,52 @@ async def verify_system(
     title: str,
     description:str,
     channel: discord.TextChannel,
-    mode: str,
+    mode: str = "button",
 ):
     if mode == "emoji":
-        await interaction.response.send_message(content="Selected Emoji",ephemeral=True)
+        await interaction.response.send_message(
+            content="In progress",
+            ephemeral=True,
+        )
     elif mode == "button":
-        await interaction.response.send_message(content="Selected Button",ephemeral=True)
+        await interaction.response.send_message(
+            content="Selected Button",
+            ephemeral=True,
+        )
+        embed = discord.Embed(
+            title=title,
+            description=description,
+        )
+        channel.send(embed=embed,view=verify_button
     elif mode == "captcha":
-        await interaction.response.send_message(content="Selected captcha",ephemeral=True)
+        await interaction.response.send_message(
+            content="In progress",
+            ephemeral=True,
+        )
     else:
-        await interaction.response.send_message(content="Wrong type!")
+        await interaction.response.send_message(
+            content="Wrong type!",
+            ephemeral=True,
+        )
 
 
 ############################### discord.Views ######################################
 
+class verify_button(discord.ui.View):
+    def __init__(self, label)-> None:
+        super().__init__()
+
+    @discord.ui.button(
+        label="Verify",
+        style = discord.ButtonStyle.blurple,
+        custom_id="verify",
+    )
+    async def verify(
+        self,
+        button: discord.ui.button,
+        interaction: discord.Interaction,
+    ):
+        await interaction.response.send_message("Clicked :3",ephemeral=True)
 
 class ticket_launcher(discord.ui.View):
 
