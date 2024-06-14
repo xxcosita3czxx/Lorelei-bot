@@ -1,8 +1,10 @@
 import logging
 import os
+import sys
 import threading
 import time
 
+import click
 import coloredlogs
 import psutil
 
@@ -92,7 +94,7 @@ def update_cosita_tk():
 def main(update):
     if update:
         update()
-        os.system("/bin/python3 utils/cosita_toolkit.py")
+        os.system("/bin/python3 utils/cosita_toolkit.py") # noqa: S605
         sys.exit()
     monitor_thread = threading.Thread(target=Is_Alive)
     update_thread = threading.Thread(target=update_loop)
