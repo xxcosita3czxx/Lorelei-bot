@@ -1157,7 +1157,7 @@ async def verify_system(
     interaction: discord.Interaction,
     title: str,
     description:str,
-    channel: discord.Channel,
+    channel: discord.channel,
     mode: str,
 ):
     if mode == "emoji":
