@@ -7,7 +7,6 @@ import coloredlogs
 import psutil
 
 import config
-import utils.cosita_toolkit as ctkit
 from main import ConfigManager as cm
 
 lang = cm("data/lang/")
@@ -56,9 +55,11 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 def update_and_run():
     if config.autoupdate:
         try:
-            ctkit.update_script_from_github("xxcosita3czxx","lorelei-bot","main.py","main.py")
-            ctkit.update_script_from_github("xxcosita3czxx","lorelei-bot","run.py","run.py")
+#            ctkit.update_script_from_github("xxcosita3czxx","lorelei-bot","main.py","main.py") # noqa: E501
+#            ctkit.update_script_from_github("xxcosita3czxx","lorelei-bot","run.py","run.py") # noqa: E501
+            os.system("/bin/git stash && /bin/git pull") # noqa: S605
         except Exception as e:
+            logger.warning("UPDATER FAILED")
             logger.warning(e)
 def update_loop():
     while True:
@@ -76,12 +77,12 @@ def Is_Alive():
                 )
         if not main_pid:
             logger.info(lang.get(conflang,"RunnerLogs","info_not_running"))
-            os.system("python3 main.py")  # noqa: S605, S607
+            os.system("/bin/python3 main.py")  # noqa: S605, S607
         time.sleep(config.Is_Alive_time)
 def update_cosita_tk():
     while True:
         try:
-            os.system("python3 utils/cosita_toolkit.py")  # noqa: S605, S607
+            os.system("/bin/python3 utils/cosita_toolkit.py")  # noqa: S605, S607
         except Exception:
             logger.error(lang.get(conflang,"RunnerLogs","err_costk_update_fail"))
         time.sleep(config.costk_update)
@@ -91,5 +92,5 @@ if __name__ == "__main__":
     update_costk_thread = threading.Thread(target=update_cosita_tk)
 
     monitor_thread.start()
-#    update_thread.start()
+    update_thread.start()
     update_costk_thread.start()

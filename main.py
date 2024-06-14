@@ -1153,8 +1153,21 @@ tree.add_command(e6_commands())
 ############################### Verify System ######################################
 @tree.command(name="Verify System",description="No bots in the server")
 @app_commands.default_permissions(administrator=True)
-async def verify_system(interaction: discord.Interaction,title:str,description:str,channel:discord.Channel,mode:str):
-    pass
+async def verify_system(
+    interaction: discord.Interaction,
+    title: str,
+    description:str,
+    channel: discord.Channel,
+    mode: str,
+):
+    if mode == "emoji":
+        pass
+    elif mode == "button":
+        pass"
+    elif mode == "captcha":
+        pass
+    else:
+        interaction.response.send_message(content="Wrong type!")
 
 
 ############################### discord.Views ######################################
