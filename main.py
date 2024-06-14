@@ -117,6 +117,10 @@ async def autocomplete_color(interaction: discord.Interaction,current: str) -> L
     colors = ['Blurple', 'Red', 'Green', 'Blue', 'Yellow',"Purple","White"]
     return [app_commands.Choice(name=color, value=color) for color in colors if current.lower() in color.lower()]  # noqa: E501
 
+async def autocomplete_verify_modes(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
+    colors = ["captcha","button","emoji"]
+    return [app_commands.Choice(name=color, value=color) for color in colors if current.lower() in color.lower()]  # noqa: E501
+
 async def autocomplete_lang(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
     directory = "data/lang"
     def get_toml_files(directory: str) -> List[str]:
@@ -1153,6 +1157,7 @@ tree.add_command(e6_commands())
 ############################### Verify System ######################################
 @tree.command(name="verify-system",description="No bots in the server")
 @app_commands.default_permissions(administrator=True)
+@app_commands.autocomplete(mode=autocomplete_verify_modes)
 async def verify_system(
     interaction: discord.Interaction,
     title: str,
@@ -1161,13 +1166,13 @@ async def verify_system(
     mode: str,
 ):
     if mode == "emoji":
-        pass
+        await interaction.response.send_message(content="Selected Emoji",ephemeral=True)
     elif mode == "button":
-        pass
+        await interaction.response.send_message(content="Selected Button",ephemeral=True)
     elif mode == "captcha":
-        pass
+        await interaction.response.send_message(content="Selected captcha",ephemeral=True)
     else:
-        interaction.response.send_message(content="Wrong type!")
+        await interaction.response.send_message(content="Wrong type!")
 
 
 ############################### discord.Views ######################################
