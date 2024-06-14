@@ -1195,7 +1195,7 @@ async def verify_system(
 ############################### discord.Views ######################################
 
 class verify_button(discord.ui.View):
-    def __init__(self, label)-> None:
+    def __init__(self)-> None:
         super().__init__()
 
     @discord.ui.button(
