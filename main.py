@@ -1150,6 +1150,13 @@ class e6_commands(app_commands.Group):
 
 tree.add_command(e6_commands())
 
+############################### Verify System ######################################
+@tree.command(name="Verify System",description="No bots in the server")
+@app_commands.default_permissions(administrator=True)
+async def verify_system(interaction: discord.Interaction,title:str,description:str,channel:discord.Channel,mode:str):
+    pass
+
+
 ############################### discord.Views ######################################
 
 
@@ -1184,7 +1191,7 @@ class ticket_launcher(discord.ui.View):
             )
         ticket = utils.get(
             interaction.guild.text_channels,
-            name = f"ticket-for-{interaction.user.name.lower().replace(' ', '-')}-{interaction.user.discriminator}")  # noqa: E501
+            name = f"ticket-{interaction.user.name.lower().replace(' ', '-')}-{interaction.user.discriminator}")  # noqa: E501
 
         if ticket is not None:
             await interaction.response.send_message(
