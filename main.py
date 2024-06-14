@@ -1163,7 +1163,7 @@ async def verify_system(
     if mode == "emoji":
         pass
     elif mode == "button":
-        pass"
+        pass
     elif mode == "captcha":
         pass
     else:
