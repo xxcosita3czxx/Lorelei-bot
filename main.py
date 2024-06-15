@@ -250,6 +250,7 @@ class aclient(discord.Client):
         if not self.added:
             self.add_view(ticket_launcher())
             self.add_view(main())
+            self.add_view(verify_button())
             self.added = True
 
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
@@ -1166,6 +1167,7 @@ async def verify_system(
     channel: discord.TextChannel,
     mode: str = "button",
 ):
+    gconfig.set(interaction.guild.id,str(interaction.channel.id)+"-verify", "role",role)
     if mode == "emoji":
         await interaction.response.send_message(
             content="In progress",
@@ -1180,8 +1182,7 @@ async def verify_system(
             title=title,
             description=description,
         )
-        aclient().add_view(verify_button(role))
-        await channel.send(embed=embed,view=verify_button(role))
+        await channel.send(embed=embed,view=verify_button())
     elif mode == "captcha":
         await interaction.response.send_message(
             content="In progress",
@@ -1197,9 +1198,8 @@ async def verify_system(
 ############################### discord.Views ######################################
 
 class verify_button(discord.ui.View):
-    def __init__(self,role)-> None:
+    def __init__(self)-> None:
         super().__init__(timeout=None)
-        self.role = role
 
     @discord.ui.button(
         label="Verify",
@@ -1208,10 +1208,12 @@ class verify_button(discord.ui.View):
     )
     async def verify(self, interaction: discord.Interaction, button: discord.ui.button): # noqa: E501
         #await interaction.response.send_message(content="Clicked :3",ephemeral=True)
+        role = gconfig.get(interaction.guild.id,str(interaction.channel.id)+"-verify", "enabled")
+
         try:
             await interaction.user.add_roles(self.role)
             await interaction.response.send_message(content="Verified!")
-        except discord.errors.Forbiden:
+        except discord.errors.Forbidden:
             await interaction.response.send_message(content="Insufficient Permissions")
         except Exception as e:
             logger.error(str(e))
