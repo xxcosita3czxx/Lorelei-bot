@@ -250,6 +250,7 @@ class aclient(discord.Client):
         if not self.added:
             self.add_view(ticket_launcher())
             self.add_view(main())
+            self.add_view(verify_button())
             self.added = True
 
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
