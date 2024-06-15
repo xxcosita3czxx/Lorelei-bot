@@ -7,7 +7,6 @@ from collections import defaultdict
 from datetime import datetime
 from typing import List
 
-import utils.help_embeds as help_embeds
 import coloredlogs
 import discord
 import requests
@@ -18,6 +17,7 @@ from humanfriendly import format_timespan
 
 import config
 import utils.cosita_toolkit as ctkit
+import utils.help_embeds as help_pages
 
 coloredlogs.install(
     level=config.loglevel,
@@ -736,7 +736,7 @@ class giveaway(app_commands.Group):
         winners:int,
         title:str,
         description:str,
-        ):
+    ):
         pass
 
     @app_commands.command(name="reroll",description="Rerolls user")
@@ -771,6 +771,7 @@ class giveaway(app_commands.Group):
         interaction:discord.Interaction,
     ):
         pass
+
 tree.add_command(giveaway())
 
 
@@ -1107,6 +1108,8 @@ async def help_user(interaction: discord.Interaction):
     await view.send_initial_message(interaction)
 
 tree.add_command(Help())
+
+
 ############################ e621.net commands #####################################
 
 class e6_commands(app_commands.Group):
@@ -1159,6 +1162,7 @@ class e6_commands(app_commands.Group):
 tree.add_command(e6_commands())
 
 ############################### Verify System ######################################
+
 @tree.command(name="verify-system",description="No bots in the server")
 @app_commands.default_permissions(administrator=True)
 @app_commands.autocomplete(mode=autocomplete_verify_modes)
@@ -1170,7 +1174,12 @@ async def verify_system(
     channel: discord.TextChannel,
     mode: str = "button",
 ):
-    gconfig.set(interaction.guild.id,str(interaction.channel.id)+"-verify", "role",role)
+    gconfig.set(
+        interaction.guild.id,
+        str(interaction.channel.id)+"-verify",
+        "role",
+        role,
+    )
     if mode == "emoji":
         await interaction.response.send_message(
             content="In progress",
@@ -1199,7 +1208,7 @@ async def verify_system(
 
 
 ############################### discord.Views ######################################
-.
+
 class verify_button(discord.ui.View):
     def __init__(self)-> None:
         super().__init__(timeout=None)
@@ -1210,14 +1219,20 @@ class verify_button(discord.ui.View):
         custom_id="verify",
     )
     async def verify(self, interaction: discord.Interaction, button: discord.ui.button): # noqa: E501
-        #await interaction.response.send_message(content="Clicked :3",ephemeral=True)
-        role = gconfig.get(interaction.guild.id,str(interaction.channel.id)+"-verify", "enabled")
+        #await interaction.response.send_message(content="Clicked :3",ephemeral=True) # noqa: E501
+        role = gconfig.get(
+            interaction.guild.id,
+            str(interaction.channel.id)+"-verify",
+            "enabled",
+        )
 
         try:
             await interaction.user.add_roles(role)
             await interaction.response.send_message(content="Verified!")
         except discord.errors.Forbidden:
-            await interaction.response.send_message(content="Insufficient Permissions")
+            await interaction.response.send_message(
+                content="Insufficient Permissions",
+            )
         except Exception as e:
             logger.error(str(e))
 
@@ -1483,6 +1498,31 @@ class main(discord.ui.View):
 
         os.remove(f"{interaction.channel.id}.md")
 
+class giveaway_open(discord.ui.View):
+    def __init__(self,title,description,winners) -> None:  # noqa: ANN101
+        super().__init__(timeout = None)
+        self.title = title
+        self.desc = description
+        self.win = winners
+
+    def create(self, interaction: discord.Interaction,title):
+        embed = discord.Embed(
+            title = self.title,
+            description = self.desc,
+            view = self,
+        )
+        embed.add_field(
+            title="Winners",
+            key=str(self.win),
+        )
+
+    @discord.ui.button(
+        label = "Join",
+        style = discord.ButtonStyle.blurple,
+        custom_id = "join",
+    )
+    def join_giv(self,interaction: discord.Interaction, button: discord.Button):
+        pass
 
 ########################## Main Runner #############################################
 
