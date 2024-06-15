@@ -1180,7 +1180,7 @@ async def verify_system(
             title=title,
             description=description,
         )
-        await channel.send(embed=embed,view=verify_button)
+        await channel.send(embed=embed,view=verify_button())
     elif mode == "captcha":
         await interaction.response.send_message(
             content="In progress",
