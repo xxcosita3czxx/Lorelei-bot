@@ -1211,7 +1211,7 @@ class verify_button(discord.ui.View):
         role = gconfig.get(interaction.guild.id,str(interaction.channel.id)+"-verify", "enabled")
 
         try:
-            await interaction.user.add_roles(self.role)
+            await interaction.user.add_roles(role)
             await interaction.response.send_message(content="Verified!")
         except discord.errors.Forbidden:
             await interaction.response.send_message(content="Insufficient Permissions")
