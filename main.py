@@ -1196,19 +1196,15 @@ async def verify_system(
 
 class verify_button(discord.ui.View):
     def __init__(self)-> None:
-        super().__init__()
+        super().__init__(timeout=None)
 
     @discord.ui.button(
         label="Verify",
         style = discord.ButtonStyle.blurple,
         custom_id="verify",
     )
-    async def verify(
-        self,
-        button: discord.ui.button,
-        interaction: discord.Interaction,
-    ):
-        await interaction.response.send_message("Clicked :3",ephemeral=True)
+    async def verify(self, button: discord.ui.button, interaction: discord.Interaction): # noqa: E501
+        await interaction.response.send_message(content="Clicked :3",ephemeral=True)
 
 class ticket_launcher(discord.ui.View):
 
