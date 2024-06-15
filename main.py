@@ -250,7 +250,6 @@ class aclient(discord.Client):
         if not self.added:
             self.add_view(ticket_launcher())
             self.add_view(main())
-            self.add_view(verify_button())
             self.added = True
 
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
@@ -1181,7 +1180,8 @@ async def verify_system(
             title=title,
             description=description,
         )
-        await channel.send(embed=embed,view=verify_button(role))
+        aclient.add_view(verify_button(role))
+        await channel.send(embed=embed,view=verify_button())
     elif mode == "captcha":
         await interaction.response.send_message(
             content="In progress",
