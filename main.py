@@ -1163,6 +1163,7 @@ async def verify_system(
     interaction: discord.Interaction,
     title: str,
     description:str,
+    role:discord.Role,
     channel: discord.TextChannel,
     mode: str = "button",
 ):
@@ -1180,7 +1181,7 @@ async def verify_system(
             title=title,
             description=description,
         )
-        await channel.send(embed=embed,view=verify_button())
+        await channel.send(embed=embed,view=verify_button(role))
     elif mode == "captcha":
         await interaction.response.send_message(
             content="In progress",
@@ -1196,8 +1197,9 @@ async def verify_system(
 ############################### discord.Views ######################################
 
 class verify_button(discord.ui.View):
-    def __init__(self)-> None:
+    def __init__(self,role)-> None:
         super().__init__(timeout=None)
+        self.role = role
 
     @discord.ui.button(
         label="Verify",
@@ -1206,6 +1208,7 @@ class verify_button(discord.ui.View):
     )
     async def verify(self, interaction: discord.Interaction, button: discord.ui.button): # noqa: E501
         await interaction.response.send_message(content="Clicked :3",ephemeral=True)
+        await interaction.user.add_roles(self.role)
 
 class ticket_launcher(discord.ui.View):
 
