@@ -1210,8 +1210,8 @@ class verify_button(discord.ui.View):
         await interaction.response.send_message(content="Clicked :3",ephemeral=True)
         try:
             await interaction.user.add_roles(self.role)
-        except Exception:
-            interaction.followup.send(content="Insufficient Permissions")
+        except discord.errors.Forbiden:
+            await interaction.followup.send(content="Insufficient Permissions")
 class ticket_launcher(discord.ui.View):
 
     '''
