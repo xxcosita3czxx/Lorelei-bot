@@ -1208,8 +1208,10 @@ class verify_button(discord.ui.View):
     )
     async def verify(self, interaction: discord.Interaction, button: discord.ui.button): # noqa: E501
         await interaction.response.send_message(content="Clicked :3",ephemeral=True)
-        await interaction.user.add_roles(self.role)
-
+        try:
+            await interaction.user.add_roles(self.role)
+        except Exception:
+            interaction.followup.send(content="Insufficient Permissions")
 class ticket_launcher(discord.ui.View):
 
     '''
