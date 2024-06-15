@@ -1204,7 +1204,7 @@ class verify_button(discord.ui.View):
         style = discord.ButtonStyle.blurple,
         custom_id="verify",
     )
-    async def verify(self, button: discord.ui.button, interaction: discord.Interaction): # noqa: E501
+    async def verify(self, interaction: discord.Interaction, button: discord.ui.button): # noqa: E501
         await interaction.response.send_message(content="Clicked :3",ephemeral=True)
 
 class ticket_launcher(discord.ui.View):
