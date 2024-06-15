@@ -1213,6 +1213,9 @@ class verify_button(discord.ui.View):
             await interaction.response.send_message(content="Verified!")
         except discord.errors.Forbiden:
             await interaction.response.send_message(content="Insufficient Permissions")
+        except Exception as e:
+            logger.error(str(e))
+
 class ticket_launcher(discord.ui.View):
 
     '''
