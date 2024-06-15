@@ -7,6 +7,7 @@ from collections import defaultdict
 from datetime import datetime
 from typing import List
 
+import utils.help_embeds as help_embeds
 import coloredlogs
 import discord
 import requests
@@ -1091,7 +1092,9 @@ class Help(app_commands.Group):
 
     @app_commands.command(name="admin",description="Admin help")
     async def help_admin(self,interaction:discord.Interaction):
-        pass
+        embeds = help_pages.help_user
+        view = Help_Pages(embeds=embeds)
+        await view.send_initial_message(interaction)
 
     @app_commands.command(name="other",description="Other/test commands")
     async def help_other(self,interaction:discord.Interaction):
@@ -1099,7 +1102,7 @@ class Help(app_commands.Group):
 
 @tree.command(name="help", description="User Help")
 async def help_user(interaction: discord.Interaction):
-    embeds = help_user
+    embeds = help_pages.help_user
     view = Help_Pages(embeds=embeds)
     await view.send_initial_message(interaction)
 
@@ -1196,7 +1199,7 @@ async def verify_system(
 
 
 ############################### discord.Views ######################################
-
+.
 class verify_button(discord.ui.View):
     def __init__(self)-> None:
         super().__init__(timeout=None)
