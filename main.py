@@ -1521,7 +1521,7 @@ class giveaway_open(discord.ui.View):
         style = discord.ButtonStyle.blurple,
         custom_id = "join",
     )
-    def join_giv(self,interaction: discord.Interaction, button: discord.Button):
+    async def join_giv(self,interaction: discord.Interaction, button: discord.Button):
         pass
 
 ########################## Main Runner #############################################
