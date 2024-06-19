@@ -1509,8 +1509,8 @@ class giveaway_open(discord.ui.View):
             description = desc,
         )
         embed.add_field(
-            title="Winners",
-            key=str(win),
+            name="Winners",
+            value=str(win),
         )
         channel.send(embed=embed)
     @discord.ui.button(
