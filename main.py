@@ -109,6 +109,24 @@ class ConfigManager:
         with open(file_path, 'w') as f:
             toml.dump(self.config[id], f)
 
+    def delete(self, id, title=None, key=None):
+        id = str(id)
+        logging.debug(f"Deleting {id}:{title}:{key}")
+        if id in self.config:
+            if title and key:
+                if title in self.config[id] and key in self.config[id][title]:
+                    del self.config[id][title][key]
+                    if not self.config[id][title]:  # Clean up empty title section
+                        del self.config[id][title]
+            elif title:
+                if title in self.config[id]:
+                    del self.config[id][title]
+            else:
+                del self.config[id]
+            self._save_config(id)
+            self._load_all_configs()  # Reload all configs after saving
+        logging.debug(f"Deleted {id}:{title}:{key}")
+
 gconfig = ConfigManager("data/guilds")
 uconfig = ConfigManager("data/users")
 lang = ConfigManager("data/lang","data/lang/en.toml")
@@ -301,7 +319,7 @@ async def on_message(message:discord.Message):
                     ).format(author=message.author.mention),
                 )
         else:
-            logging.debug("anti_links disabled")
+            logging.debug("anti-links disabled")
 @bot.event
 async def on_member_join(member:discord.Member):
     logging.debug("on_member_join was triggered!")
@@ -739,7 +757,10 @@ class giveaway(app_commands.Group):
     ):
         view = giveaway_open()
         await view.create(interaction,channel,title,description,winners)
-        await interaction.response.send_message(content="Giveaway created!", ephemeral=True)
+        await interaction.response.send_message(
+            content="Giveaway created!",
+            ephemeral=True,
+        )
 
     @app_commands.command(name="reroll",description="Rerolls user")
     async def giveaway_reroll(
@@ -797,6 +818,18 @@ class configure_sec(app_commands.Group):
         except Exception as e:
             await interaction.response.send_message(
                 content=f"Failed configuring anti-invites: {e}",
+            )
+    @app_commands.command(name="anti-links",description="No links in the halls")
+    async def anti_links(self,interaction: discord.Interaction, value:bool):
+        try:
+            gconfig.set(interaction.guild_id,"SECURITY","anti-links",value=value)
+            await interaction.response.send_message(
+                content=f"Setted value {str(value)}",
+                ephemeral=True,
+            )
+        except Exception as e:
+            await interaction.response.send_message(
+                content=f"Failed configuring anti-links: {e}",
             )
 
 @app_commands.default_permissions(administrator=True)
@@ -1327,7 +1360,6 @@ class reviews(discord.ui.View):
             description=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_rev_desc"),
         )
         return review_embed
-
     async def disable_all_buttons(self, interaction: discord.Interaction):
         for child in self.children:
             if isinstance(child, discord.ui.Button):
@@ -1343,6 +1375,10 @@ class reviews(discord.ui.View):
         await interaction.user.send(
             embed=response_embed,
         )
+        channel = discord.TextChannel(
+            gconfig.get(interaction.guild.id,"Ticketing","reviews-channel"),
+        )
+        channel.send(content=f"Rating: 1\nUser: {interaction.user.name}")
     @discord.ui.button(label="2 star")
     async def rev_star2(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
         await self.disable_all_buttons(interaction)
@@ -1352,6 +1388,11 @@ class reviews(discord.ui.View):
         await interaction.user.send(
             embed=response_embed,
         )
+        channel = discord.TextChannel(
+            gconfig.get(interaction.guild.id,"Ticketing","reviews-channel"),
+        )
+        channel.send(content=f"Rating: 2\nUser: {interaction.user.name}")
+
     @discord.ui.button(label="3 star")
     async def rev_star3(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
         await self.disable_all_buttons(interaction)
@@ -1361,6 +1402,10 @@ class reviews(discord.ui.View):
         await interaction.user.send(
             embed=response_embed,
         )
+        channel = discord.TextChannel(
+            gconfig.get(interaction.guild.id,"Ticketing","reviews-channel"),
+        )
+        channel.send(content=f"Rating: 3\nUser: {interaction.user.name}")
 
     @discord.ui.button(label="4 star")
     async def rev_star4(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
@@ -1371,6 +1416,10 @@ class reviews(discord.ui.View):
         await interaction.user.send(
             embed=response_embed,
         )
+        channel = discord.TextChannel(gconfig.get(
+            interaction.guild.id,"Ticketing","reviews-channel"),
+        )
+        channel.send(content=f"Rating: 4\nUser: {interaction.user.name}")
 
     @discord.ui.button(label="5 star")
     async def rev_star5(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
@@ -1381,6 +1430,10 @@ class reviews(discord.ui.View):
         await interaction.user.send(
             embed=response_embed,
         )
+        channel = discord.TextChannel(
+            gconfig.get(interaction.guild.id,"Ticketing","reviews-channel"),
+        )
+        channel.send(content=f"Rating: 5\nUser: {interaction.user.name}")
 
 class confirm(discord.ui.View):
 
