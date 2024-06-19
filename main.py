@@ -1506,7 +1506,7 @@ class giveaway_open(discord.ui.View):
         self.desc = description
         self.win = winners
 
-    def create(self, interaction: discord.Interaction,title):
+    def create(self, interaction: discord.Interaction):
         embed = discord.Embed(
             title = self.title,
             description = self.desc,
