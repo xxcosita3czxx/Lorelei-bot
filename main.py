@@ -895,7 +895,7 @@ class configure_ticketing(app_commands.Group):
 
                     # Construct the message with a single format placeholder
                     response_message = response_template.format(
-                        f"{value}, {channel}"
+                        values=f"{value}, {channel}"
                     )
                 else:
                     response_message = "Value set"
@@ -910,7 +910,7 @@ class configure_ticketing(app_commands.Group):
 
                     # Construct the message with a single format placeholder
                     response_message = response_template.format(
-                        f"{value}"
+                        values=f"{value}"
                     )
                 else:
                     response_message = "Value set"
@@ -926,7 +926,7 @@ class configure_ticketing(app_commands.Group):
 
                     # Construct the message with a single format placeholder
                     response_message = response_template.format(
-                        f"{channel}"
+                        values=f"{channel}"
                     )
                 else:
                     response_message = "Value set"
