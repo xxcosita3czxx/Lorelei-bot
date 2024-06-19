@@ -739,7 +739,8 @@ class giveaway(app_commands.Group):
     ):
         view = giveaway_open()
         await view.create(interaction,channel,title,description,winners)
-        await interaction.response.send_message(content="Giveaway created!")
+        await interaction.response.send_message(content="Giveaway created!", ephemeral=True)
+
     @app_commands.command(name="reroll",description="Rerolls user")
     async def giveaway_reroll(
         self,
