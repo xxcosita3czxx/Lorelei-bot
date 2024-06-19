@@ -899,7 +899,7 @@ class configure_ticketing(app_commands.Group):
                             "Responds",
                             "value_set",
                         ),
-                    ).format(value + ", "+ channel),
+                    ).format(str(value) + ", "+ str(channel),
                     ephemeral=True,
                 )
 
