@@ -737,7 +737,8 @@ class giveaway(app_commands.Group):
         title:str,
         description:str,
     ):
-        view = giveaway_open()
+        view = giveaway_open(title,description,winners)
+        await view.create(interaction)
 
     @app_commands.command(name="reroll",description="Rerolls user")
     async def giveaway_reroll(
