@@ -737,8 +737,8 @@ class giveaway(app_commands.Group):
         title:str,
         description:str,
     ):
-        view = giveaway_open(title,description,winners)
-        await view.create(interaction)
+        view = giveaway_open()
+        await view.create(interaction,channel,title,description,winners)
 
     @app_commands.command(name="reroll",description="Rerolls user")
     async def giveaway_reroll(
@@ -1500,23 +1500,19 @@ class main(discord.ui.View):
         os.remove(f"{interaction.channel.id}.md")
 
 class giveaway_open(discord.ui.View):
-    def __init__(self,title,description,winners) -> None:  # noqa: ANN101
+    def __init__(self) -> None:  # noqa: ANN101
         super().__init__(timeout = None)
-        self.title = title
-        self.desc = description
-        self.win = winners
 
-    def create(self, interaction: discord.Interaction):
+    def create(self, interaction: discord.Interaction, channel: discord.TextChannel,  title, desc, winners):
         embed = discord.Embed(
-            title = self.title,
-            description = self.desc,
-            view = self,
+            title = title,
+            description = desc,
         )
         embed.add_field(
             title="Winners",
             key=str(self.win),
         )
-
+        channel.send(embed=embed)        
     @discord.ui.button(
         label = "Join",
         style = discord.ButtonStyle.blurple,
