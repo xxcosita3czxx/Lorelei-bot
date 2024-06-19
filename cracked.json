@@ -1,0 +1,10 @@
+[
+  {
+    "type": "WPA",
+    "date": 1718617442,
+    "essid": "Nn",
+    "bssid": "76:2E:4D:16:A8:B7",
+    "key": "00000000",
+    "handshake_file": "hs/handshake_Nn_76-2E-4D-16-A8-B7_2024-06-17T11-44-02.cap"
+  }
+]

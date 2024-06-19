@@ -737,7 +737,7 @@ class giveaway(app_commands.Group):
         title:str,
         description:str,
     ):
-        pass
+        view = giveaway_open()
 
     @app_commands.command(name="reroll",description="Rerolls user")
     async def giveaway_reroll(
