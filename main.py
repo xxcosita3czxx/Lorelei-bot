@@ -1528,7 +1528,7 @@ class giveaway_open(discord.ui.View):
         custom_id = "join",
     )
     async def join_giv(self,interaction: discord.Interaction, button: discord.Button): # noqa: E501
-        await interaction.response.send_message(content="Joined!")
+        await interaction.response.send_message(content="Joined!",ephemeral=True)
 
 ########################## Main Runner #############################################
 
