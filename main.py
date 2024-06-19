@@ -920,13 +920,13 @@ class configure_ticketing(app_commands.Group):
                     content="You have to choose",
                     ephemeral=True,
                 )
-#        except discord.Forbidden:
-#            logging.debug("No permz")
-        except Exception as e:
-            await interaction.response.send_message(
-                content=f"Exception happened: {e}",
-                ephemeral=True,
-            )
+        except discord.Forbidden:
+            logging.debug("No permz")
+#        except Exception as e:
+#            await interaction.response.send_message(
+#                content=f"Exception happened: {e}",
+#                ephemeral=True,
+#            )
 @app_commands.default_permissions(administrator=True)
 class configure_members(app_commands.Group):
     def __init__(self):
