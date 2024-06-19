@@ -59,7 +59,7 @@ def update():
         try:
 #            ctkit.update_script_from_github("xxcosita3czxx","lorelei-bot","main.py","main.py") # noqa: E501
 #            ctkit.update_script_from_github("xxcosita3czxx","lorelei-bot","run.py","run.py") # noqa: E501
-            os.system("/bin/git stash && /bin/git pull") # noqa: S605
+            os.system("git stash && git pull") # noqa: S605
         except Exception as e:
             logger.warning("UPDATER FAILED")
             logger.warning(e)
@@ -79,12 +79,12 @@ def Is_Alive():
                 )
         if not main_pid:
             logger.info(lang.get(conflang,"RunnerLogs","info_not_running"))
-            os.system("/bin/python3 main.py")  # noqa: S605, S607
+            os.system("python3 main.py")  # noqa: S605, S607
         time.sleep(config.Is_Alive_time)
 def update_cosita_tk():
     while True:
         try:
-            os.system("/bin/python3 utils/cosita_toolkit.py")  # noqa: S605, S607
+            os.system("python3 utils/cosita_toolkit.py")  # noqa: S605, S607
         except Exception:
             logger.error(lang.get(conflang,"RunnerLogs","err_costk_update_fail"))
         time.sleep(config.costk_update)
@@ -94,7 +94,7 @@ def update_cosita_tk():
 def main(update):
     if update:
         update()
-        os.system("/bin/python3 utils/cosita_toolkit.py") # noqa: S605
+        os.system("python3 utils/cosita_toolkit.py") # noqa: S605
         sys.exit()
     monitor_thread = threading.Thread(target=Is_Alive)
     update_thread = threading.Thread(target=update_loop)
