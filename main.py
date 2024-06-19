@@ -885,36 +885,57 @@ class configure_ticketing(app_commands.Group):
         value:bool=None,
     ):
         try:
+            lang_key = uconfig.get(interaction.user.id, "Appearance", "language")
+            response_template = lang.get(lang_key, "Responds", "value_set")
+            
             if channel is not None and value is not None:
                 gconfig.set(interaction.guild_id,"Ticketing","reviews-enabled",value=value)
                 gconfig.set(interaction.guild_id,"Ticketing","reviews-channel",value=channel)
+                if response_template:
+
+                    # Construct the message with a single format placeholder
+                    response_message = response_template.format(
+                        f"{value}, {channel}"
+                    )
+                else:
+                    response_message = "Value set"
                 await interaction.response.send_message(
-                    content=str(
-                        lang.get(
-                            uconfig.get(
-                                interaction.user.id,
-                                "Appearance",
-                                "language",
-                            ),
-                            "Responds",
-                            "value_set",
-                        ),
-                    ).format(f"{str(value)}, {str(channel)}"),
+                    content=response_message,
                     ephemeral=True,
                 )
 
             if channel is None and value is not None:
                 gconfig.set(interaction.guild_id,"Ticketing","reviews-enabled",value=value)
+                if response_template:
+
+                    # Construct the message with a single format placeholder
+                    response_message = response_template.format(
+                        f"{value}"
+                    )
+                else:
+                    response_message = "Value set"
+
                 await interaction.response.send_message(
                     content=str(lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","value_set")).format(value),
                     ephemeral=True,
                 )
+
             if channel is not None and value is None:
                 gconfig.set(interaction.guild_id,"Ticketing","reviews-channel",value=channel)
+                if response_template:
+
+                    # Construct the message with a single format placeholder
+                    response_message = response_template.format(
+                        f"{channel}"
+                    )
+                else:
+                    response_message = "Value set"
+
                 await interaction.response.send_message(
-                    content=str(lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","value_set")).format(channel),
+                    content=response_message,
                     ephemeral=True,
                 )
+
             if channel is None and value is None:
                 await interaction.response.send_message(
                     content="You have to choose",
