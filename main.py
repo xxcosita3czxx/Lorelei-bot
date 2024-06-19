@@ -1503,16 +1503,16 @@ class giveaway_open(discord.ui.View):
     def __init__(self) -> None:  # noqa: ANN101
         super().__init__(timeout = None)
 
-    def create(self, interaction: discord.Interaction, channel: discord.TextChannel,  title, desc, winners):
+    def create(self, interaction: discord.Interaction, channel: discord.TextChannel,  title, desc, win):
         embed = discord.Embed(
             title = title,
             description = desc,
         )
         embed.add_field(
             title="Winners",
-            key=str(self.win),
+            key=str(win),
         )
-        channel.send(embed=embed)        
+        channel.send(embed=embed)
     @discord.ui.button(
         label = "Join",
         style = discord.ButtonStyle.blurple,
