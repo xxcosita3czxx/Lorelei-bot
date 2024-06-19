@@ -739,7 +739,7 @@ class giveaway(app_commands.Group):
     ):
         view = giveaway_open()
         await view.create(interaction,channel,title,description,winners)
-
+        await interaction.response(content="Giveaway created!")
     @app_commands.command(name="reroll",description="Rerolls user")
     async def giveaway_reroll(
         self,
@@ -1512,7 +1512,7 @@ class giveaway_open(discord.ui.View):
             name="Winners",
             value=str(win),
         )
-        await channel.send(embed=embed)
+        await channel.send(embed=embed, view=self)
 
     @discord.ui.button(
         label = "Join",
@@ -1520,7 +1520,7 @@ class giveaway_open(discord.ui.View):
         custom_id = "join",
     )
     async def join_giv(self,interaction: discord.Interaction, button: discord.Button): # noqa: E501
-        pass
+        interaction.response.send_message(content="Joined!")
 
 ########################## Main Runner #############################################
 
