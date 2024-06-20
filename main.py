@@ -1398,7 +1398,7 @@ class reviews(discord.ui.View):
         await interaction.user.send(
             embed=response_embed,
         )
-        channel = discord.TextChannel(
+        channel = commands.TextChannelConverter(
             gconfig.get(interaction.guild_id,"Ticketing","reviews-channel"),
         )
         channel.send(content=f"Rating: 1\nUser: {interaction.user.name}")
@@ -1412,7 +1412,7 @@ class reviews(discord.ui.View):
         await interaction.user.send(
             embed=response_embed,
         )
-        channel = discord.TextChannel(
+        channel = commands.TextChannelConverter(
             gconfig.get(interaction.guild_id,"Ticketing","reviews-channel"),
         )
         channel.send(content=f"Rating: 2\nUser: {interaction.user.name}")
@@ -1426,7 +1426,7 @@ class reviews(discord.ui.View):
         await interaction.user.send(
             embed=response_embed,
         )
-        channel = discord.TextChannel(
+        channel = commands.TextChannelConverter(
             gconfig.get(interaction.guild_id,"Ticketing","reviews-channel"),
         )
         channel.send(content=f"Rating: 3\nUser: {interaction.user.name}")
@@ -1440,8 +1440,8 @@ class reviews(discord.ui.View):
         await interaction.user.send(
             embed=response_embed,
         )
-        channel = discord.TextChannel(gconfig.get(
-            interaction.guild_id,"Ticketing","reviews-channel"),
+        channel = commands.TextChannelConverter(
+            gconfig.get(interaction.guild_id,"Ticketing","reviews-channel"),
         )
         channel.send(content=f"Rating: 4\nUser: {interaction.user.name}")
 
@@ -1454,7 +1454,7 @@ class reviews(discord.ui.View):
         await interaction.user.send(
             embed=response_embed,
         )
-        channel = discord.TextChannel(
+        channel = commands.TextChannelConverter(
             gconfig.get(interaction.guild_id,"Ticketing","reviews-channel"),
         )
         channel.send(content=f"Rating: 5\nUser: {interaction.user.name}")
