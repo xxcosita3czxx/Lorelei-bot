@@ -1399,9 +1399,10 @@ class reviews(discord.ui.View):
             embed=response_embed,
         )
         channel = discord.TextChannel(
-            gconfig.get(interaction.guild.id,"Ticketing","reviews-channel"),
+            gconfig.get(interaction.guild_id,"Ticketing","reviews-channel"),
         )
         channel.send(content=f"Rating: 1\nUser: {interaction.user.name}")
+
     @discord.ui.button(label="2 star")
     async def rev_star2(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
         await self.disable_all_buttons(interaction)
@@ -1412,7 +1413,7 @@ class reviews(discord.ui.View):
             embed=response_embed,
         )
         channel = discord.TextChannel(
-            gconfig.get(interaction.guild.id,"Ticketing","reviews-channel"),
+            gconfig.get(interaction.guild_id,"Ticketing","reviews-channel"),
         )
         channel.send(content=f"Rating: 2\nUser: {interaction.user.name}")
 
@@ -1426,7 +1427,7 @@ class reviews(discord.ui.View):
             embed=response_embed,
         )
         channel = discord.TextChannel(
-            gconfig.get(interaction.guild.id,"Ticketing","reviews-channel"),
+            gconfig.get(interaction.guild_id,"Ticketing","reviews-channel"),
         )
         channel.send(content=f"Rating: 3\nUser: {interaction.user.name}")
 
@@ -1440,7 +1441,7 @@ class reviews(discord.ui.View):
             embed=response_embed,
         )
         channel = discord.TextChannel(gconfig.get(
-            interaction.guild.id,"Ticketing","reviews-channel"),
+            interaction.guild_id,"Ticketing","reviews-channel"),
         )
         channel.send(content=f"Rating: 4\nUser: {interaction.user.name}")
 
@@ -1454,7 +1455,7 @@ class reviews(discord.ui.View):
             embed=response_embed,
         )
         channel = discord.TextChannel(
-            gconfig.get(interaction.guild.id,"Ticketing","reviews-channel"),
+            gconfig.get(interaction.guild_id,"Ticketing","reviews-channel"),
         )
         channel.send(content=f"Rating: 5\nUser: {interaction.user.name}")
 
