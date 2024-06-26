@@ -887,15 +887,16 @@ class configure_ticketing(app_commands.Group):
         try:
             lang_key = uconfig.get(interaction.user.id, "Appearance", "language")
             response_template = lang.get(lang_key, "Responds", "value_set")
-            
+
             if channel is not None and value is not None:
+
                 gconfig.set(interaction.guild_id,"Ticketing","reviews-enabled",value=value)
-                gconfig.set(interaction.guild_id,"Ticketing","reviews-channel",value=channel)
+                gconfig.set(interaction.guild_id,"Ticketing","reviews-channel",value=channel.id)
                 if response_template:
 
                     # Construct the message with a single format placeholder
                     response_message = response_template.format(
-                        values=f"{value}, {channel}"
+                        values=f"{value}, {channel}",
                     )
                 else:
                     response_message = "Value set"
@@ -910,7 +911,7 @@ class configure_ticketing(app_commands.Group):
 
                     # Construct the message with a single format placeholder
                     response_message = response_template.format(
-                        values=f"{value}"
+                        values=f"{value}",
                     )
                 else:
                     response_message = "Value set"
@@ -926,7 +927,7 @@ class configure_ticketing(app_commands.Group):
 
                     # Construct the message with a single format placeholder
                     response_message = response_template.format(
-                        values=f"{channel}"
+                        values=f"{channel}",
                     )
                 else:
                     response_message = "Value set"
@@ -1426,8 +1427,8 @@ class reviews(discord.ui.View):
         await interaction.user.send(
             embed=response_embed,
         )
-        channel = commands.TextChannelConverter(
-            gconfig.get(interaction.guild_id,"Ticketing","reviews-channel"),
+        channel = bot.get_channel(int(
+            gconfig.get(interaction.guild_id,"Ticketing","reviews-channel")),
         )
         channel.send(content=f"Rating: 3\nUser: {interaction.user.name}")
 
