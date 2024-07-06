@@ -986,6 +986,31 @@ class configure(app_commands.Group):
         self.add_command(configure_appear())
         self.add_command(configure_members())
         self.add_command(configure_ticketing())
+
+    async def import_config(interaction: discord.Interaction):
+        pass
+    async def export_config(interaction: discord.Interaction):
+        pass
+
+    @app_commands.command(name="reset",description="Resets the config. NO TAKIES BACKSIES, AS IT GETS DELETED PERNAMENTLY")  # noqa: E501
+    async def reset_config(interaction: discord.Interaction):
+        try:
+            os.remove(f"data/guilds/{interaction.guild.id}.toml")
+            interaction.response.send_message(
+                content="Config Reset!",  # noqa: E501
+                ephemeral=True,
+            )
+        except FileNotFoundError:
+            interaction.response.send_message(
+                content="No config generated yet! Try configuring the server",
+                ephemeral=True,
+            )
+        except PermissionError:
+            interaction.response.send_message(
+                content="Permission Error! Make sure i have permissions for the file. If you're administrator using Lorelei-bot, report this to Cosita Development!",  # noqa: E501
+                ephemeral=True,
+            )
+
 tree.add_command(configure())
 
 class configure_user(app_commands.Group):
@@ -1219,6 +1244,7 @@ class e6_commands(app_commands.Group):
             await interaction.response.send_message(content=f"Exception: {e}")
 
 tree.add_command(e6_commands())
+
 
 ############################### Verify System ######################################
 
@@ -1489,6 +1515,7 @@ class confirm(discord.ui.View):
                 content="Channel deletion failed! Make sure I have `manage_channels` permissions!",  # noqa: E501
                 ephemeral = True,
             )
+
 
 class main(discord.ui.View):
 
