@@ -3,14 +3,11 @@ import logging
 import os
 import random
 import re
-from collections import defaultdict
 from datetime import datetime
-from typing import List
 
 import coloredlogs
 import discord
 import requests
-import toml
 from discord import app_commands, utils
 from discord.ext import commands
 from humanfriendly import format_timespan
@@ -19,6 +16,13 @@ import config
 import utils.cosita_toolkit as ctkit
 import utils.help_embeds as help_pages
 from commands.guildConfig.guildconfig import GuildConfig
+from utils.autocomplete import (
+    autocomplete_color,
+    autocomplete_lang,
+    autocomplete_tags,
+    autocomplete_verify_modes,
+)
+from utils.configmanager import ConfigManager, gconfig, lang, uconfig
 
 coloredlogs.install(
     level=config.loglevel,
@@ -26,15 +30,6 @@ coloredlogs.install(
     datefmt='%Y-%m-%d %H:%M:%S',
 )
 conflang=config.language
-
-async def fetch_tags(query):
-    headers = {
-        'User-Agent': 'Lorelei-bot/1.0 (by cosita3cz on e621)',
-    }
-    response = requests.get(f'https://e621.net/tags.json?search[name_matches]={query}*&search[order]=count&limit=20',timeout=60,headers=headers)
-    if response.status_code == 200:  # noqa: PLR2004
-        return [tag['name'] for tag in response.json()]
-    return []
 
 mowner,mrepo = config.repository.split("/")
 
@@ -59,137 +54,6 @@ def info_text_gen(userid):
         if contributor is not str(mowner):
             info_text_raw += f"- {contributor}\n"
     return info_text_raw
-
-class ConfigManager:
-    def __init__(self, config_dir, fallback_file=None):
-        self.config_dir = config_dir
-        self.config = defaultdict(dict)
-        self.fallback_file = fallback_file
-        self._load_all_configs()
-
-    def _load_all_configs(self):
-        logging.debug("Loading all configs...")
-        for filename in os.listdir(self.config_dir):
-            if filename.endswith('.toml'):
-                id = filename[:-5]  # Remove the .toml extension to get the ID
-                file_path = os.path.join(self.config_dir, filename)
-                with open(file_path) as f:
-                    self.config[id] = toml.load(f)
-        logging.debug(f"Loaded configs: {self.config}")
-
-    def get(self, id, title, key, default=None):
-        id = str(id)
-        logging.debug(f"Getting {id}:{title}:{key}")
-        result = self.config.get(id, {}).get(title, {}).get(key, default)
-        if result is None and self.fallback_file:
-            with open(self.fallback_file) as f:
-                fallback_config = toml.load(f)
-            fallback_result = fallback_config.get(title, {}).get(key, default)
-            if fallback_result is not None:
-                logging.debug("Giving fallback result...")
-                result = fallback_result
-        logging.debug("Final result: " + str(result))
-        return result
-
-    def set(self, id, title, key, value):
-        id = str(id)
-        logging.debug(f"Setting {id}:{title}:{key} to {value}")
-        if id not in self.config:
-            self.config[id] = {}
-        if title not in self.config[id]:
-            self.config[id][title] = {}
-        self.config[id][title][key] = value
-        self._save_config(id)
-        self._load_all_configs()  # Reload all configs after saving
-        logging.debug(f"Set {id}:{title}:{key} to {value}")
-
-    def _save_config(self, id):
-        id = str(id)
-        file_path = os.path.join(self.config_dir, f"{id}.toml")
-        logging.debug(f"Saving config for {id} to {file_path}")
-        with open(file_path, 'w') as f:
-            toml.dump(self.config[id], f)
-
-    def delete(self, id, title=None, key=None):
-        id = str(id)
-        logging.debug(f"Deleting {id}:{title}:{key}")
-        if id in self.config:
-            if title and key:
-                if title in self.config[id] and key in self.config[id][title]:
-                    del self.config[id][title][key]
-                    if not self.config[id][title]:  # Clean up empty title section
-                        del self.config[id][title]
-            elif title:
-                if title in self.config[id]:
-                    del self.config[id][title]
-            else:
-                del self.config[id]
-            self._save_config(id)
-            self._load_all_configs()  # Reload all configs after saving
-        logging.debug(f"Deleted {id}:{title}:{key}")
-
-gconfig = ConfigManager("data/guilds")
-uconfig = ConfigManager("data/users")
-lang = ConfigManager("data/lang","data/lang/en.toml")
-
-
-async def autocomplete_color(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
-    colors = ['Blurple', 'Red', 'Green', 'Blue', 'Yellow',"Purple","White"]
-    return [app_commands.Choice(name=color, value=color) for color in colors if current.lower() in color.lower()]  # noqa: E501
-
-async def autocomplete_verify_modes(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
-    colors = ["captcha","button","emoji"]
-    return [app_commands.Choice(name=color, value=color) for color in colors if current.lower() in color.lower()]  # noqa: E501
-
-async def autocomplete_lang(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
-    directory = "data/lang"
-    def get_toml_files(directory: str) -> List[str]:
-        toml_files = []
-        for f in os.listdir(directory):
-            if f.endswith('.toml'):
-                filename_without_extension = f[:-5]
-                toml_files.append(filename_without_extension)
-        return toml_files
-    toml_files = get_toml_files(directory)
-    return [
-        app_commands.Choice(
-            name=language,
-            value=language,
-        ) for language in toml_files if current.lower() in language.lower()
-    ]  # noqa: E501
-
-async def autocomplete_tags(interaction: discord.Interaction, current: str):
-    try:
-        *previous_words, last_word = current.split() if current else [""]
-        tags = await fetch_tags(last_word)
-        choices = []
-
-        for tag in tags:
-            if last_word.lower() in tag.lower():
-                full_completion = " ".join(previous_words + [tag])
-                choices.append(
-                    app_commands.Choice(
-                        name=full_completion,
-                        value=full_completion,
-                    ),
-                )
-        return choices
-    except Exception as e:
-        logger.warning(f"Autocomplete tags failed! {e}")
-        return [ "autocomplete failed!" ]
-
-#    if current == "":
-#        tags = await fetch_tags(current)
-#    else:
-#        last_word = current.split()[-1]
-#        tags = await fetch_tags(last_word)
-#    return [
-#        app_commands.Choice(
-#            name=tag,
-#            value=tag,
-#        ) for tag in tags if last_word.lower() in tag.lower()
-#    ]
-
 
 async def change_status() -> None:
     while True:

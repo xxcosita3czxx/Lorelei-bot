@@ -5,7 +5,8 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from main import autocomplete_color, autocomplete_lang, gconfig, lang, uconfig
+from utils.autocomplete import autocomplete_color, autocomplete_lang
+from utils.configmanager import gconfig, lang, uconfig
 
 
 class GuildConfig(commands.Cog):
@@ -19,21 +20,55 @@ class GuildConfig(commands.Cog):
             self.name = "security"
             self.description = "Security configurations"
 
-        @app_commands.command(name="anti-invite", description="No invites in the halls")
-        async def anti_invites(self, interaction: discord.Interaction, value: bool):
+        @app_commands.command(
+            name="anti-invite",
+            description="No invites in the halls",
+        )
+        async def anti_invites(
+            self,
+            interaction: discord.Interaction,
+            value: bool,
+        ):
             try:
-                gconfig.set(interaction.guild_id, "SECURITY", "anti-invite", value=value)
-                await interaction.response.send_message(content=f"Set value {str(value)}", ephemeral=True)
+                gconfig.set(
+                    id=interaction.guild_id,
+                    title="SECURITY",
+                    key="anti-invite",
+                    value=value,
+                )
+                await interaction.response.send_message(
+                    content=f"Set value {str(value)}",
+                    ephemeral=True,
+                )
             except Exception as e:
-                await interaction.response.send_message(content=f"Failed configuring anti-invites: {e}")
+                await interaction.response.send_message(
+                    content=f"Failed configuring anti-invites: {e}",
+                )
 
-        @app_commands.command(name="anti-links", description="No links in the halls")
-        async def anti_links(self, interaction: discord.Interaction, value: bool):
+        @app_commands.command(
+            name="anti-links",
+            description="No links in the halls",
+        )
+        async def anti_links(
+            self,
+            interaction: discord.Interaction,
+            value: bool,
+        ):
             try:
-                gconfig.set(interaction.guild_id, "SECURITY", "anti-links", value=value)
-                await interaction.response.send_message(content=f"Set value {str(value)}", ephemeral=True)
+                gconfig.set(
+                    id=interaction.guild_id,
+                    title="SECURITY",
+                    key="anti-links",
+                    value=value,
+                )
+                await interaction.response.send_message(
+                    content=f"Set value {str(value)}",
+                    ephemeral=True,
+                )
             except Exception as e:
-                await interaction.response.send_message(content=f"Failed configuring anti-links: {e}")
+                await interaction.response.send_message(
+                    content=f"Failed configuring anti-links: {e}",
+                )
 
     @app_commands.default_permissions(administrator=True)
     class configure_appear(app_commands.Group):
