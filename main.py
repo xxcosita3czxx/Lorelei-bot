@@ -988,7 +988,7 @@ class configure(app_commands.Group):
         self.add_command(configure_ticketing())
 
     @app_commands.command(name="reset",description="Resets the config. NO TAKIES BACKSIES, AS IT GETS DELETED PERNAMENTLY")  # noqa: E501
-    async def reset_config(interaction: discord.Interaction):
+    async def reset_config(self,interaction: discord.Interaction):
         try:
             os.remove(f"data/guilds/{interaction.guild.id}.toml")
             interaction.response.send_message(
