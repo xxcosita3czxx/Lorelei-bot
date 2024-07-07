@@ -1,3 +1,5 @@
+**WARNING** UPDATER IS BROKEN, PLEASE DONT USE IT AND INSTEAD UPDATE MANUALLY!!
+
 # Lorelei
 Open-Source discord bot in python, for people
 
