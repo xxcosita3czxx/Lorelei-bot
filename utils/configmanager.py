@@ -15,11 +15,14 @@ class ConfigManager:
     def _load_all_configs(self):
         logging.debug("Loading all configs...")
         for filename in os.listdir(self.config_dir):
-            if filename.endswith('.toml'):
-                id = filename[:-5]  # Remove the .toml extension to get the ID
-                file_path = os.path.join(self.config_dir, filename)
-                with open(file_path) as f:
-                    self.config[id] = toml.load(f)
+            try:
+                if filename.endswith('.toml'):
+                    id = filename[:-5]  # Remove the .toml extension to get the ID
+                    file_path = os.path.join(self.config_dir, filename)
+                    with open(file_path) as f:
+                        self.config[id] = toml.load(f)
+            except UnicodeDecodeError:
+                logging.warning(f"{filename} Cannot be decoded! Check encoding, for now skipping")  # noqa: E501
         logging.debug(f"Loaded configs: {self.config}")
 
     def get(self, id, title, key, default=None):

@@ -7,6 +7,8 @@ from datetime import datetime
 
 import coloredlogs
 import discord
+import discord.ext
+import discord.ext.commands
 import requests
 from discord import app_commands, utils
 from discord.ext import commands
@@ -107,7 +109,7 @@ class TimeConverter(app_commands.Transformer):
 
 #########################################################################################
 
-class aclient(discord.Client):
+class aclient(discord.ext.commands.Bot):
 
     '''
     Main Client proccess
@@ -119,7 +121,7 @@ class aclient(discord.Client):
         intents = discord.Intents.default()
         intents.message_content = True
         intents.members = True
-        super().__init__(intents = intents)
+        super().__init__(intents = intents,command_prefix=".")
         self.synced = False
         self.added = False
 
@@ -142,7 +144,7 @@ class aclient(discord.Client):
         await change_status()
 
 bot = aclient()
-tree = app_commands.CommandTree(bot)
+tree = bot.tree
 tree.remove_command("help")
 
 ################################ EVENTS ############################################

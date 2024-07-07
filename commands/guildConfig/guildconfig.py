@@ -323,5 +323,6 @@ class GuildConfig(commands.Cog):
                     ephemeral=True,
                 )
 
-async def setup(bot):
+async def setup(bot:commands.Bot):
+    await bot.tree.add_command(GuildConfig.configure())
     await bot.add_cog(GuildConfig(bot))
