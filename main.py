@@ -987,11 +987,6 @@ class configure(app_commands.Group):
         self.add_command(configure_members())
         self.add_command(configure_ticketing())
 
-    async def import_config(interaction: discord.Interaction):
-        pass
-    async def export_config(interaction: discord.Interaction):
-        pass
-
     @app_commands.command(name="reset",description="Resets the config. NO TAKIES BACKSIES, AS IT GETS DELETED PERNAMENTLY")  # noqa: E501
     async def reset_config(interaction: discord.Interaction):
         try:
