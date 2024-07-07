@@ -264,7 +264,6 @@ class aclient(discord.Client):
         await self.wait_until_ready()
 
         if not self.synced:
-            self.add_cog(GuildConfig(bot))
             await tree.sync()
             self.synced = True
 
@@ -272,6 +271,7 @@ class aclient(discord.Client):
             self.add_view(ticket_launcher())
             self.add_view(main())
             self.add_view(verify_button())
+            await self.add_cog(GuildConfig(self))
             self.added = True
 
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
