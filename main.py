@@ -22,7 +22,7 @@ from utils.autocomplete import (
     autocomplete_tags,
     autocomplete_verify_modes,
 )
-from utils.configmanager import ConfigManager, gconfig, lang, uconfig
+from utils.configmanager import gconfig, lang, uconfig
 
 coloredlogs.install(
     level=config.loglevel,
