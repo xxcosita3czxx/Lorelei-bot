@@ -3,7 +3,7 @@
 #############################
 #TODO Welcome system
 #TODO Giveaway logic
-#TODO !!! Coging and cleaning !!! TODO 
+#TODO !!! Coging and cleaning !!! TODO
 
 import asyncio
 import logging
