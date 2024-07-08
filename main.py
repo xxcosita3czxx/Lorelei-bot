@@ -1,3 +1,10 @@
+#############################
+#    By Cosita              #
+#############################
+#TODO Welcome system
+#TODO Giveaway logic
+#TODO !!! Coging and cleaning !!! TODO 
+
 import asyncio
 import logging
 import os
