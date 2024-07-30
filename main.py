@@ -9,7 +9,6 @@ import asyncio
 import logging
 import os
 import random
-import re
 from datetime import datetime
 
 import coloredlogs
@@ -24,7 +23,6 @@ from humanfriendly import format_timespan
 import config
 import utils.cosita_toolkit as ctkit
 import utils.help_embeds as help_pages
-from commands.guildConfig.guildconfig import GuildConfig
 from utils.autocomplete import (
     autocomplete_color,
     autocomplete_lang,
@@ -32,6 +30,7 @@ from utils.autocomplete import (
     autocomplete_verify_modes,
 )
 from utils.configmanager import gconfig, lang, uconfig
+from utils.timeconverter import TimeConverter
 
 coloredlogs.install(
     level=config.loglevel,
@@ -43,8 +42,6 @@ conflang=config.language
 mowner,mrepo = config.repository.split("/")
 
 logger = logging.getLogger(__name__)
-time_regex = re.compile(r"(?:(\d{1,5})(h|s|m|d))+?")
-time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
 def info_text_gen(userid):
     info_text_raw = lang.get(
         uconfig.get(
@@ -55,6 +52,7 @@ def info_text_gen(userid):
         "Responds",
         "info_text_raw",
     )
+
     contributors = ctkit.GithubApi.get_repo_contributors(owner=mowner,repo=mrepo)
     contributors = [
         contributor for contributor in contributors if contributor != mowner
@@ -63,6 +61,18 @@ def info_text_gen(userid):
         if contributor is not str(mowner):
             info_text_raw += f"- {contributor}\n"
     return info_text_raw
+
+async def load_cogs(directory,bot):
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file.endswith('.py') and file != '__init__.py':
+                cog_path = os.path.relpath(os.path.join(root, file), directory)
+                module_name = cog_path.replace(os.sep, '.').replace('.py', '')
+                try:
+                    await bot.load_extension(f'{directory}.{module_name}')
+                    logger.info(f"Loaded {module_name}")
+                except Exception as e:
+                    logger.error(f'Failed to load {module_name}: {e}')
 
 async def change_status() -> None:
     while True:
@@ -90,30 +100,6 @@ async def change_status() -> None:
         logging.debug(lang.get(conflang,"Bot","debug_status_chng"))
         await asyncio.sleep(5)
 
-
-class TimeConverter(app_commands.Transformer):
-
-    async def transform(self,interaction:discord.Interaction,argument:str) -> int:  # noqa: E501, ANN101
-
-        args = argument.lower()
-        matches = re.findall(time_regex, args)
-        time = 0
-
-        for key, value in matches:
-
-            try:
-                time += time_dict[value] * float(key)
-
-            except KeyError:
-                raise app_commands.BadArgument(  # noqa: B904
-                    f"{value} is an invalid time key! h|m|s|d are valid arguments",
-                )
-
-            except ValueError:
-                raise app_commands.BadArgument(f"{key} is not a number!")  # noqa: B904
-
-        return round(time)
-
 #########################################################################################
 
 class aclient(discord.ext.commands.Bot):
@@ -138,13 +124,13 @@ class aclient(discord.ext.commands.Bot):
 
         if not self.synced:
             await tree.sync()
+            await load_cogs(bot=self,directory="commands")
             self.synced = True
 
         if not self.added:
             self.add_view(ticket_launcher())
             self.add_view(main())
             self.add_view(verify_button())
-            await self.add_cog(GuildConfig(self))
             self.added = True
 
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
@@ -716,44 +702,6 @@ class configure_user(app_commands.Group):
 
 tree.add_command(configure_user())
 ####################################################################################
-
-@tree.command(name="slowmode", description="Set slowmode for the channel")
-@app_commands.describe(time="Slowmod Time")
-@app_commands.default_permissions(manage_channels = True)
-async def slowmode(interaction: discord.Interaction,time: app_commands.Transform[str, TimeConverter]=None):  # noqa: E501
-
-    max_time = 21600
-    if time <= 0:
-        await interaction.channel.edit(slowmode_delay=0)
-        await interaction.response.send_message(
-            content="Slowmode has been disabled",
-            ephemeral=True,
-        )
-        await interaction.channel.send(
-            embed=discord.Embed(
-                description=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","slowmode_disable").format(interaction.channel.mention),  # noqa: E501
-                color=discord.Color.green(),
-            ),
-        )
-
-    elif time > max_time:
-        await interaction.response.send_message(
-            content=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","slowmode_max_reach"),
-            ephemeral=True,
-        )
-
-    else:
-        await interaction.channel.edit(slowmode_delay=time)
-        await interaction.response.send_message(
-            f"Slowmode has been set to {format_timespan(time)} seconds",
-            ephemeral=True,
-        )
-        await interaction.channel.send(
-            embed=discord.Embed(
-                description=f"Slow mode has been set to {format_timespan(time)} to {interaction.channel.mention}",  # noqa: E501
-                color=discord.Color.green(),
-            ),
-        )
 
 @tree.command(name="clear", description="Clear n messages specific user")
 @app_commands.default_permissions(manage_messages=True)

@@ -5,7 +5,6 @@ pywin32; platform_system == 'Windows'
 pytest
 requests
 dulwich
-netifaces
 gitpython
 toml
 click
