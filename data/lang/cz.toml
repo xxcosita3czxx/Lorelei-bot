@@ -18,6 +18,7 @@ err_costk_update_fail = "Aktualizace CtKIT Selhala!"
 [Bot]
 debug_status_chng = "Status Pozměněn."
 info_logged = "Přihlásili jsem se za {user}."
+views_added = "Views Přidány"
 
 [Responds]
 no_links = "{author}, Neposílej linky!"

@@ -24,10 +24,7 @@ import config
 import utils.cosita_toolkit as ctkit
 import utils.help_embeds as help_pages
 from utils.autocomplete import (
-    autocomplete_color,
-    autocomplete_lang,
     autocomplete_tags,
-    autocomplete_verify_modes,
 )
 from utils.configmanager import gconfig, lang, uconfig
 from utils.timeconverter import TimeConverter
@@ -133,7 +130,6 @@ class aclient(discord.ext.commands.Bot):
         if not self.added:
             self.add_view(ticket_launcher())
             self.add_view(main())
-            self.add_view(verify_button())
             logger.info("Added views")
             self.added = True
 
@@ -302,21 +298,6 @@ async def info(interaction: discord.Interaction):
         color=discord.colour.Color.blurple(),
     )
 
-    await interaction.response.send_message(
-        embed=embed,
-    )
-
-@tree.command(name="ping", description="Lets play ping pong")
-async def ping(interaction: discord.Interaction):
-
-    '''
-    Ping Pong the bot
-    '''
-    language = uconfig.get(interaction.user.id,"Appearance","language")
-    embed = discord.Embed(
-        title=lang.get(language,"Responds","ping"),
-        description=lang.get(language,"Responds","ping_latency").format(latency=round(bot.latency,2)),
-    )
     await interaction.response.send_message(
         embed=embed,
     )
@@ -822,78 +803,8 @@ tree.add_command(e6_commands())
 
 ############################### Verify System ######################################
 
-@tree.command(name="verify-system",description="No bots in the server")
-@app_commands.default_permissions(administrator=True)
-@app_commands.autocomplete(mode=autocomplete_verify_modes)
-async def verify_system(
-    interaction: discord.Interaction,
-    title: str,
-    description:str,
-    role:discord.Role,
-    channel: discord.TextChannel,
-    mode: str = "button",
-):
-    gconfig.set(
-        interaction.guild.id,
-        str(interaction.channel.id)+"-verify",
-        "role",
-        role,
-    )
-    if mode == "emoji":
-        await interaction.response.send_message(
-            content="In progress",
-            ephemeral=True,
-        )
-    elif mode == "button":
-        await interaction.response.send_message(
-            content="Selected Button",
-            ephemeral=True,
-        )
-        embed = discord.Embed(
-            title=title,
-            description=description,
-        )
-        await channel.send(embed=embed,view=verify_button())
-    elif mode == "captcha":
-        await interaction.response.send_message(
-            content="In progress",
-            ephemeral=True,
-        )
-    else:
-        await interaction.response.send_message(
-            content="Wrong type!",
-            ephemeral=True,
-        )
-
-
 ############################### discord.Views ######################################
 
-class verify_button(discord.ui.View):
-    def __init__(self)-> None:
-        super().__init__(timeout=None)
-
-    @discord.ui.button(
-        label="Verify",
-        style = discord.ButtonStyle.blurple,
-        custom_id="verify",
-    )
-    async def verify(self, interaction: discord.Interaction, button: discord.ui.button): # noqa: E501
-        #await interaction.response.send_message(content="Clicked :3",ephemeral=True) # noqa: E501
-        role = gconfig.get(
-            interaction.guild.id,
-            str(interaction.channel.id)+"-verify",
-            "enabled",
-        )
-
-        try:
-            await interaction.user.add_roles(role)
-            await interaction.response.send_message(content="Verified!")
-        except discord.errors.Forbidden:
-            await interaction.response.send_message(
-                content="Insufficient Permissions",
-            )
-        except Exception as e:
-            logger.error(str(e))
 
 class ticket_launcher(discord.ui.View):
 
