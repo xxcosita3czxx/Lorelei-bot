@@ -77,7 +77,10 @@ async def load_cogs(directory,bot):
 async def change_status() -> None:
     while True:
         await bot.change_presence(
-            activity=discord.Game(name="Some chords"),
+            activity=discord.Activity(
+                type=discord.ActivityType.playing,
+                name="Some Chords...",
+            ),
             status=config.status,
         )
         logging.debug(lang.get(conflang,"Bot","debug_status_chng"))
@@ -131,6 +134,7 @@ class aclient(discord.ext.commands.Bot):
             self.add_view(ticket_launcher())
             self.add_view(main())
             self.add_view(verify_button())
+            logger.info("Added views")
             self.added = True
 
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
@@ -661,46 +665,6 @@ tree.add_command(giveaway())
 
 ################################### CONFIGURE COMMAND ##############################
 
-class configure_user(app_commands.Group):
-    def __init__(self):
-        super().__init__()
-        self.name="userconfig"
-        self.description="User Config"
-
-    @app_commands.command(name="color",description="Default color bot will respond for you")  # noqa: E501
-    @app_commands.autocomplete(color=autocomplete_color)
-    async def conf_user_def_color(self,interaction:discord.Interaction, color:str):
-        try:
-            uconfig.set(interaction.user.id,"Appearance","color",color)
-            await interaction.response.send_message(
-                content=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","value_set").format(values=color),
-                ephemeral=True,
-            )
-        except Exception as e:
-            await interaction.response.send_message(
-                content=f"Exception happened: {e}",
-                ephemeral=True,
-            )
-
-    @app_commands.command(
-        name="language",
-        description="Language the bot will respond to you",
-    )
-    @app_commands.autocomplete(language=autocomplete_lang)
-    async def conf_user_lang(self,interaction:discord.Interaction,language:str):
-        try:
-            uconfig.set(interaction.user.id,"Appearance","language",language)
-            await interaction.response.send_message(
-                content=f"Setted value {str(language)}",
-                ephemeral=True,
-            )
-        except Exception as e:
-            await interaction.response.send_message(
-                content=f"Exception happened: {e}",
-                ephemeral=True,
-            )
-
-tree.add_command(configure_user())
 ####################################################################################
 
 @tree.command(name="clear", description="Clear n messages specific user")
