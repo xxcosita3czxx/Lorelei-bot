@@ -40,13 +40,16 @@ SOFTWARE.
 #------------------------------------------------------#
 
 class Status:
+
     """Statuses that code uses."""
 
     class Requests:
+
         """Requests statuses, so ruff wont complaint about magic value."""
 
         SUCCESS = 200
         NOT_FOUND = 404
+        UNAUTHORISED = 403
     STANDBY = 100
     SUCCESS = 101
     SUCCESS_COMP = 102
@@ -201,6 +204,7 @@ def update_script_from_github(owner:str, repo:str,branch:str, file_path:str, loc
 ############   FUNCTIONS   ############
 
 class MemMod:
+
     """Requires windows, bcs linux works different way."""
 
     def pid_by_name(target_string=None, exe_name=None):  # noqa: C901
@@ -338,10 +342,12 @@ class MemMod:
             return Status.BAD_OS
 
 class GithubApi:
+
     """Functions using Github API."""
 
     def get_repo_contributors(owner:str, repo:str) -> list:
-        """Get repository contributors.
+        """
+        Get repository contributors.
 
         Args:
         ----
@@ -366,7 +372,8 @@ class GithubApi:
             return []
 
     def get_last_info_raw(name:str,save_place:str,file_name:str):
-        """Get last info of user, what he done last.
+        """
+        Get last info of user, what he done last.
 
         Args:
         ----
@@ -406,7 +413,8 @@ class GithubApi:
         return Status.SUCCESS
 
     def get_info_usr(name:str) -> str:
-        """Get user info as JSON in variable.
+        """
+        Get user info as JSON in variable.
 
         Args:
         ----
@@ -418,16 +426,18 @@ class GithubApi:
 
         """
         url = f"https://api.github.com/users/{name}/events/public"
-        page = requests.get(url)  # noqa: S113
+        page = requests.get(url,timeout=60)
         text = page.text
         text_json = json.loads(text)
         return text_json
 
 class PokeAPI:
+
     """PokeAPI functions from http API."""
 
     def get_pokemon_raw(name:str):
-        """Get json of a pokemon.
+        """
+        Get json of a pokemon.
 
         Args:
         ----
@@ -444,13 +454,16 @@ class PokeAPI:
         return text
 
 class OsintFramework:
+
     """Anything that goes for info of users."""
 
     class Universal:
+
         """Universal functions, have more at once."""
 
         def check_username(self,username:str, service_name:str="All"):
-            """Check username using instantusername.com API.
+            """
+            Check username using instantusername.com API.
 
             Args:
             ----
@@ -486,13 +499,16 @@ class OsintFramework:
             return results
 
 class OSspecific:
+
     """Functions Specific for some systems."""
 
     class Linux:
+
         """Linux specific functions."""
 
         def get_linux_distro():
-            """Get os-release from Linux System.
+            """
+            Get os-release from Linux System.
 
             Returns
             -------
@@ -522,10 +538,12 @@ class OSspecific:
                 pass
             return "Unknown"
     class Windows:
+
         """Windows related things."""
 
         def get_windows_product_key():
-            """Return windows product key.
+            """
+            Return windows product key.
 
             Returns
             -------
@@ -548,10 +566,12 @@ class OSspecific:
                 return platform.system()
 
 class Networking:
+
     """Functions related to Network."""
 
     def get_lan_ip():
-        """Return local ip.
+        """
+        Return local ip.
 
         Returns
         -------
@@ -568,7 +588,8 @@ class Networking:
             return None
 
     def check_ip_existence(ip:str, result_list:list):
-        """_summary_.
+        """
+        Check if ip is alive.
 
         Args:
         ----
@@ -607,7 +628,8 @@ class Networking:
             logging.error(f"Error checking IP {ip}: {e}")
 
     def scan_lan_ips(subnet:int, num_threads:int=4,start_ip:int=1,end_ip:int=255) -> list:  # noqa: E501
-        """Will scan for local ips.
+        """
+        Will scan for local ips.
 
         Args:
         ----
@@ -658,7 +680,8 @@ class Networking:
         return result_list
 
     def check_ip_range(subnet:int, start:int=2, end:int=254):
-        """Check ip range (DEPRECATED).
+        """
+        Check ip range (DEPRECATED).
 
         Args:
         ----
@@ -672,7 +695,8 @@ class Networking:
             Networking.check_ip_existence(ip)
 
     def get_gateway_ip():
-        """Get the default gateway's IP address (cross-platform).
+        """
+        Get the default gateway's IP address (cross-platform).
 
         Returns
         -------
@@ -689,10 +713,12 @@ class Networking:
             return None
 
 class Upload:
+
     """File uploading functions."""
 
     def upload_to_transfer_sh(file_path:str):
-        """Will upload to transfer.sh.
+        """
+        Will upload to transfer.sh.
 
         Args:
         ----

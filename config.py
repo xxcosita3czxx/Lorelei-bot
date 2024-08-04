@@ -29,7 +29,7 @@ status = discord.Status.dnd
 #
 # Only True or False
 # True is default
-autoupdate = True
+autoupdate = False
 ###################################
 ############ Language #############
 #
