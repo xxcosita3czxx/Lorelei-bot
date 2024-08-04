@@ -1,6 +1,6 @@
 # Lorelei
 Open-Source discord bot in python, for people
-
+> disclaimer: Youre permited to host it yourself for personal purposes like single server or testings, for more than 100 servers, message me on discord (@cosita3cz)
 ## Support the creator
 You can support me by contributing to the repo
 
