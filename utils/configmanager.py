@@ -2,9 +2,16 @@ import logging
 import os
 from collections import defaultdict
 
+import coloredlogs
 import toml
 
+import config
 
+coloredlogs.install(
+    level=config.loglevel,
+    fmt='%(asctime)s %(levelname)s: %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+)
 class ConfigManager:
     def __init__(self, config_dir, fallback_file=None):
         self.config_dir = config_dir

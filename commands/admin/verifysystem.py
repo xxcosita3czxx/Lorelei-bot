@@ -67,13 +67,12 @@ class VerifySystem(commands.Cog):
         )
         async def verify(self, interaction: discord.Interaction, button: discord.ui.button): # noqa: E501
             #await interaction.response.send_message(content="Clicked :3",ephemeral=True) # noqa: E501
-            role = gconfig.get(
-                interaction.guild.id,
-                str(interaction.channel.id)+"-verify",
-                "enabled",
-            )
-
             try:
+                role = gconfig.get(
+                    interaction.guild.id,
+                    str(interaction.channel.id)+"-verify",
+                    "role",
+                )
                 await interaction.user.add_roles(role)
                 await interaction.response.send_message(content="Verified!")
             except discord.errors.Forbidden:

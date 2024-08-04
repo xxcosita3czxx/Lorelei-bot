@@ -5,6 +5,8 @@
 #TODO Giveaway logic
 #TODO !!! Coging and cleaning !!! TODO
 
+
+
 import asyncio
 import logging
 import os
@@ -71,7 +73,7 @@ async def change_status() -> None:
         await bot.change_presence(
             activity=discord.Activity(
                 type=discord.ActivityType.listening,
-                name="/help",
+                name="/info",
             ),
             status=config.status,
         )
@@ -174,54 +176,6 @@ async def on_member_join(member:discord.Member):
         await member.add_roles(role)
 
 ############################# Context Commands #####################################
-
-@tree.context_menu(name="User Info")
-async def user_info_context(interaction: discord.Interaction, member:discord.User):
-    logger.debug(member.display_avatar.key)
-    embed = discord.Embed(title="Info about", color=discord.Color.blurple())
-    embed.set_thumbnail(url=member.display_avatar.url)
-    ulang = uconfig.get(interaction.user.id,"Appearance","language")
-
-    embed.add_field(
-        name=lang.get(ulang,"UserInfo","username"),
-        value=member.name,
-        inline=True,
-    )
-
-    embed.add_field(
-        name=lang.get(ulang,"UserInfo","display_name"),
-        value=member.display_name,
-        inline=True,
-    )
-
-    embed.add_field(
-        name=lang.get(ulang,"UserInfo","id"),
-        value=member.id,
-        inline=True,
-    )
-
-    embed.add_field(
-        name=lang.get(ulang,"UserInfo","joined_dsc"),
-        value=member.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-        inline=True,
-    )
-
-    embed.add_field(
-        name=lang.get(ulang,"UserInfo","joined_guild"),
-        value=member.joined_at.strftime("%Y-%m-%d %H:%M:%S"),
-        inline=True,
-    )
-
-    embed.add_field(
-        name=lang.get(ulang,"UserInfo","roles"),
-        value=", ".join([role.name for role in member.roles]),
-        inline=False,
-    )
-
-    await interaction.response.send_message(
-        embed=embed,
-        ephemeral=True,
-    )
 
 
 ############################ Basic ##############################################

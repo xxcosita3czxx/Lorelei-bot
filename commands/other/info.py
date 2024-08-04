@@ -32,7 +32,7 @@ class Info(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="info", description="Info about bot")
-    async def info(interaction: discord.Interaction):
+    async def info(self,interaction: discord.Interaction):
         '''Help command
         Will let user know what all can he do
         '''
