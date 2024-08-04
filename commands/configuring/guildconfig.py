@@ -324,5 +324,6 @@ class GuildConfig(commands.Cog):
                 )
 
 async def setup(bot:commands.Bot):
-    await bot.add_cog(GuildConfig(bot))
-    bot.tree.add_command(GuildConfig(bot).configure())
+    cog = GuildConfig(bot)
+    await bot.add_cog(cog)
+    bot.tree.add_command(cog.configure())

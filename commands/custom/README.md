@@ -5,7 +5,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-class Slowmode(commands.Cog):
+class Hello(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -14,7 +14,7 @@ class Slowmode(commands.Cog):
         await interaction.response.send_message("Hello!")
 
 async def setup(bot:commands.Bot):
-    await bot.add_cog(Slowmode(bot))
+    await bot.add_cog(Hello(bot))
 ```
 Dont worry about adding into main.py, as it is added automaticaly after restart if syntax is correct, else it will throw error
 

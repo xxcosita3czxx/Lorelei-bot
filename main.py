@@ -21,7 +21,6 @@ from discord.ext import commands
 from humanfriendly import format_timespan
 
 import config
-import utils.cosita_toolkit as ctkit
 import utils.help_embeds as help_pages
 from utils.autocomplete import (
     autocomplete_tags,
@@ -36,28 +35,7 @@ coloredlogs.install(
 )
 conflang=config.language
 
-mowner,mrepo = config.repository.split("/")
-
 logger = logging.getLogger(__name__)
-def info_text_gen(userid):
-    info_text_raw = lang.get(
-        uconfig.get(
-            userid,
-            "Appearance",
-            "language",
-        ),
-        "Responds",
-        "info_text_raw",
-    )
-
-    contributors = ctkit.GithubApi.get_repo_contributors(owner=mowner,repo=mrepo)
-    contributors = [
-        contributor for contributor in contributors if contributor != mowner
-    ]
-    for contributor in contributors:
-        if contributor is not str(mowner):
-            info_text_raw += f"- {contributor}\n"
-    return info_text_raw
 
 async def load_cogs(directory,bot):
     for root, _, files in os.walk(directory):
@@ -110,7 +88,7 @@ class aclient(discord.ext.commands.Bot):
     This connects the bot to discord
     '''
 
-    def __init__(self) -> None:  # noqa: ANN101
+    def __init__(self) -> None:
         intents = discord.Intents.default()
         intents.message_content = True
         intents.members = True
@@ -118,13 +96,16 @@ class aclient(discord.ext.commands.Bot):
         self.synced = False
         self.added = False
 
-    async def on_ready(self) -> None:  # noqa: ANN101
+    async def on_ready(self) -> None:
 
         await self.wait_until_ready()
 
         if not self.synced:
-            await tree.sync()
+            # Not sure if it should be also on start?
+            await bot.tree.sync()
             await load_cogs(bot=self,directory="commands")
+            await bot.tree.sync()
+            logger.info("Synced!")
             self.synced = True
 
         if not self.added:
@@ -138,6 +119,7 @@ class aclient(discord.ext.commands.Bot):
 
 bot = aclient()
 tree = bot.tree
+# just to be sure bcs context commands with this version of client also works
 tree.remove_command("help")
 
 ################################ EVENTS ############################################
@@ -285,21 +267,6 @@ async def user_info(interaction: discord.Interaction, member:discord.User):
         name=lang.get(ulang,"UserInfo","roles"),
         value=", ".join([role.name for role in member.roles]),
         inline=False,
-    )
-
-@tree.command(name="info", description="Info about bot")
-async def info(interaction: discord.Interaction):
-    '''Help command
-    Will let user know what all can he do
-    '''
-    embed = discord.Embed(
-        title="Lorelei-bot",
-        description=info_text_gen(userid=interaction.user.id),
-        color=discord.colour.Color.blurple(),
-    )
-
-    await interaction.response.send_message(
-        embed=embed,
     )
 
 @tree.command(name="echo",description="Echoes message in embed")
