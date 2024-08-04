@@ -10,25 +10,18 @@
 import asyncio
 import logging
 import os
-import random
 from datetime import datetime
 
 import coloredlogs
 import discord
 import discord.ext
 import discord.ext.commands
-import requests
 from discord import app_commands, utils
 from discord.ext import commands
-from humanfriendly import format_timespan
 
 import config
 import utils.help_embeds as help_pages
-from utils.autocomplete import (
-    autocomplete_tags,
-)
 from utils.configmanager import gconfig, lang, uconfig
-from utils.timeconverter import TimeConverter
 
 coloredlogs.install(
     level=config.loglevel,
@@ -116,8 +109,8 @@ class aclient(discord.ext.commands.Bot):
             logger.info("Added views")
             self.added = True
 
-        logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
         await change_status()
+        logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
 
 bot = aclient()
 tree = bot.tree
@@ -175,74 +168,7 @@ async def on_member_join(member:discord.Member):
         role = member.guild.get_role(role_id)
         await member.add_roles(role)
 
-############################# Context Commands #####################################
-
-
 ############################ Basic ##############################################
-
-@tree.command(name="user-info",description="Info about user")
-async def user_info(interaction: discord.Interaction, member:discord.User):
-    logger.debug(member.display_avatar.key)
-    embed = discord.Embed(title="Info about", color=discord.Color.blurple())
-    embed.set_thumbnail(url=member.display_avatar.url)
-    ulang = uconfig.get(interaction.user.id,"Appearance","language")
-
-    embed.add_field(
-        name=lang.get(ulang,"UserInfo","username"),
-        value=member.name,
-        inline=True,
-    )
-
-    embed.add_field(
-        name=lang.get(ulang,"UserInfo","display_name"),
-        value=member.display_name,
-        inline=True,
-    )
-
-    embed.add_field(
-        name=lang.get(ulang,"UserInfo","id"),
-        value=member.id,
-        inline=True,
-    )
-
-    embed.add_field(
-        name=lang.get(ulang,"UserInfo","joined_dsc"),
-        value=member.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-        inline=True,
-    )
-
-    embed.add_field(
-        name=lang.get(ulang,"UserInfo","joined_guild"),
-        value=member.joined_at.strftime("%Y-%m-%d %H:%M:%S"),
-        inline=True,
-    )
-
-    embed.add_field(
-        name=lang.get(ulang,"UserInfo","roles"),
-        value=", ".join([role.name for role in member.roles]),
-        inline=False,
-    )
-
-@tree.command(name="echo",description="Echoes message in embed")
-@app_commands.default_permissions(manage_messages=True)
-async def echo(interaction: discord.Interaction,channel:discord.channel.TextChannel, title:str="", text:str=""):  # noqa: E501
-    try:
-        embed = discord.Embed(
-            title=title,
-            description=text,
-            color=discord.Color.blurple(),
-        )
-        await channel.send(embed=embed)
-        await interaction.response.send_message(
-            content="Message sent succesfuly!",
-            ephemeral=True,
-        )
-    except Exception as e:
-        await interaction.response.send_message(
-            content=f"Echo Failed!: {e}",
-            ephemeral=True,
-        )
-
 
 @app_commands.default_permissions(manage_guild=True)
 class ticketing_group(app_commands.Group):
@@ -361,145 +287,6 @@ tree.add_command(ticketing_group())
 
 ############################# Admin Essentials #####################################
 
-@tree.command(name="kick", description="Kick a user")
-@app_commands.describe(member="User to kick", reason="Reason for kick")
-@app_commands.default_permissions(kick_members=True, ban_members=True)
-async def kick(interaction: discord.Interaction, member: discord.Member, reason: str):  # noqa: E501
-
-    '''
-    Kick command
-
-    Kicks user from guild and let him know why
-    '''
-
-    if member == interaction.user or member == interaction.guild.owner:
-        return await interaction.response.send_message(
-            "You can't kick this user",
-            ephemeral=True,
-        )
-
-    if member.top_role >= interaction.guild.me.top_role:
-        return await interaction.response.send_message(
-            "I can't kick this user",
-            ephemeral=True,
-        )
-
-    if member.top_role >= interaction.user.top_role:
-        return await interaction.response.send_message(
-            "You can't kick this user due to role hierarchy",
-            ephemeral=True,
-        )
-
-    try:
-        await member.send(
-            embed=discord.Embed(
-                description=f"You have been kicked from {interaction.guild.name}\n**Reason**: {reason}",  # noqa: E501
-                color=discord.Color.red(),
-            ),
-        )
-
-    except discord.HTTPException as e:
-        await interaction.response.send_message(content=f"UNSEND KICK MESSAGE: {e}")
-        logger.warning(f"UNSENT KICK MESSAGE: {e}")
-
-    await member.kick(reason=reason)
-    await interaction.response.send_message(
-        f"Kicked {member.mention}",
-        ephemeral=True,
-    )
-    embed = discord.Embed(
-        description=f"{member.mention} has been kicked\n**Reason**: {reason}",
-        color=0x2f3136,
-    )
-    await interaction.followup.send(embed=embed, ephemeral=False)
-
-
-@tree.command(name="ban", description="Ban a user")
-@app_commands.describe(
-    reason="Reason for ban",
-    time="Duration of ban",
-    member="User to ban",
-)
-@app_commands.default_permissions(ban_members=True)
-async def ban(interaction: discord.Interaction, member: discord.Member, reason: str , time: app_commands.Transform[str, TimeConverter]=None):  # noqa: E501
-
-    '''
-    Ban command
-
-    Bans user and let him know why
-    '''
-
-    if member == interaction.user or member == interaction.guild.owner:
-        return await interaction.response.send_message(
-            "You can't ban this user",
-            ephemeral=True,
-        )
-
-    if member.top_role >= interaction.guild.me.top_role:
-        return await interaction.response.send_message(
-            "I can't ban this user",
-            ephemeral=True,
-        )
-
-    if member.top_role >= interaction.user.top_role:
-        return await interaction.response.send_message(
-            "You can't ban this user due to role hierarchy",
-            ephemeral=True,
-        )
-
-    try:
-        await member.send(
-            embed=discord.Embed(
-                description=f"You have been banned from {interaction.guild.name} for {format_timespan(time)}\n**Reason**: {reason}",  # noqa: E501
-                color=discord.Color.blurple(),
-            ),
-        )
-
-    except discord.HTTPException:
-        logger.warning("UNSENT BAN MESSAGE")
-        await interaction.response.send_message("UNSENT BAN MESSAGE",ephemeral=True)
-    await interaction.guild.ban(member, reason=reason)
-    await interaction.response.send_message(
-        f"Banned {member.mention}",
-        ephemeral=True,
-    )
-    await interaction.followup.send(
-        embed=discord.Embed(
-            description=f"{member.mention} has been banned for {format_timespan(time)}\n**Reason**: {reason}",  # noqa: E501
-            color=0x2f3136,
-        ),
-        ephemeral=False,
-    )
-
-@tree.command(name="unban", description="Unban a user")
-@app_commands.describe(member="User to unban", reason="Reason for unban")
-@app_commands.default_permissions(ban_members=True)
-async def unban(interaction: discord.Interaction, member: discord.User, reason: str):  # noqa: E501
-
-    '''
-    Unban Command
-
-    This will unban person
-    '''
-
-    try:
-        await interaction.guild.unban(member, reason=reason)
-
-    except discord.NotFound:
-        return await interaction.response.send_message(
-            "This user is not banned",
-            ephemeral=True,
-        )
-
-    await interaction.response.send_message(
-        f"Unbanned {member.mention}",
-        ephemeral=True,
-    )
-    embed = discord.Embed(
-        description=f"{member.mention} has been unbanned\n**Reason**: {reason}",
-        color=0x2f3136,
-    )
-    await interaction.followup.send(embed=embed, ephemeral=False)
 
 ################################ Giveaway Command ##################################
 
@@ -564,50 +351,6 @@ class giveaway(app_commands.Group):
 
 tree.add_command(giveaway())
 
-
-################################### CONFIGURE COMMAND ##############################
-
-####################################################################################
-
-@tree.command(name="clear", description="Clear n messages specific user")
-@app_commands.default_permissions(manage_messages=True)
-async def clear(interaction: discord.Interaction, amount:int, member: discord.Member = None):  # noqa: E501
-    try:
-        await interaction.response.defer()
-        channel = interaction.channel
-
-        if member is None:
-            await channel.purge(limit=amount)
-            await interaction.followup.send(
-                embed=discord.Embed(
-                    description=f"Successfully deleted {amount} messages.",
-                    color=discord.Color.green(),
-                ),
-            )
-
-        elif member is not None:
-            await channel.purge(limit=amount)
-            await interaction.followup.send(
-                embed=discord.Embed(
-                    description=f"Successfully deleted {amount} messages from {member.name}",  # noqa: E501
-                    color=discord.Color.green(),
-                ),
-            )
-        else:
-            await interaction.followup.send(
-                content="INTERACTION FAILED",
-                ephemeral=True,
-            )
-    except discord.errors.NotFound:
-        await interaction.followup.send(
-            content="Removed all that we could, but exception happened",
-        )
-    except Exception as e:
-        await interaction.followup.send(
-            content=f"Clear failed!: {e}",
-            ephemeral=True,
-        )
-
 ############################ HELP COMMAND ##########################################
 class Help_Pages(discord.ui.View):
     def __init__(self, embeds, *, timeout=180):
@@ -671,55 +414,6 @@ tree.add_command(Help())
 
 
 ############################ e621.net commands #####################################
-
-class e6_commands(app_commands.Group):
-    def __init__(self):
-        super().__init__()
-        self.name = "e6"
-        self.description = "e621 Images"
-        self.nsfw = True
-
-    @app_commands.command(
-        name="random-post",
-        description="Gives you random post from e6",
-    )
-    @app_commands.autocomplete(tags=autocomplete_tags)
-    async def e6_random_post(self,interaction:discord.Interaction,tags:str="",web:str="https://e621.net"):
-        try:
-            tags = tags.replace(" ","+")
-            if web.endswith("/"):
-                web[:-1]
-            if not web.startswith("http"):
-                web = "https://" + web
-            url = f"{web}/posts.json?limit=100"
-            if tags != "":
-                url += f"&tags={tags}"
-            response = requests.get(
-                url,
-                timeout=60,
-                headers={"User-Agent": "Lorelei-bot"},
-            )
-            data = response.json()
-            if not data["posts"]:
-                if tags is not None:
-                    await interaction.response.send_message(
-                        content=f"No images found for these tags: {tags}",
-                    )
-                else:
-                    await interaction.response.send_message(
-                    content="No image found.",
-                )
-            post = random.choice(data["posts"]) # noqa: S311
-
-            embed = discord.Embed(
-                title = f"Post {post['id']}, by {post['tags']['artist']}",
-            )
-            embed.set_image(url = post["file"]["url"])
-            await interaction.response.send_message(embed=embed)
-        except Exception as e:
-            await interaction.response.send_message(content=f"Exception: {e}")
-
-tree.add_command(e6_commands())
 
 
 ############################### Verify System ######################################
