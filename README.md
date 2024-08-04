@@ -1,3 +1,5 @@
+**WARNING** UPDATER IS BROKEN, PLEASE DONT USE IT AND INSTEAD UPDATE MANUALLY!!
+
 # Lorelei
 Open-Source discord bot in python, for people
 > disclaimer: Youre permited to host it yourself for personal purposes like single server or testings, for more than 100 servers, message me on discord (@cosita3cz)
