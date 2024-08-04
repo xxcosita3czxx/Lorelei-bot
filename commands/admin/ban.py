@@ -19,7 +19,7 @@ class Ban(commands.Cog):
         member="User to ban",
     )
     @app_commands.default_permissions(ban_members=True)
-    async def ban(interaction: discord.Interaction, member: discord.Member, reason: str , time: app_commands.Transform[str, TimeConverter]=None):  # noqa: E501
+    async def ban(self,interaction: discord.Interaction, member: discord.Member, reason: str , time: app_commands.Transform[str, TimeConverter]=None):  # noqa: E501
 
         '''
         Ban command
@@ -75,7 +75,7 @@ class Ban(commands.Cog):
     @app_commands.command(name="unban", description="Unban a user")
     @app_commands.describe(member="User to unban", reason="Reason for unban")
     @app_commands.default_permissions(ban_members=True)
-    async def unban(interaction: discord.Interaction, member: discord.User, reason: str):  # noqa: E501
+    async def unban(self,interaction: discord.Interaction, member: discord.User, reason: str):  # noqa: E501
 
         '''
         Unban Command
