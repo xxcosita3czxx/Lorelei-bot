@@ -33,7 +33,7 @@ autoupdate = False
 ###################################
 ############ Language #############
 #
-# Changes language
+# Changes default language
 # en is default
 language = "en"
 ###################################
