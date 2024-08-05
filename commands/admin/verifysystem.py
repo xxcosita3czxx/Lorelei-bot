@@ -25,12 +25,6 @@ class VerifySystem(commands.Cog):
         channel: discord.TextChannel,
         mode: str = "button",
     ):
-        gconfig.set(
-            interaction.guild.id,
-            str(channel.id)+"-verify",
-            "role",
-            role.id,
-        )
         if mode == "emoji":
             await interaction.response.send_message(
                 content="In progress",
@@ -50,15 +44,29 @@ class VerifySystem(commands.Cog):
                 view=self.verify_button(),
             )
             gconfig.set(
-            interaction.guild.id,
-            str(channel.id)+"-verify",
-            "message_id",
-            message.id,
-        )
+                interaction.guild.id,
+                str(channel.id)+"-verify",
+                "message_id",
+                message.id,
+            )
+            gconfig.set(
+                interaction.guild.id,
+                str(channel.id)+"-verifybutton",
+                "role",
+                role.id,
+            )
         elif mode == "captcha":
             await interaction.response.send_message(
                 content="In progress :3",
                 ephemeral=True,
+            )
+            embed = discord.Embed(
+                title=title,
+                description=description,
+            )
+            message:discord.Message = await channel.send(
+                embed=embed,
+                view=self.verify_captcha(),
             )
         elif mode == "teams":
             await interaction.response.send_message(
@@ -107,6 +115,7 @@ class VerifySystem(commands.Cog):
     class verify_teams(discord.ui.View):
         def __init__(self)-> None:
             super().__init__(timeout=None)
+
     class verify_captcha(discord.ui.View):
         def __init__(self)-> None:
             super().__init__(timeout=None)
@@ -123,7 +132,7 @@ async def setup(bot: commands.Bot):  # noqa: C901
             guild_id = filename[:-5]  # Remove the .toml extension
 
             for key in gconfig.config[guild_id]:
-                if key.endswith("-verify"):
+                if key.endswith("-verifybutton"):
                     message_id = gconfig.get(guild_id, key, "message_id")
                     channel_id_str = key[:-7]
                     role_id = gconfig.get(guild_id, key, "role")
