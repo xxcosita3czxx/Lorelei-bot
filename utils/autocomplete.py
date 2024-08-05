@@ -21,7 +21,7 @@ async def autocomplete_color(interaction: discord.Interaction,current: str) -> L
     return [app_commands.Choice(name=color, value=color) for color in colors if current.lower() in color.lower()]  # noqa: E501
 
 async def autocomplete_verify_modes(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
-    colors = ["captcha","button","emoji"]
+    colors = ["captcha","button","emoji","teams"]
     return [app_commands.Choice(name=color, value=color) for color in colors if current.lower() in color.lower()]  # noqa: E501
 
 async def autocomplete_lang(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501

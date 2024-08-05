@@ -57,7 +57,12 @@ class VerifySystem(commands.Cog):
         )
         elif mode == "captcha":
             await interaction.response.send_message(
-                content="In progress",
+                content="In progress :3",
+                ephemeral=True,
+            )
+        elif mode == "teams":
+            await interaction.response.send_message(
+                content="In progress :)",
                 ephemeral=True,
             )
         else:
@@ -99,7 +104,15 @@ class VerifySystem(commands.Cog):
             except Exception as e:
                 logging.error(str(e))
 
-
+    class verify_teams(discord.ui.View):
+        def __init__(self)-> None:
+            super().__init__(timeout=None)
+    class verify_captcha(discord.ui.View):
+        def __init__(self)-> None:
+            super().__init__(timeout=None)
+    class verify_emoji(discord.ui.View):
+        def __init__(self)-> None:
+            super().__init__(timeout=None)
 
 async def setup(bot: commands.Bot):  # noqa: C901
     cog = VerifySystem(bot)

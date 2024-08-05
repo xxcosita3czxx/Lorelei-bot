@@ -100,8 +100,8 @@ class aclient(discord.ext.commands.Bot):
             logger.info("Added views")
             self.added = True
 
-        await change_status()
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
+        await change_status()
 
 bot = aclient()
 tree = bot.tree
