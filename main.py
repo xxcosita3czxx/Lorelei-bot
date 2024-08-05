@@ -24,7 +24,8 @@ coloredlogs.install(
 conflang=config.language
 
 logger = logging.getLogger(__name__)
-
+logging.getLogger('discord.gateway').setLevel(logging.ERROR)
+logging.getLogger('discord.client').setLevel(logging.ERROR)
 async def load_cogs(directory,bot):
     for root, _, files in os.walk(directory):
         for file in files:
@@ -68,7 +69,7 @@ async def change_status() -> None:
 
 #########################################################################################
 
-class aclient(discord.ext.commands.Bot):
+class aclient(discord.ext.commands.AutoShardedBot):
 
     '''
     Main Client proccess
@@ -76,13 +77,16 @@ class aclient(discord.ext.commands.Bot):
     This connects the bot to discord
     '''
 
-    def __init__(self) -> None:
+    def __init__(self,shard_count) -> None:
         intents = discord.Intents.default()
         intents.message_content = True
         intents.members = True
-        super().__init__(intents = intents, command_prefix=".")
+        super().__init__()
         self.synced = False
         self.added = False
+        self.command_prefix = "."
+        self.intents = intents
+        self.shard_count = shard_count
 
     async def on_ready(self) -> None:
 
@@ -103,7 +107,7 @@ class aclient(discord.ext.commands.Bot):
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
         await change_status()
 
-bot = aclient()
+bot = aclient(3)
 tree = bot.tree
 
 # just to be sure bcs context commands with this version of client also works

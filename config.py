@@ -25,6 +25,12 @@ loglevel = "DEBUG"
 # Do not Disturb status (default)
 status = discord.Status.dnd
 ###################################
+############# Shards ##############
+#
+# How many Shards to use?
+# Default 3
+shards = 3
+###################################
 ########### AutoUpdate ############
 #
 # Only True or False
