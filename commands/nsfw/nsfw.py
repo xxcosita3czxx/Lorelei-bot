@@ -33,8 +33,10 @@ class NSFW(commands.Cog):
                 color=discord.Color.blurple(),
                 title="IRL NSFW Image",
                 description="Here is nsfw image:",
-            ).thumbnail(url=data)
+            )
+            embed.thumbnail(url=data)
             await interaction.response.send_message(embed=embed)
+
 async def setup(bot:commands.Bot):
     cog = NSFW(bot)
     bot.tree.add_command(cog.nsfw())

@@ -33,8 +33,8 @@ debug_status_chng = "Statuz Changd."
 info_logged = "We haz logd in az {user}."
 
 [Responds]
-no_links = "{author}, Don't send links!"
-no_invites = "{author} Don't send invites!"
+no_links = "{author}, Nu Linkz!"
+no_invites = "{author} Nu Invitz!"
 ping = "Pong!"
 ping_latency = "Latency: {latency}"
 value_set = "Value/z Set: {values}"

@@ -16,6 +16,8 @@ import discord.ext.commands
 import config
 from utils.configmanager import lang
 
+############################### Logging ############################################
+
 coloredlogs.install(
     level=config.loglevel,
     fmt='%(asctime)s %(levelname)s: %(message)s',
@@ -24,8 +26,10 @@ coloredlogs.install(
 conflang=config.language
 
 logger = logging.getLogger(__name__)
-logging.getLogger('discord.gateway').setLevel(logging.ERROR)
 logging.getLogger('discord.client').setLevel(logging.ERROR)
+
+############################### Functions ##########################################
+
 async def load_cogs(directory,bot):
     for root, _, files in os.walk(directory):
         for file in files:
@@ -37,6 +41,8 @@ async def load_cogs(directory,bot):
                     logger.info(f"Loaded {module_name}")
                 except Exception as e:
                     logger.error(f'Failed to load {module_name}: {e}')
+
+#################################### Status ########################################
 
 async def change_status() -> None:
     while True:
@@ -81,11 +87,9 @@ class aclient(discord.ext.commands.AutoShardedBot):
         intents = discord.Intents.default()
         intents.message_content = True
         intents.members = True
-        super().__init__()
+        super().__init__(command_prefix = ".",intents = intents)
         self.synced = False
         self.added = False
-        self.command_prefix = "."
-        self.intents = intents
         self.shard_count = shard_count
 
     async def on_ready(self) -> None:
@@ -115,7 +119,6 @@ tree = bot.tree
 tree.remove_command("help")
 
 ########################## Main Runner #############################################
-
 
 if __name__=="__main__":
     with open(".secret.key") as key:
