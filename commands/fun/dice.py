@@ -21,7 +21,7 @@ class Dice(commands.Cog):
             if mode is None:
                 mode = uconfig.get(id=interaction.user.id,title="FUN",key="def_dice",default="classic (6 sides)")  # noqa: E501
         else:
-            interaction.response.send_message(content="invalid dice mode",ephemeral=True)  # noqa: E501
+            await interaction.response.send_message(content="invalid dice mode",ephemeral=True)  # noqa: E501
             return
         min_val, max_val = dices[mode]
         roll = random.randint(min_val,max_val)  # noqa: S311
@@ -29,6 +29,6 @@ class Dice(commands.Cog):
             title="The Dice Roller 3000",
             description=f"And rolled number is....\n# {roll}",
         )
-        interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed)
 async def setup(bot:commands.Bot):
     await bot.add_cog(Dice(bot))

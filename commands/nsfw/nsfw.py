@@ -34,7 +34,7 @@ class NSFW(commands.Cog):
                 title="IRL NSFW Image",
                 description="Here is nsfw image:",
             )
-            embed.thumbnail(url=data)
+            embed.set_thumbnail(url=data)
             await interaction.response.send_message(embed=embed)
 
 async def setup(bot:commands.Bot):

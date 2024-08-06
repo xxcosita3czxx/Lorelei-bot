@@ -3,6 +3,8 @@
 #############################
 #TODO Welcome system
 #TODO Giveaway logic
+#TODO Check Ticketing if its working after restart
+#TODO more verify modes
 
 import asyncio
 import logging

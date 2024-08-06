@@ -118,7 +118,7 @@ class Ticketing(commands.Cog):
             )
             await interaction.channel.send(
                 embed = embed,
-                view = self.ticket_launcher(),
+                view = Ticketing.ticket_launcher(),
             )
             embed = discord.Embed(
                 title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","panel_launch"),

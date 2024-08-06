@@ -27,7 +27,7 @@ class Giveaways(commands.Cog):
             title:str,
             description:str,
         ):
-            view = self.giveaway_open()
+            view = Giveaways.giveaway_open()
             await view.create(interaction,channel,title,description,winners)
             await interaction.response.send_message(
                 content="Giveaway created!",
