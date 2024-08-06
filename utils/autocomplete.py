@@ -6,6 +6,8 @@ import discord
 import requests
 from discord import app_commands
 
+from utils.dices import dices
+
 
 async def fetch_tags(query):
     headers = {
@@ -18,6 +20,10 @@ async def fetch_tags(query):
 
 async def autocomplete_color(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
     colors = ['Blurple', 'Red', 'Green', 'Blue', 'Yellow',"Purple","White"]
+    return [app_commands.Choice(name=color, value=color) for color in colors if current.lower() in color.lower()]  # noqa: E501
+
+async def autocomplete_dice_modes(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
+    colors = dices.keys()
     return [app_commands.Choice(name=color, value=color) for color in colors if current.lower() in color.lower()]  # noqa: E501
 
 async def autocomplete_verify_modes(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501

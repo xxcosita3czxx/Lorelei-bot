@@ -7,6 +7,7 @@ from discord.ext import commands
 
 from utils.autocomplete import autocomplete_color, autocomplete_lang
 from utils.configmanager import gconfig, lang, uconfig
+from utils.dices import dices
 
 
 class GuildConfig(commands.Cog):
@@ -140,7 +141,20 @@ class GuildConfig(commands.Cog):
                     content=f"Exception happened: {e}",
                     ephemeral=True,
                 )
-
+    @app_commands.default_permissions(
+        administrator=True,
+    )
+    class configure_fun(app_commands.Group):
+        def __init__(self):
+            super().__init__()
+            self.name = "fun"
+            self.description = "Configure fun options"
+        @app_commands.command(name="dice",description="Default dice mode")
+        async def conf_fun_dice(self, interaction:discord.Interaction,mode:str):
+            if mode is None or mode == "" and mode not in dices.keys():  # noqa: SIM118
+                mode = "classic (6 sides)"
+            gconfig.set(interaction.guild.id,"FUN","def_dice",mode)
+            interaction.response.send_message(content="Value set.")
     @app_commands.default_permissions(
         administrator=True,
     )
@@ -297,7 +311,7 @@ class GuildConfig(commands.Cog):
             self.add_command(GuildConfig.configure_appear())
             self.add_command(GuildConfig.configure_members())
             self.add_command(GuildConfig.configure_ticketing())
-
+            self.add_command(GuildConfig.configure_fun())
         @app_commands.command(
             name="reset",
             description="Resets the config. NO TAKIES BACKSIES, AS IT GETS DELETED PERMANENTLY",  # noqa: E501
