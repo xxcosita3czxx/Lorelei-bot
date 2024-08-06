@@ -4,6 +4,7 @@ from discord.ext import commands
 
 from utils.autocomplete import autocomplete_color, autocomplete_lang
 from utils.configmanager import lang, uconfig
+from utils.dices import dices
 
 
 class UserConfig(commands.Cog):
@@ -31,6 +32,12 @@ class UserConfig(commands.Cog):
                     content=f"Exception happened: {e}",
                     ephemeral=True,
                 )
+        @app_commands.command(name="dice",description="Default dice mode")
+        async def conf_fun_dice(self, interaction:discord.Interaction,mode:str):
+            if mode is None or mode == "" and mode not in dices.keys():  # noqa: SIM118
+                mode = "classic (6 sides)"
+            uconfig.set(interaction.guild.id,"FUN","def_dice",mode)
+            interaction.response.send_message(content=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","value_set").format(values=mode))
 
         @app_commands.command(
             name="language",
