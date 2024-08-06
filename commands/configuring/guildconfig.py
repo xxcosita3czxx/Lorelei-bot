@@ -5,7 +5,11 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from utils.autocomplete import autocomplete_color, autocomplete_lang
+from utils.autocomplete import (
+    autocomplete_color,
+    autocomplete_dice_modes,
+    autocomplete_lang,
+)
 from utils.configmanager import gconfig, lang, uconfig
 from utils.dices import dices
 
@@ -23,13 +27,8 @@ class GuildConfig(commands.Cog):
 
         @app_commands.command(
             name="anti-invite",
-            description="No invites in the halls",
-        )
-        async def anti_invites(
-            self,
-            interaction: discord.Interaction,
-            value: bool,
-        ):
+            description="No invites in the halls")
+        async def anti_invites(self,interaction: discord.Interaction,value: bool):
             try:
                 gconfig.set(
                     id=interaction.guild_id,
@@ -48,13 +47,8 @@ class GuildConfig(commands.Cog):
 
         @app_commands.command(
             name="anti-links",
-            description="No links in the halls",
-        )
-        async def anti_links(
-            self,
-            interaction: discord.Interaction,
-            value: bool,
-        ):
+            description="No links in the halls")
+        async def anti_links(self,interaction: discord.Interaction,value: bool):
             try:
                 gconfig.set(
                     id=interaction.guild_id,
@@ -80,14 +74,9 @@ class GuildConfig(commands.Cog):
 
         @app_commands.command(
             name="color",
-            description="Changes default color of embeds.",
-        )
-        @app_commands.describe(
-            color="The color to set",
-        )
-        @app_commands.autocomplete(
-            color=autocomplete_color,
-        )
+            description="Changes default color of embeds.")
+        @app_commands.describe(color="The color to set")
+        @app_commands.autocomplete(color=autocomplete_color)
         async def config_color_guild(
             self,
             interaction: discord.Interaction,
@@ -112,14 +101,9 @@ class GuildConfig(commands.Cog):
 
         @app_commands.command(
             name="language",
-            description="Set server default language",
-        )
-        @app_commands.describe(
-            language="Language to set",
-        )
-        @app_commands.autocomplete(
-            language=autocomplete_lang,
-        )
+            description="Set server default language")
+        @app_commands.describe(language="Language to set")
+        @app_commands.autocomplete(language=autocomplete_lang)
         async def config_lang_guild(
             self,
             interaction: discord.Interaction,
@@ -149,7 +133,9 @@ class GuildConfig(commands.Cog):
             super().__init__()
             self.name = "fun"
             self.description = "Configure fun options"
+
         @app_commands.command(name="dice",description="Default dice mode")
+        @app_commands.autocomplete(mode=autocomplete_dice_modes)
         async def conf_fun_dice(self, interaction:discord.Interaction,mode:str):
             if mode is None or mode == "" and mode not in dices.keys():  # noqa: SIM118
                 mode = "classic (6 sides)"
