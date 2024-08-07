@@ -12,7 +12,7 @@ class userinfo(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="user-info",description="Info about user")
-    async def user_info(interaction: discord.Interaction, member:discord.User):
+    async def user_info(self, interaction:discord.Interaction, member:discord.User):
         logging.debug(member.display_avatar.key)
         embed = discord.Embed(title="Info about", color=discord.Color.blurple())
         embed.set_thumbnail(url=member.display_avatar.url)
