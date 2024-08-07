@@ -309,8 +309,9 @@ class GuildConfig(commands.Cog):
         ):
             try:
                 os.remove(f"data/guilds/{interaction.guild.id}.toml")
+                gconfig._load_all_configs()
                 await interaction.response.send_message(
-                    content="Config Reset!",
+                    content=lang.get(uconfig.get(interaction.user.id,"APPEARANCE","language"),"Responds","config_reset"),
                     ephemeral=True,
                 )
             except FileNotFoundError:

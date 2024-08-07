@@ -31,17 +31,23 @@ err_costk_update_fail = "Update of CtKIT Failed!"
 [Bot]
 debug_status_chng = "Status Changed."
 info_logged = "We have logged in as {user}."
+command_sync="Commands Synced!"
+cog_load="Loaded {module_name}"
+cog_fail="Failed to load {module_name}: {error}"
 
 [Responds]
 no_links = "{author}, Don't send links!"
 no_invites = "{author}, Don't send invites!"
 ping = "Pong!"
+config_reset="Config Reset!"
 ping_latency = "Latency: {latency}"
 value_set = "Value/s Set: {values}"
 noperms_manage_channels = "Make sure I have `{perms}` permissions!"
 info_text_raw ="Hello!\nThis is Lorelei Bot developed by cosita3cz.\nDeveloped in python for everyone.\n\nThanks to all contributors:\n"
 slowmode_disable="Slow mode has been disabled by {user}"
 slowmode_max_reach="Slowmode can't be more than 6 hours"
+dice_roller_title="The Dice Roller 3000"
+dice_roller_desc="Dice: {mode} \n## And rolled number is....\n# {roll}"
 
 [UserInfo]
 username="Username"
