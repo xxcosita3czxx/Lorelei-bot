@@ -42,7 +42,7 @@ class UserConfig(commands.Cog):
             if mode is None or mode == "" and mode not in dices.keys():  # noqa: SIM118
                 mode = "classic (6 sides)"
             uconfig.set(interaction.guild.id,"FUN","def_dice",mode)
-            interaction.response.send_message(content=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","value_set").format(values=mode))
+            await interaction.response.send_message(content=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","value_set").format(values=mode))  # noqa: E501
 
         @app_commands.command(
             name="language",

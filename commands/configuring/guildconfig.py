@@ -140,7 +140,8 @@ class GuildConfig(commands.Cog):
             if mode is None or mode == "" and mode not in dices.keys():  # noqa: SIM118
                 mode = "classic (6 sides)"
             gconfig.set(interaction.guild.id,"FUN","def_dice",mode)
-            interaction.response.send_message(content="Value set.")
+            await interaction.response.send_message(content="Value set.")
+
     @app_commands.default_permissions(
         administrator=True,
     )

@@ -1,0 +1,6 @@
+[Ticketing]
+reviews-enabled = true
+reviews-channel = 1243245077481128057
+
+[FUN]
+def_dice = "DnD dice (D20)"
