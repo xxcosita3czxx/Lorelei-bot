@@ -106,10 +106,6 @@ class aclient(discord.ext.commands.AutoShardedBot):
             logger.info("Synced!")
             self.synced = True
 
-        if not self.added:
-            logger.info("Added views")
-            self.added = True
-
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
         await change_status()
 
