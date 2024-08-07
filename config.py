@@ -25,15 +25,21 @@ loglevel = "INFO"
 # Do not Disturb status (default)
 status = discord.Status.dnd
 ###################################
+############# Shards ##############
+#
+# How many Shards to use?
+# Default 1
+shards = 1
+###################################
 ########### AutoUpdate ############
 #
 # Only True or False
 # True is default
-autoupdate = True
+autoupdate = False
 ###################################
 ############ Language #############
 #
-# Changes language
+# Changes default language
 # en is default
 language = "en"
 ###################################

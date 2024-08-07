@@ -9,9 +9,8 @@ import coloredlogs
 import psutil
 
 import config
-from main import ConfigManager as cm
+from utils.configmanager import lang
 
-lang = cm("data/lang/")
 conflang = f"{config.language}"
 
 coloredlogs.install(
@@ -79,12 +78,12 @@ def Is_Alive():
                 )
         if not main_pid:
             logger.info(lang.get(conflang,"RunnerLogs","info_not_running"))
-            os.system("python3 main.py")  # noqa: S605, S607
+            os.system("python main.py")  # noqa: S605, S607
         time.sleep(config.Is_Alive_time)
 def update_cosita_tk():
     while True:
         try:
-            os.system("python3 utils/cosita_toolkit.py")  # noqa: S605, S607
+            os.system("python utils/cosita_toolkit.py")  # noqa: S605, S607
         except Exception:
             logger.error(lang.get(conflang,"RunnerLogs","err_costk_update_fail"))
         time.sleep(config.costk_update)

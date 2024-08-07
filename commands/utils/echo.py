@@ -1,0 +1,31 @@
+import discord
+from discord import app_commands
+from discord.ext import commands
+
+
+class Echo(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+    @app_commands.command(name="echo",description="Echoes message in embed")
+    @app_commands.default_permissions(manage_messages=True)
+    async def echo(interaction: discord.Interaction,channel:discord.channel.TextChannel, title:str="", text:str=""):  # noqa: E501
+        try:
+            embed = discord.Embed(
+                title=title,
+                description=text,
+                color=discord.Color.blurple(),
+            )
+            await channel.send(embed=embed)
+            await interaction.response.send_message(
+                content="Message sent succesfuly!",
+                ephemeral=True,
+            )
+        except Exception as e:
+            await interaction.response.send_message(
+                content=f"Echo Failed!: {e}",
+                ephemeral=True,
+            )
+
+async def setup(bot:commands.Bot):
+    await bot.add_cog(Echo(bot))

@@ -2,7 +2,7 @@
 
 # Lorelei
 Open-Source discord bot in python, for people
-
+> disclaimer: Youre permited to host it yourself for personal purposes like single server or testings, for more than 100 servers, message me on discord (@cosita3cz)
 ## Support the creator
 You can support me by contributing to the repo
 
@@ -24,7 +24,7 @@ You can use systemd (linux) to run this bot
 ```bash
 pip install -r requirements.txt
 ```
-(if you run it as root, place `sudo` before command)
+(if you wanna run it as root, place `sudo` before command)
 
 6. Enable and start the service
 ```bash
