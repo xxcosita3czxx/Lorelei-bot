@@ -301,7 +301,7 @@ class GuildConfig(commands.Cog):
             self.add_command(GuildConfig.configure_fun())
         @app_commands.command(
             name="reset",
-            description="Resets the config. NO TAKIES BACKSIES, AS IT GETS DELETED PERMANENTLY",  # noqa: E501
+            description="Resets the config. NO TAKIES BACKSIES, AS IT GETS DELETED PERMANENTLY, BREAKS ANY VERIFY SYSTEM",  # noqa: E501
         )
         async def reset_config(
             self,

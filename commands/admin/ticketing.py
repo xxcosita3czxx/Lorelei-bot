@@ -320,7 +320,7 @@ class Ticketing(commands.Cog):
             try:
                 await interaction.channel.delete()
                 if gconfig.get(interaction.guild.id,"Ticketing","reviews-enabled") is True:  # noqa: E501
-                    await interaction.user.send(embed=embed,view=self.reviews(guild=interaction.guild))  # noqa: E501
+                    await interaction.user.send(embed=embed,view=Ticketing.reviews(guild=interaction.guild))  # noqa: E501
 
             except discord.Forbidden :
                 await interaction.response.send_message(
@@ -328,94 +328,97 @@ class Ticketing(commands.Cog):
                     ephemeral = True,
                 )
 
-        class reviews(discord.ui.View):
-            def __init__(self,guild:discord.Interaction.guild) -> None:  # noqa: ANN101
-                super().__init__(timeout = None)
-                self.guild:discord.Interaction.guild = guild
+    class reviews(discord.ui.View):
+        def __init__(self,guild:discord.Interaction.guild) -> None:  # noqa: ANN101
+            super().__init__(timeout = None)
+            self.guild:discord.Interaction.guild = guild
 
-            def rev_embed(self,interaction:discord.Interaction):
-                review_embed = discord.Embed(
-                    title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_rev_title"),
-                    description=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_rev_desc"),
-                )
-                return review_embed
-            async def disable_all_buttons(self, interaction: discord.Interaction):
-                for child in self.children:
-                    if isinstance(child, discord.ui.Button):
-                        child.disabled = True
-                await interaction.response.edit_message(view=self)
+        def rev_embed(self,interaction:discord.Interaction):
+            review_embed = discord.Embed(
+                title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_rev_title"),
+                description=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_rev_desc"),
+            )
+            return review_embed
+        async def disable_all_buttons(self, interaction: discord.Interaction):
+            for child in self.children:
+                if isinstance(child, discord.ui.Button):
+                    child.disabled = True
+            await interaction.response.edit_message(view=self)
 
-            @discord.ui.button(label="1 star")
-            async def rev_star1(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
-                await self.disable_all_buttons(interaction)
-                response_embed = discord.Embed(
-                    title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_resp_title"),
-                )
-                await interaction.user.send(
-                    embed=response_embed,
-                )
-                channel = self.guild.get_channel(
-                    gconfig.get(self.guild.id,"Ticketing","reviews-channel"),
-                )
-                await channel.send(content=f"Rating: 1\nUser: {interaction.user.name}")  # noqa: E501
+        @discord.ui.button(label="1 star")
+        async def rev_star1(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
+            await self.disable_all_buttons(interaction)
+            response_embed = discord.Embed(
+                title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_resp_title"),
+            )
+            await interaction.user.send(
+                embed=response_embed,
+            )
+            channel = self.guild.get_channel(
+                gconfig.get(self.guild.id,"Ticketing","reviews-channel"),
+            )
+            await channel.send(content=f"Rating: 1\nUser: {interaction.user.name}")  # noqa: E501
 
-            @discord.ui.button(label="2 star")
-            async def rev_star2(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
-                await self.disable_all_buttons(interaction)
-                response_embed = discord.Embed(
-                    title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_resp_title"),
-                )
-                await interaction.user.send(
-                    embed=response_embed,
-                )
-                channel = self.guild.get_channel(
-                    gconfig.get(self.guild.id,"Ticketing","reviews-channel"),
-                )
-                await channel.send(content=f"Rating: 2\nUser: {interaction.user.name}")  # noqa: E501
+        @discord.ui.button(label="2 star")
+        async def rev_star2(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
+            await self.disable_all_buttons(interaction)
+            response_embed = discord.Embed(
+                title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_resp_title"),
+            )
+            await interaction.user.send(
+                embed=response_embed,
+            )
+            channel = self.guild.get_channel(
+                gconfig.get(self.guild.id,"Ticketing","reviews-channel"),
+            )
+            await channel.send(content=f"Rating: 2\nUser: {interaction.user.name}")  # noqa: E501
 
-            @discord.ui.button(label="3 star")
-            async def rev_star3(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
-                await self.disable_all_buttons(interaction)
-                response_embed = discord.Embed(
-                    title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_resp_title"),
-                )
-                await interaction.user.send(
-                    embed=response_embed,
-                )
-                channel = self.guild.get_channel(
-                    gconfig.get(self.guild.id,"Ticketing","reviews-channel"),
-                )
-                await channel.send(content=f"Rating: 3\nUser: {interaction.user.name}")  # noqa: E501
+        @discord.ui.button(label="3 star")
+        async def rev_star3(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
+            await self.disable_all_buttons(interaction)
+            response_embed = discord.Embed(
+                title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_resp_title"),
+            )
+            await interaction.user.send(
+                embed=response_embed,
+            )
+            channel = self.guild.get_channel(
+                gconfig.get(self.guild.id,"Ticketing","reviews-channel"),
+            )
+            await channel.send(content=f"Rating: 3\nUser: {interaction.user.name}")  # noqa: E501
 
-            @discord.ui.button(label="4 star")
-            async def rev_star4(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
-                await self.disable_all_buttons(interaction)
-                response_embed = discord.Embed(
-                    title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_resp_title"),
-                )
-                await interaction.user.send(
-                    embed=response_embed,
-                )
-                channel = self.guild.get_channel(
-                    gconfig.get(self.guild.id,"Ticketing","reviews-channel"),
-                )
-                await channel.send(content=f"Rating: 4\nUser: {interaction.user.name}")  # noqa: E501
+        @discord.ui.button(label="4 star")
+        async def rev_star4(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
+            await self.disable_all_buttons(interaction)
+            response_embed = discord.Embed(
+                title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_resp_title"),
+            )
+            await interaction.user.send(
+                embed=response_embed,
+            )
+            channel = self.guild.get_channel(
+                gconfig.get(self.guild.id,"Ticketing","reviews-channel"),
+            )
+            await channel.send(content=f"Rating: 4\nUser: {interaction.user.name}")  # noqa: E501
 
-            @discord.ui.button(label="5 star")
-            async def rev_star5(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
-                await self.disable_all_buttons(interaction)
-                response_embed = discord.Embed(
-                    title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_resp_title"),
-                )
-                await interaction.user.send(
-                    embed=response_embed,
-                )
-                channel = self.guild.get_channel(
-                    gconfig.get(self.guild.id,"Ticketing","reviews-channel"),
-                )
-                await channel.send(content=f"Rating: 5\nUser: {interaction.user.name}")  # noqa: E501
+        @discord.ui.button(label="5 star")
+        async def rev_star5(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
+            await self.disable_all_buttons(interaction)
+            response_embed = discord.Embed(
+                title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","embed_review_resp_title"),
+            )
+            await interaction.user.send(
+                embed=response_embed,
+            )
+            channel = self.guild.get_channel(
+                gconfig.get(self.guild.id,"Ticketing","reviews-channel"),
+            )
+            await channel.send(content=f"Rating: 5\nUser: {interaction.user.name}")  # noqa: E501
 
 async def setup(bot:commands.Bot):
     cog = Ticketing(bot)
     await bot.add_cog(cog)
+    bot.add_view(Ticketing.ticket_launcher())
+    bot.add_view(Ticketing.main())
+    bot.add_view(Ticketing.confirm())
     bot.tree.add_command(cog.ticketing_group())
