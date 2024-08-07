@@ -26,7 +26,7 @@ class ConfigManager:
                 if filename.endswith('.toml'):
                     id = filename[:-5]  # Remove the .toml extension to get the ID
                     file_path = os.path.join(self.config_dir, filename)
-                    with open(file_path) as f:
+                    with open(file_path,encoding="utf-8") as f:
                         self.config[id] = toml.load(f)
             except UnicodeDecodeError:
                 logging.warning(f"{filename} Cannot be decoded! Check encoding, for now skipping")  # noqa: E501
@@ -86,3 +86,6 @@ class ConfigManager:
 gconfig = ConfigManager("data/guilds")
 uconfig = ConfigManager("data/users")
 lang = ConfigManager("data/lang","data/lang/en.toml")
+
+def userlang(userid) -> str:
+    return uconfig.get(userid,"APPEARANCE","language")
