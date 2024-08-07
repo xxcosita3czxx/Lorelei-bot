@@ -1,14 +1,12 @@
 from discord import Embed
 
-from utils.configmanager import lang
-
 
 class HelpText:
     def __init__(self):
         self.language = "en"  # Default language
 
     def get_translations(self, list_type):
-        language = self.language
+        #language = self.language
 
         if list_type == "user":
             return [
