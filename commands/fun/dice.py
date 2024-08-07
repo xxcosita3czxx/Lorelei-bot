@@ -22,7 +22,7 @@ class Dice(commands.Cog):
             if mode is None:
                 mode = uconfig.get(id=interaction.user.id,title="FUN",key="def_dice")  # noqa: E501
                 if mode is None:
-                    mode = "classic (6 sides)"
+                    mode = "classic (D6)"
         elif mode not in dices.keys():  # noqa: SIM118
             embed = discord.Embed(
                 title="Error",
