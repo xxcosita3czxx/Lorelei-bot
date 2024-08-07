@@ -1,7 +1,6 @@
 discord
 coloredlogs
 psutil
-pywin32; platform_system == 'Windows' 
 pytest
 requests
 dulwich

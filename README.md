@@ -24,7 +24,7 @@ You can use systemd (linux) to run this bot
 ```bash
 pip install -r requirements.txt
 ```
-(if you run it as root, place `sudo` before command)
+(if you wanna run it as root, place `sudo` before command)
 
 6. Enable and start the service
 ```bash
