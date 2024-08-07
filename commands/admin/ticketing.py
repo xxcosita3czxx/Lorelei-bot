@@ -246,7 +246,7 @@ class Ticketing(commands.Cog):
             style=discord.ButtonStyle.blurple,
             custom_id="transcript",
         )
-        async def transcript(self, interaction, button):
+        async def transcript(self, interaction:discord.Interaction, button):
             await interaction.response.defer()
 
             # Specify the path where the file will be saved
@@ -287,7 +287,7 @@ class Ticketing(commands.Cog):
 
                     generated = datetime.now().strftime("%m/%d/%Y at %H:%M:%S")
                     f.write(
-                        f"\n*Generated at {generated} by {self.bot.user}*\n*Date Formatting: MM/DD/YY*\n*Time Zone: UTC*",  # noqa: E501
+                        f"\n*Generated at {generated} by {interaction.user.name}*\n*Date Formatting: MM/DD/YY*\n*Time Zone: UTC*",  # noqa: E501
                     )
 
                 with open(file_path, 'rb') as f:
@@ -411,7 +411,7 @@ class Ticketing(commands.Cog):
                 channel = commands.TextChannelConverter(
                     gconfig.get(interaction.guild_id,"Ticketing","reviews-channel"),
                 )
-                channel.send(content=f"Rating: 5\nUser: {interaction.user.name}")
+                channel.send(content=f"Rating: 5\nUser: {interaction.user.name}")  # noqa: E501
 
 async def setup(bot:commands.Bot):
     cog = Ticketing(bot)
