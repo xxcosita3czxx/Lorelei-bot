@@ -16,7 +16,7 @@ class Dice(commands.Cog):
 
     @app_commands.command(name="dice",description="Roll the Dice!")
     @app_commands.autocomplete(mode=autocomplete_dice_modes)
-    async def dice(self,interaction:discord.Interaction,mode:str):
+    async def dice(self,interaction:discord.Interaction,mode:str=None):
         if mode == "" or mode is None:  # noqa: SIM118
             mode = gconfig.get(id=interaction.guild.id,title="FUN",key="def_dice")  # noqa: E501
             if mode is None:
@@ -35,7 +35,7 @@ class Dice(commands.Cog):
             roll = random.randint(min_val,max_val)  # noqa: S311
             embed = discord.Embed(
                 title="The Dice Roller 3000",
-                description=f"And rolled number is....\n# {roll}",
+                description=f"Dice: {mode} \n## And rolled number is....\n# {roll}",
             )
             await interaction.response.send_message(embed=embed)
         except Exception as e:
