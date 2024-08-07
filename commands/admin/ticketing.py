@@ -293,6 +293,7 @@ class Ticketing(commands.Cog):
                 with open(file_path, 'rb') as f:
                     await interaction.followup.send(
                         file=discord.File(f, f"{interaction.channel.name}.md"),
+                        content="Here is the transcript:",
                     )
             finally:
                 if os.path.exists(file_path):
