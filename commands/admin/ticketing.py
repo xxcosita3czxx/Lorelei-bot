@@ -242,58 +242,61 @@ class Ticketing(commands.Cog):
             )
 
         @discord.ui.button(
-            label = "Transcript",
-            style = discord.ButtonStyle.blurple,
-            custom_id = "transcript",
+            label="Transcript",
+            style=discord.ButtonStyle.blurple,
+            custom_id="transcript",
         )
         async def transcript(self, interaction, button):
-
             await interaction.response.defer()
-            if os.path.exists(f"{interaction.channel.id}.md"):
+
+            # Specify the path where the file will be saved
+            file_dir = "data/transcripts"
+
+            file_path = os.path.join(file_dir, f"{interaction.channel.id}.md")
+
+            if os.path.exists(file_path):
                 return await interaction.followup.send(
                     "A transcript is already being generated!",
-                    ephemeral = True,
+                    ephemeral=True,
                 )
 
-            with open(f"{interaction.channel.id}.md", 'a') as f:
-                f.write(f"# Transcript of {interaction.channel.name}:\n\n")
-                async for message in interaction.channel.history(
-                    limit = None,
-                    oldest_first = True,
-                ):
-
-                    created = datetime.strftime(
-                        message.created_at,
-                        "%m/%d/%Y at %H:%M:%S",
-                    )
-
-                    if message.edited_at:
-                        edited = datetime.strftime(
-                            message.edited_at,
+            try:
+                with open(file_path, 'a', encoding='utf-8') as f:
+                    f.write(f"# Transcript of {interaction.channel.name}:\n\n")
+                    async for message in interaction.channel.history(
+                        limit=None,
+                        oldest_first=True,
+                    ):
+                        created = datetime.strftime(
+                            message.created_at,
                             "%m/%d/%Y at %H:%M:%S",
                         )
-                        f.write(
-                            f"{message.author} on {created}: {message.clean_content} (Edited at {edited})\n",  # noqa: E501
-                        )
 
-                    else:
-                        f.write(
-                            f"{message.author} on {created}: {message.clean_content}\n",  # noqa: E501
-                        )
+                        if message.edited_at:
+                            edited = datetime.strftime(
+                                message.edited_at,
+                                "%m/%d/%Y at %H:%M:%S",
+                            )
+                            f.write(
+                                f"{message.author} on {created}: {message.clean_content} (Edited at {edited})\n",  # noqa: E501
+                            )
+                        else:
+                            f.write(
+                                f"{message.author} on {created}: {message.clean_content}\n",  # noqa: E501
+                            )
 
-                generated = datetime.now().strftime("%m/%d/%Y at %H:%M:%S")
-                f.write(
-                    f"\n*Generated at {generated} by {self.bot.user}*\n*Date Formatting: MM/DD/YY*\n*Time Zone: UTC*",  # noqa: E501
-                )
+                    generated = datetime.now().strftime("%m/%d/%Y at %H:%M:%S")
+                    f.write(
+                        f"\n*Generated at {generated} by {self.bot.user}*\n*Date Formatting: MM/DD/YY*\n*Time Zone: UTC*",  # noqa: E501
+                    )
 
-            with open(f"{interaction.channel.id}.md", 'rb') as f:
-                await interaction.followup.send(
-                    file = discord.File(
-                        f,
-                        f"{interaction.channel.name}.md"),
-                )
-
-            os.remove(f"{interaction.channel.id}.md")
+                with open(file_path, 'rb') as f:
+                    await interaction.followup.send(
+                        file=discord.File(f, f"{interaction.channel.name}.md"),
+                    )
+            finally:
+                if os.path.exists(file_path):
+                    os.remove(file_path)
     class confirm(discord.ui.View):
 
         '''

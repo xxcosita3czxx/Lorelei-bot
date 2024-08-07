@@ -28,8 +28,8 @@ status = discord.Status.dnd
 ############# Shards ##############
 #
 # How many Shards to use?
-# Default 3
-shards = 3
+# Default 1
+shards = 1
 ###################################
 ########### AutoUpdate ############
 #

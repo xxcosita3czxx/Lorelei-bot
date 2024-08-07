@@ -91,7 +91,6 @@ class aclient(discord.ext.commands.AutoShardedBot):
         intents.members = True
         super().__init__(command_prefix = ".",intents = intents)
         self.synced = False
-        self.added = False
         self.shard_count = shard_count
 
     async def on_ready(self) -> None:
@@ -103,13 +102,13 @@ class aclient(discord.ext.commands.AutoShardedBot):
             await bot.tree.sync()
             await load_cogs(bot=self,directory="commands")
             await bot.tree.sync()
-            logger.info("Synced!")
+            logger.info("Commands Synced!")
             self.synced = True
 
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
         await change_status()
 
-bot = aclient(3)
+bot = aclient(shard_count=config.shards)
 tree = bot.tree
 
 # just to be sure bcs context commands with this version of client also works
