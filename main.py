@@ -44,6 +44,7 @@ async def load_cogs(directory,bot):
                 except Exception as e:
                     logger.error(f'Failed to load {module_name}: {e}')
 
+
 #################################### Status ########################################
 
 async def change_status() -> None:
