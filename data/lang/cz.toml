@@ -16,7 +16,7 @@ parse_error = "Unknown error while parsing values"
 [HelpCommand]
 adminhelp_title = "Admin-Tools Help"
 adminhelp_ban = "/ban user=(discord.User)"
-adminhelp_kick_description = "Usage: member(Discord Member): Member to kick, reason(string): Reason why"
+adminhelp_kick_description = "Usage: member(Discord Member): Member to kick, reason(string): Důvod proč"
 adminhelp_ban_description = "Usage: member(Discord Member): Member to ban, reason(string): Reason why, time(Time): Time to ban for (1m, 5d, 6w etc..)"
 adminhelp_unban_description = "Usage: member(Discord Member): Member to unban, reason(string): Reason why"
 userhelp_userconfig_app_color_description = "Usage: color(string): Color that will be used, hex or Provided colors in autocomplete."
