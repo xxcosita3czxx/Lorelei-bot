@@ -1,10 +1,10 @@
 [ConfigureCommand]
 
 [TicketingCommand]
-embed_review_title = "Would you like to review our system?"
-embed_review_description = "Take a while and give us a star based on how well you were served:"
-ticket_close_confirm = "Are you sure you want to close this ticket?"
-embed_review_resp_title = "Thanks for rating!"
+embed_review_title = "Chceli by ste ohodnotiť náš systém?"
+embed_review_description = "Zaberie to len chvíľku, ohodnoťte nás hviezdičkou podľa toho, ako dobre ste boli spokojný:"
+ticket_close_confirm = "Ste si istý, že chcete tento tiket uzavrieť?"
+embed_review_resp_title = "Ďakujeme za ohodnotenie!"
 embed_review_rev_title = "Review response!"
 embed_review_rev_desc = "User responded to review action!"
 panel_launch = "Ticketing system launched!"
