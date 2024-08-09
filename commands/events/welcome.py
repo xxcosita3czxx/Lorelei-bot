@@ -1,4 +1,5 @@
 
+import logging
 from string import Template
 
 import discord
@@ -29,8 +30,11 @@ class Welcome(commands.Cog):
                 "owner":member.guild.owner.name,
             }
             formated = format_string(gconfig.get(member.guild.id,"MEMBERS","welcome-text"),**placeholders)  # noqa: E501
+            logging.debug(formated)
             if gconfig.get(member.guild.id,"MEMBERS","welcome-in_dms"):
+                logging.debug("welcome-indms triggered")
                 if gconfig.get(member.guild.id,"MEMBERS","welcome-rich"):
+                    logging.debug("welcome rich triggered")
                     embed = discord.Embed(
                         title=formated,
                     )
@@ -38,7 +42,9 @@ class Welcome(commands.Cog):
                 else:
                     member.send(content=formated)
             channel_id = gconfig.get(member.guild.id,"MEMBERS","welcome-channel")
+            logging.debug(channel_id)
             channel = member.guild.get_channel(channel_id)
+            logging.debug(channel)
             if gconfig.get(member.guild.id,"MEMBERS","welcome-rich"):
                 embed = discord.Embed(
                     title=formated,

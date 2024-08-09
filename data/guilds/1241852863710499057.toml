@@ -1,0 +1,8 @@
+[MEMBERS]
+welcome-text = "Welcome, {user}"
+welcome-enabled = true
+welcome-rich = true
+welcome-channel = 1243245077481128057
+welcome-in_dms = true
+autorole-role = 1241853438975938672
+autorole-enabled = true

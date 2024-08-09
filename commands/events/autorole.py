@@ -11,7 +11,7 @@ class AutoRole(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_member_join(member:discord.Member):
+    async def on_member_join(self,member:discord.Member):
         logging.debug("on_member_join was triggered!")
         logging.debug(str(member.guild) + " / " + str(member.guild.id))
         if gconfig.get(str(member.guild.id),"MEMBERS","autorole-enabled") is True:
