@@ -45,7 +45,7 @@ class AntiInvites(commands.Cog):
                 )
                 if message.author == self.bot.user:
                     return
-                if 'https://' or "http://" or "www." in message.content.lower():  # noqa: SIM222
+                if 'https://' in message.content.lower() or "http://" in message.content.lower() or "www." in message.content.lower():  # noqa: SIM222, E501
                     await message.delete()
                     await message.author.send(
                         content=lang.get(
