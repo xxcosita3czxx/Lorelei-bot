@@ -10,7 +10,7 @@ import discord
 # "WARNING" - Shows only Warning and up
 # "ERROR"   - Show only error and fatals
 # "FATAL"   - Only Fatal errors
-loglevel = "DEBUG"
+loglevel = "INFO"
 ###################################
 ############ Status ###############
 #
