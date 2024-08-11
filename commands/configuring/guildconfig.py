@@ -285,6 +285,57 @@ class GuildConfig(commands.Cog):
                     content=f"Exception happened: {e}",
                     ephemeral=True,
                 )
+        @app_commands.command(name="welcome",description="Welcomes user on join")
+        @app_commands.describe(text="Text used to welcome (placeholders support)",enabled="Should it be enabled?")  # noqa: E501
+        async def welcome(
+            self,
+            interaction: discord.Interaction,
+            enabled: bool,
+            text: str,
+            channel: discord.TextChannel,
+            in_dms: bool = False,
+            rich: bool= False,
+        ):
+            try:
+                gconfig.set(
+                    id=interaction.guild_id,
+                    title="MEMBERS",
+                    key="welcome-text",
+                    value=text,
+                )
+                gconfig.set(
+                    id=interaction.guild_id,
+                    title="MEMBERS",
+                    key="welcome-enabled",
+                    value=enabled,
+                )
+                gconfig.set(
+                    id=interaction.guild_id,
+                    title="MEMBERS",
+                    key="welcome-rich",
+                    value=rich,
+                )
+                gconfig.set(
+                    id=interaction.guild_id,
+                    title="MEMBERS",
+                    key="welcome-channel",
+                    value=channel.id,
+                )
+                gconfig.set(
+                    id=interaction.guild_id,
+                    title="MEMBERS",
+                    key="welcome-in_dms",
+                    value=in_dms,
+                )
+                await interaction.response.send_message(
+                    content="Set value/s",
+                    ephemeral=True,
+                )
+            except Exception as e:
+                await interaction.response.send_message(
+                    content=f"Exception happened: {e}",
+                    ephemeral=True,
+                )
 
     @app_commands.default_permissions(
         administrator=True,
@@ -309,8 +360,9 @@ class GuildConfig(commands.Cog):
         ):
             try:
                 os.remove(f"data/guilds/{interaction.guild.id}.toml")
+                gconfig._load_all_configs()
                 await interaction.response.send_message(
-                    content="Config Reset!",
+                    content=lang.get(uconfig.get(interaction.user.id,"APPEARANCE","language"),"Responds","config_reset"),
                     ephemeral=True,
                 )
             except FileNotFoundError:

@@ -1,10 +1,11 @@
 #############################
 #    By Cosita              #
 #############################
-#TODO Welcome system
+#TODO Welcome system still aint working
 #TODO Giveaway logic
-#TODO Check Ticketing if its working after restart
 #TODO more verify modes
+#TODO AntiLinks block all messages
+#TODO Embeds and translations of strings
 
 import asyncio
 import logging
@@ -40,9 +41,9 @@ async def load_cogs(directory,bot):
                 module_name = cog_path.replace(os.sep, '.').replace('.py', '')
                 try:
                     await bot.load_extension(f'{directory}.{module_name}')
-                    logger.info(f"Loaded {module_name}")
+                    logger.info(lang.get(config.language,"Bot","cog_load").format(module_name=module_name))
                 except Exception as e:
-                    logger.error(f'Failed to load {module_name}: {e}')
+                    logger.error(lang.get(conflang,"Bot","cog_fail").format(module_name=module_name,error=e))
 
 #################################### Status ########################################
 
@@ -102,7 +103,7 @@ class aclient(discord.ext.commands.AutoShardedBot):
             await bot.tree.sync()
             await load_cogs(bot=self,directory="commands")
             await bot.tree.sync()
-            logger.info("Commands Synced!")
+            logger.info(lang.get(config.language,"Bot","command_sync"))
             self.synced = True
 
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
