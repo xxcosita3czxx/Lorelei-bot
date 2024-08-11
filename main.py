@@ -1,10 +1,11 @@
 #############################
 #    By Cosita              #
 #############################
-#TODO Welcome system
+#TODO Welcome system still aint working
 #TODO Giveaway logic
-#TODO Check Ticketing if its working after restart
 #TODO more verify modes
+#TODO AntiLinks block all messages
+#TODO Embeds and translations of strings
 
 import asyncio
 import logging
