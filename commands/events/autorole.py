@@ -12,13 +12,15 @@ class AutoRole(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self,member:discord.Member):
-        logging.debug("on_member_join was triggered!")
-        logging.debug(str(member.guild) + " / " + str(member.guild.id))
-        if gconfig.get(str(member.guild.id),"MEMBERS","autorole-enabled") is True:
-            role_id = gconfig.get(str(member.guild.id),"MEMBERS","autorole-role")
-            logging.debug("Role_id:"+str(role_id))
-            role = member.guild.get_role(role_id)
-            await member.add_roles(role)
-
+        try:
+            logging.debug("on_member_join was triggered!")
+            logging.debug(str(member.guild) + " / " + str(member.guild.id))
+            if gconfig.get(str(member.guild.id),"MEMBERS","autorole-enabled") is True:  # noqa: E501
+                role_id = gconfig.get(str(member.guild.id),"MEMBERS","autorole-role")  # noqa: E501
+                logging.debug("Role_id:"+str(role_id))
+                role = member.guild.get_role(role_id)
+                await member.add_roles(role)
+        except Exception as e:
+            logging.warn(f"Unknown error in Auto-role: \n{e}")
 async def setup(bot:commands.Bot):
     await bot.add_cog(AutoRole(bot))
