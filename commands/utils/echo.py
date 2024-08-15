@@ -9,7 +9,7 @@ class Echo(commands.Cog):
 
     @app_commands.command(name="echo",description="Echoes message in embed")
     @app_commands.default_permissions(manage_messages=True)
-    async def echo(interaction: discord.Interaction,channel:discord.channel.TextChannel, title:str="", text:str=""):  # noqa: E501
+    async def echo(self,interaction: discord.Interaction,channel:discord.channel.TextChannel, title:str="", text:str=""):  # noqa: E501
         try:
             embed = discord.Embed(
                 title=title,
