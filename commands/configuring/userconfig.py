@@ -61,6 +61,7 @@ class UserConfig(commands.Cog):
                     content=f"Exception happened: {e}",
                     ephemeral=True,
                 )
+
 async def setup(bot:commands.Bot):
     cog = UserConfig(bot)
     await bot.add_cog(cog)

@@ -35,7 +35,7 @@ class Dice(commands.Cog):
             roll = random.randint(min_val,max_val)  # noqa: S311
             embed = discord.Embed(
                 title=lang.get(uconfig.get(interaction.user.id,"APPEARANCE","language"),"Responds","dice_roller_title"),
-                description=lang.get(uconfig.get(interaction.user.id,"APPEARANCE","language"),"Responds","dice_roller_desc").format(mode,roll),
+                description=lang.get(uconfig.get(interaction.user.id,"APPEARANCE","language"),"Responds","dice_roller_desc").format(mode=mode,roll=roll),
             )
             await interaction.response.send_message(embed=embed)
         except Exception as e:
