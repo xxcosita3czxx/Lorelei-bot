@@ -12,6 +12,7 @@ import asyncio
 import logging
 import os
 import socket
+import sys
 import threading
 
 import coloredlogs
@@ -76,15 +77,19 @@ async def handle_command(command):
 
     if command.startswith('reload_all'):
         try:
-            unload_cogs(directory="commands", bot=bot)
+            unload_cogs(bot=bot)
             bot.tree.sync()
             load_cogs(directory="commands", bot=bot)
             bot.tree.sync()
         except Exception as e:
             return f'Failed to reload. Error: {e}'
+
+    elif command.startswith("kill"):
+        logger.info("Killing from helper")
+        sys.exit()
+
     else:
         return 'Unknown command.'
-
 #################################### Status ########################################
 
 async def change_status() -> None:
