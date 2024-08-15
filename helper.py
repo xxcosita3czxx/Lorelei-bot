@@ -8,7 +8,7 @@ import config
 
 coloredlogs.install(
     level=config.loglevel,
-    fmt='%(asctime)s %(levelname)s: %(message)s',
+    fmt='%(levelname)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
 )
 
