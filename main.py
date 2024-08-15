@@ -78,6 +78,7 @@ def start_socket_listener():
                 client.sendall(response.encode('utf-8'))
 
 async def handle_command(command):
+
     if command.startswith('reload_all'):
         try:
             unload_cogs()
