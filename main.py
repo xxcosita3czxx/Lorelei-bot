@@ -49,18 +49,13 @@ async def load_cogs(directory,bot):
                     logger.error(lang.get(conflang,"Bot","cog_fail").format(module_name=module_name,error=e))
 
 
-async def unload_cogs(directory,bot):
-    for root, _, files in os.walk(directory):
-        for file in files:
-            if file.endswith('.py') and file != '__init__.py':
-                cog_path = os.path.relpath(os.path.join(root, file), directory)
-                module_name = cog_path.replace(os.sep, '.').replace('.py', '')
-                try:
-                    await bot.unload_extension(f'{directory}.{module_name}')
-                    logger.info(lang.get(config.language,"Bot","cog_load").format(module_name=module_name))
-                except Exception as e:
-                    logger.error(lang.get(conflang,"Bot","cog_fail").format(module_name=module_name,error=e))
-
+async def unload_cogs(bot):
+    for extension in list(bot.extensions):
+        try:
+            await bot.unload_extension(extension)
+            logger.info(lang.get(config.language, "Bot", "cog_unload").format(module_name=extension))  # noqa: E501
+        except Exception as e:
+            logger.error(lang.get(config.language, "Bot", "cog_fail_unload").format(module_name=extension, error=e))  # noqa: E501
 #################################### Helper ########################################
 
 def start_socket_listener():
@@ -81,9 +76,9 @@ async def handle_command(command):
 
     if command.startswith('reload_all'):
         try:
-            unload_cogs()
+            unload_cogs(directory="commands", bot=bot)
             bot.tree.sync()
-            load_cogs()
+            load_cogs(directory="commands", bot=bot)
             bot.tree.sync()
         except Exception as e:
             return f'Failed to reload. Error: {e}'

@@ -31,7 +31,9 @@ debug_status_chng = "Status Changed."
 info_logged = "We have logged in as {user}."
 command_sync="Commands Synced!"
 cog_load="Loaded {module_name}"
+cog_unload="Unloaded {module_name}"
 cog_fail="Failed to load {module_name}: {error}"
+cog_fail_unload="Failed to unload {module_name}: {error}"
 
 [Responds]
 no_links = "{author}, Don't send links!"
