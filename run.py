@@ -95,6 +95,7 @@ def main(update):
         update()
         os.system("python3 utils/cosita_toolkit.py") # noqa: S605
         sys.exit()
+
     monitor_thread = threading.Thread(target=Is_Alive)
     update_thread = threading.Thread(target=update_loop)
     update_costk_thread = threading.Thread(target=update_cosita_tk)
@@ -102,5 +103,7 @@ def main(update):
     monitor_thread.start()
     update_thread.start()
     update_costk_thread.start()
+
+
 if __name__ == "__main__":
     main()

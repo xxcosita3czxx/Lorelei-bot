@@ -25,6 +25,21 @@ loglevel = "INFO"
 # Do not Disturb status (default)
 status = discord.Status.dnd
 ###################################
+############ Language #############
+#
+# Changes default language
+# en is default
+language = "en"
+###################################
+############# Helper ##############
+#
+# Enables helper command, for bot
+# management.
+# Default = True
+helper = True
+#
+# Helper port, default 9920
+helperport = 9920
 ############# Shards ##############
 #
 # How many Shards to use?
@@ -36,12 +51,6 @@ shards = 1
 # Only True or False
 # True is default
 autoupdate = False
-###################################
-############ Language #############
-#
-# Changes default language
-# en is default
-language = "en"
 ###################################
 ########### Repository ############
 #

@@ -6,10 +6,13 @@
 #TODO more verify modes
 #TODO AntiLinks block all messages
 #TODO Embeds and translations of strings
+#TODO some more commands on helper
 
 import asyncio
 import logging
 import os
+import socket
+import threading
 
 import coloredlogs
 import discord
@@ -44,6 +47,47 @@ async def load_cogs(directory,bot):
                     logger.info(lang.get(config.language,"Bot","cog_load").format(module_name=module_name))
                 except Exception as e:
                     logger.error(lang.get(conflang,"Bot","cog_fail").format(module_name=module_name,error=e))
+
+
+async def unload_cogs(directory,bot):
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file.endswith('.py') and file != '__init__.py':
+                cog_path = os.path.relpath(os.path.join(root, file), directory)
+                module_name = cog_path.replace(os.sep, '.').replace('.py', '')
+                try:
+                    await bot.unload_extension(f'{directory}.{module_name}')
+                    logger.info(lang.get(config.language,"Bot","cog_load").format(module_name=module_name))
+                except Exception as e:
+                    logger.error(lang.get(conflang,"Bot","cog_fail").format(module_name=module_name,error=e))
+
+#################################### Helper ########################################
+
+def start_socket_listener():
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind(('localhost', {config.helperport}))  # Bind to port 9920
+    server.listen(1)
+    logger.info(f"Helper listener running on port {config.helperport}...")
+
+    while True:
+        client, _ = server.accept()
+        with client:
+            command = client.recv(1024).decode('utf-8').strip()
+            if command:
+                response = asyncio.run(handle_command(command))
+                client.sendall(response.encode('utf-8'))
+
+async def handle_command(command):
+    if command.startswith('reload_all'):
+        try:
+            unload_cogs()
+            bot.tree.sync()
+            load_cogs()
+            bot.tree.sync()
+        except Exception as e:
+            return f'Failed to reload. Error: {e}'
+    else:
+        return 'Unknown command.'
 
 #################################### Status ########################################
 
@@ -107,6 +151,8 @@ class aclient(discord.ext.commands.AutoShardedBot):
             self.synced = True
 
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
+        if config.helper:
+            threading.Thread(target=start_socket_listener, daemon=True).start()
         await change_status()
 
 bot = aclient(shard_count=config.shards)
