@@ -1,7 +1,7 @@
 #############################
 #    By Cosita              #
 #############################
-#TODO Welcome system still aint working
+#TODO Welcome system not working on channels
 #TODO Giveaway logic
 #TODO more verify modes
 #TODO AntiLinks block all messages
