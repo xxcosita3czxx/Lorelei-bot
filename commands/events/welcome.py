@@ -40,12 +40,12 @@ class Welcome(commands.Cog):
                             title=formated,
                         )
                         if member:
-                            member.send(embed=embed)
+                            await member.send(embed=embed)
                         else:
                             logging.error("Member is none")
                     else:
                         if member:
-                            member.send(content=formated)
+                            await member.send(content=formated)
                         else:
                             logging.error("Member is none")
                 channel_id = gconfig.get(member.guild.id,"MEMBERS","welcome-channel")  # noqa: E501
@@ -57,12 +57,12 @@ class Welcome(commands.Cog):
                         title=formated,
                     )
                     if channel:
-                        channel.send(embed=embed)
+                        await channel.send(embed=embed)
                     else:
                         logging.error("Channel is none")
                 else:
                     if channel:
-                        channel.send(formated)
+                        await channel.send(formated)
                     else:
                         logging.error("Channel is none")
         except Exception as e:
