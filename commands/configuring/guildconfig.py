@@ -376,6 +376,29 @@ class GuildConfig(commands.Cog):
                     ephemeral=True,
                 )
 
+        @app_commands.command(
+            name="export",
+            description="Exports config",  # noqa: E501
+        )
+        async def export(self,interaction:discord.Interaction):
+            try:
+                file = "data/guilds"+ str(interaction.guild.id) + ".toml"
+                interaction.response.send_message(
+                    content="Here is exported content that bot has saved. Remember that exports of message id dependent functions will not be ported over.",  # noqa: E501
+                    file=file,
+                    ephemeral=True,
+                )
+            except PermissionError:
+                await interaction.response.send_message(
+                    content="Permission Error! Ensure I have permissions for the file. If you're an administrator using Lorelei-bot, report this to Cosita Development!",  # noqa: E501
+                    ephemeral=True,
+                )
+            except FileNotFoundError:
+                await interaction.response.send_message(
+                    content="No config generated yet! Try configuring the server",
+                    ephemeral=True,
+                )
+
 async def setup(bot:commands.Bot):
     cog = GuildConfig(bot)
     await bot.add_cog(cog)
