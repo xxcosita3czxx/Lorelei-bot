@@ -31,6 +31,15 @@ status = discord.Status.dnd
 # en is default
 language = "en"
 ###################################
+########## Bug Reports ############
+#
+# Enabling of commands/other/bugreport.py
+# If you dont want people to use bugreports
+#
+# If you dont want to see /bugreport entirely,
+# rename commands/other/bugreport.py to something like bugreport.py.disabled
+bugreports = True
+###################################
 ############# Helper ##############
 #
 # Enables helper command, for bot
