@@ -65,7 +65,7 @@ async def unload_cogs(directory,bot):
 
 def start_socket_listener():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(('localhost', {int(config.helperport)}))  # Bind to port 9920
+    server.bind(('localhost', int(config.helperport) ))  # Bind to port 9920
     server.listen(1)
     logger.info(f"Helper listener running on port {config.helperport}...")
 
