@@ -39,9 +39,15 @@ class Welcome(commands.Cog):
                         embed = discord.Embed(
                             title=formated,
                         )
-                        member.send(embed=embed)
+                        if member:
+                            member.send(embed=embed)
+                        else:
+                            logging.error("Member is none")
                     else:
-                        member.send(content=formated)
+                        if member:
+                            member.send(content=formated)
+                        else:
+                            logging.error("Member is none")
                 channel_id = gconfig.get(member.guild.id,"MEMBERS","welcome-channel")  # noqa: E501
                 logging.debug(channel_id)
                 channel = member.guild.get_channel(channel_id)
@@ -50,10 +56,16 @@ class Welcome(commands.Cog):
                     embed = discord.Embed(
                         title=formated,
                     )
-                    channel.send(embed=embed)
+                    if channel:
+                        channel.send(embed=embed)
+                    else:
+                        logging.error("Channel is none")
                 else:
-                    channel.send(formated)
+                    if channel:
+                        channel.send(formated)
+                    else:
+                        logging.error("Channel is none")
         except Exception as e:
-            logging.warn(f"Unknow error in Welcome: \n{e}")
+            logging.error(f"Unknow error in Welcome: \n{e}")
 async def setup(bot:commands.Bot):
     await bot.add_cog(Welcome(bot))
