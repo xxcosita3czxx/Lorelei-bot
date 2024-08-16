@@ -116,7 +116,7 @@ async def handle_command(command,bot):  # noqa: C901
 
     elif command.startswith("load"):
         try:
-            _, cog = command.strip()
+            _, cog = command.strip(" ")
             if cog is None or cog == "":
                 return "Specify cog."
 
