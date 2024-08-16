@@ -45,9 +45,9 @@ class BugReport(commands.Cog):
                     f.write(f"Bots permissions on server: {interaction.app_permissions}\n")  # noqa: E501
                     f.write("End of report.\n")
             except Exception as e:
-                interaction.response.send_message(f"There was error while making bugreport. Please report on Support server or github. \nError: {e}",ephemeral=True)  # noqa: E501
+                await interaction.response.send_message(f"There was error while making bugreport. Please report on Support server or github. \nError: {e}",ephemeral=True)  # noqa: E501
         else:
-            interaction.response.send_message("Bug reports disabled in config.", ephemeral=True)  # noqa: E501
+            await interaction.response.send_message("Bug reports disabled in config.", ephemeral=True)  # noqa: E501
 
 async def setup(bot:commands.Bot):
     cog = BugReport(bot=bot)

@@ -76,8 +76,10 @@ def start_socket_listener(bot):
             with client:
                 command = client.recv(1024).decode('utf-8').strip()
                 if command:
-                    response = loop.run_until_complete(handle_command(command,bot))
+                    future = asyncio.run_coroutine_threadsafe(handle_command(command,bot),loop)  # noqa: E501
+                    response = future.result()
                     client.sendall(response.encode('utf-8'))
+
         except Exception as e:
             logger.error(f"Error in Helper thread \n{e}")
 async def handle_command(command,bot):  # noqa: C901
