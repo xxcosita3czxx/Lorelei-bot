@@ -12,9 +12,7 @@
 import asyncio
 import logging
 import os
-import socket
 import sys
-import threading
 
 import coloredlogs
 import discord
@@ -60,28 +58,29 @@ async def unload_cogs(bot):
             logger.error(lang.get(config.language, "Bot", "cog_fail_unload").format(module_name=extension, error=e))  # noqa: E501
 #################################### Helper ########################################
 
-def start_socket_listener(bot):
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(('localhost', int(config.helperport) ))  # Bind to port 9920
-    server.listen(1)
-
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-
+async def socket_listener(bot):
+    server = await asyncio.start_server(
+        lambda reader, writer: handle_client(reader, writer, bot),
+        'localhost',
+        config.helperport,
+    )
     logger.info(f"Helper listener running on port {config.helperport}...")
+    async with server:
+        await server.serve_forever()
 
-    while True:
-        try:
-            client, _ = server.accept()
-            with client:
-                command = client.recv(1024).decode('utf-8').strip()
-                if command:
-                    future = asyncio.run_coroutine_threadsafe(handle_command(command,bot),loop)  # noqa: E501
-                    response = future.result()
-                    client.sendall(response.encode('utf-8'))
+async def handle_client(reader, writer, bot):
+    try:
+        data = await reader.read(1024)
+        command = data.decode('utf-8').strip()
+        response = await handle_command(command, bot)
+        writer.write(response.encode('utf-8'))
+        await writer.drain()
+    except Exception as e:
+        logger.error(f"Error in client handling: {e}")
+    finally:
+        writer.close()
+        await writer.wait_closed()
 
-        except Exception as e:
-            logger.error(f"Error in Helper thread \n{e}")
 async def handle_command(command,bot):  # noqa: C901
 
     if command.startswith('reload_all'):
@@ -207,7 +206,7 @@ class aclient(discord.ext.commands.AutoShardedBot):
 
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
         if config.helper:
-            threading.Thread(target=start_socket_listener, args=(bot,), daemon=True).start()  # noqa: E501
+            await socket_listener(self)
         await change_status()
 
 bot = aclient(shard_count=config.shards)
