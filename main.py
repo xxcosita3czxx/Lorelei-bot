@@ -60,10 +60,14 @@ async def unload_cogs(bot):
             logger.error(lang.get(config.language, "Bot", "cog_fail_unload").format(module_name=extension, error=e))  # noqa: E501
 #################################### Helper ########################################
 
-def start_socket_listener():
+def start_socket_listener(bot):
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind(('localhost', int(config.helperport) ))  # Bind to port 9920
     server.listen(1)
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
     logger.info(f"Helper listener running on port {config.helperport}...")
 
     while True:
@@ -72,11 +76,11 @@ def start_socket_listener():
             with client:
                 command = client.recv(1024).decode('utf-8').strip()
                 if command:
-                    response = asyncio.run(handle_command(command))
+                    response = asyncio.run(handle_command(command,bot))
                     client.sendall(response.encode('utf-8'))
         except Exception as e:
             logger.error(f"Error in Helper thread \n{e}")
-async def handle_command(command):  # noqa: C901
+async def handle_command(command,bot):  # noqa: C901
 
     if command.startswith('reload_all'):
         try:
@@ -201,7 +205,7 @@ class aclient(discord.ext.commands.AutoShardedBot):
 
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
         if config.helper:
-            threading.Thread(target=start_socket_listener, daemon=True).start()
+            threading.Thread(target=start_socket_listener, args=(bot,), daemon=True).start()  # noqa: E501
         await change_status()
 
 bot = aclient(shard_count=config.shards)
