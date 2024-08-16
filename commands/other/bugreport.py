@@ -16,7 +16,7 @@ class BugReport(commands.Cog):
         if config.bugreport:
             try:
                 with open(f"data/bug-reports/bugreport-{interaction.guild.id}-{interaction.user.id}-{time.localtime()}"):  # noqa: E501
-                    
+                    pass
             except Exception as e:
                 interaction.response.send_message(f"There was error while making bugreport. Please report on Support server or github. \nError: {e}",ephemeral=True)  # noqa: E501
 
