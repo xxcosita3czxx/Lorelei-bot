@@ -74,7 +74,7 @@ def start_socket_listener():
                 response = asyncio.run(handle_command(command))
                 client.sendall(response.encode('utf-8'))
 
-async def handle_command(command):
+async def handle_command(command):  # noqa: C901
 
     if command.startswith('reload_all'):
         try:
@@ -84,6 +84,7 @@ async def handle_command(command):
             bot.tree.sync()
         except Exception as e:
             return f'Failed to reload. Error: {e}'
+
     elif command.startswith("unload"):
         try:
             _, cog = command.strip()
@@ -91,13 +92,16 @@ async def handle_command(command):
                 return "Specify cog."
             if cog not in list(bot.extensions):
                 return "Invalid cog. Ensure cog name"
-            else:
-                try:
-                    bot.unload_extension(cog)
-                except discord.ext.commands.ExtensionNotLoaded:
-                    return "Extension is not loaded"
-                except Exception as e:
-                    return f"Unknown error while unloading extension: {e}"
+
+            try:
+                bot.unload_extension(cog)
+
+            except discord.ext.commands.ExtensionNotLoaded:
+                return "Extension is not loaded"
+
+            except Exception as e:
+                return f"Unknown error while unloading extension: {e}"
+
         except Exception as e:
             return f"failed to unload: {e}"
 
@@ -106,17 +110,22 @@ async def handle_command(command):
             _, cog = command.strip()
             if cog is None or cog == "":
                 return "Specify cog."
-            else:
-                try:
-                    bot.load_extension(cog)
-                except discord.ext.commands.ExtensionNotFound:
-                    return "Extension not found, ensure name is correct"
-                except discord.ext.commands.ExtensionAlreadyLoaded:
-                    return "Extension already loaded!"
-                except discord.ext.commands.ExtensionFailed as e:
-                    return f"Failed to load: {e}"
-                except Exception as e:
-                    return f"Unknown error while loading extension: {e}"
+
+            try:
+                bot.load_extension(cog)
+
+            except discord.ext.commands.ExtensionNotFound:
+                return "Extension not found, ensure name is correct"
+
+            except discord.ext.commands.ExtensionAlreadyLoaded:
+                return "Extension already loaded!"
+
+            except discord.ext.commands.ExtensionFailed as e:
+                return f"Failed to load: {e}"
+
+            except Exception as e:
+                return f"Unknown error while loading extension: {e}"
+
         except Exception as e:
             return f"Failed to load: {e}"
     elif command.startswith("kill"):
