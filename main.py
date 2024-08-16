@@ -75,7 +75,7 @@ def start_socket_listener():
                     response = asyncio.run(handle_command(command))
                     client.sendall(response.encode('utf-8'))
         except Exception as e:
-            logger.error("Error in Helper thread \n{e}")
+            logger.error(f"Error in Helper thread \n{e}")
 async def handle_command(command):  # noqa: C901
 
     if command.startswith('reload_all'):
