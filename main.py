@@ -67,21 +67,24 @@ def start_socket_listener():
     logger.info(f"Helper listener running on port {config.helperport}...")
 
     while True:
-        client, _ = server.accept()
-        with client:
-            command = client.recv(1024).decode('utf-8').strip()
-            if command:
-                response = asyncio.run(handle_command(command))
-                client.sendall(response.encode('utf-8'))
-
+        try:
+            client, _ = server.accept()
+            with client:
+                command = client.recv(1024).decode('utf-8').strip()
+                if command:
+                    response = asyncio.run(handle_command(command))
+                    client.sendall(response.encode('utf-8'))
+        except Exception as e:
+            logger.error("Error in Helper thread \n{e}")
 async def handle_command(command):  # noqa: C901
 
     if command.startswith('reload_all'):
         try:
-            unload_cogs(bot=bot)
-            bot.tree.sync()
-            load_cogs(directory="commands", bot=bot)
-            bot.tree.sync()
+            await unload_cogs(bot=bot)
+            await bot.tree.sync()
+            await load_cogs(directory="commands", bot=bot)
+            await bot.tree.sync()
+            return "Reloaded succesfully"
         except Exception as e:
             return f'Failed to reload. Error: {e}'
 
@@ -94,7 +97,7 @@ async def handle_command(command):  # noqa: C901
                 return "Invalid cog. Ensure cog name"
 
             try:
-                bot.unload_extension(cog)
+                await bot.unload_extension(cog)
 
             except discord.ext.commands.ExtensionNotLoaded:
                 return "Extension is not loaded"
@@ -112,7 +115,7 @@ async def handle_command(command):  # noqa: C901
                 return "Specify cog."
 
             try:
-                bot.load_extension(cog)
+                await bot.load_extension(cog)
 
             except discord.ext.commands.ExtensionNotFound:
                 return "Extension not found, ensure name is correct"
