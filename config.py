@@ -38,7 +38,7 @@ language = "en"
 #
 # If you dont want to see /bugreport entirely,
 # rename commands/other/bugreport.py to something like bugreport.py.disabled
-bugreports = True
+bugreport = True
 ###################################
 ############# Helper ##############
 #
