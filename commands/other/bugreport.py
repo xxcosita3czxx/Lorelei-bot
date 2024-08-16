@@ -1,4 +1,6 @@
+import logging
 import time
+from collections import deque
 
 import discord
 from discord import app_commands
@@ -6,17 +8,42 @@ from discord.ext import commands
 
 import config
 
+last_logs = deque(maxlen=50)
+class LastLogsHandler(logging.Handler):
+    def emit(self, record):
+        log_entry = self.format(record)
+        last_logs.append(log_entry)
+
+# Add the custom handler to the root logger
+handler = LastLogsHandler()
+handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+logging.getLogger().addHandler(handler)
 
 class BugReport(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     @app_commands.command(name="bugreport",description="Here you can report bug")
     @app_commands.checks.cooldown(1, 45, key=lambda i: (i.guild_id, i.user.id))
-    async def bugreport(self,interaction: discord.Interaction,channel:discord.channel.TextChannel, title:str="", text:str=""):  # noqa: E501
+    async def bugreport(self,interaction: discord.Interaction, command:str,explanation:str):  # noqa: E501
         if config.bugreport:
             try:
-                with open(f"data/bug-reports/bugreport-{interaction.guild.id}-{interaction.user.id}-{time.localtime()}"):  # noqa: E501
-                    pass
+                local_time = time.localtime()
+                formatted_time = time.strftime("%Y-%m-%d_%H-%M-%S", local_time)
+                with open(f"data/bug-reports/bugreport-{interaction.guild.id}-{interaction.user.id}-{formatted_time}") as f:  # noqa: E501
+                    f.write(f"Reported by: {interaction.user.name}")
+                    f.write(f"Reported at: {time.localtime()}")
+                    f.write(f"Command: {command}")
+                    f.write(f"User explanation: {explanation}")
+                    f.write()
+                    f.write("Last 30 logs")
+                    for line in last_logs:
+                        f.write(line+"\n")
+                    f.write("End of logs.")
+                    f.write(f"Happened on server: {interaction.guild.name}")
+                    f.write(f"Channel: {interaction.channel.id}")
+                    f.write(f"User permissions: {interaction.user.guild_permissions}")  # noqa: E501
+                    f.write(f"Bots permissions on server: {interaction.app_permissions}")  # noqa: E501
+                    f.write("End of report.")
             except Exception as e:
                 interaction.response.send_message(f"There was error while making bugreport. Please report on Support server or github. \nError: {e}",ephemeral=True)  # noqa: E501
         else:
