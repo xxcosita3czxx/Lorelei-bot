@@ -30,20 +30,20 @@ class BugReport(commands.Cog):
                 local_time = time.localtime()
                 formatted_time = time.strftime("%Y-%m-%d_%H-%M-%S", local_time)
                 with open(f"data/bug-reports/bugreport-{interaction.guild.id}-{interaction.user.id}-{formatted_time}") as f:  # noqa: E501
-                    f.write(f"Reported by: {interaction.user.name}")
-                    f.write(f"Reported at: {time.localtime()}")
-                    f.write(f"Command: {command}")
-                    f.write(f"User explanation: {explanation}")
-                    f.write()
-                    f.write("Last 30 logs")
+                    f.write(f"Reported by: {interaction.user.name}\n")
+                    f.write(f"Reported at: {time.localtime()}\n")
+                    f.write(f"Command: {command}\n")
+                    f.write(f"User explanation: {explanation}\n")
+                    f.write("\n")
+                    f.write("Last 30 logs\n")
                     for line in last_logs:
                         f.write(line+"\n")
-                    f.write("End of logs.")
-                    f.write(f"Happened on server: {interaction.guild.name}")
-                    f.write(f"Channel: {interaction.channel.id}")
-                    f.write(f"User permissions: {interaction.user.guild_permissions}")  # noqa: E501
-                    f.write(f"Bots permissions on server: {interaction.app_permissions}")  # noqa: E501
-                    f.write("End of report.")
+                    f.write("End of logs.\n")
+                    f.write(f"Happened on server: {interaction.guild.name}\n")
+                    f.write(f"Channel: {interaction.channel.id}\n")
+                    f.write(f"User permissions: {interaction.user.guild_permissions}\n")  # noqa: E501
+                    f.write(f"Bots permissions on server: {interaction.app_permissions}\n")  # noqa: E501
+                    f.write("End of report.\n")
             except Exception as e:
                 interaction.response.send_message(f"There was error while making bugreport. Please report on Support server or github. \nError: {e}",ephemeral=True)  # noqa: E501
         else:
