@@ -7,6 +7,7 @@
 #TODO AntiLinks block all messages
 #TODO Embeds and translations of strings
 #TODO some more commands on helper
+#TODO Level system
 
 import asyncio
 import logging
@@ -83,10 +84,45 @@ async def handle_command(command):
             bot.tree.sync()
         except Exception as e:
             return f'Failed to reload. Error: {e}'
+    elif command.startswith("unload"):
+        try:
+            _, cog = command.strip()
+            if cog is None or cog == "":
+                return "Specify cog."
+            if cog not in list(bot.extensions):
+                return "Invalid cog. Ensure cog name"
+            else:
+                try:
+                    bot.unload_extension(cog)
+                except discord.ext.commands.ExtensionNotLoaded:
+                    return "Extension is not loaded"
+                except Exception as e:
+                    return f"Unknown error while unloading extension: {e}"
+        except Exception as e:
+            return f"failed to unload: {e}"
 
+    elif command.startswith("load"):
+        try:
+            _, cog = command.strip()
+            if cog is None or cog == "":
+                return "Specify cog."
+            else:
+                try:
+                    bot.load_extension(cog)
+                except discord.ext.commands.ExtensionNotFound:
+                    return "Extension not found, ensure name is correct"
+                except discord.ext.commands.ExtensionAlreadyLoaded:
+                    return "Extension already loaded!"
+                except discord.ext.commands.ExtensionFailed as e:
+                    return f"Failed to load: {e}"
+                except Exception as e:
+                    return f"Unknown error while loading extension: {e}"
+        except Exception as e:
+            return f"Failed to load: {e}"
     elif command.startswith("kill"):
         logger.info("Killing from helper")
         sys.exit()
+
 
     else:
         return 'Unknown command.'
@@ -168,4 +204,6 @@ tree.remove_command("help")
 if __name__=="__main__":
     with open(".secret.key") as key:
         token = key.read()
+
+    # This will run the bot, yes im too stoobid to rember
     bot.run(token=token)
