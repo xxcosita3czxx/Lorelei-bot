@@ -76,7 +76,7 @@ def start_socket_listener(bot):
             with client:
                 command = client.recv(1024).decode('utf-8').strip()
                 if command:
-                    response = asyncio.run(handle_command(command,bot))
+                    response = loop.run_until_complete(handle_command(command,bot))
                     client.sendall(response.encode('utf-8'))
         except Exception as e:
             logger.error(f"Error in Helper thread \n{e}")
