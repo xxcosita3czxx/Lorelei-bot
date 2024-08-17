@@ -44,8 +44,8 @@ class BugReport(commands.Cog):
                     f.write(f"User permissions: {interaction.user.guild_permissions}\n")  # noqa: E501
                     f.write(f"Bots permissions on server: {interaction.app_permissions}\n")  # noqa: E501
                     f.write("End of report.\n")
-            except commands.errors.CommandOnCooldown:
-                await interaction.response.send_message("Youre on cooldown! Please try again later")  # noqa: E501
+            except commands.errors.CommandOnCooldown as e:
+                await interaction.response.send_message(e)  # noqa: E501
             except Exception as e:
                 await interaction.response.send_message(f"There was error while making bugreport. Please report on Support server or github. \nError: {e}",ephemeral=True)  # noqa: E501
         else:
