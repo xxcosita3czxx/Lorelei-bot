@@ -206,8 +206,8 @@ class aclient(discord.ext.commands.AutoShardedBot):
 
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
         if config.helper:
-            await socket_listener(self)
-        await change_status()
+            asyncio.create_task(socket_listener(self))
+        asyncio.create_task(change_status())
 
 bot = aclient(shard_count=config.shards)
 tree = bot.tree
