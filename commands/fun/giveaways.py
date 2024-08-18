@@ -99,6 +99,7 @@ class Giveaways(commands.Cog):
 
 
 async def setup(bot:commands.Bot):
-    cog = Giveaways(bot)
-    await bot.add_cog(cog)
-    bot.tree.add_command(cog.giveaway())
+#    cog = Giveaways(bot)
+#    await bot.add_cog(cog)
+#    bot.tree.add_command(cog.giveaway())
+    pass
