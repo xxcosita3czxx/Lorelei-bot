@@ -3,6 +3,8 @@ from discord import app_commands
 from discord.ext import commands
 
 from utils.configmanager import gconfig
+
+
 class LevelSystem(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -13,7 +15,8 @@ class LevelSystem(commands.Cog):
 
     @app_commands.command(name="leaderboard",description="Server Leaderboard")
     async def leaderboard(self, interaction:discord.Interaction):
-        if gconfig.get(interaction.guild.id,"")
+        if gconfig.get(interaction.guild.id,""):
+            pass
 
     @app_commands.command(name="profile",description="Your profile")
     async def profile(self,interaction: discord.Interaction, minimal:bool=True):
