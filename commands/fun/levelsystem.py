@@ -38,6 +38,7 @@ def profile_gen(interaction:discord.Interaction,bg:str):
     # Save the image
     background.save(f".cache/{interaction.user.id}-{interaction.guild.id}.png")
     return ".cache/{interaction.user.id}-{interaction.guild.id}.png"
+
 class LevelSystem(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -63,6 +64,6 @@ class LevelSystem(commands.Cog):
 
 
 async def setup(bot:commands.Bot):
-#    cog = LevelSystem(bot)
-#    await bot.add_cog(cog)
+    cog = LevelSystem(bot)
+    await bot.add_cog(cog)
     pass
