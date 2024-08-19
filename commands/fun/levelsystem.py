@@ -6,7 +6,7 @@ from PIL import Image, ImageDraw, ImageFont
 from utils.configmanager import gconfig
 
 
-def profile_gen(bg:str):
+def profile_gen(interaction:discord.Interaction,bg:str):
     # Variables for customization
     background_image_path = bg  # Path to your background image
     font_color = (255, 255, 255)  # Font color (RGB)
@@ -36,7 +36,7 @@ def profile_gen(bg:str):
         draw.text(position, text, font=font, fill=font_color)
 
     # Save the image
-    background.save("profile_image_with_multiple_texts.png")
+    background.save(f".cache/{interaction.user.id}-{interaction.guild.id}.png")
 
 class LevelSystem(commands.Cog):
     def __init__(self, bot):

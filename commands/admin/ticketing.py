@@ -250,9 +250,9 @@ class Ticketing(commands.Cog):
             await interaction.response.defer()
 
             # Specify the path where the file will be saved
-            file_dir = "data/transcripts"
+            file_dir = ".cache/"
 
-            file_path = os.path.join(file_dir, f"{interaction.channel.id}.md")
+            file_path = os.path.join(file_dir, f"transcript-{interaction.channel.id}.md")  # noqa: E501
 
             if os.path.exists(file_path):
                 return await interaction.followup.send(
