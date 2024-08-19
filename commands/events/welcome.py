@@ -1,5 +1,6 @@
 
 import logging
+from functools import lru_cache
 from string import Template
 
 import discord
@@ -8,6 +9,7 @@ from discord.ext import commands
 from utils.configmanager import gconfig
 
 
+@lru_cache
 def format_string(template, **kwargs):
     # Create a Template object
     tmpl = Template(template)
@@ -67,5 +69,6 @@ class Welcome(commands.Cog):
                         logging.error("Channel is none")
         except Exception as e:
             logging.error(f"Unknow error in Welcome: \n{e}")
+
 async def setup(bot:commands.Bot):
     await bot.add_cog(Welcome(bot))
