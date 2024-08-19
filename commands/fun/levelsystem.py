@@ -37,7 +37,7 @@ def profile_gen(interaction:discord.Interaction,bg:str):
 
     # Save the image
     background.save(f".cache/{interaction.user.id}-{interaction.guild.id}.png")
-
+    return ".cache/{interaction.user.id}-{interaction.guild.id}.png"
 class LevelSystem(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -54,7 +54,9 @@ class LevelSystem(commands.Cog):
     @app_commands.command(name="profile",description="Your profile")
     async def profile(self,interaction: discord.Interaction, minimal:bool=True):
         if minimal:
+            image = profile_gen(interaction=interaction,bg="data/prof_bfs/Default.png")  # noqa: E501
             embed = discord.Embed(title=f"Profile of {interaction.user.name}")
+            embed.set_image(image)
             await interaction.response.send_message(embed=embed)
         else:
             await interaction.response.send_message("Not yet made", ephemeral=True)
