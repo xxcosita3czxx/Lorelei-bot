@@ -9,7 +9,6 @@ from discord.ext import commands
 from utils.configmanager import gconfig
 
 
-@lru_cache
 def format_string(template, **kwargs):
     # Create a Template object
     tmpl = Template(template)
