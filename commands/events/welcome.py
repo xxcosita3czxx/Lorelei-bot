@@ -31,7 +31,7 @@ class Welcome(commands.Cog):
                     "jointime":member.joined_at,
                     "owner":member.guild.owner.name,
                 }
-                formated = format_string(gconfig.get(member.guild.id,"MEMBERS","welcome-text"),**placeholders)  # noqa: E501
+                formated = format_string(gconfig.get(member.guild.id,"MEMBERS","welcome-text"),placeholders)  # noqa: E501
                 logging.debug(formated)
                 if gconfig.get(member.guild.id,"MEMBERS","welcome-in_dms"):
                     logging.debug("welcome-indms triggered")
