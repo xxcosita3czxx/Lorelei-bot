@@ -16,8 +16,8 @@ def profile_gen(interaction:discord.Interaction,bg:str):
 
     # Texts and positions
     texts = [
-        ("Cosita3cz", (50, 50)),  # (text, (x, y) position)
-        ("GitHub: xxcosita3czxx", (50, 150)),
+        (interaction.user.name, (50, 50)),  # (text, (x, y) position)
+        ("Level: {Lorem Ipsum}", (50, 150)),
         ("Hello, World!", (50, 250)),
     ]
 
@@ -55,7 +55,7 @@ class LevelSystem(commands.Cog):
     @app_commands.command(name="profile",description="Your profile")
     async def profile(self,interaction: discord.Interaction, minimal:bool=True):
         if minimal:
-            image = profile_gen(interaction=interaction,bg="data/prof_bfs/Default.png")  # noqa: E501
+            image = profile_gen(interaction=interaction,bg="data/prof_bgs/Default.png")  # noqa: E501
             embed = discord.Embed(title=f"Profile of {interaction.user.name}")
             embed.set_image(image)
             await interaction.response.send_message(embed=embed)
