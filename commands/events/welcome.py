@@ -51,7 +51,7 @@ class Welcome(commands.Cog):
                             logging.error("Member is none")
 
                 channel_id = gconfig.get(member.guild.id,"MEMBERS","welcome-channel")  # noqa: E501
-                logging.warning(channel_id)
+                logging.debug(channel_id)
 
                 # channel = member.guild.get_channel(channel_id)
                 channel = await self.bot.fetch_channel(channel_id)
