@@ -10,7 +10,7 @@ def profile_gen(interaction:discord.Interaction,bg:str):
     # Variables for customization
     background_image_path = bg  # Path to your background image
     font_color = (255, 255, 255)  # Font color (RGB)
-    font_path = "arial.ttf"  # Path to your font file
+    font_path = "data/fonts/Freedom.ttf"  # Path to your font file
     font_size = 50  # Font size for all texts
     fixed_size = (710, 800)  # Fixed size for the profile image
 
