@@ -36,9 +36,12 @@ def profile_gen(interaction:discord.Interaction,bg:str):
         draw.text(position, text, font=font, fill=font_color)
 
     # Save the image
-    background.save(f".cache/{interaction.user.id}-{interaction.guild.id}.png")
-    return ".cache/{interaction.user.id}-{interaction.guild.id}.png"
-
+    if interaction.guild.id:
+        background.save(f".cache/{interaction.user.id}-{interaction.guild.id}.png")
+        return ".cache/{interaction.user.id}-{interaction.guild.id}.png"
+    else:
+        background.save(f".cache/{interaction.user.id}.png")
+        return ".cache/{interaction.user.id}.png"
 class LevelSystem(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
