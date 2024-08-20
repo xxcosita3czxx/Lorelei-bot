@@ -12,7 +12,7 @@ def profile_gen(interaction:discord.Interaction,bg:str):
     font_color = (255, 255, 255)  # Font color (RGB)
     font_path = "arial.ttf"  # Path to your font file
     font_size = 50  # Font size for all texts
-    fixed_size = (500, 500)  # Fixed size for the profile image
+    fixed_size = (710, 800)  # Fixed size for the profile image
 
     # Texts and positions
     texts = [
@@ -55,7 +55,7 @@ class LevelSystem(commands.Cog):
     @app_commands.command(name="profile",description="Your profile")
     async def profile(self,interaction: discord.Interaction, minimal:bool=True):
         if minimal:
-            image = profile_gen(interaction=interaction,bg="data/prof_bgs/Default.png")  # noqa: E501
+            image = profile_gen(interaction=interaction,bg="data/prof-bgs/Default.png")  # noqa: E501
             embed = discord.Embed(title=f"Profile of {interaction.user.name}")
             embed.set_image(image)
             await interaction.response.send_message(embed=embed)

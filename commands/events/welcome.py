@@ -50,6 +50,7 @@ class Welcome(commands.Cog):
                             await member.send(content=formated)
                         else:
                             logging.error("Member is none")
+
                 channel_id = gconfig.get(member.guild.id,"MEMBERS","welcome-channel")  # noqa: E501
                 logging.debug(channel_id)
                 channel = member.guild.get_channel(channel_id)
