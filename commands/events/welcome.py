@@ -1,6 +1,6 @@
 
 import logging
-from string import Template
+import re
 
 import discord
 from discord.ext import commands
@@ -8,11 +8,12 @@ from discord.ext import commands
 from utils.configmanager import gconfig
 
 
-def format_string(template, **kwargs):
-    # Create a Template object
-    tmpl = Template(template)
-    # Perform safe substitution
-    return tmpl.safe_substitute(**kwargs)
+def format_string(template, placeholders):
+    return re.sub(
+        r'{(\w+)}',
+        lambda match: str(placeholders.get(match.group(1), match.group(0))),
+        template,
+    )
 
 
 class Welcome(commands.Cog):
