@@ -53,7 +53,9 @@ class Welcome(commands.Cog):
 
                 channel_id = gconfig.get(member.guild.id,"MEMBERS","welcome-channel")  # noqa: E501
                 logging.warning(channel_id)
-                channel = member.guild.get_channel(channel_id)
+
+                # channel = member.guild.get_channel(channel_id)
+                channel = await self.bot.fetch_channel(channel_id)
                 logging.debug(channel)
                 if gconfig.get(member.guild.id,"MEMBERS","welcome-rich"):
                     embed = discord.Embed(

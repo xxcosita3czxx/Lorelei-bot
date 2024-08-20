@@ -57,8 +57,9 @@ class LevelSystem(commands.Cog):
         if minimal:
             image = profile_gen(interaction=interaction,bg="data/prof-bgs/Default.png")  # noqa: E501
             embed = discord.Embed(title=f"Profile of {interaction.user.name}")
-            embed.set_image(image)
-            await interaction.response.send_message(embed=embed)
+            file = discord.File(image, filename="profile.png")
+            embed.set_image(url="attachment://profile.png")
+            await interaction.response.send_message(embed=embed,file=file)
         else:
             await interaction.response.send_message("Not yet made", ephemeral=True)
 
@@ -66,4 +67,3 @@ class LevelSystem(commands.Cog):
 async def setup(bot:commands.Bot):
     cog = LevelSystem(bot)
     await bot.add_cog(cog)
-    pass
