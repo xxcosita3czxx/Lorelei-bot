@@ -55,10 +55,19 @@ class E6_commands(commands.Cog):
                     title = f"Post {post['id']}, by {post['tags']['artist']}",
                 )
                 embed.set_image(url = post["file"]["url"])
-                await interaction.response.send_message(embed=embed)
+                await interaction.response.send_message(embed=embed,view=e6_view)
             except Exception as e:
                 await interaction.response.send_message(content=f"Exception: {e}")
 
+class e6_view(discord.ui.View):
+    def __init__(self):
+        super().__init__()
+    @discord.ui.button(label="Previous",custom_id="prev")
+    async def prev(self,interaction:discord.Interaction):
+        pass
+    @discord.ui.button(label="Next",custom_id="next")
+    async def next(self,interaction:discord.Interaction):
+        pass
 
 async def setup(bot:commands.Bot):
     cog = E6_commands(bot)
