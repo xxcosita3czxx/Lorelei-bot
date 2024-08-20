@@ -1,6 +1,5 @@
 
 import logging
-from functools import lru_cache
 from string import Template
 
 import discord
