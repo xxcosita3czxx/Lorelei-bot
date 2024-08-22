@@ -10,8 +10,10 @@ from utils.autocomplete import (
     autocomplete_dice_modes,
     autocomplete_lang,
 )
+from utils.timeconverter import TimeConverter
 from utils.configmanager import gconfig, lang, uconfig
 from utils.dices import dices
+from humanfriendly import format_timespan
 
 
 class GuildConfig(commands.Cog):
@@ -44,6 +46,15 @@ class GuildConfig(commands.Cog):
                 await interaction.response.send_message(
                     content=f"Failed configuring anti-invites: {e}",
                 )
+        @app_commands.command(
+            name="anti-alts",
+            description="No alts on the server allowed!",
+        )
+        async def antialts(self,enabled:bool,time:app_commands.Transform[str, TimeConverter]=None):  # noqa: E501
+            try:
+                pass
+            except Exception as e:
+                pass
 
         @app_commands.command(
             name="anti-links",
