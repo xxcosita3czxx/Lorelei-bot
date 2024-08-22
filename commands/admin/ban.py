@@ -4,8 +4,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from utils.timeconverter import TimeConverter
-
+#from utils.timeconverter import TimeConverter
 #from humanfriendly import format_timespan
 
 class Ban(commands.Cog):
@@ -15,11 +14,11 @@ class Ban(commands.Cog):
     @app_commands.command(name="ban", description="Ban a user")
     @app_commands.describe(
         reason="Reason for ban",
-        time="Duration of ban",
         member="User to ban",
     )
+    # time: app_commands.Transform[str, TimeConverter]=None
     @app_commands.default_permissions(ban_members=True)
-    async def ban(self,interaction: discord.Interaction, member: discord.Member, reason: str , time: app_commands.Transform[str, TimeConverter]=None):  # noqa: E501
+    async def ban(self,interaction: discord.Interaction, member: discord.Member, reason: str):  # noqa: E501
 
         '''
         Ban command
