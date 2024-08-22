@@ -101,7 +101,7 @@ except ImportError:
     logging.warning("Module subproccess not found, could have limitations")
 
 try:
-    import netifaces
+    import netifaces  # type: ignore
 
 except ImportError:
     logging.warning("Module netifaces not found, could have limitations")
@@ -129,6 +129,12 @@ try:
 
 except ImportError:
     logging.warning("Module requests not found, could have limitations")
+
+try:
+    import zipfile
+
+except ImportError:
+    logging.warning("Module zipfile not found, could have limitations")
 
 try:
     import json
@@ -205,7 +211,11 @@ def update_script_from_github(owner:str, repo:str,branch:str, file_path:str, loc
 
 class MemMod:
 
-    """Requires windows, bcs linux works different way."""
+    """
+    Requires windows, bcs linux works different way.
+
+    Edit Memory of programs in RAM.
+    """
 
     def pid_by_name(target_string=None, exe_name=None):  # noqa: C901
         """Get proccess pid by its name, pid needed for memory editing."""
@@ -431,6 +441,58 @@ class GithubApi:
         text_json = json.loads(text)
         return text_json
 
+    def download_repo_zip(self,owner, repo, branch='main'):
+        """Download the repo as zip."""
+        header = {'User-Agent': f'Cosita-Toolkit-{update_branch}'}
+        url = f'https://github.com/{owner}/{repo}/archive/{branch}.zip'
+        response = requests.get(url,timeout=60,headers=header)
+
+        if response.status_code == Status.Requests.SUCCESS:
+            with open(f'{repo}-{branch}.zip', 'wb') as file:
+                file.write(response.content)
+            logging.debug(f'Repository {repo} downloaded as {repo}-{branch}.zip')  # noqa: E501
+        else:
+            logging.error(f'Failed to download repository {repo}: {response.status_code}')  # noqa: E501
+
+    def pull_changes(self,user:str,repo:str,branch:str="main",root:str=".",list:list=None,mode:str="all"):  # noqa: C901, E501
+        """Pull changes from repo using http api."""
+        if mode not in ["all","include","exclude"]:
+            raise ValueError("Bad mode, only 'include','exclude' or 'all' accepted")
+
+        zip_path = self.download_repo_zip(owner=user,repo=repo,branch=branch)
+
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            # List will contain files to pull
+            if mode == "include" and list is not None:
+                for item in list:
+                    for file in zip_ref.namelist():
+                        if item.endswith('/') and file.startswith(item) or file == item:  # It's a folder  # noqa: E501
+                            zip_ref.extract(file, root)
+                            logging.debug(f'Extracted {file}')
+
+            # List will contain files to exclude
+            elif mode == "exclude" and list is not None:
+                for file in zip_ref.namelist():
+                    # Check if the file or folder should be excluded
+                    if not any(file.startswith(excluded) for excluded in list):
+                        zip_ref.extract(file, root)
+                        logging.debug(f'Extracted {file}')
+                    else:
+                        logging.debug(f'Excluded {file}')
+
+            # Will ignore list and updates all (clone of repo)
+            elif mode == "all":
+                for file in zip_ref.namelist():
+                    # Define the extraction path
+                    extract_path = os.path.join(root, file)
+                    # Create directories if the path is a directory
+                    if file.endswith('/'):
+                        os.makedirs(extract_path, exist_ok=True)
+                    else:
+                        # Extract file and overwrite if it already exists
+                        zip_ref.extract(file, root)
+                        logging.debug(f'Extracted {file}')
+
 class PokeAPI:
 
     """PokeAPI functions from http API."""
@@ -604,7 +666,7 @@ class Networking:
         try:
             if platform.system() == "Linux":
                 logging.debug(f"checking {ip}")
-                output = subprocess.check_output(
+                output = subprocess.check_output(  # noqa: S603
                     ["ping", "-c", "1", ip],  # noqa: S603, S607
                     stderr=subprocess.STDOUT,
                     text=True,
@@ -613,7 +675,7 @@ class Networking:
                     result_list.append(ip)
                     logging.info(f"Checked IP: {ip}")
             elif platform.system() == "Windows":
-                output = subprocess.check_output(
+                output = subprocess.check_output(  # noqa: S603
                     ["ping", "-n", "1", ip],  # noqa: S603, S607
                     stderr=subprocess.STDOUT,
                     text=True,
