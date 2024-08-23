@@ -281,12 +281,13 @@ class GuildConfig(commands.Cog):
                     key="autorole-role",
                     value=role.id,
                 )
-                gconfig.set(
-                    id=interaction.guild_id,
-                    title="MEMBERS",
-                    key="autorole-enabled",
-                    value=enabled,
-                )
+                if role:
+                    gconfig.set(
+                        id=interaction.guild_id,
+                        title="MEMBERS",
+                        key="autorole-enabled",
+                        value=enabled,
+                    )
                 await interaction.response.send_message(
                     content=f"Set value {str(role.name)}, {str(enabled)}",
                     ephemeral=True,
