@@ -38,7 +38,7 @@ class Welcome(commands.Cog):
                     if gconfig.get(member.guild.id,"MEMBERS","welcome-rich"):
                         logging.debug("welcome rich triggered")
                         embed = discord.Embed(
-                            title=formated,
+                            description=formated,
                         )
                         if member:
                             await member.send(embed=embed)
@@ -58,7 +58,7 @@ class Welcome(commands.Cog):
                 logging.debug(channel)
                 if gconfig.get(member.guild.id,"MEMBERS","welcome-rich"):
                     embed = discord.Embed(
-                        title=formated,
+                        description=formated,
                     )
                     if channel:
                         await channel.send(embed=embed)
