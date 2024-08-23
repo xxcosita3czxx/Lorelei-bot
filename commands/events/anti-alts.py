@@ -2,6 +2,7 @@ import logging
 
 import discord
 from discord.ext import commands
+from humanfriendly import format_timespan
 
 from utils.configmanager import gconfig
 

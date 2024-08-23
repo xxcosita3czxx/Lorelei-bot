@@ -10,10 +10,9 @@ from utils.autocomplete import (
     autocomplete_dice_modes,
     autocomplete_lang,
 )
-from utils.timeconverter import TimeConverter
 from utils.configmanager import gconfig, lang, uconfig
 from utils.dices import dices
-from humanfriendly import format_timespan
+from utils.timeconverter import TimeConverter
 
 
 class GuildConfig(commands.Cog):
@@ -50,11 +49,12 @@ class GuildConfig(commands.Cog):
             name="anti-alts",
             description="No alts on the server allowed!",
         )
-        async def antialts(self,enabled:bool,time:app_commands.Transform[str, TimeConverter]=None):  # noqa: E501
+        async def antialts(self,interaction:discord.Interaction,enabled:bool,time:app_commands.Transform[str, TimeConverter]=None):  # noqa: E501
             try:
-                pass
+                gconfig.set(interaction.guild.id,"SECURITY","antialts-enabled")
+                gconfig.set(interaction.guild.id,"SECURITY","antialts-time")
             except Exception as e:
-                pass
+                logging.info(f"THere was error in settings {e}")
 
         @app_commands.command(
             name="anti-links",
