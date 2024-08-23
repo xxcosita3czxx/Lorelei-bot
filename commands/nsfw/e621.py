@@ -76,12 +76,12 @@ class E6_commands(commands.Cog):
             self.index = index
 
         @discord.ui.button(label="Previous", custom_id="prev", style=discord.ButtonStyle.primary)  # noqa: E501
-        async def prev(self, button: discord.ui.Button, interaction: discord.Interaction):  # noqa: E501
+        async def prev(self, interaction: discord.Interaction, button: discord.ui.Button):  # noqa: E501
             self.index = (self.index - 1) % len(self.posts)
             await self.update_embed(interaction)
 
         @discord.ui.button(label="Next", custom_id="next", style=discord.ButtonStyle.primary)  # noqa: E501
-        async def next(self, button: discord.ui.Button, interaction: discord.Interaction):  # noqa: E501
+        async def next(self, interaction: discord.Interaction, button: discord.ui.Button):  # noqa: E501
             self.index = (self.index + 1) % len(self.posts)
             await self.update_embed(interaction)
 
@@ -92,7 +92,6 @@ class E6_commands(commands.Cog):
             )
             embed.set_image(url=post["file"]["url"])
             await interaction.response.edit_message(embed=embed, view=self)
-
 async def setup(bot: commands.Bot):
     cog = E6_commands(bot)
     bot.tree.add_command(cog.e6_commands())
