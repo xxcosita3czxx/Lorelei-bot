@@ -51,8 +51,8 @@ class GuildConfig(commands.Cog):
         )
         async def antialts(self,interaction:discord.Interaction,enabled:bool,time:app_commands.Transform[str, TimeConverter]=None):  # noqa: E501
             try:
-                gconfig.set(interaction.guild.id,"SECURITY","antialts-enabled")
-                gconfig.set(interaction.guild.id,"SECURITY","antialts-time")
+                gconfig.set(interaction.guild.id,"SECURITY","antialts-enabled",enabled)
+                gconfig.set(interaction.guild.id,"SECURITY","antialts-time",time)
             except Exception as e:
                 logging.info(f"THere was error in settings {e}")
 
