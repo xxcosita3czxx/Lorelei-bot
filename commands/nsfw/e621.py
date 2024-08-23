@@ -58,6 +58,7 @@ class E6_commands(commands.Cog):
                 await interaction.response.send_message(
                     embed=embed,
                     view=E6_commands.e6_view(posts, current_index),
+                    file=discord.File(video_url),
                 )
             except Exception as e:
                 await interaction.response.send_message(content=f"Exception: {e}")
@@ -70,6 +71,8 @@ class E6_commands(commands.Cog):
             if post["file"]["url"].endswith((".mp4", ".webm")):  # If the file is a video  # noqa: E501
                 video_url = post["file"]["url"]
                 embed.description = f"[Click here to view the video]({video_url})"  # Add video link to description  # noqa: E501
+            elif post["file"]["url"].endswith(".swm"):
+                embed.description = "Flash files are no longer supported!"
             else:
                 embed.set_image(url=post["file"]["url"])
             return embed, video_url
@@ -93,7 +96,7 @@ class E6_commands(commands.Cog):
         async def update_embed(self, interaction: discord.Interaction):
             post = self.posts[self.index]
             embed, video_url = E6_commands.e6_commands.create_embed(self, post)
-            await interaction.response.edit_message(embed=embed, content=video_url if video_url else None, view=self)  # noqa: E501
+            await interaction.response.edit_message(embed=embed,attachments=discord.File(video_url), view=self)  # noqa: E501
 
 async def setup(bot: commands.Bot):
     cog = E6_commands(bot)
