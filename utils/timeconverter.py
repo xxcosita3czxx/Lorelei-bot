@@ -1,5 +1,4 @@
 import re
-from functools import lru_cache
 
 import discord
 from discord import app_commands
@@ -7,7 +6,6 @@ from discord import app_commands
 time_regex = re.compile(r"(?:(\d{1,5})(h|s|m|d))+?")
 time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
 
-@lru_cache
 async def transformer(argument):
     args = argument.lower()
     matches = re.findall(time_regex, args)
@@ -25,7 +23,7 @@ async def transformer(argument):
 
         except ValueError:
             raise app_commands.BadArgument(f"{key} is not a number!")  # noqa: B904
-    return round(time)
+    return int(time)
 
 class TimeConverter(app_commands.Transformer):
 
