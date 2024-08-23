@@ -18,7 +18,7 @@ class AntiAlts(commands.Cog):
         if gconfig.get(id=member.guild.id,title="SECURITY",key="antialts-enabled"):  # noqa: SIM102
 
             creation_time = member.created_at
-            current_time = datetime.utcnow()
+            current_time = datetime.datetime.now(datetime.UTC)
             account_age = (current_time - creation_time).total_seconds()
 
             if account_age <= gconfig.get(id=member.guild.id,title="SECURITY",key="antialts-time"):  # noqa: E501
