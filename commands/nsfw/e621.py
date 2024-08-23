@@ -54,7 +54,7 @@ class E6_commands(commands.Cog):
                 posts = data["posts"]
                 current_index = random.randint(0, len(posts) - 1)  # Start with a random post  # noqa: E501, S311
 
-                embed = self.create_embed(posts[current_index])
+                embed, video_url = self.create_embed(posts[current_index])
                 await interaction.response.send_message(
                     embed=embed,
                     view=E6_commands.e6_view(posts, current_index),
@@ -66,8 +66,13 @@ class E6_commands(commands.Cog):
             embed = discord.Embed(
                 title=f"Post {post['id']}, by {', '.join(post['tags']['artist'])}",
             )
-            embed.set_image(url=post["file"]["url"])
-            return embed
+            video_url = None
+            if post["file"]["url"].endswith((".mp4", ".webm")):  # If the file is a video  # noqa: E501
+                video_url = post["file"]["url"]
+                embed.description = f"[Click here to view the video]({video_url})"  # Add video link to description  # noqa: E501
+            else:
+                embed.set_image(url=post["file"]["url"])
+            return embed, video_url
 
     class e6_view(discord.ui.View):
         def __init__(self, posts, index):
@@ -87,11 +92,9 @@ class E6_commands(commands.Cog):
 
         async def update_embed(self, interaction: discord.Interaction):
             post = self.posts[self.index]
-            embed = discord.Embed(
-                title=f"Post {post['id']}, by {', '.join(post['tags']['artist'])}",
-            )
-            embed.set_image(url=post["file"]["url"])
-            await interaction.response.edit_message(embed=embed, view=self)
+            embed, video_url = E6_commands.e6_commands.create_embed(self, post)
+            await interaction.response.edit_message(embed=embed, content=video_url if video_url else None, view=self)  # noqa: E501
+
 async def setup(bot: commands.Bot):
     cog = E6_commands(bot)
     bot.tree.add_command(cog.e6_commands())
