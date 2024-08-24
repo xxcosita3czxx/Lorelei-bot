@@ -4,10 +4,10 @@
 #TODO Welcome system not working on channels
 #TODO Giveaway logic
 #TODO more verify modes
-#TODO AntiLinks block all messages
+#TODO AntiLinks block all messages (Test please)
 #TODO Embeds and translations of strings
-#TODO some more commands on helper
 #TODO Level system
+#TODO Autorole not giving roles, if checks maybe?
 
 import asyncio
 import logging
