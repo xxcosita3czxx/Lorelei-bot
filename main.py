@@ -4,10 +4,10 @@
 #TODO Welcome system not working on channels
 #TODO Giveaway logic
 #TODO more verify modes
-#TODO AntiLinks block all messages
+#TODO AntiLinks block all messages (Test please)
 #TODO Embeds and translations of strings
-#TODO some more commands on helper
 #TODO Level system
+#TODO Autorole not giving roles, if checks maybe?
 
 import asyncio
 import logging
@@ -20,6 +20,7 @@ import discord.ext
 import discord.ext.commands
 
 import config
+import utils.profiler as profiler
 from utils.configmanager import lang
 
 ############################### Logging ############################################
@@ -136,10 +137,24 @@ async def handle_command(command,bot):  # noqa: C901
 
         except Exception as e:
             return f"Failed to load: {e}"
+
+    elif command.startswith("profiler"):
+        # Handle profiler commands
+        parts = command.split(" ", 1)
+        if len(parts) > 1:
+            action = parts[1]
+            if action == "start":
+                return profiler.start_profiling()
+            elif action == "stop":
+                return profiler.stop_profiling()
+            elif action == "stats":
+                return profiler.get_stats()
+            else:
+                return "Unknown profiler action."
+
     elif command.startswith("kill"):
         logger.info("Killing from helper")
         sys.exit()
-
 
     else:
         return 'Unknown command.'

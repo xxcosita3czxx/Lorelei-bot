@@ -49,24 +49,40 @@ async def autocomplete_lang(interaction: discord.Interaction,current: str) -> Li
 
 async def autocomplete_tags(interaction: discord.Interaction, current: str):
     try:
+        # Split current input into words
         *previous_words, last_word = current.split() if current else [""]
-        tags = await fetch_tags(last_word)
+
+        # Handle the dash in last_word
+        last_word_cleaned = last_word.lstrip('-').strip()
+
+        # Fetch tags based on cleaned last_word
+        tags = await fetch_tags(last_word_cleaned)
         choices = []
 
         for tag in tags:
-            if last_word.lower() in tag.lower():
-                full_completion = " ".join(previous_words + [tag])
+            # Check if cleaned last_word is in the tag
+            if last_word_cleaned.lower() in tag.lower():
+                # Re-include the dash if it was part of the original input
+                if last_word.startswith('-'):
+                    full_completion = " ".join(previous_words + ['-' + tag])
+                else:
+                    full_completion = " ".join(previous_words + [tag])
+
                 choices.append(
                     app_commands.Choice(
                         name=full_completion,
                         value=full_completion,
                     ),
                 )
+
         return choices
     except Exception as e:
         logging.warning(f"Autocomplete tags failed! {e}")
-        return [ "autocomplete failed!" ]
-
+        return [
+            app_commands.Choice(name="autocomplete failed!", value="autocomplete failed!"),  # noqa: E501
+            app_commands.Choice(name="autocomplete failed!", value="autocomplete failed!"),  # noqa: E501
+            app_commands.Choice(name="autocomplete failed!", value="autocomplete failed!"),  # noqa: E501
+        ]
 #    if current == "":
 #        tags = await fetch_tags(current)
 #    else:

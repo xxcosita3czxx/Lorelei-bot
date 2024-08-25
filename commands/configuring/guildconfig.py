@@ -50,11 +50,12 @@ class GuildConfig(commands.Cog):
             name="anti-alts",
             description="No alts on the server allowed!",
         )
-        async def antialts(self,enabled:bool,time:app_commands.Transform[str, TimeConverter]=None):  # noqa: E501
+        async def antialts(self,interaction:discord.Interaction,enabled:bool,time:app_commands.Transform[str, TimeConverter]=None):  # noqa: E501
             try:
-                logging.debug("lorem ipsum")
+                gconfig.set(interaction.guild.id,"SECURITY","antialts-enabled",enabled)
+                gconfig.set(interaction.guild.id,"SECURITY","antialts-time",time)
             except Exception as e:
-                logging.error(f"There was unhandled exception, {e}")
+                logging.info(f"There was error in settings {e}")
 
         @app_commands.command(
             name="anti-links",
@@ -281,12 +282,13 @@ class GuildConfig(commands.Cog):
                     key="autorole-role",
                     value=role.id,
                 )
-                gconfig.set(
-                    id=interaction.guild_id,
-                    title="MEMBERS",
-                    key="autorole-enabled",
-                    value=enabled,
-                )
+                if role:
+                    gconfig.set(
+                        id=interaction.guild_id,
+                        title="MEMBERS",
+                        key="autorole-enabled",
+                        value=enabled,
+                    )
                 await interaction.response.send_message(
                     content=f"Set value {str(role.name)}, {str(enabled)}",
                     ephemeral=True,

@@ -18,7 +18,7 @@ def format_string(template, placeholders):
 
 class Welcome(commands.Cog):
     def __init__(self, bot):
-        self.bot = bot
+        self.bot:commands.AutoShardedBot = bot
 
     @commands.Cog.listener("on_member_join")
     async def on_join(self,member:discord.Member):
@@ -38,7 +38,7 @@ class Welcome(commands.Cog):
                     if gconfig.get(member.guild.id,"MEMBERS","welcome-rich"):
                         logging.debug("welcome rich triggered")
                         embed = discord.Embed(
-                            title=formated,
+                            description=formated,
                         )
                         if member:
                             await member.send(embed=embed)
@@ -54,11 +54,11 @@ class Welcome(commands.Cog):
                 logging.debug(channel_id)
 
                 # channel = member.guild.get_channel(channel_id)
-                channel = await self.bot.fetch_channel(channel_id)
+                channel = await self.bot.get_channel(channel_id)
                 logging.debug(channel)
                 if gconfig.get(member.guild.id,"MEMBERS","welcome-rich"):
                     embed = discord.Embed(
-                        title=formated,
+                        description=formated,
                     )
                     if channel:
                         await channel.send(embed=embed)
