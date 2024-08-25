@@ -4,16 +4,16 @@ import os
 import discord
 from discord import app_commands
 from discord.ext import commands
+from humanfriendly import format_timespan
 
 from utils.autocomplete import (
     autocomplete_color,
     autocomplete_dice_modes,
     autocomplete_lang,
 )
-from utils.timeconverter import TimeConverter
 from utils.configmanager import gconfig, lang, uconfig
 from utils.dices import dices
-from humanfriendly import format_timespan
+from utils.timeconverter import TimeConverter
 
 
 class GuildConfig(commands.Cog):
@@ -52,9 +52,9 @@ class GuildConfig(commands.Cog):
         )
         async def antialts(self,enabled:bool,time:app_commands.Transform[str, TimeConverter]=None):  # noqa: E501
             try:
-                pass
+                logging.debug("lorem ipsum")
             except Exception as e:
-                pass
+                logging.error(f"There was unhandled exception, {e}")
 
         @app_commands.command(
             name="anti-links",
