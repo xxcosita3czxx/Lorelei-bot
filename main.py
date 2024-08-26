@@ -77,14 +77,17 @@ class FastAPIServer:
         )
 
     def _configure_routes(self):
+
         @self.app.get("/")
         async def api_root():
             return {"message": "Hello, World!"}
+
         @self.app.get("/guilds")
         async def api_guilds():
             return {"guilds": len(self.bot.guilds)}
+
     async def start(self):
-        config = uvicorn.Config(self.app, host="127.0.0.1", port=self.port, loop="asyncio")  # noqa: E501
+        config = uvicorn.Config(self.app, host="0.0.0.0", port=self.port, loop="asyncio")  # noqa: E501, S104
         server = uvicorn.Server(config)
         await server.serve()
 
