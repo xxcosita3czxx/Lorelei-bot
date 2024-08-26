@@ -1,17 +1,6 @@
 [ConfigureCommand]
 
 [TicketingCommand]
-embed_review_title = "Chceli by ste skontrolovať náš systém?"
-embed_review_description = "Nájdite chvíľu a dajte nám hviezdičku podľa toho, ako dobre ste sa obslúžili:"
-ticket_close_confirm = "Ste si istý, že chcete zavrieť tento ticket?"
-embed_review_resp_title = "Ďakujem za hodnotenie!"
-embed_review_rev_title = "Skontrolovať odpoveď"
-embed_review_rev_desc = "Používateľ odpovedal na akciu kontroly!"
-panel_launch = "Spustenie systému ticketov!"
-remove_role = "Odstránená rola {role} z ticketu"
-remove_user = "Používateľ {user} bol odstránený z lístka"
-only_one = "Môžeš použiť len jeden."
-parse_error = "Neznáma chyba pri analýze hodnôt"
 embed_review_title = "Chceli by ste ohodnotiť náš systém?"
 embed_review_description = "Zaberie to len chvíľku, ohodnoťte nás hviezdičkou podľa toho, ako dobre ste boli spokojný:"
 ticket_close_confirm = "Ste si istý, že chcete tento tiket uzavrieť?"
