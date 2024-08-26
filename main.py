@@ -74,7 +74,7 @@ class FastAPIServer:
             return {"message": "Hello, World!"}
         @self.app.get("/guilds")
         async def api_guilds():
-            return len(self.bot.guilds)
+            return {"guilds": len(self.bot.guilds)}
     async def start(self):
         config = uvicorn.Config(self.app, host="127.0.0.1", port=self.port, loop="asyncio")  # noqa: E501
         server = uvicorn.Server(config)
