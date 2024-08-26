@@ -19,6 +19,7 @@ import discord
 import uvicorn  # type: ignore
 from discord.ext import commands
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 import config
 import utils.profiler as profiler
@@ -67,6 +68,13 @@ class FastAPIServer:
         self.port = port
         self.bot = bot
         self._configure_routes()
+        self.app.add_middleware(
+            CORSMiddleware,
+            allow_origins=["*"],
+            allow_credentials=True,
+            allow_methods=["*"],  # Allows all HTTP methods
+            allow_headers=["*"],  # Allows all headers
+        )
 
     def _configure_routes(self):
         @self.app.get("/")
