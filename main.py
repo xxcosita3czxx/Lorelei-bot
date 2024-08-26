@@ -16,9 +16,8 @@ import sys
 
 import coloredlogs
 import discord
-import discord.ext
-import discord.ext.commands
 import uvicorn
+from discord.ext import commands
 from fastapi import FastAPI
 
 import config
@@ -63,17 +62,21 @@ async def unload_cogs(bot):
 ################################# Api bot info #####################################
 
 class FastAPIServer:
-    def __init__(self):
+    def __init__(self,port,bot:commands.AutoShardedBot):
         self.app = FastAPI()
+        self.port = port
+        self.bot = bot
         self._configure_routes()
 
     def _configure_routes(self):
         @self.app.get("/")
-        async def read_root():
+        async def api_root():
             return {"message": "Hello, World!"}
-
+        @self.app.get("guilds")
+        async def api_guilds():
+            return len(self.bot.guilds)
     async def start(self):
-        config = uvicorn.Config(self.app, host="127.0.0.1", port=8000, loop="asyncio")  # noqa: E501
+        config = uvicorn.Config(self.app, host="127.0.0.1", port=self.port, loop="asyncio")  # noqa: E501
         server = uvicorn.Server(config)
         await server.serve()
 
