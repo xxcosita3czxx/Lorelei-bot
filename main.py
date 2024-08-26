@@ -72,7 +72,7 @@ class FastAPIServer:
         @self.app.get("/")
         async def api_root():
             return {"message": "Hello, World!"}
-        @self.app.get("guilds")
+        @self.app.get("/guilds")
         async def api_guilds():
             return len(self.bot.guilds)
     async def start(self):
