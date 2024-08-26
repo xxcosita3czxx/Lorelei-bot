@@ -18,6 +18,8 @@ import coloredlogs
 import discord
 import discord.ext
 import discord.ext.commands
+import uvicorn
+from fastapi import FastAPI
 
 import config
 import utils.profiler as profiler
@@ -57,6 +59,24 @@ async def unload_cogs(bot):
             logger.info(lang.get(config.language, "Bot", "cog_unload").format(module_name=extension))  # noqa: E501
         except Exception as e:
             logger.error(lang.get(config.language, "Bot", "cog_fail_unload").format(module_name=extension, error=e))  # noqa: E501
+
+################################# Api bot info #####################################
+
+class FastAPIServer:
+    def __init__(self):
+        self.app = FastAPI()
+        self._configure_routes()
+
+    def _configure_routes(self):
+        @self.app.get("/")
+        async def read_root():
+            return {"message": "Hello, World!"}
+
+    async def start(self):
+        config = uvicorn.Config(self.app, host="127.0.0.1", port=8000, loop="asyncio")  # noqa: E501
+        server = uvicorn.Server(config)
+        await server.serve()
+
 #################################### Helper ########################################
 
 async def socket_listener(bot):
@@ -222,6 +242,9 @@ class aclient(discord.ext.commands.AutoShardedBot):
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
         if config.helper:
             asyncio.create_task(socket_listener(self))
+        if config.api:
+            fastapi_server = FastAPIServer()
+            asyncio.create_task(fastapi_server.start())
         asyncio.create_task(change_status())
 
 bot = aclient(shard_count=config.shards)
