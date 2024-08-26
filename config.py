@@ -57,7 +57,7 @@ helperport = 9920
 api = True
 #
 # API port, default 9921
-helperport = 9921
+apiport = 9921
 ############# Shards ##############
 ############# Shards ##############
 #

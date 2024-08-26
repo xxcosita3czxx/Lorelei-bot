@@ -246,7 +246,7 @@ class aclient(discord.ext.commands.AutoShardedBot):
         if config.helper:
             asyncio.create_task(socket_listener(self))
         if config.api:
-            fastapi_server = FastAPIServer()
+            fastapi_server = FastAPIServer(bot=bot port=config.apiport)
             asyncio.create_task(fastapi_server.start())
         asyncio.create_task(change_status())
 
