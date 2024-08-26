@@ -58,7 +58,7 @@ def update():
         try:
 #            ctkit.update_script_from_github("xxcosita3czxx","lorelei-bot","main.py","main.py") # noqa: E501
 #            ctkit.update_script_from_github("xxcosita3czxx","lorelei-bot","run.py","run.py") # noqa: E501
-            os.system("git stash && git pull") # noqa: S605
+            os.system("git pull") # noqa: S605
         except Exception as e:
             logger.warning("UPDATER FAILED")
             logger.warning(e)
@@ -95,6 +95,7 @@ def main(update):
         update()
         os.system("python3 utils/cosita_toolkit.py") # noqa: S605
         sys.exit()
+
     monitor_thread = threading.Thread(target=Is_Alive)
     update_thread = threading.Thread(target=update_loop)
     update_costk_thread = threading.Thread(target=update_cosita_tk)
@@ -102,5 +103,7 @@ def main(update):
     monitor_thread.start()
     update_thread.start()
     update_costk_thread.start()
+
+
 if __name__ == "__main__":
     main()

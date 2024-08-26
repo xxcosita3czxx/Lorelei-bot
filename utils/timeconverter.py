@@ -9,8 +9,7 @@ time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
 
 class TimeConverter(app_commands.Transformer):
 
-    async def transform(self,interaction:discord.Interaction,argument:str) -> int:  # noqa: E501, ANN101
-
+    async def transform(self, interaction: discord.Interaction, argument:str):
         args = argument.lower()
         matches = re.findall(time_regex, args)
         time = 0
@@ -27,5 +26,4 @@ class TimeConverter(app_commands.Transformer):
 
             except ValueError:
                 raise app_commands.BadArgument(f"{key} is not a number!")  # noqa: B904
-
-        return round(time)
+        return int(time)

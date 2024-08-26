@@ -7,3 +7,5 @@ dulwich
 gitpython
 toml
 click
+fastapi
+uvicorn

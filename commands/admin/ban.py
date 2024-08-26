@@ -3,10 +3,9 @@ import logging as logger
 import discord
 from discord import app_commands
 from discord.ext import commands
-from humanfriendly import format_timespan
 
-from utils.timeconverter import TimeConverter
-
+#from utils.timeconverter import TimeConverter
+#from humanfriendly import format_timespan
 
 class Ban(commands.Cog):
     def __init__(self, bot):
@@ -15,11 +14,11 @@ class Ban(commands.Cog):
     @app_commands.command(name="ban", description="Ban a user")
     @app_commands.describe(
         reason="Reason for ban",
-        time="Duration of ban",
         member="User to ban",
     )
+    # time: app_commands.Transform[str, TimeConverter]=None
     @app_commands.default_permissions(ban_members=True)
-    async def ban(self,interaction: discord.Interaction, member: discord.Member, reason: str , time: app_commands.Transform[str, TimeConverter]=None):  # noqa: E501
+    async def ban(self,interaction: discord.Interaction, member: discord.Member, reason: str):  # noqa: E501
 
         '''
         Ban command
@@ -48,7 +47,7 @@ class Ban(commands.Cog):
         try:
             await member.send(
                 embed=discord.Embed(
-                    description=f"You have been banned from {interaction.guild.name} for {format_timespan(time)}\n**Reason**: {reason}",  # noqa: E501
+                    description=f"You have been banned from {interaction.guild.name} \n**Reason**: {reason}",  # noqa: E501
                     color=discord.Color.blurple(),
                 ),
             )
@@ -66,7 +65,7 @@ class Ban(commands.Cog):
         )
         await interaction.followup.send(
             embed=discord.Embed(
-                description=f"{member.mention} has been banned for {format_timespan(time)}\n**Reason**: {reason}",  # noqa: E501
+                description=f"{member.mention} has been banned \n**Reason**: {reason}",  # noqa: E501
                 color=0x2f3136,
             ),
             ephemeral=False,

@@ -6,7 +6,7 @@ from discord import app_commands
 from discord.ext import commands
 
 from utils.autocomplete import autocomplete_dice_modes
-from utils.configmanager import gconfig, uconfig
+from utils.configmanager import gconfig, lang, uconfig
 from utils.dices import dices
 
 
@@ -34,8 +34,8 @@ class Dice(commands.Cog):
             min_val, max_val = dices[mode]
             roll = random.randint(min_val,max_val)  # noqa: S311
             embed = discord.Embed(
-                title="The Dice Roller 3000",
-                description=f"Dice: {mode} \n## And rolled number is....\n# {roll}",
+                title=lang.get(uconfig.get(interaction.user.id,"APPEARANCE","language"),"Responds","dice_roller_title"),
+                description=lang.get(uconfig.get(interaction.user.id,"APPEARANCE","language"),"Responds","dice_roller_desc").format(mode=mode,roll=roll),
             )
             await interaction.response.send_message(embed=embed)
         except Exception as e:

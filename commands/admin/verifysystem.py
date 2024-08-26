@@ -117,9 +117,8 @@ class VerifySystem(commands.Cog):
     class verify_teams(discord.ui.View):
         def __init__(self)-> None:
             super().__init__(timeout=None)
-
     class verify_captcha(discord.ui.View):
-        def __init__(self)-> None:
+        def __init__(self):
             super().__init__(timeout=None)
     class verify_emoji(discord.ui.View):
         def __init__(self)-> None:

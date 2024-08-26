@@ -1,21 +1,27 @@
 #############################
 #    By Cosita              #
 #############################
-#TODO Welcome system
+#TODO Welcome system not working on channels
 #TODO Giveaway logic
-#TODO Check Ticketing if its working after restart
 #TODO more verify modes
+#TODO AntiLinks block all messages (Test please)
+#TODO Embeds and translations of strings
+#TODO Level system
+#TODO Autorole not giving roles, if checks maybe?
 
 import asyncio
 import logging
 import os
+import sys
 
 import coloredlogs
 import discord
-import discord.ext
-import discord.ext.commands
+import uvicorn  # type: ignore
+from discord.ext import commands
+from fastapi import FastAPI
 
 import config
+import utils.profiler as profiler
 from utils.configmanager import lang
 
 ############################### Logging ############################################
@@ -40,10 +46,141 @@ async def load_cogs(directory,bot):
                 module_name = cog_path.replace(os.sep, '.').replace('.py', '')
                 try:
                     await bot.load_extension(f'{directory}.{module_name}')
-                    logger.info(f"Loaded {module_name}")
+                    logger.info(lang.get(config.language,"Bot","cog_load").format(module_name=module_name))
                 except Exception as e:
-                    logger.error(f'Failed to load {module_name}: {e}')
+                    logger.error(lang.get(conflang,"Bot","cog_fail").format(module_name=module_name,error=e))
 
+
+async def unload_cogs(bot):
+    for extension in list(bot.extensions):
+        try:
+            await bot.unload_extension(extension)
+            logger.info(lang.get(config.language, "Bot", "cog_unload").format(module_name=extension))  # noqa: E501
+        except Exception as e:
+            logger.error(lang.get(config.language, "Bot", "cog_fail_unload").format(module_name=extension, error=e))  # noqa: E501
+
+################################# Api bot info #####################################
+
+class FastAPIServer:
+    def __init__(self,port,bot:commands.AutoShardedBot):
+        self.app = FastAPI()
+        self.port = port
+        self.bot = bot
+        self._configure_routes()
+
+    def _configure_routes(self):
+        @self.app.get("/")
+        async def api_root():
+            return {"message": "Hello, World!"}
+        @self.app.get("guilds")
+        async def api_guilds():
+            return len(self.bot.guilds)
+    async def start(self):
+        config = uvicorn.Config(self.app, host="127.0.0.1", port=self.port, loop="asyncio")  # noqa: E501
+        server = uvicorn.Server(config)
+        await server.serve()
+
+#################################### Helper ########################################
+
+async def socket_listener(bot):
+    server = await asyncio.start_server(
+        lambda reader, writer: handle_client(reader, writer, bot),
+        'localhost',
+        config.helperport,
+    )
+    logger.info(f"Helper listener running on port {config.helperport}...")
+    async with server:
+        await server.serve_forever()
+
+async def handle_client(reader, writer, bot):
+    try:
+        data = await reader.read(1024)
+        command = data.decode('utf-8').strip()
+        response = await handle_command(command, bot)
+        writer.write(response.encode('utf-8'))
+        await writer.drain()
+    except Exception as e:
+        logger.error(f"Error in client handling: {e}")
+    finally:
+        writer.close()
+        await writer.wait_closed()
+
+async def handle_command(command,bot):  # noqa: C901
+
+    if command.startswith('reload_all'):
+        try:
+            await unload_cogs(bot=bot)
+            await bot.tree.sync()
+            await load_cogs(directory="commands", bot=bot)
+            await bot.tree.sync()
+            return "Reloaded succesfully"
+        except Exception as e:
+            return f'Failed to reload. Error: {e}'
+
+    elif command.startswith("unload"):
+        try:
+            cog = command.split(maxsplit=1)
+            if cog is None or cog == "":
+                return "Specify cog."
+            if cog not in list(bot.extensions):
+                return "Invalid cog. Ensure cog name"
+
+            try:
+                await bot.unload_extension(cog)
+
+            except discord.ext.commands.ExtensionNotLoaded:
+                return "Extension is not loaded"
+
+            except Exception as e:
+                return f"Unknown error while unloading extension: {e}"
+
+        except Exception as e:
+            return f"failed to unload: {e}"
+
+    elif command.startswith("load"):
+        try:
+            _, cog = command.strip(" ")
+            if cog is None or cog == "":
+                return "Specify cog."
+
+            try:
+                await bot.load_extension(cog)
+
+            except discord.ext.commands.ExtensionNotFound:
+                return "Extension not found, ensure name is correct"
+
+            except discord.ext.commands.ExtensionAlreadyLoaded:
+                return "Extension already loaded!"
+
+            except discord.ext.commands.ExtensionFailed as e:
+                return f"Failed to load: {e}"
+
+            except Exception as e:
+                return f"Unknown error while loading extension: {e}"
+
+        except Exception as e:
+            return f"Failed to load: {e}"
+
+    elif command.startswith("profiler"):
+        # Handle profiler commands
+        parts = command.split(" ", 1)
+        if len(parts) > 1:
+            action = parts[1]
+            if action == "start":
+                return profiler.start_profiling()
+            elif action == "stop":
+                return profiler.stop_profiling()
+            elif action == "stats":
+                return profiler.get_stats()
+            else:
+                return "Unknown profiler action."
+
+    elif command.startswith("kill"):
+        logger.info("Killing from helper")
+        sys.exit()
+
+    else:
+        return 'Unknown command.'
 #################################### Status ########################################
 
 async def change_status() -> None:
@@ -102,11 +239,16 @@ class aclient(discord.ext.commands.AutoShardedBot):
             await bot.tree.sync()
             await load_cogs(bot=self,directory="commands")
             await bot.tree.sync()
-            logger.info("Commands Synced!")
+            logger.info(lang.get(config.language,"Bot","command_sync"))
             self.synced = True
 
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
-        await change_status()
+        if config.helper:
+            asyncio.create_task(socket_listener(self))
+        if config.api:
+            fastapi_server = FastAPIServer(bot=bot, port=config.apiport)
+            asyncio.create_task(fastapi_server.start())
+        asyncio.create_task(change_status())
 
 bot = aclient(shard_count=config.shards)
 tree = bot.tree
@@ -120,4 +262,6 @@ tree.remove_command("help")
 if __name__=="__main__":
     with open(".secret.key") as key:
         token = key.read()
+
+    # This will run the bot, yes im too stoobid to rember
     bot.run(token=token)

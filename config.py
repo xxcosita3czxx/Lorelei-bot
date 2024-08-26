@@ -25,6 +25,40 @@ loglevel = "INFO"
 # Do not Disturb status (default)
 status = discord.Status.dnd
 ###################################
+############ Language #############
+#
+# Changes default language
+# en is default
+language = "en"
+###################################
+########## Bug Reports ############
+#
+# Enabling of commands/other/bugreport.py
+# If you dont want people to use bugreports
+#
+# If you dont want to see /bugreport entirely,
+# rename commands/other/bugreport.py to something like bugreport.py.disabled
+bugreport = True
+###################################
+############# Helper ##############
+#
+# Enables helper command, for bot
+# management.
+# Default = True
+helper = True
+#
+# Helper port, default 9920
+helperport = 9920
+############## Api ###############
+#
+# Enables API for getting info
+# about the bot running.
+# Default = True
+api = True
+#
+# API port, default 9921
+apiport = 9921
+############# Shards ##############
 ############# Shards ##############
 #
 # How many Shards to use?
@@ -36,12 +70,6 @@ shards = 1
 # Only True or False
 # True is default
 autoupdate = False
-###################################
-############ Language #############
-#
-# Changes default language
-# en is default
-language = "en"
 ###################################
 ########### Repository ############
 #

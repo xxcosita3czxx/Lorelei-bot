@@ -4,6 +4,7 @@ import os
 import discord
 from discord import app_commands
 from discord.ext import commands
+from humanfriendly import format_timespan
 
 from utils.autocomplete import (
     autocomplete_color,
@@ -12,6 +13,7 @@ from utils.autocomplete import (
 )
 from utils.configmanager import gconfig, lang, uconfig
 from utils.dices import dices
+from utils.timeconverter import TimeConverter
 
 
 class GuildConfig(commands.Cog):
@@ -44,6 +46,16 @@ class GuildConfig(commands.Cog):
                 await interaction.response.send_message(
                     content=f"Failed configuring anti-invites: {e}",
                 )
+        @app_commands.command(
+            name="anti-alts",
+            description="No alts on the server allowed!",
+        )
+        async def antialts(self,interaction:discord.Interaction,enabled:bool,time:app_commands.Transform[str, TimeConverter]=None):  # noqa: E501
+            try:
+                gconfig.set(interaction.guild.id,"SECURITY","antialts-enabled",enabled)
+                gconfig.set(interaction.guild.id,"SECURITY","antialts-time",time)
+            except Exception as e:
+                logging.info(f"There was error in settings {e}")
 
         @app_commands.command(
             name="anti-links",
@@ -270,14 +282,66 @@ class GuildConfig(commands.Cog):
                     key="autorole-role",
                     value=role.id,
                 )
+                if role:
+                    gconfig.set(
+                        id=interaction.guild_id,
+                        title="MEMBERS",
+                        key="autorole-enabled",
+                        value=enabled,
+                    )
+                await interaction.response.send_message(
+                    content=f"Set value {str(role.name)}, {str(enabled)}",
+                    ephemeral=True,
+                )
+            except Exception as e:
+                await interaction.response.send_message(
+                    content=f"Exception happened: {e}",
+                    ephemeral=True,
+                )
+        @app_commands.command(name="welcome",description="Welcomes user on join")
+        @app_commands.describe(text="Text used to welcome (placeholders support)",enabled="Should it be enabled?")  # noqa: E501
+        async def welcome(
+            self,
+            interaction: discord.Interaction,
+            enabled: bool,
+            text: str,
+            channel: discord.TextChannel,
+            in_dms: bool = False,
+            rich: bool= False,
+        ):
+            try:
                 gconfig.set(
                     id=interaction.guild_id,
                     title="MEMBERS",
-                    key="autorole-enabled",
+                    key="welcome-text",
+                    value=text,
+                )
+                gconfig.set(
+                    id=interaction.guild_id,
+                    title="MEMBERS",
+                    key="welcome-enabled",
                     value=enabled,
                 )
+                gconfig.set(
+                    id=interaction.guild_id,
+                    title="MEMBERS",
+                    key="welcome-rich",
+                    value=rich,
+                )
+                gconfig.set(
+                    id=interaction.guild_id,
+                    title="MEMBERS",
+                    key="welcome-channel",
+                    value=channel.id,
+                )
+                gconfig.set(
+                    id=interaction.guild_id,
+                    title="MEMBERS",
+                    key="welcome-in_dms",
+                    value=in_dms,
+                )
                 await interaction.response.send_message(
-                    content=f"Set value {str(role.name)}, {str(enabled)}",
+                    content="Set value/s",
                     ephemeral=True,
                 )
             except Exception as e:
@@ -309,8 +373,9 @@ class GuildConfig(commands.Cog):
         ):
             try:
                 os.remove(f"data/guilds/{interaction.guild.id}.toml")
+                gconfig._load_all_configs()
                 await interaction.response.send_message(
-                    content="Config Reset!",
+                    content=lang.get(uconfig.get(interaction.user.id,"APPEARANCE","language"),"Responds","config_reset"),
                     ephemeral=True,
                 )
             except FileNotFoundError:
@@ -321,6 +386,29 @@ class GuildConfig(commands.Cog):
             except PermissionError:
                 await interaction.response.send_message(
                     content="Permission Error! Ensure I have permissions for the file. If you're an administrator using Lorelei-bot, report this to Cosita Development!",  # noqa: E501
+                    ephemeral=True,
+                )
+
+        @app_commands.command(
+            name="export",
+            description="Exports config",  # noqa: E501
+        )
+        async def export(self,interaction:discord.Interaction):
+            try:
+                file = "data/guilds"+ str(interaction.guild.id) + ".toml"
+                interaction.response.send_message(
+                    content="Here is exported content that bot has saved. Remember that exports of message id dependent functions will not be ported over.",  # noqa: E501
+                    file=file,
+                    ephemeral=True,
+                )
+            except PermissionError:
+                await interaction.response.send_message(
+                    content="Permission Error! Ensure I have permissions for the file. If you're an administrator using Lorelei-bot, report this to Cosita Development!",  # noqa: E501
+                    ephemeral=True,
+                )
+            except FileNotFoundError:
+                await interaction.response.send_message(
+                    content="No config generated yet! Try configuring the server",
                     ephemeral=True,
                 )
 

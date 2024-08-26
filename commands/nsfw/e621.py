@@ -49,18 +49,55 @@ class E6_commands(commands.Cog):
                         await interaction.response.send_message(
                         content="No image found.",
                     )
-                post = random.choice(data["posts"]) # noqa: S311
+                #post = random.choice(data["posts"]) # noqa: S311
 
-                embed = discord.Embed(
-                    title = f"Post {post['id']}, by {post['tags']['artist']}",
+                posts = data["posts"]
+                current_index = random.randint(0, len(posts) - 1)  # Start with a random post  # noqa: E501, S311
+
+                embed, video_url = self.create_embed(posts[current_index])
+                await interaction.response.send_message(
+                    embed=embed,
+                    view=E6_commands.e6_view(posts, current_index),
                 )
-                embed.set_image(url = post["file"]["url"])
-                await interaction.response.send_message(embed=embed)
             except Exception as e:
                 await interaction.response.send_message(content=f"Exception: {e}")
 
+        def create_embed(self, post):
+            embed = discord.Embed(
+                title=f"Post {post['id']}, by {', '.join(post['tags']['artist'])}",
+            )
+            video_url = None
+            if post["file"]["url"].endswith((".mp4", ".webm")):  # If the file is a video  # noqa: E501
+                video_url = post["file"]["url"]
+                embed.description = f"[Click here to view the video]({video_url})"  # Add video link to description  # noqa: E501
+            elif post["file"]["url"].endswith(".swf"):
+                embed.description = "Flash files are no longer supported!"
+            else:
+                embed.set_image(url=post["file"]["url"])
+            return embed, video_url
 
-async def setup(bot:commands.Bot):
+    class e6_view(discord.ui.View):
+        def __init__(self, posts, index):
+            super().__init__()
+            self.posts = posts
+            self.index = index
+
+        @discord.ui.button(label="Previous", custom_id="prev", style=discord.ButtonStyle.primary)  # noqa: E501
+        async def prev(self, interaction: discord.Interaction, button: discord.ui.Button):  # noqa: E501
+            self.index = (self.index - 1) % len(self.posts)
+            await self.update_embed(interaction)
+
+        @discord.ui.button(label="Next", custom_id="next", style=discord.ButtonStyle.primary)  # noqa: E501
+        async def next(self, interaction: discord.Interaction, button: discord.ui.Button):  # noqa: E501
+            self.index = (self.index + 1) % len(self.posts)
+            await self.update_embed(interaction)
+
+        async def update_embed(self, interaction: discord.Interaction):
+            post = self.posts[self.index]
+            embed, video_url = E6_commands.e6_commands.create_embed(self, post)
+            await interaction.response.edit_message(embed=embed, view=self)  # noqa: E501
+
+async def setup(bot: commands.Bot):
     cog = E6_commands(bot)
     bot.tree.add_command(cog.e6_commands())
     await bot.add_cog(cog)
