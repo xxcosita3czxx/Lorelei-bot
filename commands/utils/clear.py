@@ -9,7 +9,7 @@ class Clear(commands.Cog):
 
     @app_commands.command(name="clear", description="Clear n messages specific user")  # noqa: E501
     @app_commands.default_permissions(manage_messages=True)
-    async def clear(interaction: discord.Interaction, amount:int, member: discord.Member = None):  # noqa: E501
+    async def clear(self,interaction: discord.Interaction, amount:int, member: discord.Member = None):  # noqa: E501
         try:
             await interaction.response.defer()
             channel = interaction.channel
