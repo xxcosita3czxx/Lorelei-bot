@@ -4,6 +4,8 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+from utils.embeder import respEmbed
+
 #from utils.timeconverter import TimeConverter
 #from humanfriendly import format_timespan
 
@@ -27,20 +29,21 @@ class Ban(commands.Cog):
         '''
 
         if member == interaction.user or member == interaction.guild.owner:
-            return await interaction.response.send_message(
-                "You can't ban this user",
+            respEmbed(
+                content="You can't ban this user",
                 ephemeral=True,
             )
+            return
 
         if member.top_role >= interaction.guild.me.top_role:
-            return await interaction.response.send_message(
-                "I can't ban this user",
+            respEmbed(
+                content="I can't ban this user",
                 ephemeral=True,
             )
-
+            return
         if member.top_role >= interaction.user.top_role:
-            return await interaction.response.send_message(
-                "You can't ban this user due to role hierarchy",
+            respEmbed(
+                content="You can't ban this user due to role hierarchy",
                 ephemeral=True,
             )
 
