@@ -57,12 +57,12 @@ class Ban(commands.Cog):
 
         except discord.HTTPException:
             logger.warning("UNSENT BAN MESSAGE")
-            await interaction.response.send_message(
+            respEmbed(
                 content="UNSENT BAN MESSAGE",
                 ephemeral=True,
             )
         await interaction.guild.ban(member, reason=reason)
-        await interaction.response.send_message(
+        respEmbed(
             f"Banned {member.mention}",
             ephemeral=True,
         )

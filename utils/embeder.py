@@ -1,7 +1,7 @@
 import discord
 
 
-def respEmbed(interaction:discord.Interaction,content:str,ephemeral:bool=False):
+async def respEmbed(interaction:discord.Interaction,content:str,ephemeral:bool=False):  # noqa: E501
     embed = discord.Embed(
         description=content,
     )

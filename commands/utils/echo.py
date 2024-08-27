@@ -2,6 +2,8 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+from utils.embeder import respEmbed
+
 
 class Echo(commands.Cog):
     def __init__(self, bot):
@@ -17,12 +19,12 @@ class Echo(commands.Cog):
                 color=discord.Color.blurple(),
             )
             await channel.send(embed=embed)
-            await interaction.response.send_message(
+            respEmbed(
                 content="Message sent succesfuly!",
                 ephemeral=True,
             )
         except Exception as e:
-            await interaction.response.send_message(
+            respEmbed(
                 content=f"Echo Failed!: {e}",
                 ephemeral=True,
             )
