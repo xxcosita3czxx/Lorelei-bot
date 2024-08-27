@@ -254,12 +254,22 @@ class aclient(discord.ext.commands.AutoShardedBot):
             self.synced = True
 
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
+
+        asyncio.create_task(change_status())
+        await self.post_ready()
+
+    async def post_ready(self):
+
         if config.helper:
+            logger.info("Starting helper socket listener...")
             asyncio.create_task(socket_listener(self))
+            logger.info("Helper socket listener started.")
+
         if config.api:
+            logger.info("Starting FastAPI server...")
             fastapi_server = FastAPIServer(bot=bot, port=config.apiport)
             asyncio.create_task(fastapi_server.start())
-        asyncio.create_task(change_status())
+            logger.info("FastAPI server started.")
 
 bot = aclient(shard_count=config.shards)
 tree = bot.tree
