@@ -70,7 +70,7 @@ class FastAPIServer:
         self._configure_routes()
         self.app.add_middleware(
             CORSMiddleware,
-            allow_origins=["*"],
+            allow_origins=["https://cosita3cz.ddns.net:81"],
             allow_credentials=True,
             allow_methods=["*"],  # Allows all HTTP methods
             allow_headers=["*"],  # Allows all headers
