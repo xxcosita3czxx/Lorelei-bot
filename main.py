@@ -12,6 +12,7 @@ import asyncio
 import logging
 import os
 import sys
+import time
 
 import coloredlogs
 import discord
@@ -161,6 +162,9 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot):  
                 return len(bot.guilds)
             elif action == "lat":
                 return bot.latency
+            elif action == "":
+                rntime = time.time()
+                return time.time() - (lambda start=rntime: start)()
             else:
                 return "Unknown info action."
     elif command.startswith("kill"):
