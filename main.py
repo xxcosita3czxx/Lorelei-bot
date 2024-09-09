@@ -162,7 +162,7 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot):  
                 return len(bot.guilds)
             elif action == "lat":
                 return bot.latency
-            elif action == "":
+            elif action == "uptime":
                 rntime = time.time()
                 return time.time() - (lambda start=rntime: start)()
             else:
