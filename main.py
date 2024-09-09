@@ -1,7 +1,6 @@
 #############################
 #    By Cosita              #
 #############################
-#TODO Welcome system not working on channels
 #TODO Giveaway logic
 #TODO more verify modes
 #TODO AntiLinks block all messages (Test please)
@@ -16,10 +15,8 @@ import sys
 
 import coloredlogs
 import discord
-import uvicorn  # type: ignore
-from discord.ext import commands
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+import discord.ext
+import discord.ext.commands
 
 import config
 import utils.profiler as profiler
@@ -60,37 +57,6 @@ async def unload_cogs(bot):
         except Exception as e:
             logger.error(lang.get(config.language, "Bot", "cog_fail_unload").format(module_name=extension, error=e))  # noqa: E501
 
-################################# Api bot info #####################################
-
-class FastAPIServer:
-    def __init__(self,port,bot:commands.AutoShardedBot):
-        self.app = FastAPI()
-        self.port = port
-        self.bot = bot
-        self._configure_routes()
-        self.app.add_middleware(
-            CORSMiddleware,
-            allow_origins=["https://cosita3cz.ddns.net:81"],
-            allow_credentials=True,
-            allow_methods=["*"],  # Allows all HTTP methods
-            allow_headers=["*"],  # Allows all headers
-        )
-
-    def _configure_routes(self):
-
-        @self.app.get("/")
-        async def api_root():
-            return {"message": "Hello, World!"}
-
-        @self.app.get("/guilds")
-        async def api_guilds():
-            return {"guilds": len(self.bot.guilds)}
-
-    async def start(self):
-        config = uvicorn.Config(self.app, host="0.0.0.0", port=self.port, loop="asyncio")  # noqa: E501, S104
-        server = uvicorn.Server(config)
-        await server.serve()
-
 #################################### Helper ########################################
 
 async def socket_listener(bot):
@@ -116,7 +82,7 @@ async def handle_client(reader, writer, bot):
         writer.close()
         await writer.wait_closed()
 
-async def handle_command(command,bot):  # noqa: C901
+async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot):  # noqa: C901
 
     if command.startswith('reload_all'):
         try:
@@ -186,6 +152,17 @@ async def handle_command(command,bot):  # noqa: C901
             else:
                 return "Unknown profiler action."
 
+    elif command.startswith("info"):
+        # Handle profiler commands
+        parts = command.split(" ", 1)
+        if len(parts) > 1:
+            action = parts[1]
+            if action == "guilds":
+                return len(bot.guilds)
+            elif action == "lat":
+                return bot.latency
+            else:
+                return "Unknown info action."
     elif command.startswith("kill"):
         logger.info("Killing from helper")
         sys.exit()
