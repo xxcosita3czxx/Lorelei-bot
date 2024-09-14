@@ -1,47 +1,47 @@
+import json
+import logging
+
 import discord
 from discord import app_commands
 from discord.ext import commands
 from PIL import Image, ImageDraw, ImageFont
 
-from utils.configmanager import gconfig
+from utils.configmanager import gconfig, themes
 
 
-def profile_gen(interaction:discord.Interaction,bg:str):
-    # Variables for customization
-    background_image_path = bg  # Path to your background image
-    font_color = (255, 255, 255)  # Font color (RGB)
-    font_path = "data/fonts/Freedom.ttf"  # Path to your font file
-    font_size = 50  # Font size for all texts
+def profile_gen(interaction=discord.Interaction,theme:str="Default"):  # noqa: E501
+    logging.debug(themes.config)
+
+    # Vars
+    bg = themes.get(theme,"Data","bg")
     fixed_size = (710, 800)  # Fixed size for the profile image
-
-    # Texts and positions
-    texts = [
-        (interaction.user.name, (50, 50)),  # (text, (x, y) position)
-        ("Level: {Lorem Ipsum}", (50, 150)),
-        ("Hello, World!", (50, 250)),
-    ]
+    texts = themes.get(theme,"Text", "text")
+    font = themes.get(theme,"Text","font")
 
     # Load and resize the background image
-    if background_image_path.startswith("#"):
+    if bg.startswith("#"):
         background = Image.new('RGB', fixed_size, color=bg)
     else:
-        background = Image.open(background_image_path)
+        background = Image.open(bg)
         background = background.resize(fixed_size, Image.ANTIALIAS)
 
-    # Draw each text on the background
     draw = ImageDraw.Draw(background)
-    font = ImageFont.truetype(font_path, font_size)
-
-    for text, position in texts:
-        draw.text(position, text, font=font, fill=font_color)
+    print(texts)
+    for text in texts:
+        print(text)
+        draw.text(text.position, text.content, font=ImageFont.truetype(font, text.size), fill=text.color)  # noqa: E501
 
     # Save the image
     if interaction.guild.id:
         background.save(f".cache/{interaction.user.id}-{interaction.guild.id}.png")
-        return f".cache/{interaction.user.id}-{interaction.guild.id}.png"
+        return f".cache/{interaction.user.id or "lorem-user"}-{interaction.guild.id or "lorem-id"}.png"  # noqa: E501
     else:
         background.save(f".cache/{interaction.user.id}.png")
         return f".cache/{interaction.user.id}.png"
+    return themes.config
+
+#def profile_gen(interaction:discord.Interaction,bg:str,theme:str="Default"):  # noqa: E501
+
 class LevelSystem(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -68,5 +68,6 @@ class LevelSystem(commands.Cog):
 
 
 async def setup(bot:commands.Bot):
-    cog = LevelSystem(bot)
-    await bot.add_cog(cog)
+#    cog = LevelSystem(bot)
+#    await bot.add_cog(cog)
+    pass

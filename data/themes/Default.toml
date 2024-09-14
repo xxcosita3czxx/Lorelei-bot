@@ -1,0 +1,11 @@
+[Data]
+bg = "data/themes/Default.png"
+
+[Text]
+font = "data/fonts/Freedom.ttf"
+
+text = [
+    { content = "interaction.user.name", position = [50, 50], size = 50, color=[255, 255, 255]},
+    { content = "Level: {Lorem Ipsum}", position = [50, 150], size = 50, color=[255, 255, 255] },
+    { content = "", position = [50, 250], size = 50, color=[255, 255, 255] }
+]

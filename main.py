@@ -5,7 +5,8 @@
 #TODO more verify modes
 #TODO AntiLinks block all messages (Test please)
 #TODO Embeds and translations of strings
-#TODO Level system
+#TODO Level system more theme files
+#TODO Level system logic for leaderboards and levels
 #TODO Autorole not giving roles, if checks maybe?
 
 import asyncio
