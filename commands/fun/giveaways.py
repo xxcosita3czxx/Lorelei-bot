@@ -67,6 +67,21 @@ class Giveaways(commands.Cog):
         ):
             pass
 
+    class giveaway_list(discord.ui.View):
+        def __init__(self):
+            super().__init__(timeout = None)
+        def create(self,interaction:discord.Interaction):
+            embed= discord.Embed(
+                title="Running Giveaways in the server"
+            )
+        @discord.ui.button(
+            label="Previous",
+            style=discord.ButtonStyle.blurple,
+            custom_id="prev_giveaway",
+        )
+        def previous(self,interaction:discord.Interaction,button:discord.Button):
+            interaction.response.send_message("Previous",ephemeral=True)
+
     class giveaway_open(discord.ui.View):
         def __init__(self) -> None:  # noqa: ANN101
             super().__init__(timeout = None)
