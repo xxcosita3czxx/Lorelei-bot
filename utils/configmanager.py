@@ -47,7 +47,6 @@ class ConfigManager:
         return result
 
     def set(self, id, title, key, value):
-        id = str(id)
         logging.debug(f"Setting {id}:{title}:{key} to {value}")
         if id not in self.config:
             self.config[id] = {}
