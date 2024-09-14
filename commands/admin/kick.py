@@ -11,7 +11,7 @@ class Kick(commands.Cog):
 
     @app_commands.command(name="kick", description="Kick a user")
     @app_commands.describe(member="User to kick", reason="Reason for kick")
-    @app_commands.default_permissions(kick_members=True, ban_members=True)
+    @app_commands.default_permissions(kick_members=True)
     async def kick(self,interaction: discord.Interaction, member: discord.Member, reason: str):  # noqa: E501
 
         '''
@@ -65,3 +65,8 @@ class Kick(commands.Cog):
 
 async def setup(bot:commands.Bot):
     await bot.add_cog(Kick(bot))
+
+    @app_commands.context_menu(name="Kick")
+    @app_commands.default_permissions(kick_members=True)
+    async def kick_context(interaction:discord.Interaction,member:discord.Member):
+        await Kick.kick(interaction, member,"Unspecified")
