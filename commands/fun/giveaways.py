@@ -1,9 +1,14 @@
 
 #TODO logic for all
+#TODO Modal Editor
+
+import logging
 
 import discord
 from discord import app_commands
 from discord.ext import commands
+
+from utils.configmanager import gconfig
 
 
 class Giveaways(commands.Cog):
@@ -42,45 +47,36 @@ class Giveaways(commands.Cog):
         ):
             pass
 
-        @app_commands.command(name="edit",description="Edits giveaway")
-        async def giveaway_edit(
-            self,
-            interaction:discord.Interaction,
-            message:str,
-            title:str,
-            description:str,
-        ):
-            pass
-
-        @app_commands.command(name="remove",description="Removes giveaway.")
-        async def giveaway_remove(
-            self,
-            interaction:discord.Interaction,
-            message:str,
-        ):
-            pass
-
-        @app_commands.command(name="list",description="Lists all running Giveaways.")  # noqa: E501
+        @app_commands.command(name="running",description="List of all running Giveaways.")  # noqa: E501
         async def giveaway_list(
             self,
             interaction:discord.Interaction,
         ):
-            pass
+            Giveaways.giveaway_list().create(self,interaction=interaction)
 
     class giveaway_list(discord.ui.View):
         def __init__(self):
             super().__init__(timeout = None)
         def create(self,interaction:discord.Interaction):
             embed= discord.Embed(
-                title="Running Giveaways in the server"
+                title="Running Giveaways in the server",
             )
+            interaction.response.send_message(embed=embed,view=self)
         @discord.ui.button(
             label="Previous",
             style=discord.ButtonStyle.blurple,
-            custom_id="prev_giveaway",
+            custom_id="prev_giveaway_list",
         )
         def previous(self,interaction:discord.Interaction,button:discord.Button):
             interaction.response.send_message("Previous",ephemeral=True)
+
+        @discord.ui.button(
+            label="Next",
+            style=discord.ButtonStyle.blurple,
+            custom_id="next_giveaway_list",
+        )
+        def next(self,interaction:discord.Interaction,button:discord.Button):
+            interaction.response.send_message("Next",ephemeral=True)
 
     class giveaway_open(discord.ui.View):
         def __init__(self) -> None:  # noqa: ANN101
@@ -110,8 +106,13 @@ class Giveaways(commands.Cog):
             custom_id = "join",
         )
         async def join_giv(self,interaction: discord.Interaction, button: discord.Button): # noqa: E501
+            if gconfig.get(interaction.guild.id,"Giveaways",f"{interaction.message.id}-joined") is not None:  # noqa: E501
+                old = gconfig.get(interaction.guild.id,"Giveaways",f"{interaction.message.id}-joined")  # noqa: E501
+                gconfig.set(interaction.guild.id,"Giveaways",f"{interaction.message.id}-joined",f"{old} {interaction.user.id}")  # noqa: E501
+            else:
+                gconfig.set(interaction.guild.id,"Giveaways",f"{interaction.message.id}-joined",interaction.user.id)
             await interaction.response.send_message(content="Joined!",ephemeral=True)  # noqa: E501
-
+            logging.debug(gconfig.get(interaction.guild.id,"Giveaways",f"{interaction.message.id}-joined"))
 
 async def setup(bot:commands.Bot):
 #    cog = Giveaways(bot)
