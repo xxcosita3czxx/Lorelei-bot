@@ -1,4 +1,3 @@
-import json
 import logging
 
 import discord
@@ -26,9 +25,9 @@ def profile_gen(interaction=discord.Interaction,theme:str="Default"):  # noqa: E
         background = background.resize(fixed_size, Image.ANTIALIAS)
 
     draw = ImageDraw.Draw(background)
-    print(texts)
+    logging.debug(texts)
     for text in texts:
-        print(text)
+        logging.debug(text)
         draw.text(text.position, text.content, font=ImageFont.truetype(font, text.size), fill=text.color)  # noqa: E501
 
     # Save the image
