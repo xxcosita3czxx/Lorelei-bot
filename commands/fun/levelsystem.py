@@ -37,7 +37,6 @@ def profile_gen(interaction=discord.Interaction,theme:str="Default"):  # noqa: E
     else:
         background.save(f".cache/{interaction.user.id}.png")
         return f".cache/{interaction.user.id}.png"
-    return themes.config
 
 #def profile_gen(interaction:discord.Interaction,bg:str,theme:str="Default"):  # noqa: E501
 
@@ -55,16 +54,17 @@ class LevelSystem(commands.Cog):
             pass
 
     @app_commands.command(name="profile",description="Your profile")
-    async def profile(self,interaction: discord.Interaction, minimal:bool=True):
-        if minimal:
+    async def profile(self,interaction: discord.Interaction, minimal:bool=False):
+        if not minimal:
             image = profile_gen(interaction=interaction,bg="data/prof-bgs/Default.png")  # noqa: E501
             embed = discord.Embed(title=f"Profile of {interaction.user.name}")
             file = discord.File(image, filename="profile.png")
             embed.set_image(url="attachment://profile.png")
             await interaction.response.send_message(embed=embed,file=file)
         else:
-            await interaction.response.send_message("Not yet made", ephemeral=True)
-
+            embed = discord.Embed(title=f"Profile of {interaction.user.name}")
+            embed.add_field(name="Level: {lorem ipsum}")
+            interaction.response.send_message(embed=embed)
 
 async def setup(bot:commands.Bot):
 #    cog = LevelSystem(bot)

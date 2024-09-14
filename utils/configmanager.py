@@ -44,7 +44,7 @@ class ConfigManager:
                 logging.debug("Giving fallback result...")
                 result = fallback_result
         logging.debug("Final result: " + str(result))
-        return str(result)
+        return result
 
     def set(self, id, title, key, value):
         id = str(id)
