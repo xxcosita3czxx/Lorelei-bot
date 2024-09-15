@@ -32,7 +32,7 @@ class ConfigManager:
                 logging.warning(f"{filename} Cannot be decoded! Check encoding, for now skipping")  # noqa: E501
         logging.debug(f"Loaded configs: {self.config}")
 
-    def get(self, id, title, key, default=None) -> str:
+    def get(self, id, title, key, default=None):
         id = str(id)
         logging.debug(f"Getting {id}:{title}:{key}")
         result = self.config.get(id, {}).get(title, {}).get(key, default)
