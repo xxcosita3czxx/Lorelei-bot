@@ -2,10 +2,11 @@
 bg = "data/themes/Default.png"
 
 [Text]
-font = "data/fonts/Freedom.ttf"
+font = "data/fonts/Arial.ttf"
 
-text = [
-    { content = "interaction.user.name", position = [50, 50], size = 50, color=[255, 255, 255]},
-    { content = "Level: {Lorem Ipsum}", position = [50, 150], size = 50, color=[255, 255, 255] },
-    { content = "", position = [50, 250], size = 50, color=[255, 255, 255] }
+objects = [
+    { img  = { image = "{interaction.user.avatar_url}"}},
+    { text = { content = "{interaction.user.name}", position = [50, 50], size = 35, color=[255, 255, 255]}},
+    { text = { content = "Level: Lorem Ipsum", position = [50, 150], size = 35, color=[255, 255, 255] }},
+    { text = { content = "Veri defolt", position = [50, 250], size = 40, color=[255, 255, 255] }}
 ]

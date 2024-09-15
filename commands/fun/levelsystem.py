@@ -8,13 +8,13 @@ from PIL import Image, ImageDraw, ImageFont
 from utils.configmanager import gconfig, themes
 
 
-def profile_gen(interaction=discord.Interaction,theme:str="Default"):  # noqa: E501
+def profile_gen(interaction:discord.Interaction,theme:str="Default"):  # noqa: E501
     logging.debug(themes.config)
 
     # Vars
     bg = themes.get(theme,"Data","bg")
     fixed_size = (710, 800)  # Fixed size for the profile image
-    texts = themes.get(theme,"Text", "text")
+    objects = themes.get(theme,"Text", "objects")
     font = themes.get(theme,"Text","font")
 
     # Load and resize the background image
@@ -25,19 +25,28 @@ def profile_gen(interaction=discord.Interaction,theme:str="Default"):  # noqa: E
         background = background.resize(fixed_size, Image.ANTIALIAS)
 
     draw = ImageDraw.Draw(background)
-    logging.debug(texts)
-    for text in texts:
-        logging.debug(text)
-        draw.text(text.position, text.content, font=ImageFont.truetype(font, text.size), fill=text.color)  # noqa: E501
-
+    logging.debug(objects)
+    for obj in objects:
+        logging.debug(obj)
+        if "text" in obj:
+            for text in obj:
+                draw.text(text['position'], text['content'], font=ImageFont.truetype(font, text['size']), fill=tuple(text['color']))  # noqa: E501
+        else:
+            logging.warning(f"Unsupported object {obj} in theme {theme}, ignoring...")  # noqa: E501
     # Save the image
-    if interaction.guild.id:
-        background.save(f".cache/{interaction.user.id}-{interaction.guild.id}.png")
-        return f".cache/{interaction.user.id or "lorem-user"}-{interaction.guild.id or "lorem-id"}.png"  # noqa: E501
+    if interaction is not None:
+        if interaction.guild.id:
+            background.save(f".cache/{interaction.user.id}-{interaction.guild.id}.png")
+            return f".cache/{interaction.user.id or "lorem-user"}-{interaction.guild.id or "lorem-id"}.png"  # noqa: E501
+        else:
+            background.save(f".cache/{interaction.user.id}.png")
+            return f".cache/{interaction.user.id}.png"
+    elif interaction is None:
+        logging.warning("Well be saving as testing file. If running the bot THIS IS A BUG")  # noqa: E501
+        background.save(".cache/lorem.png")
+        return ".cache/lorem.png"
     else:
-        background.save(f".cache/{interaction.user.id}.png")
-        return f".cache/{interaction.user.id}.png"
-
+        logging.error("Failed to make profile: Interaction is wrong type")
 #def profile_gen(interaction:discord.Interaction,bg:str,theme:str="Default"):  # noqa: E501
 
 class LevelSystem(commands.Cog):
