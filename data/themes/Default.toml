@@ -5,7 +5,9 @@ bg = "data/themes/Default.png"
 font = "data/fonts/Arial.ttf"
 
 objects = [
-    { img  = { image = "{interaction.user.avatar_url}"}},
+    { triangle = { position = [200,200], radius=40}},
+    { rect = { position = [230,230],size=[50,50]}},
+    { img  = { image = "{interaction.user.avatar_url}", position = [60, 60], width = 50, height = 200}},
     { text = { content = "{interaction.user.name}", position = [50, 50], size = 35, color=[255, 255, 255]}},
     { text = { content = "Level: Lorem Ipsum", position = [50, 150], size = 35, color=[255, 255, 255] }},
     { text = { content = "Veri defolt", position = [50, 250], size = 40, color=[255, 255, 255] }}

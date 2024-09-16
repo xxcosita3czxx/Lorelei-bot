@@ -1,4 +1,5 @@
 import logging
+import math
 from io import BytesIO
 
 import discord
@@ -7,8 +8,10 @@ from discord import app_commands
 from discord.ext import commands
 from PIL import Image, ImageDraw, ImageFont
 
+import config
 from utils.configmanager import gconfig, themes
 
+DEFAULT_IMAGE_PATH = config.def_image
 
 def eval_fstring(s, context):
     """Evaluate a string expression as an f-string with the given context."""
@@ -59,38 +62,88 @@ def profile_gen(interaction:discord.Interaction,theme:str="Default"):  # noqa: C
         # Directly check for "img" key
         elif obj.get("img"):
             img = obj["img"]
-
-            # Get the image path (could be file or URL)
-            img_path = eval_fstring(img.get('image'),context=context)
+            img_path = eval_fstring(img.get('image'), context=context)
 
             if not img_path:
                 logging.warning(f"Image path not provided for object {obj}")
                 continue
 
             try:
-                # Check if it's a URL
+                # Attempt to load the image (URL or local file)
                 if img_path.startswith("http://") or img_path.startswith("https://"):
-                    response = requests.get(img_path,timeout=60)
+                    response = requests.get(img_path, timeout=60)
                     image = Image.open(BytesIO(response.content))
                 else:
-                    # Assume it's a local file path
                     image = Image.open(img_path)
-
-                # Optionally resize the image if width and height are provided
-                width = img.get('width')
-                height = img.get('height')
-                if width and height:
-                    image = image.resize((width, height), Image.ANTIALIAS)
-
-                # Get the position to paste the image
-                position = tuple(img.get('position', [0, 0]))  # Default to (0, 0)
-
-                # Paste the image onto the background
-                background.paste(image, position)
-                logging.info(f"Pasted image {img_path} at {position}")
 
             except Exception as e:
                 logging.error(f"Failed to process image {img_path}: {e}")
+                logging.warning("Replacing image with default image.")
+
+                # Replace the img object with a default one
+
+                try:
+                    image = Image.open(DEFAULT_IMAGE_PATH)  # Load default image
+                except Exception as default_error:
+                    logging.error(f"Failed to load default image: {default_error}")
+                    continue  # Skip if even the default fails
+
+            # Resize the image if width and height are provided
+            width = img.get('width')
+            height = img.get('height')
+            if width and height:
+                image = image.resize((width, height), Image.ANTIALIAS)
+
+            # Get the position to paste the image
+            position = tuple(img.get('position', [0, 0]))
+
+            # Paste the image onto the background
+            background.paste(image, position)
+            logging.debug(f"Pasted image {img_path} at {position}")
+
+        elif obj.get("rect"):
+            rect = obj["rect"]
+            top_left = tuple(rect.get('position', [0, 0]))
+            bottom_right = tuple(rect.get('size', [100, 100]))
+            color = tuple(rect.get('color', [255, 255, 255]))
+            draw.rectangle([top_left, bottom_right], fill=color)
+            logging.debug(f"Drew rectangle at {top_left} with size {bottom_right} and color {color}")  # noqa: E501
+
+        # Handling "circle" objects
+        elif obj.get("circle"):
+            circle = obj["circle"]
+            center = tuple(circle.get('position', [50, 50]))  # Center of the circle
+            radius = circle.get('radius', 50)  # Radius of the circle
+            color = tuple(circle.get('color', [255, 255, 255]))  # Default white
+            bounding_box = [  # Define the bounding box for the circle
+                (center[0] - radius, center[1] - radius),
+                (center[0] + radius, center[1] + radius),
+            ]
+            draw.ellipse(bounding_box, fill=color)
+            logging.debug(f"Drew circle at {center} with radius {radius} and color {color}")  # noqa: E501
+
+        # Handling "triangle" objects
+        elif obj.get("triangle"):
+            triangle = obj["triangle"]
+            center = tuple(triangle.get('position', [100, 100]))
+            radius = triangle.get('radius', 50)  # Radius of the triangle
+            color = tuple(triangle.get('color', [255, 255, 255]))  # Default white
+
+            # Optional rotation (in degrees)
+            rotation = triangle.get('rotation', 0)  # Default to 0 degrees
+
+            # Calculate the three vertices of the equilateral triangle
+            points = []
+            for i in range(3):
+                angle_deg = 120 * i + rotation
+                angle_rad = math.radians(angle_deg)
+                x = center[0] + radius * math.cos(angle_rad)
+                y = center[1] + radius * math.sin(angle_rad)
+                points.append((x, y))
+
+            # Draw the triangle
+            draw.polygon(points, fill=color)
+            logging.info(f"Drew triangle at {center} with radius {radius}, color {color}, and rotation {rotation}")  # noqa: E501
 
         else:
             logging.warning(f"Unsupported or invalid object {obj} in theme {theme}, ignoring...")  # noqa: E501

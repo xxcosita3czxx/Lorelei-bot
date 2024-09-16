@@ -90,3 +90,9 @@ bot_update = 6000
 # Time for IsAlive script ping (default 30)
 Is_Alive_time = 30
 ###################################
+######### Default Image ###########
+#
+# Default image to show when image object fails
+#
+def_image = "data/themes/fail.jpg"
+###################################
