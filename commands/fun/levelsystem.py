@@ -103,9 +103,21 @@ def profile_gen(interaction:discord.Interaction,theme:str="Default"):  # noqa: C
 
         elif obj.get("rect"):
             rect = obj["rect"]
-            top_left = tuple(rect.get('position', [0, 0]))
-            bottom_right = tuple(rect.get('size', [100, 100]))
-            color = tuple(rect.get('color', [255, 255, 255]))
+
+            # Center of the rectangle
+            center = tuple(rect.get('position', [100, 100]))
+
+            # Width and height of the rectangle
+            width = rect.get('size', [100, 50])[0]  # Default width
+            height = rect.get('size', [100, 50])[1]  # Default height
+
+            top_left = (center[0] - width // 2, center[1] - height // 2)
+            bottom_right = (center[0] + width // 2, center[1] + height // 2)
+
+            # Color of the rectangle
+            color = tuple(rect.get('color', [255, 255, 255]))  # Default white
+
+            # Draw the rectangle
             draw.rectangle([top_left, bottom_right], fill=color)
             logging.debug(f"Drew rectangle at {top_left} with size {bottom_right} and color {color}")  # noqa: E501
 
@@ -143,7 +155,7 @@ def profile_gen(interaction:discord.Interaction,theme:str="Default"):  # noqa: C
 
             # Draw the triangle
             draw.polygon(points, fill=color)
-            logging.info(f"Drew triangle at {center} with radius {radius}, color {color}, and rotation {rotation}")  # noqa: E501
+            logging.debug(f"Drew triangle at {center} with radius {radius}, color {color}, and rotation {rotation}")  # noqa: E501
 
         else:
             logging.warning(f"Unsupported or invalid object {obj} in theme {theme}, ignoring...")  # noqa: E501
