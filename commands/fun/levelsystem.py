@@ -1,3 +1,5 @@
+#TODO Default profile theme finsih seccond part + colors
+
 import logging
 import math
 from io import BytesIO
@@ -117,8 +119,11 @@ def profile_gen(interaction:discord.Interaction,theme:str="Default"):  # noqa: C
             # Color of the rectangle
             color = tuple(rect.get('color', [255, 255, 255]))  # Default white
 
-            # Draw the rectangle
-            draw.rectangle([top_left, bottom_right], fill=color)
+            # Corner rounding radius (optional, default to 0 for no rounding)
+            corner_radius = rect.get('corner_radius', 0)
+
+            # Draw the rounded rectangle
+            draw.rounded_rectangle([top_left, bottom_right], radius=corner_radius, fill=color)  # noqa: E501
             logging.debug(f"Drew rectangle at {top_left} with size {bottom_right} and color {color}")  # noqa: E501
 
         # Handling "circle" objects

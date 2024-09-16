@@ -7,8 +7,8 @@ font = "data/fonts/Arial.ttf"
 objects = [
     { rect = { position = [270,150],size=[550,200],color=[0,0,0]}},
     { triangle = { position = [545,183], radius=135,rotation=30,color=[0,0,0]}},
-    { img  = { image = "{interaction.user.avatar_url}", position = [60, 100], width = 100, height = 100}},
-    { text = { content = "{interaction.user.name}", position = [60, 50], size = 35, color=[255, 255, 255]}},
-    { text = { content = "Level: Lorem Ipsum", position = [50, 150], size = 35, color=[255, 255, 255] }},
+    { img  = { image = "{interaction.user.avatar_url}", position = [30, 100], width = 100, height = 100}},
+    { text = { content = "{interaction.user.name}", position = [150, 100], size = 35, color=[255, 255, 255]}},
+    { text = { content = "Level: Lorem Ipsum", position = [150, 150], size = 35, color=[255, 255, 255] }},
     { text = { content = "Veri defolt", position = [50, 250], size = 40, color=[255, 255, 255] }}
 ]
