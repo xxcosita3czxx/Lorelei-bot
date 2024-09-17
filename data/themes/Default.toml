@@ -6,9 +6,11 @@ font = "data/fonts/Arial.ttf"
 
 objects = [
     { rect = { position = [270,150],size=[550,200],color=[0,0,0]}},
+    { rect = { position = [350,550],size=[600,520],color=[0,0,0],corner_radius=20}},
     { triangle = { position = [545,183], radius=135,rotation=30,color=[0,0,0]}},
     { img  = { image = "{interaction.user.avatar_url}", position = [30, 100], width = 100, height = 100}},
     { text = { content = "{interaction.user.name}", position = [150, 100], size = 35, color=[255, 255, 255]}},
-    { text = { content = "Level: Lorem Ipsum", position = [150, 150], size = 35, color=[255, 255, 255] }},
-    { text = { content = "Veri defolt", position = [50, 250], size = 40, color=[255, 255, 255] }}
+    { text = { content = "Level: Lorem Ipsum", position = [150, 150], size = 35, color=[255, 255, 255,] }},
+    { text = { content = "Global: Leaderboard", position = [50, 280], size = 35, color=[255, 255, 255] }},
+    { text = { content = "Guild: Leaderboard", position = [50, 330], size = 35, color=[255, 255, 255] }}
 ]

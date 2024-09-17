@@ -26,42 +26,67 @@ def eval_fstring(s, context):
         logging.error(f"Failed to evaluate f-string {s}: {e}")
         return s
 
-def profile_gen(interaction:discord.Interaction,theme:str="Default"):  # noqa: C901, E501
+def parse_color(color, opacity=1.0):  # noqa: C901
+    """Converts color formats to RGBA and applies opacity if necessary."""
+    if isinstance(color, str):  # Hex color
+        color = color.lstrip('#')  # Remove the hash if present
+        if len(color) == 6:  # #RRGGBB  # noqa: PLR2004
+            r, g, b = int(color[0:2], 16), int(color[2:4], 16), int(color[4:6], 16)
+            a = 255  # Full opacity
+        elif len(color) == 8:  # #RRGGBBAA  # noqa: PLR2004
+            r, g, b = int(color[0:2], 16), int(color[2:4], 16), int(color[4:6], 16)
+            a = int(color[6:8], 16)  # Alpha from hex
+        else:
+            raise ValueError("Invalid hex color format")
+    elif isinstance(color, list) and len(color) == 3:  # RGB  # noqa: PLR2004
+        r, g, b = color
+        a = 255  # Full opacity
+    elif isinstance(color, list) and len(color) == 4:  # RGBA  # noqa: PLR2004
+        r, g, b, a = color
+    else:
+        raise ValueError("Unsupported color format")
+
+    # Apply opacity (only for hex and RGB, not RGBA)
+    if opacity < 1.0:
+        a = int(a * opacity)
+
+    return (r, g, b, a)
+
+
+def profile_gen(interaction: discord.Interaction, theme: str = "Default"):  # noqa: C901, E501
     logging.debug(themes.config)
 
     # Vars
-    bg = themes.get(theme,"Data","bg")
+    bg = themes.get(theme, "Data", "bg")
     fixed_size = (710, 800)  # Fixed size for the profile image
-    objects = themes.get(theme,"Text", "objects")
-    font = themes.get(theme,"Text","font")
+    objects = themes.get(theme, "Text", "objects")
+    font = themes.get(theme, "Text", "font")
 
     context = {
         'interaction': interaction,
     }
     # Load and resize the background image
     if bg.startswith("#"):
-        background = Image.new('RGB', fixed_size, color=bg)
+        background = Image.new('RGBA', fixed_size, color=bg)
     else:
-        background = Image.open(bg)
+        background = Image.open(bg).convert("RGBA")
         background = background.resize(fixed_size, Image.ANTIALIAS)
 
-    draw = ImageDraw.Draw(background)
+    draw = ImageDraw.Draw(background, "RGBA")
     logging.debug(objects)
+
     for obj in objects:
         logging.debug(obj)
 
-        # Directly check for "text" key
         if obj.get("text"):
             text = obj["text"]
-            # Use defaults where fields might be missing
             position = tuple(text.get('position', [0, 0]))
-            content = text.get('content', '')
-            size = text.get('size', 20)  # Default font size 20 if missing
-            color = tuple(text.get('color', [255, 255, 255]))  # Default color white
+            content = text.get('content', 'Lorem Ipsum')
+            size = text.get('size', 20)
+            color = parse_color(text.get('color', [255, 255, 255]), opacity=text.get('opacity', 1.0))  # noqa: E501
 
             draw.text(position, content, font=ImageFont.truetype(font, size), fill=color)  # noqa: E501
 
-        # Directly check for "img" key
         elif obj.get("img"):
             img = obj["img"]
             img_path = eval_fstring(img.get('image'), context=context)
@@ -71,7 +96,6 @@ def profile_gen(interaction:discord.Interaction,theme:str="Default"):  # noqa: C
                 continue
 
             try:
-                # Attempt to load the image (URL or local file)
                 if img_path.startswith("http://") or img_path.startswith("https://"):
                     response = requests.get(img_path, timeout=60)
                     image = Image.open(BytesIO(response.content))
@@ -81,75 +105,60 @@ def profile_gen(interaction:discord.Interaction,theme:str="Default"):  # noqa: C
             except Exception as e:
                 logging.error(f"Failed to process image {img_path}: {e}")
                 logging.warning("Replacing image with default image.")
-
-                # Replace the img object with a default one
-
                 try:
-                    image = Image.open(DEFAULT_IMAGE_PATH)  # Load default image
+                    image = Image.open(DEFAULT_IMAGE_PATH)
                 except Exception as default_error:
                     logging.error(f"Failed to load default image: {default_error}")
-                    continue  # Skip if even the default fails
+                    continue
 
-            # Resize the image if width and height are provided
             width = img.get('width')
             height = img.get('height')
             if width and height:
                 image = image.resize((width, height), Image.ANTIALIAS)
 
-            # Get the position to paste the image
             position = tuple(img.get('position', [0, 0]))
-
-            # Paste the image onto the background
             background.paste(image, position)
             logging.debug(f"Pasted image {img_path} at {position}")
 
         elif obj.get("rect"):
             rect = obj["rect"]
-
-            # Center of the rectangle
             center = tuple(rect.get('position', [100, 100]))
-
-            # Width and height of the rectangle
-            width = rect.get('size', [100, 50])[0]  # Default width
-            height = rect.get('size', [100, 50])[1]  # Default height
-
+            width = rect.get('size', [100, 50])[0]  # noqa: PLR2004
+            height = rect.get('size', [100, 50])[1]  # noqa: PLR2004
             top_left = (center[0] - width // 2, center[1] - height // 2)
             bottom_right = (center[0] + width // 2, center[1] + height // 2)
-
-            # Color of the rectangle
-            color = tuple(rect.get('color', [255, 255, 255]))  # Default white
-
-            # Corner rounding radius (optional, default to 0 for no rounding)
+            color = parse_color(rect.get('color', [255, 255, 255]), opacity=rect.get('opacity', 1.0))  # noqa: E501
             corner_radius = rect.get('corner_radius', 0)
 
-            # Draw the rounded rectangle
-            draw.rounded_rectangle([top_left, bottom_right], radius=corner_radius, fill=color)  # noqa: E501
-            logging.debug(f"Drew rectangle at {top_left} with size {bottom_right} and color {color}")  # noqa: E501
+            # Create a new image for rectangle
+            rect_layer = Image.new('RGBA', background.size, (255, 255, 255, 0))
+            rect_draw = ImageDraw.Draw(rect_layer)
+            rect_draw.rounded_rectangle([top_left, bottom_right], radius=corner_radius, fill=color)  # noqa: E501
+            background = Image.alpha_composite(background, rect_layer)
 
-        # Handling "circle" objects
         elif obj.get("circle"):
             circle = obj["circle"]
             center = tuple(circle.get('position', [50, 50]))  # Center of the circle
             radius = circle.get('radius', 50)  # Radius of the circle
-            color = tuple(circle.get('color', [255, 255, 255]))  # Default white
+            color = parse_color(circle.get('color', [255, 255, 255]), opacity=circle.get('opacity', 1.0))  # noqa: E501
             bounding_box = [  # Define the bounding box for the circle
                 (center[0] - radius, center[1] - radius),
                 (center[0] + radius, center[1] + radius),
             ]
-            draw.ellipse(bounding_box, fill=color)
-            logging.debug(f"Drew circle at {center} with radius {radius} and color {color}")  # noqa: E501
 
-        # Handling "triangle" objects
+            # Create a new image for circle
+            circle_layer = Image.new('RGBA', background.size, (255, 255, 255, 0))
+            circle_draw = ImageDraw.Draw(circle_layer)
+            circle_draw.ellipse(bounding_box, fill=color)
+            background = Image.alpha_composite(background, circle_layer)
+
         elif obj.get("triangle"):
             triangle = obj["triangle"]
             center = tuple(triangle.get('position', [100, 100]))
-            radius = triangle.get('radius', 50)  # Radius of the triangle
-            color = tuple(triangle.get('color', [255, 255, 255]))  # Default white
+            radius = triangle.get('radius', 50)  # noqa: PLR2004
+            color = parse_color(triangle.get('color', [255, 255, 255]), opacity=triangle.get('opacity', 1.0))  # noqa: E501
+            rotation = triangle.get('rotation', 0)
 
-            # Optional rotation (in degrees)
-            rotation = triangle.get('rotation', 0)  # Default to 0 degrees
-
-            # Calculate the three vertices of the equilateral triangle
             points = []
             for i in range(3):
                 angle_deg = 120 * i + rotation
@@ -158,9 +167,11 @@ def profile_gen(interaction:discord.Interaction,theme:str="Default"):  # noqa: C
                 y = center[1] + radius * math.sin(angle_rad)
                 points.append((x, y))
 
-            # Draw the triangle
-            draw.polygon(points, fill=color)
-            logging.debug(f"Drew triangle at {center} with radius {radius}, color {color}, and rotation {rotation}")  # noqa: E501
+            # Create a new image for triangle
+            triangle_layer = Image.new('RGBA', background.size, (255, 255, 255, 0))
+            triangle_draw = ImageDraw.Draw(triangle_layer)
+            triangle_draw.polygon(points, fill=color)
+            background = Image.alpha_composite(background, triangle_layer)
 
         else:
             logging.warning(f"Unsupported or invalid object {obj} in theme {theme}, ignoring...")  # noqa: E501
