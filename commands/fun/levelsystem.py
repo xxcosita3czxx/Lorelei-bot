@@ -1,7 +1,9 @@
 #TODO Default profile theme finsih seccond part + colors
 
+import datetime
 import logging
 import math
+import time
 from io import BytesIO
 
 import discord
@@ -57,7 +59,7 @@ def parse_points(points):
     parsed_points = []
     for point in points:
         try:
-            x, y = map(int, point.split(','))
+            x, y = map(float, point.split(','))
             parsed_points.append((x, y))
         except ValueError:
             logging.error(f"Invalid point format: {point}")
@@ -74,6 +76,8 @@ def profile_gen(interaction: discord.Interaction, theme: str = "Default"):  # no
 
     context = {
         'interaction': interaction,
+        "time":time,
+        "datetime":datetime,
     }
     # Load and resize the background image
     if bg.startswith("#"):
@@ -91,7 +95,7 @@ def profile_gen(interaction: discord.Interaction, theme: str = "Default"):  # no
         if obj.get("text"):
             text = obj["text"]
             position = tuple(text.get('position', [0, 0]))
-            content = text.get('content', 'Lorem Ipsum')
+            content = eval_fstring(text.get('content', 'Lorem Ipsum'),context=context)  # noqa: E501
             size = text.get('size', 20)  # Default font size
             color = parse_color(text.get('color', [255, 255, 255]),text.get('opacity', 1.0))  # noqa: E501
 
@@ -191,24 +195,18 @@ def profile_gen(interaction: discord.Interaction, theme: str = "Default"):  # no
             triangle_draw.polygon(points, fill=color)
             background = Image.alpha_composite(background, triangle_layer)
 
-        else:
-            logging.warning(f"Unsupported or invalid object {obj} in theme {theme}, ignoring...")  # noqa: E501
         # Handle poly object with alpha compositing
-    for obj in objects:
-        logging.debug(obj)
-
-        # Handle poly object with alpha compositing
-        if obj.get("poly"):
+        elif obj.get("poly"):
             poly = obj["poly"]
 
             # Parse the points from strings to tuples
             points = parse_points(poly.get('points', []))
-            if not points or len(points) < 3:
+            if not points or len(points) < 3:  # noqa: PLR2004
                 logging.warning(f"Polygon with insufficient points: {points}")
                 continue
 
             # Get the color with opacity
-            color = parse_color(poly.get('color', [255, 255, 255]), poly.get('opacity', 1.0))
+            color = parse_color(poly.get('color', [255, 255, 255]), poly.get('opacity', 1.0))  # noqa: E501
 
             # Create a new transparent layer for the polygon
             poly_layer = Image.new('RGBA', background.size, (255, 255, 255, 0))
@@ -221,6 +219,8 @@ def profile_gen(interaction: discord.Interaction, theme: str = "Default"):  # no
             background = Image.alpha_composite(background, poly_layer)
             logging.debug(f"Drew polygon with points {points} and color {color}")
 
+        else:
+            logging.warning(f"Unsupported or invalid object {obj} in theme {theme}, ignoring...")  # noqa: E501
 
 
     # Save the image
