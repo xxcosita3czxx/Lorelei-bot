@@ -10,8 +10,9 @@ objects = [
     { poly = { position = [545,183],color=[0,0,0,120],points=["546,250","546,50","650,250"]}},
     { img  = { image = "{interaction.user.avatar_url}", position = [30, 100], width = 100, height = 100}},
     { text = { content = "{interaction.user.name}", position = [150, 100], size = 35, color=[255, 255, 255]}},
-    { text = { content = "Level: Lorem Ipsum", position = [150, 150], size = 35, color=[255, 255, 255] }},
+    { text = { content = "Level: {userlevel}", position = [150, 150], size = 35, color=[255, 255, 255] }},
     { text = { content = "Global: Leaderboard", position = [60, 300], size = 35, color=[255, 255, 255] }},
     { text = { content = "Guild: Leaderboard", position = [60, 340], size = 35, color=[255, 255, 255] }},
     { text = { content = "Time: {datetime.time()}", position = [60, 380], size = 35, color=[255, 255, 255] }},
+    { text = { content = "userid:{user_id} | Powered by Lorelei-bot",color = [0,0,0,80],position = [5,780],size=15}}
 ]

@@ -13,7 +13,7 @@ from discord.ext import commands
 from PIL import Image, ImageDraw, ImageFont
 
 import config
-from utils.configmanager import gconfig, themes
+from utils.configmanager import gconfig, themes, uconfig
 
 DEFAULT_IMAGE_PATH = config.def_image
 
@@ -65,7 +65,7 @@ def parse_points(points):
             logging.error(f"Invalid point format: {point}")
     return parsed_points
 
-def profile_gen(interaction: discord.Interaction, theme: str = "Default"):  # noqa: C901, E501
+def profile_gen(interaction: discord.Interaction, theme: str = "Default",user:discord.User=None):  # noqa: C901, E501
     logging.debug(themes.config)
 
     # Vars
@@ -73,11 +73,16 @@ def profile_gen(interaction: discord.Interaction, theme: str = "Default"):  # no
     fixed_size = (710, 800)  # Fixed size for the profile image
     objects = themes.get(theme, "Text", "objects")
     font = themes.get(theme, "Text", "font")
-
+    try:
+        user_id = user.id if user is not None else interaction.user.id
+    except AttributeError:
+        user_id = None
     context = {
         'interaction': interaction,
         "time":time,
         "datetime":datetime,
+        "userlevel":uconfig.get(user_id,"Profile","level",default=0),
+        "user_id":user_id,
     }
     # Load and resize the background image
     if bg.startswith("#"):
@@ -252,17 +257,18 @@ class LevelSystem(commands.Cog):
             pass
 
     @app_commands.command(name="profile",description="Your profile")
-    async def profile(self,interaction: discord.Interaction, minimal:bool=False):
-        if not minimal:
-            image = profile_gen(interaction=interaction,bg="data/prof-bgs/Default.png")  # noqa: E501
-            embed = discord.Embed(title=f"Profile of {interaction.user.name}")
-            file = discord.File(image, filename="profile.png")
-            embed.set_image(url="attachment://profile.png")
-            await interaction.response.send_message(embed=embed,file=file)
-        else:
-            embed = discord.Embed(title=f"Profile of {interaction.user.name}")
-            embed.add_field(name="Level: {lorem ipsum}")
-            interaction.response.send_message(embed=embed)
+    async def profile(self,interaction: discord.Interaction, user:discord.User=None, minimal:bool=False):  # noqa: E501
+        if user is None:
+            if not minimal:
+                image = profile_gen(interaction=interaction,bg="data/prof-bgs/Default.png")  # noqa: E501
+                embed = discord.Embed(title=f"Profile of {interaction.user.name}")
+                file = discord.File(image, filename="profile.png")
+                embed.set_image(url="attachment://profile.png")
+                await interaction.response.send_message(embed=embed,file=file)
+            else:
+                embed = discord.Embed(title=f"Profile of {interaction.user.name}")
+                embed.add_field(name="Level: {lorem ipsum}")
+                interaction.response.send_message(embed=embed)
 
 async def setup(bot:commands.Bot):
 #    cog = LevelSystem(bot)
