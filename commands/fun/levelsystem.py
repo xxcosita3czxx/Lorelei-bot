@@ -52,6 +52,16 @@ def parse_color(color, opacity=1.0):  # noqa: C901
 
     return (r, g, b, a)
 
+def parse_points(points):
+    """Converts a list of 'x,y' strings into tuples of (x, y) coordinates."""
+    parsed_points = []
+    for point in points:
+        try:
+            x, y = map(int, point.split(','))
+            parsed_points.append((x, y))
+        except ValueError:
+            logging.error(f"Invalid point format: {point}")
+    return parsed_points
 
 def profile_gen(interaction: discord.Interaction, theme: str = "Default"):  # noqa: C901, E501
     logging.debug(themes.config)
@@ -82,10 +92,18 @@ def profile_gen(interaction: discord.Interaction, theme: str = "Default"):  # no
             text = obj["text"]
             position = tuple(text.get('position', [0, 0]))
             content = text.get('content', 'Lorem Ipsum')
-            size = text.get('size', 20)
-            color = parse_color(text.get('color', [255, 255, 255]), opacity=text.get('opacity', 1.0))  # noqa: E501
+            size = text.get('size', 20)  # Default font size
+            color = parse_color(text.get('color', [255, 255, 255]),text.get('opacity', 1.0))  # noqa: E501
 
+            # Draw the text with opacity
             draw.text(position, content, font=ImageFont.truetype(font, size), fill=color)  # noqa: E501
+
+            text_layer = Image.new('RGBA', background.size, (255, 255, 255, 0))
+            text_draw = ImageDraw.Draw(text_layer)
+            text_draw.text(position, content, font=ImageFont.truetype(font, size), fill=color)  # noqa: E501
+            background = Image.alpha_composite(background, text_layer)
+
+            logging.debug(f"Drew text '{content}' at {position}")
 
         elif obj.get("img"):
             img = obj["img"]
@@ -175,6 +193,34 @@ def profile_gen(interaction: discord.Interaction, theme: str = "Default"):  # no
 
         else:
             logging.warning(f"Unsupported or invalid object {obj} in theme {theme}, ignoring...")  # noqa: E501
+        # Handle poly object with alpha compositing
+    for obj in objects:
+        logging.debug(obj)
+
+        # Handle poly object with alpha compositing
+        if obj.get("poly"):
+            poly = obj["poly"]
+
+            # Parse the points from strings to tuples
+            points = parse_points(poly.get('points', []))
+            if not points or len(points) < 3:
+                logging.warning(f"Polygon with insufficient points: {points}")
+                continue
+
+            # Get the color with opacity
+            color = parse_color(poly.get('color', [255, 255, 255]), poly.get('opacity', 1.0))
+
+            # Create a new transparent layer for the polygon
+            poly_layer = Image.new('RGBA', background.size, (255, 255, 255, 0))
+            poly_draw = ImageDraw.Draw(poly_layer)
+
+            # Draw the polygon on the transparent layer
+            poly_draw.polygon(points, fill=color)
+
+            # Composite the polygon layer onto the background
+            background = Image.alpha_composite(background, poly_layer)
+            logging.debug(f"Drew polygon with points {points} and color {color}")
+
 
 
     # Save the image
