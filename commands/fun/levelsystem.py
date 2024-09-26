@@ -87,7 +87,7 @@ def profile_gen(interaction: discord.Interaction, theme: str = "Default",user:di
     # Load and resize the background image
     if bg.startswith("#"):
         background = Image.new('RGBA', fixed_size, color=bg)
-    else:
+    else
         background = Image.open(bg).convert("RGBA")
         background = background.resize(fixed_size, Image.ANTIALIAS)
 

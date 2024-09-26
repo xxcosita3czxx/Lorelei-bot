@@ -28,7 +28,7 @@ def gen(kitty,theme):
 
 @click.command()
 def new():
-    click.echo('You ran the "new" command!')
+    click.echo("not yet")
 
 @main.result_callback()
 def handle_empty_command(ctx, *args, **kwargs):
