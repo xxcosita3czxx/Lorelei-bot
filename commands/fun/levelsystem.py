@@ -87,7 +87,7 @@ def profile_gen(interaction: discord.Interaction, theme: str = "Default",user:di
     # Load and resize the background image
     if bg.startswith("#"):
         background = Image.new('RGBA', fixed_size, color=bg)
-    else
+    else:
         background = Image.open(bg).convert("RGBA")
         background = background.resize(fixed_size, Image.ANTIALIAS)
 
@@ -237,7 +237,7 @@ def profile_gen(interaction: discord.Interaction, theme: str = "Default",user:di
             background.save(f".cache/{interaction.user.id}.png")
             return f".cache/{interaction.user.id}.png"
     elif interaction is None:
-        logging.warning("Well be saving as testing file. If running the bot THIS IS A BUG")  # noqa: E501
+        logging.warning("Well be saving as testing file. If running the bot THIS IS A BUG (You may ignore errors if image generated)")  # noqa: E501
         background.save(".cache/lorem.png")
         return ".cache/lorem.png"
     else:
