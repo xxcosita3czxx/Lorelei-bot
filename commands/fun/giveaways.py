@@ -67,7 +67,7 @@ class Giveaways(commands.Cog):
             style=discord.ButtonStyle.blurple,
             custom_id="prev_giveaway_list",
         )
-        def previous(self,interaction:discord.Interaction,button:discord.Button):
+        async def previous(self,interaction:discord.Interaction,button:discord.Button):
             interaction.response.send_message("Previous",ephemeral=True)
 
         @discord.ui.button(
@@ -75,7 +75,7 @@ class Giveaways(commands.Cog):
             style=discord.ButtonStyle.blurple,
             custom_id="next_giveaway_list",
         )
-        def next(self,interaction:discord.Interaction,button:discord.Button):
+        async def next(self,interaction:discord.Interaction,button:discord.Button):
             interaction.response.send_message("Next",ephemeral=True)
 
     class giveaway_open(discord.ui.View):
