@@ -271,6 +271,6 @@ class LevelSystem(commands.Cog):
                 interaction.response.send_message(embed=embed)
 
 async def setup(bot:commands.Bot):
-#    cog = LevelSystem(bot)
-#    await bot.add_cog(cog)
+    cog = LevelSystem(bot)
+    await bot.add_cog(cog)
     pass
