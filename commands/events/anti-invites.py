@@ -25,8 +25,8 @@ class AntiInvites(commands.Cog):
                     )
                     if message.author == self.bot.user:
                         return
-                    if message.author.guild_permissions.administrator:
-                        return
+                    #if message.author.guild_permissions.administrator:
+                    #    return
                     if 'discord.gg' in message.content:
                         try:
                             await message.delete()

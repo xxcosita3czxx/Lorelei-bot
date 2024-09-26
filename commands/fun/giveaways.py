@@ -67,7 +67,7 @@ class Giveaways(commands.Cog):
             style=discord.ButtonStyle.blurple,
             custom_id="prev_giveaway_list",
         )
-        async def previous(self,interaction:discord.Interaction,button:discord.Button):
+        async def previous(self,interaction:discord.Interaction,button:discord.Button):  # noqa: E501
             interaction.response.send_message("Previous",ephemeral=True)
 
         @discord.ui.button(
