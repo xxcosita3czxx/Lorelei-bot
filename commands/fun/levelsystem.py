@@ -260,7 +260,7 @@ class LevelSystem(commands.Cog):
     async def profile(self,interaction: discord.Interaction, user:discord.User=None, minimal:bool=False):  # noqa: E501
         if user is None:
             if not minimal:
-                image = profile_gen(interaction=interaction,bg="data/prof-bgs/Default.png")  # noqa: E501
+                image = profile_gen(interaction=interaction,theme="data/prof-bgs/Default.png")  # noqa: E501
                 embed = discord.Embed(title=f"Profile of {interaction.user.name}")
                 file = discord.File(image, filename="profile.png")
                 embed.set_image(url="attachment://profile.png")
