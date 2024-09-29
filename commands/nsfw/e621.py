@@ -1,3 +1,4 @@
+import logging
 import random
 
 import discord
@@ -87,10 +88,18 @@ class E6_commands(commands.Cog):
             self.index = (self.index - 1) % len(self.posts)
             await self.update_embed(interaction)
 
+        @discord.ui.button(label="Tags")
+        async def tags(self,interaction: discord.Interaction, button:discord.Button):  # noqa: E501
+            try:
+                pass
+            except Exception:
+                logging.error("Exception while trying to find tags")
+
         @discord.ui.button(label="Next", custom_id="next", style=discord.ButtonStyle.primary)  # noqa: E501
         async def next(self, interaction: discord.Interaction, button: discord.ui.Button):  # noqa: E501
             self.index = (self.index + 1) % len(self.posts)
             await self.update_embed(interaction)
+
 
         async def update_embed(self, interaction: discord.Interaction):
             post = self.posts[self.index]
