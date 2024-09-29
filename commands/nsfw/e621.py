@@ -1,3 +1,5 @@
+#TODO Logic for Tags
+
 import logging
 import random
 
