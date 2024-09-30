@@ -1,5 +1,3 @@
-#TODO Logic for Tags
-
 import logging
 import random
 
@@ -10,6 +8,7 @@ from discord.ext import commands
 
 from utils.autocomplete import autocomplete_tags
 
+#TODO Logic for Tags
 
 class E6_commands(commands.Cog):
     def __init__(self, bot):
@@ -94,6 +93,10 @@ class E6_commands(commands.Cog):
         async def tags(self,interaction: discord.Interaction, button:discord.Button):  # noqa: E501
             try:
                 pass
+                # index num is first,
+                # then you should get tags
+                # for each cat read tags in it
+                # data[index][tags][<categories>]
             except Exception:
                 logging.error("Exception while trying to find tags")
 
