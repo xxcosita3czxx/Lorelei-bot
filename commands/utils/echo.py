@@ -21,11 +21,13 @@ class Echo(commands.Cog):
             )
             await channel.send(embed=embed)
             respEmbed(
+                interaction,
                 content="Message sent succesfuly!",
                 ephemeral=True,
             )
         except Exception as e:
             respEmbed(
+                interaction,
                 content=f"Echo Failed!: {e}",
                 ephemeral=True,
             )
