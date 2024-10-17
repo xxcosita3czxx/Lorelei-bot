@@ -18,10 +18,23 @@ async def fetch_tags(query):
         return [tag['name'] for tag in response.json()]
     return []
 
-async def autocomplete_color(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
-    colors = ['Blurple', 'Red', 'Green', 'Blue', 'Yellow',"Purple","White"]
-    return [app_commands.Choice(name=color, value=color) for color in colors if current.lower() in color.lower()]  # noqa: E501
 
+async def autocomplete_color(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
+    colors = {
+        "Blurple": "#5865F2",
+        "Red": "#ED4245",
+        "Green": "#57F287",
+        "Blue": "#0096CF",  # Adding blue just in case
+        "Yellow": "#FEE75C",
+        "Purple": "#5865F2",  # Discord's purple is often Blurple
+        "White": "#FFFFFF",
+    }
+
+    return [
+        app_commands.Choice(name=color, value=hex_value)
+        for color, hex_value in colors.items()
+        if current.lower() in color.lower()
+    ]
 async def autocomplete_dice_modes(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
     colors = dices.keys()
     return [app_commands.Choice(name=color, value=color) for color in colors if current.lower() in color.lower()]  # noqa: E501

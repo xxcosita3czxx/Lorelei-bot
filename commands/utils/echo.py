@@ -2,6 +2,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+from utils.configmanager import gconfig
 from utils.embeder import respEmbed
 
 
@@ -16,7 +17,7 @@ class Echo(commands.Cog):
             embed = discord.Embed(
                 title=title,
                 description=text,
-                color=discord.Color.blurple(),
+                color=gconfig.get(interaction.guild.id,"APPEARANCE","color"),
             )
             await channel.send(embed=embed)
             respEmbed(
