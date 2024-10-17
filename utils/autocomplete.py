@@ -31,9 +31,9 @@ async def autocomplete_color(interaction: discord.Interaction, current: str) -> 
     }
 
     return [
-        app_commands.Choice(name=color, value=hex_value)
+        app_commands.Choice(name=f"{color} ({hex_value})", value=hex_value)
         for color, hex_value in colors.items()
-        if current.lower() in color.lower()
+        if current.lower() in hex_value.lower() or current.lower() in color.lower()
     ]
 async def autocomplete_dice_modes(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
     colors = dices.keys()
