@@ -26,6 +26,7 @@ class AntiInvites(commands.Cog):
                     logging.debug("Anti-invite status:"+str(gconfig.get(
                         str(guild_id),"SECURITY","anti-invite")),
                     )
+                    logging.debug(message.author)
                     if message.author == self.bot.user:
                         return
                     #if message.author.guild_permissions.administrator:
