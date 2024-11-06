@@ -7,7 +7,9 @@
 #TODO Embeds and translations of strings
 #TODO Level system more theme files
 #TODO Level system logic for leaderboards and levels
-#TODO Autorole not giving roles, if checks maybe?
+#TODO Auto messages (prop cron style/discord builtin calendar)
+#TODO Smart Warn system
+#TODO Better config system (Embed style preferences)
 
 import asyncio
 import logging

@@ -29,7 +29,7 @@ class BugReport(commands.Cog):
             try:
                 local_time = time.localtime()
                 formatted_time = time.strftime("%Y-%m-%d_%H-%M-%S", local_time)
-                with open(f"data/bug-reports/bugreport-{interaction.guild.id}-{interaction.user.id}-{formatted_time}.txt", mode="w") as f:  # noqa: E501
+                with open(f"data/bug-reports/bugreport-{command}-{interaction.guild.id}-{interaction.user.name}-{interaction.user.id}-{formatted_time}.txt", mode="w") as f:  # noqa: E501
                     f.write(f"Reported by: {interaction.user.name}\n")
                     f.write(f"Reported at: {formatted_time}\n")
                     f.write(f"Command: {command}\n")
