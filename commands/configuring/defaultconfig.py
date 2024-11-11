@@ -1,3 +1,5 @@
+"""
+
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -66,3 +68,4 @@ async def setup(bot:commands.Bot):
     cog = UserConfig(bot)
     await bot.add_cog(cog)
     bot.tree.add_command(cog.userconfig())
+"""
