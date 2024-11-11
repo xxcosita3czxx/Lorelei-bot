@@ -16,6 +16,16 @@ from utils.configmanager import gconfig, lang, uconfig
 from utils.dices import dices
 from utils.timeconverter import TimeConverter
 
+#
+# The config system will work like this:
+# config_session = GuildConfig(gconfig)
+# configs = config_session.new_setting("class (for instance SECURITY)","name")
+# configs.new_option("name","description","type (int, str bool....)",)  # noqa: E501
+
+class GuildConfig:
+    pass
+
+
 
 """
 class GuildConfig(commands.Cog):
