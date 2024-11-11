@@ -3,9 +3,10 @@
 import datetime
 import logging
 import math
+import os
 import time
 from io import BytesIO
-import os
+
 import discord
 import requests
 from discord import app_commands
@@ -13,8 +14,9 @@ from discord.ext import commands
 from PIL import Image, ImageDraw, ImageFont
 
 import config
-from utils.configmanager import gconfig, themes, uconfig
+from utils.configmanager import themes, uconfig
 from utils.embeder import respEmbed
+
 DEFAULT_IMAGE_PATH = config.def_image
 
 def eval_fstring(s, context):
