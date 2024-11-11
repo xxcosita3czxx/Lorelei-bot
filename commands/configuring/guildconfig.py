@@ -17,6 +17,7 @@ from utils.dices import dices
 from utils.timeconverter import TimeConverter
 
 
+"""
 class GuildConfig(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -412,7 +413,7 @@ class GuildConfig(commands.Cog):
                     content="No config generated yet! Try configuring the server",
                     ephemeral=True,
                 )
-
+"""
 async def setup(bot:commands.Bot):
     cog = GuildConfig(bot)
     await bot.add_cog(cog)
