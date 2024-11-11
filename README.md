@@ -1,9 +1,16 @@
 **WARNING** UPDATER IS BROKEN, PLEASE DONT USE IT AND INSTEAD UPDATE MANUALLY!!
 
 # Lorelei
+
 Open-Source discord bot in python, for people
 > disclaimer: Youre permited to host it yourself for personal purposes like single server or testings, for more than 100 servers, message me on discord (@cosita3cz)
+
+## Why?
+
+Because having too much of bots is very annoying, every single one have different configurations, web dashboards, and you can get lost quickly in it. Also most good bots these days are paid and very limited for free (hope dyno stays free 🙏). This is where my bot comes with all inside discord. Its free, its open-source, and you can do alot with it, edit it for your own needs, or help other people by making your own commands to the main bot.
+
 ## Support the creator
+
 You can support me by contributing to the repo
 
 Or donating me any eth-based crypto to this wallet:
@@ -40,6 +47,4 @@ You can also run it using pterodactyl (UPTDATER DOESNT HAVE TO WORK)
 2. Add all requirements from `requirements.txt` into your settings
 3. Set main file as `run.py`
 4. (Optional) Disable autoupdate in `config.py` for better stability, **You will have to update manually**
-5. Start
-## Config
-work in progress
+5. Start with main.py
