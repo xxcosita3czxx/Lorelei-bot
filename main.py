@@ -8,8 +8,8 @@
 #TODO Level system more theme files
 #TODO Level system logic for leaderboards and levels
 #TODO Auto messages (prop cron style/discord builtin calendar)
-#TODO Smart Warn system
-#TODO Better config system (Embed style preferences)
+#TODO Smart Warn system (Move to commands/admin/warn.py)
+#TODO Better config system (Embed style preferences + being able to add to it from the cog)  # noqa: E501
 
 import asyncio
 import logging
