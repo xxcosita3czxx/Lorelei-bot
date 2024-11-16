@@ -119,14 +119,7 @@ class _GuildConfigCommands(commands.Cog):
                     ephemeral=True,
                 )
 
-async def setup(bot:commands.Bot):
-    cog = _GuildConfigCommands(bot)
-    await bot.add_cog(cog)
-    bot.tree.add_command(cog.configure())
-
-
-"""
-class GuildConfig(commands.Cog):
+class OldGuildConfig(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -521,4 +514,10 @@ class GuildConfig(commands.Cog):
                     content="No config generated yet! Try configuring the server",
                     ephemeral=True,
                 )
-"""
+
+async def setup(bot:commands.Bot):
+    cog = _GuildConfigCommands(bot)
+    await bot.add_cog(cog)
+    oldcog = OldGuildConfig(bot)
+    await bot.add_cog(oldcog)
+    bot.tree.add_command(cog.configure())

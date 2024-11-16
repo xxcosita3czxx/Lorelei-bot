@@ -1,6 +1,3 @@
-
-"""
-
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -14,7 +11,7 @@ from utils.configmanager import lang, uconfig
 from utils.dices import dices
 
 
-class UserConfig(commands.Cog):
+class OldUserConfig(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     @app_commands.default_permissions(
@@ -66,7 +63,6 @@ class UserConfig(commands.Cog):
                 )
 
 async def setup(bot:commands.Bot):
-    cog = UserConfig(bot)
+    cog = OldUserConfig(bot)
     await bot.add_cog(cog)
     bot.tree.add_command(cog.userconfig())
-"""
