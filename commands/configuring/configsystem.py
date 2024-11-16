@@ -16,7 +16,6 @@ from utils.configmanager import gconfig, lang, uconfig
 from utils.dices import dices
 from utils.timeconverter import TimeConverter
 
-
 #TODO System will be able to still have commands like guildconfig export, import and reset
 #TODO Yet it will have new option named guildconfig configure
 #TODO Possibility of having display in help menu (gotta recreate that also)
@@ -25,23 +24,36 @@ from utils.timeconverter import TimeConverter
 # config_session = GuildConfig(gconfig)
 # configs = config_session.new_setting("class (for instance SECURITY)","name")
 # configs.new_option("name","description","type (int, str bool....)")  # noqa: E501
+
+def _ClassEmbed(title):
+    return discord.Embed(
+        title=title,
+        description=f"What do you want to configure in class {title}",
+    )
+
 class _GuildConfigSession:
     def __init__(self, config_class,name,backend):
         super().__init__()
         self.config_class = config_class
         self.name = name
         self.backend = backend
-    def new_option():
+    def new_option(self):
         pass
+class _GuildConfigClass:
+    def __init__(self, name):
+        super().__init__()
+        self.name = name
 
+    def new_setting(self, config_class, name, backend):
+        return _GuildConfigSession(config_class,name,backend)
 class GuildConfig:
     def __init__(self,backend):
         self.backend = backend
 
-    def new_setting(self, config_class, name, backend):
-        return _GuildConfigSession(config_class,name,backend)
+    def new_class(self, name):
+        return _GuildConfigClass(name)
 
-class GuildConfigCommands(commands.Cog):
+class _GuildConfigCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     @app_commands.default_permissions(
@@ -108,7 +120,7 @@ class GuildConfigCommands(commands.Cog):
                 )
 
 async def setup(bot:commands.Bot):
-    cog = GuildConfigCommands(bot)
+    cog = _GuildConfigCommands(bot)
     await bot.add_cog(cog)
     bot.tree.add_command(cog.configure())
 
