@@ -16,7 +16,7 @@ from utils.configmanager import gconfig, lang, uconfig
 from utils.dices import dices
 from utils.timeconverter import TimeConverter
 
-#TODO System will be able to still have commands like guildconfig export, import and reset
+#TODO System will be able to still have commands like guildconfig export, import and reset  # noqa: E501
 #TODO Yet it will have new option named guildconfig configure
 #TODO Possibility of having display in help menu (gotta recreate that also)
 #
