@@ -17,7 +17,7 @@ from utils.dices import dices
 from utils.timeconverter import TimeConverter
 
 
-class OldGuildConfig(commands.Cog):
+class GuildConfig(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -359,11 +359,11 @@ class OldGuildConfig(commands.Cog):
             super().__init__()
             self.name = "guildconfig"
             self.description = "Config for server"
-            self.add_command(OldGuildConfig.configure_sec())
-            self.add_command(OldGuildConfig.configure_appear())
-            self.add_command(OldGuildConfig.configure_members())
-            self.add_command(OldGuildConfig.configure_ticketing())
-            self.add_command(OldGuildConfig.configure_fun())
+            self.add_command(GuildConfig.configure_sec())
+            self.add_command(GuildConfig.configure_appear())
+            self.add_command(GuildConfig.configure_members())
+            self.add_command(GuildConfig.configure_ticketing())
+            self.add_command(GuildConfig.configure_fun())
         @app_commands.command(
             name="reset",
             description="Resets the config. NO TAKIES BACKSIES, AS IT GETS DELETED PERMANENTLY, BREAKS ANY VERIFY SYSTEM",  # noqa: E501
@@ -414,6 +414,6 @@ class OldGuildConfig(commands.Cog):
                 )
 
 async def setup(bot:commands.Bot):
-    oldcog = OldGuildConfig(bot)
-    await bot.add_cog(oldcog)
-    bot.tree.add_command(oldcog.configure())
+    cog = GuildConfig(bot)
+    await bot.add_cog(cog)
+    bot.tree.add_command(cog.configure())
