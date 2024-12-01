@@ -1,20 +1,13 @@
 # RECREATING THE WHOLE CONFIG SYSTEM FROM SCRATCH TO BE MORE MODULAR
 
-import logging
+import logging  # noqa: F401
 import os
 
 import discord
 from discord import app_commands
 from discord.ext import commands
 
-from utils.autocomplete import (
-    autocomplete_color,
-    autocomplete_dice_modes,
-    autocomplete_lang,
-)
 from utils.configmanager import gconfig, lang, uconfig
-from utils.dices import dices
-from utils.timeconverter import TimeConverter
 
 #TODO System will be able to still have commands like guildconfig export, import and reset  # noqa: E501
 #TODO Yet it will have new option named guildconfig configure
@@ -134,4 +127,4 @@ async def setup(bot:commands.Bot):
 #    await bot.add_cog(cog)
 #    bot.tree.add_command(cog.configure())
     pass
-# Aint doing it yet and i will do mostly commands, as functionalities are needed more
+# Aint doing it yet and i will do mostly commands, as functionalities are needed more  # noqa: E501
