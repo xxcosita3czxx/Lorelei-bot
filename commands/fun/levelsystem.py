@@ -274,6 +274,10 @@ class LevelSystem(commands.Cog):
                 embed.add_field(name="Level: {lorem ipsum}")
                 interaction.response.send_message(embed=embed)
 
+    #@commands.Cog.listener("on_message")
+    #async def add_points(self,interaction:discord.Interaction):
+    #    pass
+
 async def setup(bot:commands.Bot):
     cog = LevelSystem(bot)
     await bot.add_cog(cog)
