@@ -11,7 +11,7 @@ from utils.configmanager import lang, uconfig
 from utils.dices import dices
 
 
-class OldUserConfig(commands.Cog):
+class UserConfig(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     @app_commands.default_permissions(
@@ -63,6 +63,6 @@ class OldUserConfig(commands.Cog):
                 )
 
 async def setup(bot:commands.Bot):
-    cog = OldUserConfig(bot)
+    cog = UserConfig(bot)
     await bot.add_cog(cog)
     bot.tree.add_command(cog.userconfig())

@@ -20,6 +20,11 @@ from utils.timeconverter import TimeConverter
 #TODO Yet it will have new option named guildconfig configure
 #TODO Possibility of having display in help menu (gotta recreate that also)
 #
+# There will be command named "/guildconfig configure"
+# in there will be options of categories that will be listed in embed with
+# descriptions
+# Inside those there will be options for commands
+#
 # The config system will work like this:
 # config_session = GuildConfig(gconfig)
 # configs = config_session.new_setting("class (for instance SECURITY)","name")
@@ -28,7 +33,7 @@ from utils.timeconverter import TimeConverter
 def _ClassEmbed(title):
     return discord.Embed(
         title=title,
-        description=f"What do you want to configure in class {title}",
+        description=f"What do you want to configure in category {title}",
     )
 
 class _GuildConfigSession:
@@ -37,8 +42,10 @@ class _GuildConfigSession:
         self.config_class = config_class
         self.name = name
         self.backend = backend
+
     def new_option(self):
         pass
+
 class _GuildConfigClass:
     def __init__(self, name):
         super().__init__()
@@ -46,6 +53,7 @@ class _GuildConfigClass:
 
     def new_setting(self, config_class, name, backend):
         return _GuildConfigSession(config_class,name,backend)
+
 class GuildConfig:
     def __init__(self,backend):
         self.backend = backend
@@ -56,6 +64,7 @@ class GuildConfig:
 class _GuildConfigCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
     @app_commands.default_permissions(
         administrator=True,
     )
@@ -121,6 +130,8 @@ class _GuildConfigCommands(commands.Cog):
             pass
 
 async def setup(bot:commands.Bot):
-    cog = _GuildConfigCommands(bot)
-    await bot.add_cog(cog)
-    bot.tree.add_command(cog.configure())
+#    cog = _GuildConfigCommands(bot)
+#    await bot.add_cog(cog)
+#    bot.tree.add_command(cog.configure())
+    pass
+# Aint doing it yet and i will do mostly commands, as functionalities are needed more
