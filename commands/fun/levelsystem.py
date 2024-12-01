@@ -3,6 +3,7 @@
 import datetime
 import logging
 import math
+import os
 import time
 from io import BytesIO
 
@@ -13,7 +14,8 @@ from discord.ext import commands
 from PIL import Image, ImageDraw, ImageFont
 
 import config
-from utils.configmanager import gconfig, themes, uconfig
+from utils.configmanager import themes, uconfig
+from utils.embeder import respEmbed
 
 DEFAULT_IMAGE_PATH = config.def_image
 
@@ -249,12 +251,14 @@ class LevelSystem(commands.Cog):
 
     @app_commands.command(name="global-leaderboard",description="Level Leaderboard")
     async def global_leaderboard(self,interaction:discord.Interaction):
-        pass
-
+        if os.path.exists("data/levels/global.toml"):
+            # logic for going trough every user
+            pass
+        else:
+            respEmbed(interaction,"There is no one with level yet!")
     @app_commands.command(name="leaderboard",description="Server Leaderboard")
     async def leaderboard(self, interaction:discord.Interaction):
-        if gconfig.get(interaction.guild.id,""):
-            pass
+        pass
 
     @app_commands.command(name="profile",description="Your profile")
     async def profile(self,interaction: discord.Interaction, user:discord.User=None, minimal:bool=False):  # noqa: E501

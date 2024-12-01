@@ -11,10 +11,10 @@ class Warn(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="warn", description="Warns user")
-    async def hello(interaction:discord.Interaction):
+    async def warn(self,interaction:discord.Interaction):
         await interaction.response.send_message("You got warned lol")
 
+
 async def setup(bot:commands.Bot):
-#    cog = Warn(bot)
-#    await bot.add_cog(cog)
-    pass
+    cog = Warn(bot)
+    await bot.add_cog(cog)

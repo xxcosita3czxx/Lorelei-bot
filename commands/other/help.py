@@ -68,5 +68,6 @@ class HelpCommand(commands.Cog):
             pass
 
 async def setup(bot:commands.Bot):
-    await bot.add_cog(HelpCommand(bot))
-    bot.tree.add_command(HelpCommand(bot).Help())
+#    await bot.add_cog(HelpCommand(bot))
+#    bot.tree.add_command(HelpCommand(bot).Help())
+    pass

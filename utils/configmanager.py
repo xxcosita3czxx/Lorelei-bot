@@ -86,6 +86,7 @@ gconfig = ConfigManager("data/guilds")
 uconfig = ConfigManager("data/users")
 lang = ConfigManager("data/lang","data/lang/en.toml")
 themes = ConfigManager("data/themes","data/themes/Default.toml")
+levels = ConfigManager("data/levels","data/levels/global.toml")
 
 def userlang(userid) -> str:
     return uconfig.get(userid,"APPEARANCE","language")
