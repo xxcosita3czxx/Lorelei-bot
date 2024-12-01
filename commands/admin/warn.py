@@ -14,6 +14,7 @@ class Warn(commands.Cog):
     async def warn(self,interaction:discord.Interaction):
         await interaction.response.send_message("You got warned lol")
 
+
 async def setup(bot:commands.Bot):
     cog = Warn(bot)
     await bot.add_cog(cog)
