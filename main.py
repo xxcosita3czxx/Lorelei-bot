@@ -12,6 +12,7 @@
 #TODO Better config system (Embed style preferences + being able to add to it from the cog)  # noqa: E501
 
 import asyncio
+import importlib
 import logging
 import os
 import sys
@@ -40,18 +41,39 @@ logging.getLogger('discord.client').setLevel(logging.ERROR)
 
 ############################### Functions ##########################################
 
-async def load_cogs(directory,bot):
+async def load_cogs(directory, bot):
+    cogs = []
+    # Walk through the directory and collect cogs with priority
     for root, _, files in os.walk(directory):
         for file in files:
             if file.endswith('.py') and file != '__init__.py':
                 cog_path = os.path.relpath(os.path.join(root, file), directory)
                 module_name = cog_path.replace(os.sep, '.').replace('.py', '')
-                try:
-                    await bot.load_extension(f'{directory}.{module_name}')
-                    logger.info(lang.get(config.language,"Bot","cog_load").format(module_name=module_name))
-                except Exception as e:
-                    logger.error(lang.get(conflang,"Bot","cog_fail").format(module_name=module_name,error=e))
+                full_module_path = f'{directory}.{module_name}'
 
+                try:
+                    # Dynamically import the module to get __PRIORITY__
+                    module = importlib.import_module(full_module_path)
+                    priority = getattr(module, "__PRIORITY__", 0)
+
+                    # Clamp priority between 0 and 10
+                    if not (0 <= priority <= 10):  # noqa: PLR2004
+                        logger.warning(
+                            f"Cog '{module_name}' has invalid priority {priority}. Defaults to 0.",  # noqa: E501
+                        )
+                        priority = 0
+
+                    cogs.append((priority, full_module_path))
+                except Exception as e:
+                    logger.error(lang.get(conflang, "Bot", "cog_fail").format(module_name=module_name, error=e))  # noqa: E501
+
+    # Sort cogs by descending priority (highest first)
+    for _, module_name in sorted(cogs, key=lambda x: x[0], reverse=True):
+        try:
+            await bot.load_extension(module_name)
+            logger.info(lang.get(config.language, "Bot", "cog_load").format(module_name=module_name))  # noqa: E501
+        except Exception as e:
+            logger.error(lang.get(conflang, "Bot", "cog_fail").format(module_name=module_name, error=e))  # noqa: E501
 
 async def unload_cogs(bot):
     for extension in list(bot.extensions):
