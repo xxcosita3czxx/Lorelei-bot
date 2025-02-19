@@ -17,7 +17,7 @@ def main():
     pass
 
 @click.command()
-@click.option('--kitty', is_flag=True, help='Generates a kitty.')
+@click.option('--kitty', is_flag=True, help='Generates a picture inside kitty terminal.')  # noqa: E501
 @click.argument("theme")
 def gen(kitty,theme):
     with patch('discord.User.name', new_callable=lambda: 'Lorem Ipsum'):
