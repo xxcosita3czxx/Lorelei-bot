@@ -96,3 +96,9 @@ Is_Alive_time = 30
 #
 def_image = "data/themes/fail.jpg"
 ###################################
+######## Disable Commands #########
+#
+# Disable commands for the bot
+#
+disabled = []
+###################################
