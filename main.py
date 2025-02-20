@@ -11,6 +11,7 @@
 #TODO Smart Warn system (Move to commands/admin/warn.py)
 #TODO Better config system (Embed style preferences + being able to add to it from the cog)  # noqa: E501
 #TODO Invite tracking
+#TODO Support for pterodactyl
 
 import asyncio
 import importlib
