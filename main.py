@@ -298,4 +298,7 @@ if __name__=="__main__":
         token = key.read()
 
     # This will run the bot, yes im too stoobid to rember
-    bot.run(token=token)
+    try:
+        bot.run(token=token)
+    except discord.errors.PrivilegedIntentsRequired:
+        logger.error("All privileged intents are required to run the bot.")
