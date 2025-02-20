@@ -70,4 +70,4 @@ async def setup(bot:commands.Bot):
     @app_commands.default_permissions(kick_members=True)
     async def kick_context(interaction:discord.Interaction,member:discord.Member):
         await Kick.kick(interaction, member,"Unspecified")
-    bot.add_command(kick_context)
+    bot.tree.add_command(kick_context)
