@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import List
+from typing import List  # noqa: UP035
 
 import discord
 import requests
@@ -19,7 +19,7 @@ async def fetch_tags(query):
     return []
 
 
-async def autocomplete_color(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
+async def autocomplete_color(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:  # noqa: E501, UP006
     colors = {
         "Blurple": "#5865F2",
         "Red": "#ED4245",
@@ -35,17 +35,17 @@ async def autocomplete_color(interaction: discord.Interaction, current: str) -> 
         for color, hex_value in colors.items()
         if current.lower() in hex_value.lower() or current.lower() in color.lower()
     ]
-async def autocomplete_dice_modes(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
+async def autocomplete_dice_modes(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501, UP006
     colors = dices.keys()
     return [app_commands.Choice(name=color, value=color) for color in colors if current.lower() in color.lower()]  # noqa: E501
 
-async def autocomplete_verify_modes(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
+async def autocomplete_verify_modes(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501, UP006
     colors = ["captcha","button","emoji","teams"]
     return [app_commands.Choice(name=color, value=color) for color in colors if current.lower() in color.lower()]  # noqa: E501
 
-async def autocomplete_lang(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501
+async def autocomplete_lang(interaction: discord.Interaction,current: str) -> List[app_commands.Choice[str]]:  # noqa: E501, UP006
     directory = "data/lang"
-    def get_toml_files(directory: str) -> List[str]:
+    def get_toml_files(directory: str) -> List[str]:  # noqa: UP006
         toml_files = []
         for f in os.listdir(directory):
             if f.endswith('.toml'):
