@@ -100,5 +100,9 @@ def_image = "data/themes/fail.jpg"
 #
 # Disable commands for the bot
 #
+disabler_mode = "bl"
+# bl = Blacklist mode - disables specified
+# wl = Whitelist mode - Only enables specified
+enabled = []
 disabled = []
 ###################################

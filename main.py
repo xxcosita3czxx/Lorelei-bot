@@ -70,8 +70,12 @@ async def load_cogs(directory, bot):
     # Sort cogs by descending priority (highest first)
     for _, module_name in sorted(cogs, key=lambda x: x[0], reverse=True):
         try:
-            if module_name in config.disabled:
+            if config.disabler_mode == "wl" and module_name not in config.enabled:
+                logger.info(lang.get(config.language, "Bot", "cog_skipped").format(module_name=module_name))  # noqa: E501
+                continue
+            if config.disabler_mode == "bl" and module_name in config.disabled:
                 logger.info(lang.get(config.language, "Bot", "cog_disabled").format(module_name=module_name))  # noqa: E501
+                continue
             else:
                 await bot.load_extension(module_name)
                 logger.info(lang.get(config.language, "Bot", "cog_load").format(module_name=module_name))  # noqa: E501
