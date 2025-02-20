@@ -71,7 +71,7 @@ async def load_cogs(directory, bot):
     for _, module_name in sorted(cogs, key=lambda x: x[0], reverse=True):
         try:
             if module_name in config.disabled:
-                logger.info(lang.get(config.language, "Bot", "cog_disabled").format(module_name=module_name))
+                logger.info(lang.get(config.language, "Bot", "cog_disabled").format(module_name=module_name))  # noqa: E501
             else:
                 await bot.load_extension(module_name)
                 logger.info(lang.get(config.language, "Bot", "cog_load").format(module_name=module_name))  # noqa: E501
