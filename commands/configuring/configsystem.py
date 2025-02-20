@@ -16,7 +16,7 @@ from utils.configmanager import gconfig, lang, uconfig
 from utils.dices import dices
 from utils.timeconverter import TimeConverter
 
-
+__PRIORITY__ = 10
 class GuildConfig(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

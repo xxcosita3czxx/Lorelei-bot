@@ -9,6 +9,8 @@ from discord.ext import commands
 
 from utils.configmanager import gconfig, lang, uconfig
 
+__PRIORITY__ = 10
+
 #TODO System will be able to still have commands like guildconfig export, import and reset  # noqa: E501
 #TODO Yet it will have new option named guildconfig configure
 #TODO Possibility of having display in help menu (gotta recreate that also)
