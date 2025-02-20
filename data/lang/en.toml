@@ -33,6 +33,7 @@ command_sync="Commands Synced!"
 cog_load="Loaded {module_name}"
 cog_unload="Unloaded {module_name}"
 cog_fail="Failed to load {module_name}: {error}"
+cog_disabled="Disabled {module_name}"
 cog_fail_unload="Failed to unload {module_name}: {error}"
 
 [Responds]
