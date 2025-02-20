@@ -78,11 +78,11 @@ class AntiInvites(commands.Cog):
 
                         except discord.Forbidden:
                             await message.channel.send("I dont have permissions to remove links!")  # noqa: E501
-                            logging.debug(f"Anti-links no permission on {str(message.guild)}")  # noqa: E501
+                            logging.debug(lang.get(ulanguage,"MainLogs","debug_antilinks_no_perm").format(guild=str(message.guild)))  # noqa: E501
                         except Exception as e:
                             await message.channel.send(f"Unknown error: {e}")
                 else:
-                    logging.debug("anti-links disabled")
+                    logging.debug(lang.get(ulanguage,"MainLogs","debug_antilinks_disabled"))
         except Exception as e:
             logging.warning(f"Unknown error in anti-links: \n{e}")
 

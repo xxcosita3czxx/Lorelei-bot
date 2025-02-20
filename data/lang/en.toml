@@ -48,6 +48,9 @@ slowmode_disable="Slow mode has been disabled by {user}"
 slowmode_max_reach="Slowmode can't be more than 6 hours"
 dice_roller_title="The Dice Roller 3000"
 dice_roller_desc="Dice: {mode} \n## And rolled number is....\n# {roll}"
+report_sent="Report sent succesfuly!"
+report_error="There was error while making bugreport. Please report on Support server or github. \nError: {e}"
+report_disabled="Bug reports disabled in bot config."
 
 [UserInfo]
 username="Username"
@@ -59,3 +62,5 @@ roles="Roles"
 
 [MainLogs]
 debug_user_admin = "User is admin, ignoring..."
+debug_antilinks_disabled = "AntiLinks is disabled, ignoring..."
+debug_antilinks_no_perm = "Anti-links no permission on {guild}"

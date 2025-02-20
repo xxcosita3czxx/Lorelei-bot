@@ -9,3 +9,4 @@ toml
 click
 fastapi
 uvicorn
+pillow
