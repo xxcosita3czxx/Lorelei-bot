@@ -118,6 +118,8 @@ async def handle_client(reader, writer, bot):
         await writer.wait_closed()
 
 async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot):  # noqa: C901
+    if command.startswith('help'):
+        return 'Available commands: reload_all, unload, load, profiler [start|stop|stats], info [guilds|lat|uptime], kill'  # noqa: E501
 
     if command.startswith('reload_all'):
         try:
