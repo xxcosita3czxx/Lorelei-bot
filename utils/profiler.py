@@ -6,6 +6,8 @@ profiler = None  # Global variable to hold the profiler instance
 
 def start_profiling():
     global profiler
+    profiler = cProfile.Profile()
+    profiler.enable(subcalls=True, builtins=False)
     if not profiler:
         profiler = cProfile.Profile()
         profiler.enable()
