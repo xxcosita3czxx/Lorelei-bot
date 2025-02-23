@@ -193,12 +193,12 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot):  
         if len(parts) > 1:
             action = parts[1]
             if action == "guilds":
-                return len(bot.guilds)
+                return str(len(bot.guilds))
             elif action == "lat":
-                return bot.latency
+                return str(bot.latency)
             elif action == "uptime":
                 rntime = time.time()
-                return time.time() - (lambda start=rntime: start)()
+                return str(time.time() - (lambda start=rntime: start)())
             else:
                 return "Unknown info action."
     elif command.startswith("kill"):
