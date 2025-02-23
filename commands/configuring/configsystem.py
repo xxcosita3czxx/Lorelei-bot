@@ -12,6 +12,8 @@ from utils.autocomplete import (
     autocomplete_dice_modes,
     autocomplete_lang,
 )
+from datetime import datetime, timedelta
+
 from utils.configmanager import gconfig, lang, uconfig
 from utils.dices import dices
 from utils.timeconverter import TimeConverter
@@ -21,6 +23,35 @@ __PRIORITY__ = 10
 class GuildConfig(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+    @app_commands.default_permissions(administrator=True)
+    class configure_sec(app_commands.Group):
+        def __init__(self):
+            super().__init__()
+            self.name = "automations"
+            self.description = "Automations for the server"
+
+        @app_commands.command(name="set_message", description="Set an auto message, interval, and channel")
+        async def set_message(self, interaction: discord.Interaction, message: str, interval: int, channel: discord.TextChannel):
+            """Set an auto message, interval, and channel.
+
+            Args:
+                interaction (discord.Interaction): The interaction object.
+                message (str): The message to send.
+                interval (int): The interval in minutes for sending the message.
+                channel (discord.TextChannel): The channel to send the message in.
+            """
+            guild_id = str(interaction.guild_id)
+            channel_id = str(channel.id)
+            timestamp = (datetime.now() + timedelta(minutes=interval)).timestamp()
+            self.auto_messages[guild_id][channel_id] = {
+                "message": message,
+                "interval": interval,
+                "timestamp": timestamp,
+            }
+            gconfig.set(guild_id,f"automessages-{channel_id}", "message", message)
+            gconfig.set(guild_id,f"automessages-{channel_id}", "interval", interval)
+            gconfig.set(guild_id,f"automessages-{channel_id}", "timestamp", timestamp)
+            await interaction.response.send_message(f"Auto message set to '{message}' with interval '{interval}' minutes in channel {channel.mention}",ephemeral=True)
 
     @app_commands.default_permissions(administrator=True)
     class configure_sec(app_commands.Group):
