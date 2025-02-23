@@ -279,6 +279,6 @@ class LevelSystem(commands.Cog):
     #    pass
 
 async def setup(bot:commands.Bot):
-    cog = LevelSystem(bot)
-    await bot.add_cog(cog)
-#    pass
+#    cog = LevelSystem(bot)
+#    await bot.add_cog(cog)
+    pass
