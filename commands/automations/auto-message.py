@@ -51,6 +51,6 @@ class AutoMessages(commands.Cog):
         await self.bot.wait_until_ready()
 
 async def setup(bot: commands.Bot):
-#    cog = AutoMessages(bot)
-#    await bot.add_cog(cog)
-    pass
+    cog = AutoMessages(bot)
+    await bot.add_cog(cog)
+#    pass
