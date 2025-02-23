@@ -49,16 +49,7 @@ helper = True
 #
 # Helper port, default 9920
 helperport = 9920
-############## Api ###############
-#
-# Enables API for getting info
-# about the bot running.
-# Default = True
-api = True
-#
-# API port, default 9921
-apiport = 9921
-############# Shards ##############
+###################################
 ############# Shards ##############
 #
 # How many Shards to use?
@@ -69,7 +60,7 @@ shards = 1
 #
 # Only True or False
 # True is default
-autoupdate = False
+autoupdate = True
 ###################################
 ########### Repository ############
 #
