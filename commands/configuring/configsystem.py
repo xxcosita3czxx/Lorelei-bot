@@ -24,7 +24,7 @@ class GuildConfig(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     @app_commands.default_permissions(administrator=True)
-    class configure_sec(app_commands.Group):
+    class configure_automations(app_commands.Group):
         def __init__(self):
             super().__init__()
             self.name = "automations"
@@ -399,6 +399,8 @@ class GuildConfig(commands.Cog):
             self.add_command(GuildConfig.configure_members())
             self.add_command(GuildConfig.configure_ticketing())
             self.add_command(GuildConfig.configure_fun())
+            self.add_command(GuildConfig.configure_automations())
+            
         @app_commands.command(
             name="reset",
             description="Resets the config. NO TAKIES BACKSIES, AS IT GETS DELETED PERMANENTLY, BREAKS ANY VERIFY SYSTEM",  # noqa: E501
