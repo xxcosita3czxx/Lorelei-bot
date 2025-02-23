@@ -116,7 +116,8 @@ def main(update):
     update_costk_thread.start()
 
     if os.getenv("P_SERVER_UUID") is not None:
-        ptero_mode()
+        ptero_thread = threading.Thread(target=ptero_mode)
+        ptero_thread.start()
 
 if __name__ == "__main__":
     main()
