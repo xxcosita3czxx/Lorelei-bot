@@ -1,5 +1,3 @@
-**WARNING** UPDATER IS BROKEN, PLEASE DONT USE IT AND INSTEAD UPDATE MANUALLY!!
-
 # Lorelei
 
 Open-Source discord bot in python, for people
@@ -18,7 +16,7 @@ Or donating me any eth-based crypto to this wallet:
 
 ## Installation
 
-### Systemd
+### Systemd (linux)
 
 You can use systemd (linux) to run this bot
 
@@ -28,23 +26,30 @@ You can use systemd (linux) to run this bot
 4. Create file named `.secret.key` and put your token inside
 5. Install dependencies
 
-```bash
-pip install -r requirements.txt
-```
-(if you wanna run it as root, place `sudo` before command)
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+    (if you wanna run it as root, place `sudo` before command)
 
 6. Enable and start the service
-```bash
-sudo systemctl enable lorelei.service
-sudo systemctl start lorelei.service
-```
+
+    ```bash
+    sudo systemctl enable lorelei.service
+    sudo systemctl start lorelei.service
+    ```
 
 ### Pterodactyl
 
-You can also run it using pterodactyl (UPTDATER DOESNT HAVE TO WORK)
+You can also run it using pterodactyl.
+For updater to work please check if your hosting does allow using git inside their eggs
+If yes, please dont use builtin updater, and let the script do its own thing. If you prefer switch from the hosting, please disable autoupdate in the bot. If disabled, bot wont update itself automaticaly after period of time, but after restart.
 
 1. Place repository into root of the pterodactyl
 2. Add all requirements from `requirements.txt` into your settings
 3. Set main file as `run.py`
-4. (Optional) Disable autoupdate in `config.py` for better stability, **You will have to update manually**
-5. Start with main.py
+4. Start with main.py
+
+### Windows
+
+Because of some features differing or not even existing im not willing to develop it for windows. Who even uses windows server these days for this.
