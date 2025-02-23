@@ -19,7 +19,7 @@ coloredlogs.install(
     datefmt='%Y-%m-%d %H:%M:%S',
 )
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("runner")
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 # SAVE FOR LATER
@@ -56,8 +56,6 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 def update():
     if config.autoupdate:
         try:
-#            ctkit.update_script_from_github("xxcosita3czxx","lorelei-bot","main.py","main.py") # noqa: E501
-#            ctkit.update_script_from_github("xxcosita3czxx","lorelei-bot","run.py","run.py") # noqa: E501
             os.system("git pull") # noqa: S605
         except Exception as e:
             logger.warning("UPDATER FAILED")
@@ -94,6 +92,13 @@ def main(update):
     if update:
         update()
         os.system("python3 utils/cosita_toolkit.py") # noqa: S605
+        sys.exit()
+
+    if not os.path.exists(".secret.key") or open(".secret.key").read().strip() == "":
+        logger.error("TOKEN NOT FOUND, PLEASE ADD TOKEN TO .secret.key")
+        if not os.path.exists(".secret.key"):
+            with open(".secret.key", "w") as f:
+                f.write("")
         sys.exit()
 
     monitor_thread = threading.Thread(target=Is_Alive)
