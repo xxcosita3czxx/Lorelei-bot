@@ -29,32 +29,24 @@ class GuildConfig(commands.Cog):
             self.name = "automations"
             self.description = "Automations for the server"
 
-        @app_commands.command(name="automessage", description="Set an auto message, interval, and channel")
-        async def set_message(self, interaction: discord.Interaction, message: str, interval: int, channel: discord.TextChannel, embed: bool = False,enable:bool=True):
+        @app_commands.command(name="automessage", description="Set an auto message, interval, and channel")  # noqa: E501
+        async def set_message(self, interaction: discord.Interaction, message: str, interval: int, channel: discord.TextChannel, embed: bool = False,enable:bool=True):  # noqa: E501
             if enable:
-                """Set an auto message, interval, and channel.
-
-                Args:
-                    interaction (discord.Interaction): The interaction object.
-                    message (str): The message to send.
-                    interval (int): The interval in minutes for sending the message.
-                    channel (discord.TextChannel): The channel to send the message in.
-                """
                 guild_id = str(interaction.guild_id)
                 channel_id = str(channel.id)
-                timestamp = (datetime.now() + timedelta(minutes=interval)).timestamp()
+                timestamp = (datetime.now() + timedelta(minutes=interval)).timestamp()  # noqa: E501
 
                 gconfig.set(guild_id,f"automessages-{channel_id}", "embed", embed)
-                gconfig.set(guild_id,f"automessages-{channel_id}", "message", message)
-                gconfig.set(guild_id,f"automessages-{channel_id}", "interval", interval)
-                gconfig.set(guild_id,f"automessages-{channel_id}", "timestamp", timestamp)
+                gconfig.set(guild_id,f"automessages-{channel_id}", "message", message)  # noqa: E501
+                gconfig.set(guild_id,f"automessages-{channel_id}", "interval", interval)  # noqa: E501
+                gconfig.set(guild_id,f"automessages-{channel_id}", "timestamp", timestamp)  # noqa: E501
 
-                await interaction.response.send_message(f"Auto message set to '{message}' with interval '{interval}' minutes in channel {channel.mention}",ephemeral=True)
+                await interaction.response.send_message(f"Auto message set to '{message}' with interval '{interval}' minutes in channel {channel.mention}",ephemeral=True)  # noqa: E501
             else:
                 guild_id = str(interaction.guild_id)
                 channel_id = str(channel.id)
                 gconfig.delete(guild_id,f"automessages-{channel_id}")
-                await interaction.response.send_message("Auto message deleted",ephemeral=True)
+                await interaction.response.send_message("Auto message deleted",ephemeral=True)  # noqa: E501
 
     @app_commands.default_permissions(administrator=True)
     class configure_sec(app_commands.Group):

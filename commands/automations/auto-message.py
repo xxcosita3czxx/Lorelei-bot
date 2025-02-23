@@ -35,7 +35,7 @@ class AutoMessages(commands.Cog):
                 if not message or not interval:
                     continue
                 if gconfig.get(guild_id,f"automessages-{channelid}","embed"):
-                    embed = discord.Embed(color=discord.Color.random(),description=message)
+                    embed = discord.Embed(color=discord.Color.random(),description=message)  # noqa: E501
                 else:
                     embed = None
                 if timestamp + interval < now:
@@ -52,4 +52,3 @@ class AutoMessages(commands.Cog):
 async def setup(bot: commands.Bot):
     cog = AutoMessages(bot)
     await bot.add_cog(cog)
-#    pass
