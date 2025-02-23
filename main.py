@@ -12,6 +12,7 @@
 #TODO Better config system (Embed style preferences + being able to add to it from the cog)  # noqa: E501
 #TODO Invite tracking
 #TODO Support for pterodactyl
+#TODO FINALLY FIX RUN.PY
 
 import asyncio
 import importlib
@@ -279,12 +280,6 @@ class aclient(discord.ext.commands.AutoShardedBot):
             logger.info("Starting helper socket listener...")
             asyncio.create_task(socket_listener(self))
             logger.info("Helper socket listener started.")
-
-#        if config.api:
-#            logger.info("Starting FastAPI server...")
-#            fastapi_server = FastAPIServer(bot=bot, port=config.apiport)
-#            asyncio.create_task(fastapi_server.start())
-#            logger.info("FastAPI server started.")
 
 bot = aclient(shard_count=config.shards)
 tree = bot.tree
