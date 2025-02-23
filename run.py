@@ -90,7 +90,7 @@ def update_cosita_tk():
 
 def ptero_mode():
         while True:
-            for line in sys.stdin():
+            for line in sys.stdin:
                 os.system("python3 helper.py " + line)  # noqa: S605
 
 @click.command()
