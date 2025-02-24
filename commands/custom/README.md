@@ -10,12 +10,13 @@ class Hello(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="hello", description="Greets")
-    async def hello(interaction:discord.Interaction)
+    async def hello(interaction:discord.Interaction):
         await interaction.response.send_message("Hello!")
 
 async def setup(bot:commands.Bot):
     await bot.add_cog(Hello(bot))
 ```
+
 Dont worry about adding into main.py, as it is added automaticaly after restart if syntax is correct, else it will throw error
 
 KEEP IT INSIDE ONE FOLDER, DONT STACK FOLDERS
