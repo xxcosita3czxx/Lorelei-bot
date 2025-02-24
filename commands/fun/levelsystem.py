@@ -91,7 +91,7 @@ def profile_gen(interaction: discord.Interaction, theme: str = "Default",user:di
         background = Image.new('RGBA', fixed_size, color=bg)
     else:
         background = Image.open(bg).convert("RGBA")
-        background = background.resize(fixed_size, Image.ANTIALIAS)
+        background = background.resize(fixed_size, Image.LANCZOS)
 
     draw = ImageDraw.Draw(background, "RGBA")
     logging.debug(objects)
@@ -143,7 +143,7 @@ def profile_gen(interaction: discord.Interaction, theme: str = "Default",user:di
             width = img.get('width')
             height = img.get('height')
             if width and height:
-                image = image.resize((width, height), Image.ANTIALIAS)
+                image = image.resize((width, height), Image.LANCZOS)
 
             position = tuple(img.get('position', [0, 0]))
             background.paste(image, position)

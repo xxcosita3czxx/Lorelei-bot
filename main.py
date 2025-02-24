@@ -206,6 +206,12 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot):  
     elif command.startswith("kill"):
         logger.info("Killing from helper")
         sys.exit()
+    elif command.startswith("update"):
+        try:
+            os.system("git pull")  # noqa: S605
+            return "Updated succesfully"
+        except Exception as e:
+            return f'Failed to update. Error: {e}'
     else:
         return 'Unknown command.'
 #################################### Status ########################################

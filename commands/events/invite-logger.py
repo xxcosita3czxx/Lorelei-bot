@@ -52,6 +52,7 @@ class InviteLogger(commands.Cog):
         if used_invite:
             inviter:discord.Member = used_invite.inviter
             logger.debug(f"{member} was invited by {inviter.name}")
+
     async def get_used_invite(self, member: discord.Member):
         invites_before = self.invites[member.guild.id]
         invites_after = await member.guild.invites()
@@ -66,6 +67,6 @@ class InviteLogger(commands.Cog):
         return used_invite
 
 async def setup(bot: commands.Bot):
-#    await bot.add_cog(InviteLogger(bot))
-#    bot.tree.add_command(InviteLogger.Invites())
-    pass
+    await bot.add_cog(InviteLogger(bot))
+    bot.tree.add_command(InviteLogger.Invites())
+#    pass

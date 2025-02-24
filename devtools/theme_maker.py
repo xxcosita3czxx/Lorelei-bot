@@ -1,6 +1,6 @@
 import os
 import sys
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import click
 
@@ -20,8 +20,18 @@ def main():
 @click.option('--kitty', is_flag=True, help='Generates a picture inside kitty terminal.')  # noqa: E501
 @click.argument("theme")
 def gen(kitty,theme):
-    with patch('discord.User.name', new_callable=lambda: 'Lorem Ipsum'):
-        var = profile_gen(interaction=None, theme=theme)
+    mock_user = MagicMock()
+    mock_user.name = 'Lorem Ipsum'
+    mock_user.id = 'user12345'
+    mock_guild = MagicMock()
+    mock_guild.id = 'guild12345'
+
+    mock_interaction = MagicMock()
+    mock_interaction.user = mock_user
+    mock_interaction.guild = mock_guild
+
+    with patch('discord.Interaction', new_callable=lambda: mock_interaction):  # noqa: E501
+        var = profile_gen(interaction=mock_interaction, theme=theme)
         click.echo(f"Saved at: {var}")  # noqa: T201
         if kitty:
             os.system(command=f"kitty icat {var}")
