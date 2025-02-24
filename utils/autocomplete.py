@@ -96,14 +96,17 @@ async def autocomplete_tags(interaction: discord.Interaction, current: str):
             app_commands.Choice(name="autocomplete failed!", value="autocomplete failed!"),  # noqa: E501
             app_commands.Choice(name="autocomplete failed!", value="autocomplete failed!"),  # noqa: E501
         ]
-#    if current == "":
-#        tags = await fetch_tags(current)
-#    else:
-#        last_word = current.split()[-1]
-#        tags = await fetch_tags(last_word)
-#    return [
-#        app_commands.Choice(
-#            name=tag,
-#            value=tag,
-#        ) for tag in tags if last_word.lower() in tag.lower()
-#    ]
+
+async def autocomplete_invites(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:  # noqa: E501, UP006
+    guild = interaction.guild
+    if guild is None:
+        return []
+
+    invites = await guild.invites()
+    invite_codes = [invite.code for invite in invites]
+
+    return [
+        app_commands.Choice(name=f"discord.gg/{code}", value=f"discord.gg/{code}")
+        for code in invite_codes
+        if current.lower() in code.lower()
+    ]

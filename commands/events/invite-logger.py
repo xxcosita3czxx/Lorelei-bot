@@ -4,13 +4,14 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+from utils.autocomplete import autocomplete_invites
+
 logger = logging.getLogger("invite-logger")
 
 class InviteLogger(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.invites = {}
-
     class Invites(app_commands.Group):
         def __init__(self):
             super().__init__(self)
@@ -18,11 +19,13 @@ class InviteLogger(commands.Cog):
             self.description="No bots in the server"
 
         @app_commands.command(name="invite",description="Get info about invite")
-        async def invite(self,interaction:discord.Interaction,invite:discord.Invite):  # noqa: E501
+        @app_commands.autocomplete(invite=autocomplete_invites)
+        async def invite(self,interaction:discord.Interaction,invite:str):  # noqa: E501
             await interaction.response.send_message(
                 content=f"Invite {invite.code} was created by {invite.inviter.name}#{invite.inviter.discriminator} and has {invite.uses} uses.",  # noqa: E501
                 ephemeral=True,
             )
+
         @app_commands.command(name="user",description="Get all invites from a user")
         async def user(self,interaction:discord.Interaction,user:discord.User):
             invites = await interaction.guild.invites()
