@@ -36,6 +36,9 @@ cog_fail="Failed to load {module_name}: {error}"
 cog_disabled="Disabled {module_name}"
 cog_skipped="Skipped {module_name}"
 cog_fail_unload="Failed to unload {module_name}: {error}"
+helper_running="Helper listener running on port {helperport}..."
+err_client_handle="Error in client handling: {error}"
+reload_success="Reloaded succesfully"
 
 [Responds]
 no_links = "{author}, Don't send links!"

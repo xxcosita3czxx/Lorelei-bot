@@ -100,7 +100,7 @@ async def socket_listener(bot):
         'localhost',
         config.helperport,
     )
-    logger.info(f"Helper listener running on port {config.helperport}...")
+    logger.info(lang.get(config.language,"Bot","helper_running").format(helperport=config.helperport))
     async with server:
         await server.serve_forever()
 
@@ -112,7 +112,7 @@ async def handle_client(reader, writer, bot):
         writer.write(response.encode('utf-8'))
         await writer.drain()
     except Exception as e:
-        logger.error(f"Error in client handling: {e}")
+        logger.error(lang.get(config.language,"Bot","err_client_handle").format(error=e))
     finally:
         writer.close()
         await writer.wait_closed()
@@ -127,7 +127,7 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot):  
             await bot.tree.sync()
             await load_cogs(directory="commands", bot=bot)
             await bot.tree.sync()
-            return "Reloaded succesfully"
+            return lang.config(config.language,"Bot","reload_success")
         except Exception as e:
             return f'Failed to reload. Error: {e}'
 
