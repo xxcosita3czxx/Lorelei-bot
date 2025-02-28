@@ -43,12 +43,6 @@ class VerifySystem(commands.Cog):
                 embed=embed,
                 view=self.verify_button(),
             )
-            """gconfig.set(
-                interaction.guild.id,
-                str(channel.id)+"-verify",
-                "message_id",
-                message.id,
-            ) """
             gconfig.set(
                 interaction.guild.id,
                 str(channel.id)+"-verifybutton",
