@@ -97,7 +97,7 @@ class VerifySystem(commands.Cog):
                     "role",
                 )
                 if role is None:
-                    interaction.response.send_message("interaction failed: role is none")  # noqa: E501
+                    await interaction.response.send_message("interaction failed: role is none")  # noqa: E501
                 # Convert the string back to an integer and role
                 role_id = int(role)
                 role = interaction.guild.get_role(role_id)
