@@ -67,6 +67,36 @@ class HelpCommand(commands.Cog):
         async def help_other(self,interaction:discord.Interaction):
             pass
 
+class Help:
+    def add_help_page(self, group_name: str, command_name: str, embed: discord.Embed):
+        if not hasattr(help_pages, group_name):
+            setattr(help_pages, group_name, {})
+        group = getattr(help_pages, group_name)
+        group[command_name] = embed
+
+    def get_help_page(self, group_name: str, command_name: str) -> discord.Embed:
+        group = getattr(help_pages, group_name, None)
+        if group is None:
+            raise ValueError(f"Group '{group_name}' does not exist.")
+        embed = group.get(command_name, None)
+        if embed is None:
+            raise ValueError(f"Command '{command_name}' does not exist in group '{group_name}'.")
+        return embed
+
+    def create_group(self, group_name: str):
+        if hasattr(help_pages, group_name):
+            raise ValueError(f"Group '{group_name}' already exists.")
+        setattr(help_pages, group_name, {})
+
+    def list_groups(self) -> list:
+        return [attr for attr in dir(help_pages) if not callable(getattr(help_pages, attr)) and not attr.startswith("__")]
+
+    def add_command_to_group(self, group_name: str, command_name: str, description: str):
+        if not hasattr(help_pages, group_name):
+            raise ValueError(f"Group '{group_name}' does not exist.")
+        group = getattr(help_pages, group_name)
+        group[command_name] = description
+
 async def setup(bot:commands.Bot):
 #    await bot.add_cog(HelpCommand(bot))
 #    bot.tree.add_command(HelpCommand(bot).Help())
