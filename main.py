@@ -225,7 +225,7 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot):  
                 else:
                     return "Invalid index. Please provide a valid bug report index."
             else:
-                return "All reports:\n".join([f"{i}: {report}" for i, report in enumerate(bug_reports)])  # noqa: E501
+                return "All reports:\n"+"\n".join([f"{i}: {report}" for i, report in enumerate(bug_reports)])  # noqa: E501
         else:
             return "Bug reports directory is empty."
     else:
