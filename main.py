@@ -119,7 +119,7 @@ async def handle_client(reader, writer, bot):
 
 async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot):  # noqa: C901
     if command.startswith('help'):
-        return 'Available commands: reload_all, unload, load, profiler [start|stop|stats], info [guilds|lat|uptime], kill'  # noqa: E501
+        return 'Available commands: reload_all, unload, load, profiler [start|stop|stats], info [guilds|lat|uptime], kill, update, bugreports [index]'  # noqa: E501
 
     if command.startswith('reload_all'):
         try:
@@ -215,12 +215,12 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot):  
             return f'Failed to update. Error: {e}'
     elif command.startswith("bugreports"):
         parts = command.split(" ", 1)
-        if os.path.exists("data/bugreports") and os.listdir("data/bugreports"):
-            bug_reports = os.listdir("data/bugreports")
+        if os.path.exists("data/bug-reports") and os.listdir("data/bug-reports"):
+            bug_reports = os.listdir("data/bug-reports")
             if len(parts) > 1:
                 index = int(parts[1])
                 if 0 <= index < len(bug_reports):
-                    with open(os.path.join("data/bugreports", bug_reports[index])) as file:  # noqa: E501
+                    with open(os.path.join("data/bug-reports", bug_reports[index])) as file:  # noqa: E501
                         return file.read()
                 else:
                     return "Invalid index. Please provide a valid bug report index."
