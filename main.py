@@ -221,7 +221,7 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot):  
                 index = int(parts[1])
                 if 0 <= index < len(bug_reports):
                     with open(os.path.join("data/bug-reports", bug_reports[index])) as file:  # noqa: E501
-                        return file.read()
+                        return "\n" + file.read()
                 else:
                     return "Invalid index. Please provide a valid bug report index."
             else:
