@@ -212,6 +212,21 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot):  
             return "Updated succesfully"
         except Exception as e:
             return f'Failed to update. Error: {e}'
+    elif command.startswith("bugreports"):
+        parts = command.split(" ", 1)
+        if os.path.exists("data/bugreports") and os.listdir("data/bugreports"):
+            bug_reports = os.listdir("data/bugreports")
+            if len(parts) > 1:
+                index = int(parts[1])
+                if 0 <= index < len(bug_reports):
+                    with open(os.path.join("data/bugreports", bug_reports[index])) as file:  # noqa: E501
+                        return file.read()
+                else:
+                    return "Invalid index. Please provide a valid bug report index."
+            else:
+                return "\n".join([f"{i}: {report}" for i, report in enumerate(bug_reports)])  # noqa: E501
+        else:
+            return "Bug reports directory is empty."
     else:
         return 'Unknown command.'
 #################################### Status ########################################
