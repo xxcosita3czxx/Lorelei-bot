@@ -1,4 +1,4 @@
-import logging as logger
+import logging
 
 import discord
 from discord import app_commands
@@ -8,6 +8,7 @@ from utils.embeder import respEmbed
 
 #from utils.timeconverter import TimeConverter
 #from humanfriendly import format_timespan
+logger = logging.getLogger("ban")
 
 class Ban(commands.Cog):
     def __init__(self, bot):

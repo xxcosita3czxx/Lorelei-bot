@@ -5,7 +5,7 @@ from discord.ext import commands
 
 from utils.configmanager import gconfig
 
-
+logger = logging.getLogger("autorole")
 class AutoRole(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -13,20 +13,20 @@ class AutoRole(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self,member:discord.Member):
         try:
-            logging.debug("on_member_join was triggered!")
-            logging.debug(str(member.guild) + " / " + str(member.guild.id))
+            logger.debug("on_member_join was triggered!")
+            logger.debug(str(member.guild) + " / " + str(member.guild.id))
             if gconfig.get(str(member.guild.id),"MEMBERS","autorole-enabled") is True:  # noqa: E501
                 role_id = gconfig.get(str(member.guild.id),"MEMBERS","autorole-role")  # noqa: E501
-                logging.debug("Role_id:"+str(role_id))
+                logger.debug("Role_id:"+str(role_id))
                 role = member.guild.get_role(int(role_id))
                 await member.add_roles(role)
         except discord.Forbidden:
             member.send("Autorole failed, tell administrator to check permissions")
-            logging.info("Autorole failed due to permissions")
+            logger.info("Autorole failed due to permissions")
         except discord.HTTPException:
-            logging.warn("Autorole adding failed, HTTPException")
+            logger.warning("Autorole adding failed, HTTPException")
         except Exception as e:
-            logging.warn(f"Unknown error in Auto-role: \n{e}")
+            logger.warning(f"Unknown error in Auto-role: \n{e}")
 
 async def setup(bot:commands.Bot):
     await bot.add_cog(AutoRole(bot))

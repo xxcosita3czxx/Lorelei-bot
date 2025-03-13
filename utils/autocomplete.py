@@ -8,6 +8,7 @@ from discord import app_commands
 
 from utils.dices import dices
 
+logger = logging.getLogger("autocomplete")
 
 async def fetch_tags(query):
     headers = {
@@ -90,7 +91,7 @@ async def autocomplete_tags(interaction: discord.Interaction, current: str):
 
         return choices
     except Exception as e:
-        logging.warning(f"Autocomplete tags failed! {e}")
+        logger.warning(f"Autocomplete tags failed! {e}")
         return [
             app_commands.Choice(name="autocomplete failed!", value="autocomplete failed!"),  # noqa: E501
             app_commands.Choice(name="autocomplete failed!", value="autocomplete failed!"),  # noqa: E501

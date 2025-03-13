@@ -7,6 +7,7 @@ from discord.ext import commands
 from utils.configmanager import gconfig
 
 #from humanfriendly import format_timespan
+logger = logging.getLogger("anti-alts")
 
 class AntiAlts(commands.Cog):
     def __init__(self, bot):
@@ -32,7 +33,7 @@ class AntiAlts(commands.Cog):
                 member.send(embed=embed)
                 member.kick("Alternative Account [Lorelei]")
             else:
-                logging.debug("Acc okay")
-        logging.debug("antialts disabled :<")
+                logger.debug("Acc okay")
+        logger.debug("antialts disabled :<")
 async def setup(bot:commands.Bot):
     await bot.add_cog(AntiAlts(bot))

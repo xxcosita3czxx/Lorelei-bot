@@ -4,6 +4,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+logger = logging.getLogger("kick")
 
 class Kick(commands.Cog):
     def __init__(self, bot):
@@ -50,7 +51,7 @@ class Kick(commands.Cog):
             await interaction.response.send_message(
                 content=f"UNSEND KICK MESSAGE: {e}",
             )
-            logging.warning(f"UNSENT KICK MESSAGE: {e}")
+            logger.warning(f"UNSENT KICK MESSAGE: {e}")
 
         await member.kick(reason=reason)
         await interaction.response.send_message(

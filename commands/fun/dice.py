@@ -9,6 +9,7 @@ from utils.autocomplete import autocomplete_dice_modes
 from utils.configmanager import gconfig, lang, uconfig
 from utils.dices import dices
 
+logger = logging.getLogger("dice")
 
 class Dice(commands.Cog):
     def __init__(self, bot):
@@ -39,6 +40,6 @@ class Dice(commands.Cog):
             )
             await interaction.response.send_message(embed=embed)
         except Exception as e:
-            logging.error(f"dice failed, \n{e}")
+            logger.error(f"dice failed, \n{e}")
 async def setup(bot:commands.Bot):
     await bot.add_cog(Dice(bot))

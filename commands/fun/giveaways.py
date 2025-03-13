@@ -10,6 +10,7 @@ from discord.ext import commands
 
 from utils.configmanager import gconfig
 
+logger = logging.getLogger("giveaways")
 
 class Giveaways(commands.Cog):
     def __init__(self, bot):
@@ -112,7 +113,7 @@ class Giveaways(commands.Cog):
             else:
                 gconfig.set(interaction.guild.id,"Giveaways",f"{interaction.message.id}-joined",interaction.user.id)
             await interaction.response.send_message(content="Joined!",ephemeral=True)  # noqa: E501
-            logging.debug(gconfig.get(interaction.guild.id,"Giveaways",f"{interaction.message.id}-joined"))
+            logger.debug(gconfig.get(interaction.guild.id,"Giveaways",f"{interaction.message.id}-joined"))
 
 async def setup(bot:commands.Bot):
 #    cog = Giveaways(bot)

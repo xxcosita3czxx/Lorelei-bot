@@ -18,6 +18,7 @@ from utils.dices import dices
 from utils.timeconverter import TimeConverter
 
 __PRIORITY__ = 10
+logger = logging.getLogger("guildconfig")
 
 class GuildConfig(commands.Cog):
     def __init__(self, bot):
@@ -83,7 +84,7 @@ class GuildConfig(commands.Cog):
                 gconfig.set(interaction.guild.id,"SECURITY","antialts-enabled",enabled)
                 gconfig.set(interaction.guild.id,"SECURITY","antialts-time",time)
             except Exception as e:
-                logging.info(f"There was error in settings {e}")
+                logger.info(f"There was error in settings {e}")
 
         @app_commands.command(
             name="anti-links",
@@ -273,7 +274,7 @@ class GuildConfig(commands.Cog):
                         ephemeral=True,
                     )
             except discord.Forbidden:
-                logging.debug("No permissions")
+                logger.debug("No permissions")
             except Exception as e:
                 await interaction.response.send_message(
                     content=f"Exception happened: {e}",

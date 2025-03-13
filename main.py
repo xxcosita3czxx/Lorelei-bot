@@ -36,7 +36,7 @@ coloredlogs.install(
 )
 conflang=config.language
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("main")
 logging.getLogger('discord.client').setLevel(logging.ERROR)
 
 ############################### Functions ##########################################
@@ -262,7 +262,7 @@ async def change_status() -> None:
             ),
             status=config.status,
         )
-        logging.debug(lang.get(conflang,"Bot","debug_status_chng"))
+        logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
         await bot.change_presence(
             activity=discord.Activity(
                 type=discord.ActivityType.watching,
@@ -270,7 +270,7 @@ async def change_status() -> None:
             ),
             status=config.status,
         )
-        logging.debug(lang.get(conflang,"Bot","debug_status_chng"))
+        logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
         await asyncio.sleep(5)
         await bot.change_presence(
             activity=discord.Activity(
@@ -279,7 +279,7 @@ async def change_status() -> None:
             ),
             status=config.status,
         )
-        logging.debug(lang.get(conflang,"Bot","debug_status_chng"))
+        logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
         await asyncio.sleep(5)
 
 #########################################################################################

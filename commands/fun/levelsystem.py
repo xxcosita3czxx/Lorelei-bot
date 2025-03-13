@@ -19,6 +19,8 @@ from utils.embeder import respEmbed
 
 DEFAULT_IMAGE_PATH = config.def_image
 
+logger = logging.getLogger("levelsystem")
+
 def eval_fstring(s, context):
     """Evaluate a string expression as an f-string with the given context."""
     if not s:
@@ -27,7 +29,7 @@ def eval_fstring(s, context):
         # Use eval to evaluate the f-string directly with context
         return eval(f"f'''{s}'''", globals(), context)  # noqa: S307
     except Exception as e:
-        logging.error(f"Failed to evaluate f-string {s}: {e}")
+        logger.error(f"Failed to evaluate f-string {s}: {e}")
         return s
 
 def parse_color(color, opacity=1.0):  # noqa: C901
@@ -64,11 +66,11 @@ def parse_points(points):
             x, y = map(float, point.split(','))
             parsed_points.append((x, y))
         except ValueError:
-            logging.error(f"Invalid point format: {point}")
+            logger.error(f"Invalid point format: {point}")
     return parsed_points
 
 def profile_gen(interaction: discord.Interaction, theme: str = "Default",user:discord.User=None):  # noqa: C901, E501
-    logging.debug(themes.config)
+    logger.debug(themes.config)
 
     # Vars
     bg = themes.get(theme, "Data", "bg")
@@ -94,10 +96,10 @@ def profile_gen(interaction: discord.Interaction, theme: str = "Default",user:di
         background = background.resize(fixed_size, Image.LANCZOS)
 
     draw = ImageDraw.Draw(background, "RGBA")
-    logging.debug(objects)
+    logger.debug(objects)
 
     for obj in objects:
-        logging.debug(obj)
+        logger.debug(obj)
 
         if obj.get("text"):
             text = obj["text"]
@@ -114,14 +116,14 @@ def profile_gen(interaction: discord.Interaction, theme: str = "Default",user:di
             text_draw.text(position, content, font=ImageFont.truetype(font, size), fill=color)  # noqa: E501
             background = Image.alpha_composite(background, text_layer)
 
-            logging.debug(f"Drew text '{content}' at {position}")
+            logger.debug(f"Drew text '{content}' at {position}")
 
         elif obj.get("img"):
             img = obj["img"]
             img_path = eval_fstring(img.get('image'), context=context)
 
             if not img_path:
-                logging.warning(f"Image path not provided for object {obj}")
+                logger.warning(f"Image path not provided for object {obj}")
                 continue
 
             try:
@@ -132,12 +134,12 @@ def profile_gen(interaction: discord.Interaction, theme: str = "Default",user:di
                     image = Image.open(img_path)
 
             except Exception as e:
-                logging.error(f"Failed to process image {img_path}: {e}")
-                logging.warning("Replacing image with default image.")
+                logger.error(f"Failed to process image {img_path}: {e}")
+                logger.warning("Replacing image with default image.")
                 try:
                     image = Image.open(DEFAULT_IMAGE_PATH)
                 except Exception as default_error:
-                    logging.error(f"Failed to load default image: {default_error}")
+                    logger.error(f"Failed to load default image: {default_error}")
                     continue
 
             width = img.get('width')
@@ -147,7 +149,7 @@ def profile_gen(interaction: discord.Interaction, theme: str = "Default",user:di
 
             position = tuple(img.get('position', [0, 0]))
             background.paste(image, position)
-            logging.debug(f"Pasted image {img_path} at {position}")
+            logger.debug(f"Pasted image {img_path} at {position}")
 
         elif obj.get("rect"):
             rect = obj["rect"]
@@ -209,7 +211,7 @@ def profile_gen(interaction: discord.Interaction, theme: str = "Default",user:di
             # Parse the points from strings to tuples
             points = parse_points(poly.get('points', []))
             if not points or len(points) < 3:  # noqa: PLR2004
-                logging.warning(f"Polygon with insufficient points: {points}")
+                logger.warning(f"Polygon with insufficient points: {points}")
                 continue
 
             # Get the color with opacity
@@ -224,10 +226,10 @@ def profile_gen(interaction: discord.Interaction, theme: str = "Default",user:di
 
             # Composite the polygon layer onto the background
             background = Image.alpha_composite(background, poly_layer)
-            logging.debug(f"Drew polygon with points {points} and color {color}")
+            logger.debug(f"Drew polygon with points {points} and color {color}")
 
         else:
-            logging.warning(f"Unsupported or invalid object {obj} in theme {theme}, ignoring...")  # noqa: E501
+            logger.warning(f"Unsupported or invalid object {obj} in theme {theme}, ignoring...")  # noqa: E501
 
 
     # Save the image
@@ -239,11 +241,11 @@ def profile_gen(interaction: discord.Interaction, theme: str = "Default",user:di
             background.save(f".cache/{interaction.user.id}.png")
             return f".cache/{interaction.user.id}.png"
     elif interaction is None:
-        logging.warning("Well be saving as testing file. If running the bot THIS IS A BUG (You may ignore errors if image generated)")  # noqa: E501
+        logger.warning("Well be saving as testing file. If running the bot THIS IS A BUG (You may ignore errors if image generated)")  # noqa: E501
         background.save(".cache/lorem.png")
         return ".cache/lorem.png"
     else:
-        logging.error("Failed to make profile: Interaction is wrong type")
+        logger.error("Failed to make profile: Interaction is wrong type")
 
 class LevelSystem(commands.Cog):
     def __init__(self, bot):

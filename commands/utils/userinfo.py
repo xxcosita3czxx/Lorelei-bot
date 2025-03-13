@@ -6,14 +6,14 @@ from discord.ext import commands
 
 from utils.configmanager import lang, uconfig
 
-
+logger = logging.getLogger("userinfo")
 class userinfo(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @app_commands.command(name="user-info",description="Info about user")
     async def user_info(self, interaction:discord.Interaction, member:discord.User):
-        logging.debug(member.display_avatar.key)
+        logger.debug(member.display_avatar.key)
         embed = discord.Embed(title="Info about", color=discord.Color.blurple())
         embed.set_thumbnail(url=member.display_avatar.url)
         ulang = uconfig.get(interaction.user.id,"Appearance","language")
@@ -58,7 +58,7 @@ async def setup(bot:commands.Bot):
 
     @app_commands.context_menu(name="User Info")
     async def user_info(interaction: discord.Interaction, member:discord.User):
-        logging.debug(member.display_avatar.key)
+        logger.debug(member.display_avatar.key)
         embed = discord.Embed(title="Info about", color=discord.Color.blurple())
         embed.set_thumbnail(url=member.display_avatar.url)
         ulang = uconfig.get(interaction.user.id,"Appearance","language")

@@ -8,7 +8,7 @@ from discord.ext import commands
 
 from utils.autocomplete import autocomplete_tags
 
-
+logger_e6 = logging.getLogger("nsfw.e621")
 class E6_commands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -98,7 +98,7 @@ class E6_commands(commands.Cog):
                     tag_message += f"**{category.capitalize()}**: {', '.join(tag_list)}\n"  # noqa: E501
                 await interaction.response.send_message(content=tag_message, ephemeral=True)  # noqa: E501
             except Exception:
-                logging.error("Exception while trying to find tags")
+                logger_e6.error("Exception while trying to find tags")
 
         @discord.ui.button(label="Next", custom_id="next", style=discord.ButtonStyle.primary)  # noqa: E501
         async def next(self, interaction: discord.Interaction, button: discord.ui.Button):  # noqa: E501

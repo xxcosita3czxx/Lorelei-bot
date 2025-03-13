@@ -8,6 +8,7 @@ from discord.ext import commands
 from utils.autocomplete import autocomplete_verify_modes
 from utils.configmanager import gconfig
 
+logger = logging.getLogger("verifysystem")
 
 class VerifySystem(commands.Cog):
     def __init__(self, bot):
@@ -43,7 +44,7 @@ class VerifySystem(commands.Cog):
                 embed=embed,
                 view=self.verify_button(),
             )
-            logging.debug(role.id)
+            logger.debug(role.id)
             gconfig.set(
                 interaction.guild.id,
                 str(channel.id)+"-verifybutton",
@@ -107,7 +108,7 @@ class VerifySystem(commands.Cog):
                     content="Insufficient Permissions",
                 )
             except Exception as e:
-                logging.error(str(e))
+                logger.error(str(e))
 
     class verify_teams(discord.ui.View):
         def __init__(self)-> None:

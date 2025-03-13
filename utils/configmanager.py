@@ -12,6 +12,9 @@ coloredlogs.install(
     fmt='%(asctime)s %(levelname)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
 )
+
+logger = logging.getLogger("configmanager")
+
 class ConfigManager:
     def __init__(self, config_dir, fallback_file=None):
         self.config_dir = config_dir
@@ -20,7 +23,7 @@ class ConfigManager:
         self._load_all_configs()
 
     def _load_all_configs(self):
-        logging.debug("Loading all configs...")
+        logger.debug("Loading all configs...")
         for filename in os.listdir(self.config_dir):
             try:
                 if filename.endswith('.toml'):
@@ -29,25 +32,25 @@ class ConfigManager:
                     with open(file_path,encoding="utf-8") as f:
                         self.config[id] = toml.load(f)
             except UnicodeDecodeError:
-                logging.warning(f"{filename} Cannot be decoded! Check encoding, for now skipping")  # noqa: E501
-        logging.debug(f"Loaded configs: {self.config}")
+                logger.warning(f"{filename} Cannot be decoded! Check encoding, for now skipping")  # noqa: E501
+        logger.debug(f"Loaded configs: {self.config}")
 
     def get(self, id, title, key, default=None):
         id = str(id)
-        logging.debug(f"Getting {id}:{title}:{key}")
+        logger.debug(f"Getting {id}:{title}:{key}")
         result = self.config.get(id, {}).get(title, {}).get(key, default)
         if result is None and self.fallback_file:
             with open(self.fallback_file) as f:
                 fallback_config = toml.load(f)
             fallback_result = fallback_config.get(title, {}).get(key, default)
             if fallback_result is not None:
-                logging.debug("Giving fallback result...")
+                logger.debug("Giving fallback result...")
                 result = fallback_result
-        logging.debug("Final result: " + str(result))
+        logger.debug("Final result: " + str(result))
         return result
 
     def set(self, id, title, key, value):
-        logging.debug(f"Setting {id}:{title}:{key} to {value}")
+        logger.debug(f"Setting {id}:{title}:{key} to {value}")
         if id not in self.config:
             self.config[id] = {}
         if title not in self.config[id]:
@@ -55,18 +58,18 @@ class ConfigManager:
         self.config[id][title][key] = value
         self._save_config(id)
         self._load_all_configs()  # Reload all configs after saving
-        logging.debug(f"Set {id}:{title}:{key} to {value}")
+        logger.debug(f"Set {id}:{title}:{key} to {value}")
 
     def _save_config(self, id):
         id = str(id)
         file_path = os.path.join(self.config_dir, f"{id}.toml")
-        logging.debug(f"Saving config for {id} to {file_path}")
+        logger.debug(f"Saving config for {id} to {file_path}")
         with open(file_path, 'w') as f:
             toml.dump(self.config[id], f)
 
     def delete(self, id, title=None, key=None):
         id = str(id)
-        logging.debug(f"Deleting {id}:{title}:{key}")
+        logger.debug(f"Deleting {id}:{title}:{key}")
         if id in self.config:
             if title and key:
                 if title in self.config[id] and key in self.config[id][title]:
@@ -80,7 +83,7 @@ class ConfigManager:
                 del self.config[id]
             self._save_config(id)
             self._load_all_configs()  # Reload all configs after saving
-        logging.debug(f"Deleted {id}:{title}:{key}")
+        logger.debug(f"Deleted {id}:{title}:{key}")
 
 gconfig = ConfigManager("data/guilds")
 uconfig = ConfigManager("data/users")
