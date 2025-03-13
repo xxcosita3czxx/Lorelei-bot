@@ -1,0 +1,71 @@
+[TicketingCommand]
+embed_review_title = "Would you like to review our system?"
+embed_review_description = "Take a while and give us a star based on how well you were served:"
+ticket_close_confirm = "Are you sure you want to close this ticket?"
+embed_review_resp_title = "Thanks for rating!"
+embed_review_rev_title = "Review response!"
+embed_review_rev_desc = "User responded to review action!"
+panel_launch = "Ticketing system launched!"
+remove_role = "Removed role {role} from ticket"
+remove_user = "Removed user {user} from ticket"
+only_one = "You can only use one."
+parse_error = "Unknown error while parsing values"
+
+[HelpCommand]
+adminhelp_title = "Admin-Tools Help"
+adminhelp_ban = "/ban user=(discord.User)"
+adminhelp_kick_description = "Usage: member(Discord Member): Member to kick, reason(string): Reason why"
+adminhelp_ban_description = "Usage: member(Discord Member): Member to ban, reason(string): Reason why, time(Time): Time to ban for (1m, 5d, 6w etc..)"
+adminhelp_unban_description = "Usage: member(Discord Member): Member to unban, reason(string): Reason why"
+userhelp_userconfig_app_color_description = "Usage: color(string): Color that will be used, hex or Provided colors in autocomplete."
+userhelp_userconfig_app_lang_description = "Usage: language(string): Language that will bot respond to you. Use only autocomplete ones as they are linked to language files"
+confighelp_security_antiinvite = "Usage: value(bool): Shall be enabled?"
+
+[RunnerLogs]
+debug_on_pid_log = "main.py is running at PID: "
+info_not_running = "main.py is not running. Restarting..."
+err_costk_update_fail = "Update of CtKIT Failed!"
+
+[Bot]
+debug_status_chng = "Status Changed."
+info_logged = "We have logged in as {user}."
+command_sync = "Commands Synced!"
+cog_load = "Loaded {module_name}"
+cog_unload = "Unloaded {module_name}"
+cog_fail = "Failed to load {module_name}: {error}"
+cog_disabled = "Disabled {module_name}"
+cog_skipped = "Skipped {module_name}"
+cog_fail_unload = "Failed to unload {module_name}: {error}"
+helper_running = "Helper listener running on port {helperport}..."
+err_client_handle = "Error in client handling: {error}"
+reload_success = "Reloaded succesfully"
+
+[Responds]
+no_links = "{author}, Don't send links!"
+no_invites = "{author}, Don't send invites!"
+ping = "Pong! UwU"
+config_reset = "Config Reset!"
+ping_latency = "Latency: {latency}"
+value_set = "Value/s Set: {values}"
+noperms_manage_channels = "Make sure I have `{perms}` permissions!"
+info_text_raw = "Hello!\nThis is Lorelei Bot developed by cosita3cz.\nDeveloped in python for everyone.\nGithub: https://github.com/xxcosita3czxx/lorelei-bot\n\nThanks to all contributors:\n"
+slowmode_disable = "Slow mode has been disabled by {user}"
+slowmode_max_reach = "Slowmode can't be more than 6 hours"
+dice_roller_title = "The Dice Roller 3000"
+dice_roller_desc = "Dice: {mode} \n## And rolled number is....\n# {roll}"
+report_sent = "Report sent succesfuly!"
+report_error = "There was error while making bugreport. Please report on Support server or github. \nError: {e}"
+report_disabled = "Bug reports disabled in bot config."
+
+[UserInfo]
+username = "Usewnamwe"
+display_name = "Dispway Namwe" 
+id = "ID"
+joined_dsc = "Joined Discowd" 
+joined_guild = "Joined Sewvew"
+roles = "Woles"
+
+[MainLogs]
+debug_user_admin = "Usew is admin, ignowing..."
+debug_antilinks_disabled = "Anti-winks is disabwed, ignowing..."
+debug_antilinks_no_perm = "Anti-winks no pewmission on {guild}"
