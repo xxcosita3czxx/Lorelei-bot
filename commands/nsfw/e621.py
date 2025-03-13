@@ -8,7 +8,6 @@ from discord.ext import commands
 
 from utils.autocomplete import autocomplete_tags
 
-#TODO Logic for Tags
 
 class E6_commands(commands.Cog):
     def __init__(self, bot):
@@ -105,6 +104,7 @@ class E6_commands(commands.Cog):
         async def next(self, interaction: discord.Interaction, button: discord.ui.Button):  # noqa: E501
             self.index = (self.index + 1) % len(self.posts)
             await self.update_embed(interaction)
+            #TODO Add a way to refresh the list of posts so it wont be capped to 100 posts  # noqa: E501
 
 
         async def update_embed(self, interaction: discord.Interaction):
