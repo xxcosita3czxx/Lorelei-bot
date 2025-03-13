@@ -10,8 +10,7 @@
 #TODO Smart Warn system (Move to commands/admin/warn.py)
 #TODO Better config system (Embed style preferences + being able to add to it from the cog)  # noqa: E501
 #TODO Invite tracking
-#TODO Support for pterodactyl (i just realised most of default eggs do package git with them)  # noqa: E501
-#TODO FINALLY FIX RUN.PY
+
 
 import asyncio
 import importlib
