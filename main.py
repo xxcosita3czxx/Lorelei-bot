@@ -118,60 +118,60 @@ async def handle_client(reader, writer, bot):
 async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot):  # noqa: C901
     if command.startswith('help'):
         return 'Available commands: reload_all, unload, load, profiler [start|stop|stats], info [guilds|lat|uptime], kill, update, bugreports [index]'  # noqa: E501
-
-    if command.startswith('reload_all'):
-        try:
-            await unload_cogs(bot=bot)
-            await bot.tree.sync()
-            await load_cogs(directory="commands", bot=bot)
-            await bot.tree.sync()
-            return lang.config(config.language,"Bot","reload_success")
-        except Exception as e:
-            return f'Failed to reload. Error: {e}'
-
-    elif command.startswith("unload"):
-        try:
-            cog = command.split(maxsplit=1)
-            if cog is None or cog == "":
-                return "Specify cog."
-            if cog not in list(bot.extensions):
-                return "Invalid cog. Ensure cog name"
-
+    if command.startswith('extensions'):
+        _, command = command.split(" ", 1)
+        if command.startswith('reload_all'):
             try:
-                await bot.unload_extension(cog)
+                await unload_cogs(bot=bot)
+                await bot.tree.sync()
+                await load_cogs(directory="commands", bot=bot)
+                await bot.tree.sync()
+                return lang.config(config.language,"Bot","reload_success")
+            except Exception as e:
+                return f'Failed to reload. Error: {e}'
 
-            except discord.ext.commands.ExtensionNotLoaded:
-                return "Extension is not loaded"
+        elif command.startswith("unload"):
+            try:
+                cog = command.split(maxsplit=1)[1]
+                if cog is None or cog == "":
+                    return "Specify cog."
+                if cog not in list(bot.extensions):
+                    return "Invalid cog. Ensure cog name"
+                try:
+                    await bot.unload_extension(cog)
+
+                except discord.ext.commands.ExtensionNotLoaded:
+                    return "Extension is not loaded"
+
+                except Exception as e:
+                    return f"Unknown error while unloading extension: {e}"
 
             except Exception as e:
-                return f"Unknown error while unloading extension: {e}"
+                return f"failed to unload: {e}"
 
-        except Exception as e:
-            return f"failed to unload: {e}"
-
-    elif command.startswith("load"):
-        try:
-            _, cog = command.strip(" ")
-            if cog is None or cog == "":
-                return "Specify cog."
-
+        elif command.startswith("load"):
             try:
-                await bot.load_extension(cog)
+                _, cog = command.split(maxsplit=1)
+                if cog is None or cog == "":
+                    return "Specify cog."
 
-            except discord.ext.commands.ExtensionNotFound:
-                return "Extension not found, ensure name is correct"
+                try:
+                    await bot.load_extension(cog)
 
-            except discord.ext.commands.ExtensionAlreadyLoaded:
-                return "Extension already loaded!"
+                except discord.ext.commands.ExtensionNotFound:
+                    return "Extension not found, ensure name is correct"
 
-            except discord.ext.commands.ExtensionFailed as e:
+                except discord.ext.commands.ExtensionAlreadyLoaded:
+                    return "Extension already loaded!"
+
+                except discord.ext.commands.ExtensionFailed as e:
+                    return f"Failed to load: {e}"
+
+                except Exception as e:
+                    return f"Unknown error while loading extension: {e}"
+
+            except Exception as e:
                 return f"Failed to load: {e}"
-
-            except Exception as e:
-                return f"Unknown error while loading extension: {e}"
-
-        except Exception as e:
-            return f"Failed to load: {e}"
 
     elif command.startswith("profiler"):
         # Handle profiler commands
