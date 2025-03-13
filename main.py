@@ -119,7 +119,10 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot):  
     if command.startswith('help'):
         return 'Available commands: reload_all, unload, load, profiler [start|stop|stats], info [guilds|lat|uptime], kill, update, bugreports [index]'  # noqa: E501
     if command.startswith('extensions'):
-        _, command = command.split(" ", 1)
+        parts = command.split(" ", 1)
+        if len(parts) < 2:  # noqa: PLR2004
+            return "Invalid extensions command. Use 'extensions reload_all', 'extensions unload <cog>', or 'extensions load <cog>'."  # noqa: E501
+        _, command = parts
         if command.startswith('reload_all'):
             try:
                 await unload_cogs(bot=bot)
