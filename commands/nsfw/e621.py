@@ -106,7 +106,6 @@ class E6_commands(commands.Cog):
             await self.update_embed(interaction)
             #TODO Add a way to refresh the list of posts so it wont be capped to 100 posts  # noqa: E501
 
-
         async def update_embed(self, interaction: discord.Interaction):
             post = self.posts[self.index]
             embed, video_url = E6_commands.e6_commands.create_embed(self, post)

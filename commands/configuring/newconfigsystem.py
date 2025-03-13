@@ -118,6 +118,31 @@ class _GuildConfigCommands(commands.Cog):
                     ephemeral=True,
                 )
         @app_commands.command(
+            name="import",
+            description="Imports config",  # noqa: E501
+        )
+        async def import_config(self,interaction:discord.Interaction):  # noqa: E501
+            try:
+                if not interaction.data['attachments']:
+                    await interaction.response.send_message(
+                        content="No file uploaded. Please upload a config file.",
+                        ephemeral=True,
+                    )
+                    return
+                attachment = interaction.data['attachments'][0]
+                file_content = await attachment.read()
+                with open("data/guilds"+ str(interaction.guild.id) + ".toml", "w") as f:  # noqa: E501
+                    f.write(file_content)
+                await interaction.response.send_message(
+                    content="Config imported successfully.",
+                    ephemeral=True,
+                )
+            except Exception as e:
+                await interaction.response.send_message(
+                    content=f"Error: {e}",
+                    ephemeral=True,
+                )
+        @app_commands.command(
             name="configure",
             description="Configure the bot",  # noqa: E501
         )
