@@ -175,7 +175,27 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot):  
 
             except Exception as e:
                 return f"Failed to load: {e}"
-
+        elif command.startswith("reload"):
+            try:
+                cog = command.split(maxsplit=1)[1]
+                if cog is None or cog == "":
+                    return "Specify cog."
+                if cog not in list(bot.extensions):
+                    return "Invalid cog. Ensure cog name"
+                try:
+                    await bot.unload_extension(cog)
+                    await bot.load_extension(cog)
+                    return f"Reloaded {cog} successfully."
+                except discord.ext.commands.ExtensionNotLoaded:
+                    return "Extension is not loaded"
+                except discord.ext.commands.ExtensionNotFound:
+                    return "Extension not found, ensure name is correct"
+                except discord.ext.commands.ExtensionFailed as e:
+                    return f"Failed to reload: {e}"
+                except Exception as e:
+                    return f"Unknown error while reloading extension: {e}"
+            except Exception as e:
+                return f"Failed to reload: {e}"
     elif command.startswith("profiler"):
         # Handle profiler commands
         parts = command.split(" ", 1)
