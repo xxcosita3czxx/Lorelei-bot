@@ -14,7 +14,7 @@ only_one = " Můžeš použít pouze jednu/jeden."
 parse_error = "Neznámá chyba při analýze hodnot"
 
 [HelpCommand]
-adminhelp_title = "Admin-Tools Help"
+adminhelp_title = "Admin-Tools Help" 
 adminhelp_ban = "/ban user=(discord.User)"
 adminhelp_kick_description = "Použití: member(Discord Member): Člen k vyhození, reason(string): Důvod proč"
 adminhelp_ban_description = "Použití: member(Discord Member): Člen k zabanování, reason(string): Důvod proč, time(Time): Doba zabanování (1 měsíc, 5 dnů, 6 týdnů atd..)"
@@ -32,6 +32,16 @@ err_costk_update_fail = "Aktualizace CtKIT Selhala!"
 debug_status_chng = "Status Pozměněn."
 info_logged = "Přihlásili jsem se za {user}."
 views_added = "Views Přidány"
+command_sync = "Příkazy synchronizovány!"
+cog_load = "{module_name} Načten"
+cog_unload = "{module_name} Odnačten"
+cog_fail = "Failed to load {module_name}: {error}"
+cog_disabled = "Disabled {module_name}"
+cog_skipped = "Skipped {module_name}"
+cog_fail_unload = "Failed to unload {module_name}: {error}"
+helper_running = "Helper listener running on port {helperport}..."
+err_client_handle = "Error in client handling: {error}"
+reload_success = "Reloaded succesfully"
 
 [Responds]
 no_links = "{author}, Neposílej linky!"
@@ -43,9 +53,17 @@ noperms_manage_channels = "Make sure I have `{perms}` permissions!"
 info_text_raw = "Zdravím!\nToto je Lorelei-bot vytvořený vývojářem cosita3cz.\nVytvořen v pythonu, pro lidi.\n\nChtěl bych poděkovat všem kontributorům:\n"
 slowmode_disable = "Pomalý režim byl zakázán od {user}"
 slowmode_max_reach = "Pomalý režim nesmí být delší než 6 hodin"
+config_reset = "Config Reset!"
+dice_roller_title = "The Dice Roller 3000"
+dice_roller_desc = "Dice: {mode} \n## And rolled number is....\n# {roll}"
+report_sent = "Report sent succesfuly!"
+report_error = "There was error while making bugreport. Please report on Support server or github. \nError: {e}"
+report_disabled = "Bug reports disabled in bot config."
 
 [MainLogs]
 debug_user_admin = "User je admin! Ignoruji..."
+debug_antilinks_disabled = "AntiLinks is disabled, ignoring..."
+debug_antilinks_no_perm = "Anti-links no permission on {guild}"
 
 [UserInfo]
 username = "Uživatelské jméno"
