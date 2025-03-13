@@ -92,11 +92,12 @@ class E6_commands(commands.Cog):
         @discord.ui.button(label="Tags")
         async def tags(self,interaction: discord.Interaction, button:discord.Button):  # noqa: E501
             try:
-                pass
-                # index num is first,
-                # then you should get tags
-                # for each cat read tags in it
-                # data[index][tags][<categories>]
+                post = self.posts[self.index]
+                tags = post['tags']
+                tag_message = "Tags:\n"
+                for category, tag_list in tags.items():
+                    tag_message += f"**{category.capitalize()}**: {', '.join(tag_list)}\n"  # noqa: E501
+                await interaction.response.send_message(content=tag_message, ephemeral=True)  # noqa: E501
             except Exception:
                 logging.error("Exception while trying to find tags")
 

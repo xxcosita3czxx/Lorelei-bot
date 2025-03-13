@@ -1,15 +1,14 @@
 #############################
 #    By Cosita              #
 #############################
-#TODO Giveaway logic
+#TODO Invite tracking
 #TODO more verify modes
 #TODO AntiLinks block all messages (Test please)
 #TODO Embeds and translations of strings
 #TODO Level system more theme files
 #TODO Level system logic for leaderboards and levels
-#TODO Smart Warn system (Move to commands/admin/warn.py)
 #TODO Better config system (Embed style preferences + being able to add to it from the cog)  # noqa: E501
-#TODO Invite tracking
+#TODO Giveaway logic
 
 
 import asyncio
