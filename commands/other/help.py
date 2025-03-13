@@ -4,17 +4,10 @@ from discord.ext import commands
 
 import utils.help_embeds as help_pages
 
-
+__PRIORITY__ = 8
 class HelpCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-    @app_commands.command(name="help", description="User Help")
-    async def help_user(self,interaction: discord.Interaction):
-        embeds = help_pages.help_user
-        view = self.Help_Pages(embeds=embeds)
-        await view.send_initial_message(interaction)
-
     class Help_Pages(discord.ui.View):
         def __init__(self, embeds, *, timeout=180):
             super().__init__(timeout=timeout)
@@ -46,6 +39,12 @@ class HelpCommand(commands.Cog):
                     view=self,
                 )
 
+    @app_commands.command(name="help", description="User Help")
+    async def help_user(self,interaction: discord.Interaction):
+        embeds = help_pages.help_user
+        view = self.Help_Pages(embeds=embeds)
+        await view.send_initial_message(interaction)
+
     @app_commands.default_permissions(administrator=True)
     class Help(app_commands.Group):
         def __init__(self):
@@ -67,35 +66,51 @@ class HelpCommand(commands.Cog):
         async def help_other(self,interaction:discord.Interaction):
             pass
 
-class Help:
-    def add_help_page(self, group_name: str, command_name: str, embed: discord.Embed):  # noqa: E501
-        if not hasattr(help_pages, group_name):
-            setattr(help_pages, group_name, {})
-        group = getattr(help_pages, group_name)
-        group[command_name] = embed
+class HelpManager:
+    _instance = None  # Singleton instance
 
-    def get_help_page(self, group_name: str, command_name: str) -> discord.Embed:
-        group = getattr(help_pages, group_name, None)
-        if group is None:
-            raise ValueError(f"Group '{group_name}' does not exist.")
-        embed = group.get(command_name, None)
-        if embed is None:
-            raise ValueError(f"Command '{command_name}' does not exist in group '{group_name}'.")  # noqa: E501
-        return embed
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance.help_pages = {}  # Initialize the dictionary once
+        return cls._instance
 
     def create_group(self, group_name: str):
-        if hasattr(help_pages, group_name):
+        """Creates a new help group if it doesn't exist."""
+        if group_name in self.help_pages:
             raise ValueError(f"Group '{group_name}' already exists.")
-        setattr(help_pages, group_name, {})
+        self.help_pages[group_name] = {}
+
+    def add_help_page(self, group_name: str, command_name: str, embed: discord.Embed):  # noqa: E501
+        """Adds a help page (embed) for a command inside a group."""
+        if group_name not in self.help_pages:
+            self.create_group(group_name)  # Auto-create the group if missing
+        self.help_pages[group_name][command_name] = embed
+
+    def get_help_page(self, group_name: str, command_name: str) -> discord.Embed:
+        """Retrieves the help embed for a command inside a group."""
+        if group_name not in self.help_pages:
+            raise ValueError(f"Group '{group_name}' does not exist.")
+        if command_name not in self.help_pages[group_name]:
+            raise ValueError(f"Command '{command_name}' does not exist in group '{group_name}'.")  # noqa: E501
+        return self.help_pages[group_name][command_name]
 
     def list_groups(self) -> list:
-        return [attr for attr in dir(help_pages) if not callable(getattr(help_pages, attr)) and not attr.startswith("__")]  # noqa: E501
+        """Returns a list of all help groups."""
+        return list(self.help_pages.keys())
 
     def add_command_to_group(self, group_name: str, command_name: str, description: str):  # noqa: E501
-        if not hasattr(help_pages, group_name):
+        """Adds a command with a description to a group."""
+        if group_name not in self.help_pages:
             raise ValueError(f"Group '{group_name}' does not exist.")
-        group = getattr(help_pages, group_name)
-        group[command_name] = description
+        self.help_pages[group_name][command_name] = description
+
+    def list_commands(self, group_name: str) -> dict:
+        """Lists all commands in a given group."""
+        if group_name not in self.help_pages:
+            raise ValueError(f"Group '{group_name}' does not exist.")
+        return self.help_pages[group_name]
+
 
 async def setup(bot:commands.Bot):
 #    await bot.add_cog(HelpCommand(bot))

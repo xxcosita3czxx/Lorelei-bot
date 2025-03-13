@@ -466,6 +466,7 @@ class GuildConfig(commands.Cog):
                     content=f"Error: {e}",
                     ephemeral=True,
                 )
+
 async def setup(bot:commands.Bot):
     cog = GuildConfig(bot)
     await bot.add_cog(cog)
