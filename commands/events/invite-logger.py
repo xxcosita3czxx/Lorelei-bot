@@ -14,20 +14,18 @@ class InviteLogger(commands.Cog):
         self.invites = {}
     class Invites(app_commands.Group):
         def __init__(self):
-            super().__init__(self)
-            self.name="invites"
-            self.description="No bots in the server"
+            super().__init__(name="invites", description="No bots in the server")
 
-        @app_commands.command(name="invite",description="Get info about invite")
+        @app_commands.command(name="invite", description="Get info about invite")
         @app_commands.autocomplete(invite=autocomplete_invites)
-        async def invite(self,interaction:discord.Interaction,invite:str):  # noqa: E501
+        async def invite(self, interaction: discord.Interaction, invite: str):  # noqa: E501
             await interaction.response.send_message(
                 content=f"Invite {invite.code} was created by {invite.inviter.name}#{invite.inviter.discriminator} and has {invite.uses} uses.",  # noqa: E501
                 ephemeral=True,
             )
 
-        @app_commands.command(name="user",description="Get all invites from a user")
-        async def user(self,interaction:discord.Interaction,user:discord.User):
+        @app_commands.command(name="user", description="Get all invites from a user")  # noqa: E501
+        async def user(self, interaction: discord.Interaction, user: discord.User):
             invites = await interaction.guild.invites()
             user_invites = [invite for invite in invites if invite.inviter == user]
             if user_invites:
@@ -50,7 +48,7 @@ class InviteLogger(commands.Cog):
     async def on_member_join(self, member: discord.Member):
         used_invite = await self.get_used_invite(member)
         if used_invite:
-            inviter:discord.Member = used_invite.inviter
+            inviter: discord.Member = used_invite.inviter
             logger.debug(f"{member} was invited by {inviter.name}")
 
     async def get_used_invite(self, member: discord.Member):
