@@ -28,7 +28,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run translation check script
-        run: python devtools/translate-check.py
+        run: python devtools/translate-readme.py
 
       - name: Commit changes
         run: |
