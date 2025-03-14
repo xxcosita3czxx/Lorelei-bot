@@ -56,7 +56,7 @@ slowmode_max_reach = "Pomalý režim nesmí být delší než 6 hodin"
 config_reset = "Config byl resetován!"
 dice_roller_title = "Házeč kostkou 3000"
 dice_roller_desc = "Dice: {mode} \n## And rolled number is....\n# {roll}"
-report_sent = "Report sent succesfuly!"
+report_sent = "Report byl odesán úspěšně!"
 report_error = "There was error while making bugreport. Please report on Support server or github. \nError: {e}"
 report_disabled = "Bug reports disabled in bot config."
 
