@@ -9,22 +9,22 @@ Because having too much of bots is very annoying, every single one have differen
 
 ### Translation Progress
 
-<!-- PLEASE DONT EDIT, GETS GENERATED AUTOMATICALY -->
+<!-- PLEASE DONT EDIT, GETS GENERATED AUTOMATICALLY -->
 
 | Language | Progress |
 |----------|----------|
-| CZ | 63.79% |
+| CZ | 67.24% |
 | DE | 62.07% |
 | HU | 62.07% |
 | SK | 62.07% |
 | RU | 43.10% |
 | EN-LOLSPEAK | 24.14% |
+| EN-UWU | 18.97% |
 | AL | 17.24% |
 | CN | 17.24% |
 | FI | 17.24% |
 | PL | 17.24% |
 | TR | 17.24% |
-| EN-UWU | 15.52% |
 
 ## Support the creator
 
