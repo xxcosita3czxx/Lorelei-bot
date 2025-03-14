@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'data/lang/**'
-
+  workflow_dispatch:
 jobs:
   update-readme:
     runs-on: ubuntu-latest
