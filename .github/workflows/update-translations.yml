@@ -3,6 +3,7 @@ name: Update Translation Table
 on:
   push:
     paths:
+      - 'data/lang/**'
       - 'devtools/translate-check.py'
       - 'README.md'
   workflow_dispatch:  # This allows you to trigger the workflow manually
