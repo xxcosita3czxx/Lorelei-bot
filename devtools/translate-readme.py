@@ -1,10 +1,11 @@
 import re
 import subprocess
+import os
 
 README_FILE = "README.md"
 TRANSLATION_SCRIPT = "devtools/translate-check.py"
 
-
+print("Current directory:", os.getcwd())
 def get_translation_percentages():
     """Runs the translation script and extracts percentages for each language."""
     result = subprocess.run(["python", TRANSLATION_SCRIPT], capture_output=True, text=True)  # noqa: E501, S603

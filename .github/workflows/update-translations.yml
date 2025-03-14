@@ -20,10 +20,6 @@ jobs:
       with:
         python-version: '3.x'
 
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt  # Assuming you have a requirements.txt for any dependencies
-
     - name: Run translation update script
       run: |
         python devtools/translate-readme.py
