@@ -23,6 +23,10 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Install dependencies
+        run: |
+          pip install click
+
       - name: Run translation check script
         run: python devtools/translate-check.py
 
