@@ -7,6 +7,25 @@ Open-Source discord bot in python, for people
 
 Because having too much of bots is very annoying, every single one have different configurations, web dashboards, and you can get lost quickly in it. Also most good bots these days are paid and very limited for free (hope dyno stays free 🙏). This is where my bot comes with all inside discord. Its free, its open-source, and you can do alot with it, edit it for your own needs, or help other people by making your own commands to the main bot.
 
+### Translation Progress
+
+<!-- PLEASE DONT EDIT, GETS GENERATED AUTOMATICALY -->
+
+| Language | Progress |
+|----------|----------|
+| CZ | 63.79% |
+| DE | 62.07% |
+| HU | 62.07% |
+| SK | 62.07% |
+| RU | 43.10% |
+| EN-LOLSPEAK | 24.14% |
+| AL | 17.24% |
+| CN | 17.24% |
+| FI | 17.24% |
+| PL | 17.24% |
+| TR | 17.24% |
+| EN-UWU | 15.52% |
+
 ## Support the creator
 
 You can support me by contributing to the repo
