@@ -9,7 +9,7 @@ from utils.configmanager import gconfig
 #TODO add support for cron style
 #TODO pls finish
 
-logger = logging.getLogger("automessages")
+logger = logging
 
 class AutoMessages(commands.Cog):
     def __init__(self, bot):
