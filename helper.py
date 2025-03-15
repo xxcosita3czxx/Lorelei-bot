@@ -4,10 +4,15 @@ import sys
 
 import coloredlogs
 
-import config
+try:
+    import config as c
+    loglevel = c.loglevel
+except ImportError:
+    print("RUNNING OUTSIDE BOT ENVIRONMENT")  # noqa: T201
+    loglevel = logging.INFO
 
 coloredlogs.install(
-    level=config.loglevel,
+    level=loglevel,
     fmt='%(asctime)s HELPER: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
 )
