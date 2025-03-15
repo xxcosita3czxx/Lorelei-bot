@@ -36,6 +36,16 @@ coloredlogs.install(
 )
 conflang=config.language
 
+# Set the logging level for specific loggers if needed
+logging.getLogger('automessages') .setLevel(config.loglevel)
+logging.getLogger('welcome')      .setLevel(config.loglevel)
+logging.getLogger('anti-invites') .setLevel(config.loglevel)
+logging.getLogger('nsfw.e621')    .setLevel(config.loglevel)
+logging.getLogger('ban')          .setLevel(config.loglevel)
+logging.getLogger('invite-logger').setLevel(config.loglevel)
+logging.getLogger('configmanager').setLevel(config.loglevel)
+
+
 logger = logging.getLogger("main")
 logging.getLogger('discord.client').setLevel(logging.ERROR)
 
