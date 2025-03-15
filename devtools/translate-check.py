@@ -20,6 +20,19 @@ def flatten_dict(d, parent_key='', sep='.'):
             items.append((new_key, v))
     return dict(items)
 
+def clean_value(value):
+    """Remove comments and check if the string contains #ignore-trans."""
+    if isinstance(value, str):
+        # Remove anything after a # symbol (the comment part)
+        clean_value = value.split('#')[0].strip()
+
+        # Check if the value contains '#ignore-trans' in the comment part
+        if "#ignore-trans" in value:
+            return None  # Return None to mark as "translated" and ignore it
+
+        return clean_value
+    return value
+
 def find_untranslated_strings(master_data, language_data):
     """Find all untranslated strings in the language file."""
     untranslated = {}
@@ -31,8 +44,15 @@ def find_untranslated_strings(master_data, language_data):
     for key, master_value in master_data.items():
         lang_value = language_data.get(key)
 
+        # Clean the lang_value to remove any comment and check for #ignore-trans
+        cleaned_lang_value = clean_value(lang_value)
+
+        # Skip if the cleaned lang_value is None (i.e., it contains #ignore-trans)
+        if cleaned_lang_value is None:
+            continue
+
         # Trim whitespace and check for identical values or missing keys
-        if not lang_value or lang_value.strip() == "" or lang_value.strip() == master_value.strip():  # noqa: E501
+        if not cleaned_lang_value or cleaned_lang_value.strip() == "" or cleaned_lang_value.strip() == master_value.strip():  # noqa: E501
             untranslated[key] = master_value
 
     return untranslated
@@ -51,7 +71,14 @@ def calculate_translation_completion(master_data, language_data):
         # Check if the key exists and is different from the master value
         lang_value = language_data.get(key)
 
-        if lang_value and lang_value.strip() != master_value.strip():
+        # Clean the lang_value to remove any comment and check for #ignore-trans
+        cleaned_lang_value = clean_value(lang_value)
+
+        # Skip if the cleaned lang_value is None (i.e., it contains #ignore-trans)
+        if cleaned_lang_value is None:
+            continue
+
+        if cleaned_lang_value and cleaned_lang_value.strip() != master_value.strip():  # noqa: E501
             translated_keys += 1
 
     # Ensure completion percentage is between 0 and 100

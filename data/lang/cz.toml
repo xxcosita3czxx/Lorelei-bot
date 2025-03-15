@@ -14,8 +14,8 @@ only_one = " Můžeš použít pouze jednu/jeden."
 parse_error = "Neznámá chyba při analýze hodnot"
 
 [HelpCommand]
-adminhelp_title = "Admin-Tools Help"
-adminhelp_ban = "/ban user=(discord.User)"
+adminhelp_title = "Admin-Tools Help" #ignore-trans
+adminhelp_ban = "/ban user=(discord.User)" #ignore-tran
 adminhelp_kick_description = "Použití: member(Discord Member): Člen k vyhození, reason(string): Důvod proč"
 adminhelp_ban_description = "Použití: member(Discord Member): Člen k zabanování, reason(string): Důvod proč, time(Time): Doba zabanování (1 měsíc, 5 dnů, 6 týdnů atd..)"
 adminhelp_unban_description = "Použití: member(Discord Member): Člen ke zrušení banu, reason(string): Důvod proč"
@@ -68,7 +68,7 @@ debug_antilinks_no_perm = "Anti-links no permission on {guild}"
 [UserInfo]
 username = "Uživatelské jméno"
 display_name = "Ukazované jméno"
-id = "ID"
+id = "ID" #ignore-trans
 joined_dsc = "Vytvořil účet"
 joined_guild = "Připojil se k serveru"
-roles = "Role"
+roles = "Role" #ignore-trans
