@@ -302,7 +302,7 @@ class GuildConfig(commands.Cog):
             self,
             interaction: discord.Interaction,
             enabled: bool,
-            role: discord.Role = None,
+            role: discord.Role,
         ):
             try:
                 gconfig.set(
@@ -311,13 +311,12 @@ class GuildConfig(commands.Cog):
                     key="autorole-role",
                     value=role.id,
                 )
-                if role:
-                    gconfig.set(
-                        id=interaction.guild_id,
-                        title="MEMBERS",
-                        key="autorole-enabled",
-                        value=enabled,
-                    )
+                gconfig.set(
+                    id=interaction.guild_id,
+                    title="MEMBERS",
+                    key="autorole-enabled",
+                    value=enabled,
+                )
                 await interaction.response.send_message(
                     content=f"Set value {str(role.name)}, {str(enabled)}",
                     ephemeral=True,

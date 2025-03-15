@@ -5,6 +5,8 @@ from discord.ext import commands
 
 from utils.configmanager import gconfig
 
+#TODO Autorole not giving actually a role
+
 logger = logging.getLogger("autorole")
 class AutoRole(commands.Cog):
     def __init__(self, bot):
