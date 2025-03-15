@@ -21,10 +21,10 @@ class AutoMessages(commands.Cog):
         """Background task to send the auto messages based on their intervals."""
         now = datetime.now().timestamp()
         for guild_id, guild_data in gconfig.config.items():
-            logger.debug(guild_data)
-            guild = self.bot.get_guild(guild_id)
+            logger.debug(f"Processing guild_id: {guild_id}, guild_data: {guild_data}")
+            guild = self.bot.get_guild(int(guild_id))
             if not guild:
-                logger.debug(f"Guild {guild_id} not found.")
+                logger.warning(f"Guild {guild_id} not found or bot is not a member.")
                 continue
             for key, value in guild_data.items():
                 if key.startswith("automessages-"):
