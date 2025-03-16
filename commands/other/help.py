@@ -3,6 +3,7 @@ from discord import app_commands
 from discord.ext import commands
 
 __PRIORITY__ = 8
+
 class HelpCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -24,10 +25,10 @@ class HelpCommand(commands.Cog):
                     selected_group = select.values[0]
                     await self.help(interaction, selected_group)
 
-                    select.callback = select_callback
-                    view = discord.ui.View()
-                    view.add_item(select)
-                    await interaction.response.send_message(embed=embed, view=view)
+                select.callback = select_callback
+                view = discord.ui.View()
+                view.add_item(select)
+                await interaction.response.send_message(embed=embed, view=view)
             else:
                 try:
                     commands = help_manager.list_commands(group)
@@ -84,7 +85,6 @@ class HelpManager:
             raise ValueError(f"Group '{group_name}' does not exist.")
         return self.help_pages[group_name]
 
-
-async def setup(bot:commands.Bot):
+async def setup(bot:discord.AutoShardedClient):
     cog = HelpCommand(bot)
     await bot.add_cog(cog)
