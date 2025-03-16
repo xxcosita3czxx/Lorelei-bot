@@ -12,7 +12,7 @@ class HelpCommand(commands.Cog):
     async def helpcommand(self, interaction: discord.Interaction, group: str = None):  # noqa: E501
         help_manager = HelpManager()
         embed = discord.Embed(title="Help", color=discord.Color.blue())
-
+        message_sent = False
         if group is None:
             embed.description = "Select a group:"
             options = [
@@ -29,6 +29,7 @@ class HelpCommand(commands.Cog):
             view = discord.ui.View()
             view.add_item(select)
             await interaction.response.send_message(embed=embed, view=view)
+            message_sent = True
         else:
             try:
                 commands = help_manager.list_commands(group)
@@ -37,9 +38,10 @@ class HelpCommand(commands.Cog):
                     embed.add_field(name=command_name, value=description, inline=False)  # noqa: E501
             except ValueError as e:
                 embed.description = str(e)
-
-        await interaction.response.send_message(embed=embed)
-
+        if message_sent is False:
+            await interaction.response.send_message(embed=embed)
+        else:
+            await interaction.followup.send(embed=embed, ephemeral=True)  # noqa: E501
 class HelpManager:
     _instance = None  # Singleton instance
 
