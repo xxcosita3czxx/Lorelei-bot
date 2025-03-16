@@ -13,18 +13,18 @@ Because having too much of bots is very annoying, every single one have differen
 
 | Language | Progress |
 |----------|----------|
-| CZ | 72.41% |
-| DE | 62.07% |
-| HU | 62.07% |
-| SK | 62.07% |
-| RU | 43.10% |
-| EN-LOLSPEAK | 24.14% |
-| EN-UWU | 20.69% |
-| AL | 17.24% |
-| CN | 17.24% |
-| FI | 17.24% |
-| PL | 17.24% |
-| TR | 17.24% |
+| CZ | 60.00% |
+| DE | 51.43% |
+| HU | 51.43% |
+| SK | 51.43% |
+| RU | 35.71% |
+| EN-LOLSPEAK | 20.00% |
+| EN-UWU | 17.14% |
+| AL | 14.29% |
+| CN | 14.29% |
+| FI | 14.29% |
+| PL | 14.29% |
+| TR | 14.29% |
 
 ## Support the creator
 
