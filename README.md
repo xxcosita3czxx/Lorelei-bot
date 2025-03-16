@@ -18,8 +18,8 @@ Because having too much of bots is very annoying, every single one have differen
 | HU | 46.15% |
 | SK | 46.15% |
 | RU | 32.05% |
+| EN-UWU | 20.51% |
 | EN-LOLSPEAK | 17.95% |
-| EN-UWU | 15.38% |
 | AL | 12.82% |
 | CN | 12.82% |
 | FI | 12.82% |
