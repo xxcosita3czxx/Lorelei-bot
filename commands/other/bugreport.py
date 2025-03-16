@@ -59,5 +59,5 @@ class BugReport(commands.Cog):
 async def setup(bot:commands.Bot):
     cog = BugReport(bot=bot)
     helpmanager = HelpManager()
-    helpmanager.add_help_page("other", "bugreport", "Here you can report bug")  # noqa: E501
+    helpmanager.set_help_page("other", "bugreport", "Used to report bugs", embed=discord.Embed(title="/bugreport",description="Usage: /bugreport <command name> <description of what went wrong>"))  # noqa: E501
     await bot.add_cog(cog)

@@ -11,7 +11,7 @@ class HelpCommand(commands.Cog):
     @app_commands.command(name="help", description="Shows help information for commands.")  # noqa: E501
     async def helpcommand(self, interaction: discord.Interaction, group: str = None):  # noqa: E501
         help_manager = HelpManager()
-        embed = discord.Embed(title="Help", color=discord.Color.blue())
+        embed = discord.Embed(title="Help", color=discord.Color.blurple())
         message_sent = False
         if group is None:
             embed.description = "Select a group:"
@@ -34,7 +34,8 @@ class HelpCommand(commands.Cog):
             try:
                 commands = help_manager.list_commands(group)
                 embed.title = f"Help - {group}"
-                for command_name, description in commands.items():
+                for command_name in commands:
+                    description = help_manager.get_command_description(group, command_name)  # noqa: E501
                     embed.add_field(name=command_name, value=description, inline=False)  # noqa: E501
             except ValueError as e:
                 embed.description = str(e)
@@ -42,6 +43,7 @@ class HelpCommand(commands.Cog):
             await interaction.response.send_message(embed=embed)
         else:
             await interaction.followup.send(embed=embed, ephemeral=True)  # noqa: E501
+
 class HelpManager:
     _instance = None  # Singleton instance
 
@@ -57,11 +59,12 @@ class HelpManager:
             raise ValueError(f"Group '{group_name}' already exists.")
         self.help_pages[group_name] = {}
 
-    def add_help_page(self, group_name: str, command_name: str, embed: discord.Embed):  # noqa: E501
+    def set_help_page(self, group_name: str, command_name: str, description:str, embed: discord.Embed):  # noqa: E501
         """Adds a help page (embed) for a command inside a group."""
         if group_name not in self.help_pages:
             self.create_group(group_name)  # Auto-create the group if missing
-        self.help_pages[group_name][command_name] = embed
+        self.help_pages[group_name][command_name]["description"] = description
+        self.help_pages[group_name][command_name]["embed"] = embed
 
     def get_help_page(self, group_name: str, command_name: str) -> discord.Embed:
         """Retrieves the help embed for a command inside a group."""
@@ -75,17 +78,18 @@ class HelpManager:
         """Returns a list of all help groups."""
         return list(self.help_pages.keys())
 
-    def add_command_to_group(self, group_name: str, command_name: str, description: str):  # noqa: E501
-        """Adds a command with a description to a group."""
-        if group_name not in self.help_pages:
-            raise ValueError(f"Group '{group_name}' does not exist.")
-        self.help_pages[group_name][command_name] = description
-
     def list_commands(self, group_name: str) -> dict:
         """Lists all commands in a given group."""
         if group_name not in self.help_pages:
             raise ValueError(f"Group '{group_name}' does not exist.")
         return self.help_pages[group_name]
+    def get_command_description(self, group_name: str, command_name: str) -> str:
+        """Returns the description of a command."""
+        if group_name not in self.help_pages:
+            raise ValueError(f"Group '{group_name}' does not exist.")
+        if command_name not in self.help_pages[group_name]:
+            raise ValueError(f"Command '{command_name}' does not exist in group '{group_name}'.")  # noqa: E501
+        return self.help_pages[group_name][command_name]["description"]
 
 async def setup(bot:discord.AutoShardedClient):
     cog = HelpCommand(bot=bot)
