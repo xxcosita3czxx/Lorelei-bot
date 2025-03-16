@@ -18,10 +18,11 @@ class Ban(commands.Cog):
     @app_commands.describe(
         reason="Reason for ban",
         member="User to ban",
+        delete_message_days="Delete messages from user in the last x days",
     )
     # time: app_commands.Transform[str, TimeConverter]=None
     @app_commands.default_permissions(ban_members=True)
-    async def ban(self,interaction: discord.Interaction, member: discord.Member, reason: str):  # noqa: E501
+    async def ban(self,interaction: discord.Interaction, member: discord.Member, reason: str="Unspecified",delete_message_days:int=0):  # noqa: E501
 
         '''
         Ban command
@@ -47,7 +48,7 @@ class Ban(commands.Cog):
                 content="You can't ban this user due to role hierarchy",
                 ephemeral=True,
             )
-
+            return
         try:
             await member.send(
                 embed=discord.Embed(
@@ -62,7 +63,7 @@ class Ban(commands.Cog):
                 content="UNSENT BAN MESSAGE",
                 ephemeral=True,
             )
-        await interaction.guild.ban(member, reason=reason)
+        await interaction.guild.ban(member, reason=reason,delete_message_days=delete_message_days)  # noqa: E501
         respEmbed(
             f"Banned {member.mention}",
             ephemeral=True,
@@ -78,7 +79,7 @@ class Ban(commands.Cog):
     @app_commands.command(name="unban", description="Unban a user")
     @app_commands.describe(member="User to unban", reason="Reason for unban")
     @app_commands.default_permissions(ban_members=True)
-    async def unban(self,interaction: discord.Interaction, member: discord.User, reason: str):  # noqa: E501
+    async def unban(self,interaction: discord.Interaction, member: discord.User, reason: str="Unspecified"):  # noqa: E501
 
         '''
         Unban Command
