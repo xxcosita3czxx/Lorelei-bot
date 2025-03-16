@@ -8,37 +8,37 @@ class HelpCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-        @app_commands.command(name="help", description="Shows help information for commands.")  # noqa: E501
-        async def help(self, interaction: discord.Interaction, group: str = None):
-            help_manager = HelpManager()
-            embed = discord.Embed(title="Help", color=discord.Color.blue())
+    @app_commands.command(name="help", description="Shows help information for commands.")  # noqa: E501
+    async def helpcommand(self, interaction: discord.Interaction, group: str = None):  # noqa: E501
+        help_manager = HelpManager()
+        embed = discord.Embed(title="Help", color=discord.Color.blue())
 
-            if group is None:
-                embed.description = "Select a group:"
-                options = [
-                    discord.SelectOption(label=group_name, value=group_name)
-                    for group_name in help_manager.list_groups()
-                ]
-                select = discord.ui.Select(placeholder="Choose a group...", options=options)  # noqa: E501
+        if group is None:
+            embed.description = "Select a group:"
+            options = [
+                discord.SelectOption(label=group_name, value=group_name)
+                for group_name in help_manager.list_groups()
+            ]
+            select = discord.ui.Select(placeholder="Choose a group...", options=options)  # noqa: E501
 
-                async def select_callback(interaction: discord.Interaction):
-                    selected_group = select.values[0]
-                    await self.help(interaction, selected_group)
+            async def select_callback(interaction: discord.Interaction):
+                selected_group = select.values[0]
+                await self.help(interaction, selected_group)
 
-                select.callback = select_callback
-                view = discord.ui.View()
-                view.add_item(select)
-                await interaction.response.send_message(embed=embed, view=view)
-            else:
-                try:
-                    commands = help_manager.list_commands(group)
-                    embed.title = f"Help - {group}"
-                    for command_name, description in commands.items():
-                        embed.add_field(name=command_name, value=description, inline=False)  # noqa: E501
-                except ValueError as e:
-                    embed.description = str(e)
+            select.callback = select_callback
+            view = discord.ui.View()
+            view.add_item(select)
+            await interaction.response.send_message(embed=embed, view=view)
+        else:
+            try:
+                commands = help_manager.list_commands(group)
+                embed.title = f"Help - {group}"
+                for command_name, description in commands.items():
+                    embed.add_field(name=command_name, value=description, inline=False)  # noqa: E501
+            except ValueError as e:
+                embed.description = str(e)
 
-            await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed)
 
 class HelpManager:
     _instance = None  # Singleton instance
@@ -86,5 +86,5 @@ class HelpManager:
         return self.help_pages[group_name]
 
 async def setup(bot:discord.AutoShardedClient):
-    cog = HelpCommand(bot)
+    cog = HelpCommand(bot=bot)
     await bot.add_cog(cog)
