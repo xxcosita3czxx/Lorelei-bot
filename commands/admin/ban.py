@@ -16,7 +16,7 @@ async def ban_member(member: discord.Member, reason: str, interaction: discord.I
     try:
         await member.send(
             embed=discord.Embed(
-                description=f"You have been banned from {interaction.guild.name} \n**Reason**: {reason}",  # noqa: E501
+                description=lang.get(userlang(interaction.user.id),"Responds","you_was_banned").format(guild=interaction.guild.name,reason=reason),  # noqa: E501
                 color=discord.Color.blurple(),
             ),
         )
@@ -46,14 +46,14 @@ class Ban(commands.Cog):
 
         if member == interaction.user or member == interaction.guild.owner:
             respEmbed(
-                content="You can't ban this user",
+                content=lang.get(userlang(interaction.user.id),"Responds","you_cant_ban"),
                 ephemeral=True,
             )
             return
 
         if member.top_role >= interaction.guild.me.top_role:
             respEmbed(
-                content="I can't ban this user",
+                content=lang.get(userlang(interaction.user.id),"Responds","i_cant_ban"),
                 ephemeral=True,
             )
             return
@@ -96,16 +96,16 @@ class Ban(commands.Cog):
 
         except discord.NotFound:
             return await interaction.response.send_message(
-                "This user is not banned",
+                lang.get(interaction.user.id,"Responds","not_banned"),
                 ephemeral=True,
             )
 
         await interaction.response.send_message(
-            f"Unbanned {member.mention}",
+            lang.get(interaction.user.id,"Responds","user_unbanned").format(member=member.mention),
             ephemeral=True,
         )
         embed = discord.Embed(
-            description=f"{member.mention} has been unbanned\n**Reason**: {reason}",
+            description=lang.get(interaction.user.id,"Responds","user_unbanned_followup").format(member=member.mention,reason=reason),
             color=0x2f3136,
         )
         await interaction.followup.send(embed=embed, ephemeral=False)
