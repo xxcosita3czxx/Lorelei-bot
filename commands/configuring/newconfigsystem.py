@@ -30,31 +30,48 @@ def _ClassEmbed(title):
         title=title,
         description=f"What do you want to configure in category {title}",
     )
-
-class _GuildConfigSession:
-    def __init__(self, config_class,name,backend):
-        super().__init__()
-        self.config_class = config_class
-        self.name = name
-        self.backend = backend
-
-    def new_option(self):
-        pass
-
-class _GuildConfigClass:
-    def __init__(self, name):
-        super().__init__()
-        self.name = name
-
-    def new_setting(self, config_class, name, backend):
-        return _GuildConfigSession(config_class,name,backend)
+# Example usage:
+# config_session = GuildConfig()
+# security_category = config_session.new_category("SECURITY")
+# setting = security_category.new_setting("max_login_attempts")
+# setting.new_option("attempts", "Maximum number of login attempts", int)
 
 class GuildConfig:
-    def __init__(self,backend):
-        self.backend = backend
+    _instance = None  # Singleton instance
 
-    def new_class(self, name):
-        return _GuildConfigClass(name)
+    def __init__(self):
+        self.Configs = {}
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+    def new_category(self, name):
+        if name not in self.Configs:
+            self.Configs[name] = {}
+        return self.Category(name, self.Configs)
+
+    class Category:
+        def __init__(self, name, configs):
+            self.name = name
+            self.configs = configs
+
+        def new_setting(self, name):
+            return GuildConfig.Setting(name, self.configs[self.name])
+
+    class Setting:
+        def __init__(self, name, category):
+            self.name = name
+            self.category = category
+            self.category[name] = {}
+
+        def new_option(self, option_name, description, option_type):
+            self.category[self.name][option_name] = {
+                "type": option_type,
+                "description": description,
+                "variable": None,
+            }
 
 class _GuildConfigCommands(commands.Cog):
     def __init__(self, bot):
@@ -147,7 +164,14 @@ class _GuildConfigCommands(commands.Cog):
             description="Configure the bot",  # noqa: E501
         )
         async def configure(self,interaction:discord.Interaction):
-            pass
+            config_session = GuildConfig()
+            embed = discord.Embed(
+                title="Configuration Categories",
+                description="Select a category to configure",
+            )
+            for category in config_session.Configs:
+                embed.add_field(name=category, value=f"Configure {category}", inline=False)  # noqa: E501
+            await interaction.response.send_message(embed=embed, ephemeral=True)
 
 async def setup(bot:commands.Bot):
 #    cog = _GuildConfigCommands(bot)
