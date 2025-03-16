@@ -14,8 +14,8 @@ only_one = " Můžeš použít pouze jednu/jeden."
 parse_error = "Neznámá chyba při analýze hodnot"
 
 [HelpCommand]
-adminhelp_title = "Admin-Tools Help" #ignore-trans
-adminhelp_ban = "/ban user=(discord.User)" #ignore-tran
+adminhelp_title = "Admin-Tools Help"
+adminhelp_ban = "/ban user=(discord.User)"
 adminhelp_kick_description = "Použití: member(Discord Member): Člen k vyhození, reason(string): Důvod proč"
 adminhelp_ban_description = "Použití: member(Discord Member): Člen k zabanování, reason(string): Důvod proč, time(Time): Doba zabanování (1 měsíc, 5 dnů, 6 týdnů atd..)"
 adminhelp_unban_description = "Použití: member(Discord Member): Člen ke zrušení banu, reason(string): Důvod proč"
@@ -59,16 +59,38 @@ dice_roller_desc = "Dice: {mode} \n## And rolled number is....\n# {roll}"
 report_sent = "Report byl odesán úspěšně!"
 report_error = "There was error while making bugreport. Please report on Support server or github. \nError: {e}"
 report_disabled = "Bug reporty byly vypnuty v nastavení bota."
+u_cant_ban_hiearchy = "You can't ban this user due to role hierarchy"
+user_banned_followup = "{member} has been banned \n**Reason**: {reason}"
+user_banned = "{member} byl zabanován"
+user_unbanned = "{member} byl odbanován"
+user_kicked = "{member} byl vyhozen"
+user_kicked_followup = "{member} byl vyhozen \n**Důvod**: {reason}"
+user_unbanned_followup = "{member} byl odbanován \n**Důvod**: {reason}"
+not_banned = "{member} není zabanován"
+i_cant_ban = "Nemohu zabanovat tohoto uživatele"
+you_cant_ban = "Nemůžeš zabanovat tohoto uživatele"
+you_was_banned = "Byl jsi zabanován z {guild} \n**Důvod**: {reason}"
 
 [MainLogs]
 debug_user_admin = "User je admin! Ignoruji..."
 debug_antilinks_disabled = "AntiLinks is disabled, ignoring..."
 debug_antilinks_no_perm = "Anti-links no permission on {guild}"
+warn_unsent_ban = "Failed to send ban message to {user}"
+warn_unsent_kick = "Failed to send kick message to {user}"
 
 [UserInfo]
 username = "Uživatelské jméno"
 display_name = "Ukazované jméno"
-id = "ID" #ignore-trans
+id = "ID"
 joined_dsc = "Vytvořil účet"
 joined_guild = "Připojil se k serveru"
-roles = "Role" #ignore-trans
+roles = "Role"
+
+[Descriptions]
+ban_reason = "Důvod pro ban"
+kick_reason = "Důvod pro vyhození"
+unban_reason = "Důvod pro odbanování"
+ban_user = "Uživatel k zabanování"
+kick_user = "Uživatel k vyhození"
+unban_user = "Uživatel k odbanování"
+ban_delete_message_days = "Smazat zprávy od uživatele za poslední x dní"
