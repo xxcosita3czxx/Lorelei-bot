@@ -4,6 +4,8 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+import config
+from utils.configmanager import lang, userlang
 from utils.embeder import respEmbed
 
 #from utils.timeconverter import TimeConverter
@@ -20,7 +22,7 @@ async def ban_member(member: discord.Member, reason: str, interaction: discord.I
         )
 
     except discord.HTTPException:
-        logger.warning("UNSENT BAN MESSAGE")
+        logger.warning(lang.get(config.language,"Responds","warn_unsent_ban"))
 
 class Ban(commands.Cog):
     def __init__(self, bot):
@@ -28,9 +30,9 @@ class Ban(commands.Cog):
 
     @app_commands.command(name="ban", description="Ban a user")
     @app_commands.describe(
-        reason="Reason for ban",
-        member="User to ban",
-        delete_message_days="Delete messages from user in the last x days",
+        reason=lang.get(config.language,"Descriptions","ban_reason"),
+        member=lang.get(config.language,"Descriptions","ban_member"),
+        delete_message_days=lang.get(config.language,"Descriptions","ban_delete_message_days"),
     )
     # time: app_commands.Transform[str, TimeConverter]=None
     @app_commands.default_permissions(ban_members=True)
@@ -57,25 +59,29 @@ class Ban(commands.Cog):
             return
         if member.top_role >= interaction.user.top_role:
             respEmbed(
-                content="You can't ban this user due to role hierarchy",
+                content=lang.get(userlang(interaction.user.id),"Responds","u_cant_ban_hierarchy"),
                 ephemeral=True,
             )
             return
         await ban_member(member, reason, interaction,delete_message_days)
         await interaction.guild.ban(member, reason=reason,delete_message_days=delete_message_days)  # noqa: E501
         respEmbed(
-            f"Banned {member.mention}",
+            lang.get(userlang(interaction.user.id),"Responds","user_banned").format(member=member.mention),
             ephemeral=True,
         )
         await interaction.followup.send(
             embed=discord.Embed(
-                description=f"{member.mention} has been banned \n**Reason**: {reason}",  # noqa: E501
+                description=lang.get(userlang(interaction.user.id),"Responds","user_banned_followup").format(member=member.mention,reason=reason),  # noqa: E501
                 color=0x2f3136,
             ),
             ephemeral=False,
         )
+
     @app_commands.command(name="unban", description="Unban a user")
-    @app_commands.describe(member="User to unban", reason="Reason for unban")
+    @app_commands.describe(
+        member=lang.get(config.language,"Descriptions","unban_user"),
+        reason=lang.get(config.language,"Descriptions","unban_reason"),
+    )
     @app_commands.default_permissions(ban_members=True)
     async def unban(self,interaction: discord.Interaction, member: discord.User, reason: str="Unspecified"):  # noqa: E501
 
