@@ -9,6 +9,8 @@ from discord.ext import commands
 import config
 from utils.configmanager import lang, uconfig
 
+from ..other.help import HelpManager
+
 last_logs = deque(maxlen=50)
 class LastLogsHandler(logging.Handler):
     def emit(self, record):
@@ -56,4 +58,5 @@ class BugReport(commands.Cog):
 
 async def setup(bot:commands.Bot):
     cog = BugReport(bot=bot)
+    HelpManager.add_command_to_group("other", "bugreport", "Here you can report bug")  # noqa: E501
     await bot.add_cog(cog)
