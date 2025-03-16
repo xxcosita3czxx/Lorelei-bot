@@ -2,7 +2,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-__PRIORITY__ = 8
+__PRIORITY__ = 10
 
 class HelpCommand(commands.Cog):
     def __init__(self, bot):
