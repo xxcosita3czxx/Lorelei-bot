@@ -10,6 +10,18 @@ from utils.embeder import respEmbed
 #from humanfriendly import format_timespan
 logger = logging.getLogger("ban")
 
+async def ban_member(member: discord.Member, reason: str, interaction: discord.Interaction,delete_message_days:int):  # noqa: E501
+    try:
+        await member.send(
+            embed=discord.Embed(
+                description=f"You have been banned from {interaction.guild.name} \n**Reason**: {reason}",  # noqa: E501
+                color=discord.Color.blurple(),
+            ),
+        )
+
+    except discord.HTTPException:
+        logger.warning("UNSENT BAN MESSAGE")
+
 class Ban(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -49,20 +61,7 @@ class Ban(commands.Cog):
                 ephemeral=True,
             )
             return
-        try:
-            await member.send(
-                embed=discord.Embed(
-                    description=f"You have been banned from {interaction.guild.name} \n**Reason**: {reason}",  # noqa: E501
-                    color=discord.Color.blurple(),
-                ),
-            )
-
-        except discord.HTTPException:
-            logger.warning("UNSENT BAN MESSAGE")
-            respEmbed(
-                content="UNSENT BAN MESSAGE",
-                ephemeral=True,
-            )
+        await ban_member(member, reason, interaction,delete_message_days)
         await interaction.guild.ban(member, reason=reason,delete_message_days=delete_message_days)  # noqa: E501
         respEmbed(
             f"Banned {member.mention}",
@@ -75,7 +74,6 @@ class Ban(commands.Cog):
             ),
             ephemeral=False,
         )
-
     @app_commands.command(name="unban", description="Unban a user")
     @app_commands.describe(member="User to unban", reason="Reason for unban")
     @app_commands.default_permissions(ban_members=True)

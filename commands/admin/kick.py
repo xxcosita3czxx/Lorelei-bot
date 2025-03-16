@@ -6,6 +6,18 @@ from discord.ext import commands
 
 logger = logging.getLogger("kick")
 
+async def kick_member(member: discord.Member, reason: str, interaction: discord.Interaction):  # noqa: E501
+    try:
+        await member.send(
+            embed=discord.Embed(
+                description=f"You have been kicked from {interaction.guild.name}\n**Reason**: {reason}",  # noqa: E501
+                color=discord.Color.red(),
+            ),
+        )
+
+    except discord.HTTPException as e:
+        logger.warning(f"UNSENT KICK MESSAGE: {e}")
+
 class Kick(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -39,19 +51,7 @@ class Kick(commands.Cog):
                 ephemeral=True,
             )
 
-        try:
-            await member.send(
-                embed=discord.Embed(
-                    description=f"You have been kicked from {interaction.guild.name}\n**Reason**: {reason}",  # noqa: E501
-                    color=discord.Color.red(),
-                ),
-            )
-
-        except discord.HTTPException as e:
-            await interaction.response.send_message(
-                content=f"UNSEND KICK MESSAGE: {e}",
-            )
-            logger.warning(f"UNSENT KICK MESSAGE: {e}")
+        await kick_member(member, reason, interaction)
 
         await member.kick(reason=reason)
         await interaction.response.send_message(
