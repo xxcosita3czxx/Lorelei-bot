@@ -2,69 +2,42 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-import utils.help_embeds as help_pages
-
 __PRIORITY__ = 8
 class HelpCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-    class Help_Pages(discord.ui.View):
-        def __init__(self, embeds, *, timeout=180):
-            super().__init__(timeout=timeout)
-            self.embeds = embeds
-            self.current_page = 0
-            self.total_pages = len(embeds)
 
-        async def send_initial_message(self, interaction: discord.Interaction):
-            await interaction.response.send_message(
-                embed=self.embeds[self.current_page],
-                view=self,
-            )
+        @app_commands.command(name="help", description="Shows help information for commands.")  # noqa: E501
+        async def help(self, interaction: discord.Interaction, group: str = None):
+            help_manager = HelpManager()
+            embed = discord.Embed(title="Help", color=discord.Color.blue())
 
-        @discord.ui.button(label='Previous', style=discord.ButtonStyle.primary)
-        async def previous_button(self, button: discord.ui.Button, interaction: discord.Interaction):  # noqa: E501
-            if self.current_page > 0:
-                self.current_page -= 1
-                await interaction.response.edit_message(
-                    embed=self.embeds[self.current_page],
-                    view=self,
-                )
+            if group is None:
+                embed.description = "Select a group:"
+                options = [
+                    discord.SelectOption(label=group_name, value=group_name)
+                    for group_name in help_manager.list_groups()
+                ]
+                select = discord.ui.Select(placeholder="Choose a group...", options=options)  # noqa: E501
 
-        @discord.ui.button(label='Next', style=discord.ButtonStyle.primary)
-        async def next_button(self, button: discord.ui.Button, interaction: discord.Interaction):  # noqa: E501
-            if self.current_page < self.total_pages - 1:
-                self.current_page += 1
-                await interaction.response.edit_message(
-                    embed=self.embeds[self.current_page],
-                    view=self,
-                )
+                async def select_callback(interaction: discord.Interaction):
+                    selected_group = select.values[0]
+                    await self.help(interaction, selected_group)
 
-    @app_commands.command(name="help", description="User Help")
-    async def help_user(self,interaction: discord.Interaction):
-        embeds = help_pages.help_user
-        view = self.Help_Pages(embeds=embeds)
-        await view.send_initial_message(interaction)
+                    select.callback = select_callback
+                    view = discord.ui.View()
+                    view.add_item(select)
+                    await interaction.response.send_message(embed=embed, view=view)
+            else:
+                try:
+                    commands = help_manager.list_commands(group)
+                    embed.title = f"Help - {group}"
+                    for command_name, description in commands.items():
+                        embed.add_field(name=command_name, value=description, inline=False)  # noqa: E501
+                except ValueError as e:
+                    embed.description = str(e)
 
-    @app_commands.default_permissions(administrator=True)
-    class Help(app_commands.Group):
-        def __init__(self):
-            super().__init__()
-            self.name = "helpadmin"
-            self.description = "Help command"
-
-        @app_commands.command(name="configure",description="Configuring help")
-        async def help_configure(self,interaction:discord.Interaction):
-            pass
-
-        @app_commands.command(name="admin",description="Admin help")
-        async def help_admin(self,interaction:discord.Interaction):
-            embeds = help_pages.help_user
-            view = self.Help_Pages(embeds=embeds)
-            await view.send_initial_message(interaction)
-
-        @app_commands.command(name="other",description="Other/test commands")
-        async def help_other(self,interaction:discord.Interaction):
-            pass
+            await interaction.response.send_message(embed=embed)
 
 class HelpManager:
     _instance = None  # Singleton instance
@@ -113,6 +86,5 @@ class HelpManager:
 
 
 async def setup(bot:commands.Bot):
-#    await bot.add_cog(HelpCommand(bot))
-#    bot.tree.add_command(HelpCommand(bot).Help())
-    pass
+    cog = HelpCommand(bot)
+    await bot.add_cog(cog)
