@@ -59,5 +59,5 @@ class BugReport(commands.Cog):
 async def setup(bot:commands.Bot):
     cog = BugReport(bot=bot)
     helpmanager = HelpManager()
-    helpmanager.add_command_to_group("other", "bugreport", "Here you can report bug")  # noqa: E501
+    helpmanager.add_help_page("other", "bugreport", "Here you can report bug")  # noqa: E501
     await bot.add_cog(cog)
