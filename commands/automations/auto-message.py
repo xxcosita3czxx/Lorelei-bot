@@ -7,7 +7,6 @@ from discord.ext import commands, tasks
 from utils.configmanager import gconfig
 
 #TODO add support for cron style
-#TODO pls finish
 
 logger = logging
 
@@ -16,7 +15,7 @@ class AutoMessages(commands.Cog):
         self.bot:discord.AutoShardedClient = bot
         self.auto_message_task.start()
 
-    @tasks.loop(seconds=10)
+    @tasks.loop(seconds=30)
     async def auto_message_task(self):
         """Background task to send the auto messages based on their intervals."""
         now = datetime.now().timestamp()
