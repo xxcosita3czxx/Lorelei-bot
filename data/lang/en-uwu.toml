@@ -22,9 +22,9 @@ userhelp_userconfig_app_lang_description = "Usage: language(string): Language th
 confighelp_security_antiinvite = "Usage: value(bool): Shall be enabled?"
 
 [RunnerLogs]
-debug_on_pid_log = "main.py is running at PID: "
-info_not_running = "main.py is not running. Restarting..."
-err_costk_update_fail = "Update of CtKIT Failed!"
+debug_on_pid_log = "main.py is wunning at PID: "
+info_not_running = "main.py is nyot wunning. Westawting..."
+err_costk_update_fail = "Upwdate of CtKIT Faiwed! qwq"
 
 [Bot]
 debug_status_chng = "Stwatus Changed."
@@ -38,7 +38,7 @@ cog_skipped = "Skipped {module_name}"
 cog_fail_unload = "Failed to unload {module_name}: {error}"
 helper_running = "Helper listener running on port {helperport}..."
 err_client_handle = "Error in client handling: {error}"
-reload_success = "Reloaded succesfully"
+reload_success = "Rewoaded succwesfuwy"
 
 [Responds]
 no_links = "{author}, Don't send links!"
