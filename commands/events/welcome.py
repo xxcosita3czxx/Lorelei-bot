@@ -1,4 +1,5 @@
 
+import importlib
 import logging
 import re
 
@@ -7,6 +8,7 @@ from discord.ext import commands
 
 from utils.configmanager import gconfig
 
+invite_logger = importlib.import_module("invite-logger")
 logger = logging.getLogger("welcome")
 
 def format_string(template, placeholders):
@@ -16,6 +18,23 @@ def format_string(template, placeholders):
         template,
     )
 
+get_used_invite = invite_logger.InviteLogger.get_used_invite
+
+async def get_placeholders(member: discord.Member,list:bool=False):
+    placeholders = {
+        "mention": member.mention,
+        "user": member.name,
+        "display": member.display_name,
+        "jointime": member.joined_at,
+        "owner": member.guild.owner.name,
+        "server": member.guild.name,
+        "membercount": member.guild.member_count,
+        "invite": await get_used_invite(member=member),
+        "inviter": (await get_used_invite(member=member)).inviter,
+    }
+    if list:
+        return list(placeholders.keys())
+    return placeholders
 
 class Welcome(commands.Cog):
     def __init__(self, bot):
@@ -25,13 +44,7 @@ class Welcome(commands.Cog):
     async def on_join(self,member:discord.Member):
         try:
             if gconfig.get(member.guild.id,"MEMBERS","welcome-enabled"):
-                placeholders = {
-                    "mention":member.mention,
-                    "user":member.name,
-                    "display":member.display_name,
-                    "jointime":member.joined_at,
-                    "owner":member.guild.owner.name,
-                }
+                placeholders = await get_placeholders(member)
                 formated = format_string(gconfig.get(member.guild.id,"MEMBERS","welcome-text"),placeholders)  # noqa: E501
                 logger.debug(formated)
                 if gconfig.get(member.guild.id,"MEMBERS","welcome-in_dms"):

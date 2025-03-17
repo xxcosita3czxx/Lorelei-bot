@@ -31,9 +31,10 @@ class AntiAlts(commands.Cog):
                     description=text,
                 )
                 member.send(embed=embed)
-                member.kick("Alternative Account [Lorelei]")
+                member.kick("[Lorelei] Alternative Account")
             else:
                 logger.debug("Acc okay")
         logger.debug("antialts disabled :<")
+
 async def setup(bot:commands.Bot):
     await bot.add_cog(AntiAlts(bot))

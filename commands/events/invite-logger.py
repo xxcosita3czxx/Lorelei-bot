@@ -7,6 +7,9 @@ from discord.ext import commands
 from utils.autocomplete import autocomplete_invites
 
 logger = logging.getLogger("invite-logger")
+#TODO Welcome message for logger
+#TODO Make the invite logger a bit more user friendly
+#TODO Track when invited user leaves the server
 
 class InviteLogger(commands.Cog):
     def __init__(self, bot):
@@ -53,6 +56,7 @@ class InviteLogger(commands.Cog):
             inviter: discord.Member = used_invite.inviter
             logger.debug(f"{member} was invited by {inviter.name}")
 
+    @staticmethod
     async def get_used_invite(self, member: discord.Member):
         invites_before = self.invites[member.guild.id]
         invites_after = await member.guild.invites()
