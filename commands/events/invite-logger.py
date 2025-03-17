@@ -13,9 +13,9 @@ class InviteLogger(commands.Cog):
         self.bot = bot
         self.invites = {}
     class Invites(app_commands.Group):
-        def __init__(self):
+        def __init__(self, bot):
             super().__init__(name="invites", description="No bots in the server")
-
+            self.bot = bot
         @app_commands.command(name="invite", description="Get info about invite")
         @app_commands.autocomplete(invite=autocomplete_invites)
         async def invite(self, interaction: discord.Interaction, invite: str):  # noqa: E501
