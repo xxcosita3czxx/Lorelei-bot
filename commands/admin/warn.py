@@ -1,12 +1,13 @@
 from datetime import timedelta
 
 import discord
-from ban import ban_member
 from discord import app_commands
 from discord.ext import commands
-from kick import kick_member
 
 from utils.configmanager import gconfig
+
+from .ban import ban_member
+from .kick import kick_member
 
 #TODO Automatic bans and timeouts on warns
 #TODO Add automations to configs
@@ -19,7 +20,7 @@ async def add_warns(guild_id, user:discord.Member,interaction:discord.Interactio
     else:
         gconfig.set(guild_id, "warns", user_id, 1)
     if gconfig.get(guild_id, "warns", user_id) >= gconfig.get(guild_id,"warns-settings","timeout",3):  # noqa: E501
-        user.timeout(reason="Too many warns", until=gconfig.get(guild_id,"warns-settings","timeout_duration",timedelta(hours=5)), interaction=interaction)  # noqa: E501
+        user.timeout(reason="Too many warns", until=gconfig.get(guild_id,"warns-settings","timeout_duration",timedelta(hours=5)))  # noqa: E501
     elif gconfig.get(guild_id, "warns", user_id) >= gconfig.get(guild_id,"warns-settings","kick",5):  # noqa: E501, SIM114
         await kick_member(user, "Too many warns", interaction)
     elif gconfig.get(guild_id, "warns", user_id) >= gconfig.get(guild_id,"warns-settings","ban",10):  # noqa: E501
