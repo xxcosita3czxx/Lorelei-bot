@@ -152,7 +152,8 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
                     return "Invalid cog. Ensure cog name"
                 try:
                     await bot.unload_extension(cog)
-
+                    await bot.tree.sync()
+                    return f"Unloaded {cog} successfully."
                 except discord.ext.commands.ExtensionNotLoaded:
                     return "Extension is not loaded"
 
@@ -170,6 +171,7 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
 
                 try:
                     await bot.load_extension(cog)
+                    await bot.tree.sync()
                     return f"Loaded {cog} successfully."
                 except discord.ext.commands.ExtensionNotFound:
                     return "Extension not found, ensure name is correct"
@@ -193,8 +195,8 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
                 if cog not in list(bot.extensions):
                     return "Invalid cog. Ensure cog name"
                 try:
-                    await bot.unload_extension(cog)
-                    await bot.load_extension(cog)
+                    await bot.reload_extension(cog)
+                    await bot.tree.sync()
                     return f"Reloaded {cog} successfully."
                 except discord.ext.commands.ExtensionNotLoaded:
                     return "Extension is not loaded"
