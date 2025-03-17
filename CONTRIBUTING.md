@@ -9,6 +9,7 @@ We welcome contributions to translate Lorelei Bot into different languages. Here
 1. **Fork the Repository**: Start by forking the repository to your GitHub account.
 
 2. **Clone the Repository**: Clone the forked repository to your local machine if you wanna use commands, else, just open on github directly.
+
     ```sh
     git clone https://github.com/your-username/Lorelei-bot.git
     cd Lorelei-bot
@@ -22,26 +23,24 @@ We welcome contributions to translate Lorelei Bot into different languages. Here
 
 6. **Commit Your Changes**: Commit your changes with a descriptive commit message.
    Upload it using commit button or with commands:
+
     ```sh
     git add .
     git commit -m "Add translation for <language>"
     ```
 
-8. **Push Your Changes**: Push your changes to your forked repository.
-   When commiting, its already pushed, when using commands, use this: 
+7. **Push Your Changes**: Push your changes to your forked repository.
+   When commiting, its already pushed, when using commands, use this:
+
     ```sh
     git push
     ```
 
-10. **Create a Pull Request**: Go to the original repository on GitHub and create a pull request from your forked repository. Provide a clear description of the changes you made.
+8. **Create a Pull Request**: Go to the original repository on GitHub and create a pull request from your forked repository. Provide a clear description of the changes you made.
 
 ## Reporting Issues
 
 If you encounter any issues or have suggestions for improvements, please open an issue on GitHub. Provide as much detail as possible to help us understand and address the issue.
-
-## Code of Conduct
-
-By participating in this project, you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md). Please read it to understand the expectations for contributing to this project.
 
 ## Contact
 
