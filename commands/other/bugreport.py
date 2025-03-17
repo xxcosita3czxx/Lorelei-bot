@@ -9,7 +9,7 @@ from discord.ext import commands
 import config
 from utils.configmanager import lang, uconfig
 
-from ..other.help import HelpManager
+from ..other.help import HelpManager  # noqa: F401
 
 last_logs = deque(maxlen=50)
 class LastLogsHandler(logging.Handler):

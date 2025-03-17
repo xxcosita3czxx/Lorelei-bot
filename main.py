@@ -170,7 +170,7 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
 
                 try:
                     await bot.load_extension(cog)
-
+                    return f"Loaded {cog} successfully."
                 except discord.ext.commands.ExtensionNotFound:
                     return "Extension not found, ensure name is correct"
 
