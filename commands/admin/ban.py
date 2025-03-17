@@ -31,7 +31,7 @@ class Ban(commands.Cog):
     @app_commands.command(name="ban", description="Ban a user")
     @app_commands.describe(
         reason=lang.get(config.language,"Descriptions","ban_reason"),
-        member=lang.get(config.language,"Descriptions","ban_member"),
+        member=lang.get(config.language,"Descriptions","ban_user"),
         delete_message_days=lang.get(config.language,"Descriptions","ban_delete_message_days"),
     )
     # time: app_commands.Transform[str, TimeConverter]=None
