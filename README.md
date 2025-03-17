@@ -6,6 +6,9 @@ Open-Source discord bot in python, for people
 ## Why?
 
 Because having too much of bots is very annoying, every single one have different configurations, web dashboards, and you can get lost quickly in it. Also most good bots these days are paid and very limited for free (hope dyno stays free 🙏). This is where my bot comes with all inside discord. Its free, its open-source, and you can do alot with it, edit it for your own needs, or help other people by making your own commands to the main bot.
+## How to contribute?
+
+Everything about contributing is [here](https://github.com/xxcosita3czxx/Lorelei-bot/blob/main/CONTRIBUTING.md)
 
 ### Translation Progress
 
