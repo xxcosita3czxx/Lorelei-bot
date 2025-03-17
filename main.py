@@ -116,7 +116,7 @@ async def handle_client(reader, writer, bot):
     try:
         data = await reader.read(1024)
         command = data.decode('utf-8').strip()
-        response = await handle_command(command, bot)
+        response = await handle_command(command, bot,writer)
         writer.write(response.encode('utf-8'))
         await writer.drain()
     except Exception as e:
@@ -125,7 +125,7 @@ async def handle_client(reader, writer, bot):
         writer.close()
         await writer.wait_closed()
 
-async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot):  # noqa: C901
+async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,writer):  # noqa: C901
     if command.startswith('help'):
         return 'Available commands: reload_all, unload, load, profiler [start|stop|stats], info [guilds|lat|uptime], kill, update, bugreports [index]'  # noqa: E501
     if command.startswith('extensions'):
@@ -236,6 +236,7 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot):  
                 return "Unknown info action."
     elif command.startswith("kill"):
         logger.info("Killing from helper")
+        writer.write("Killing bot.")
         await bot.close()
         sys.exit(0)
     elif command.startswith("update"):
