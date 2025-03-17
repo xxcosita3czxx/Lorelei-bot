@@ -66,5 +66,6 @@ class InviteLogger(commands.Cog):
         return used_invite
 
 async def setup(bot: commands.Bot):
-    await bot.add_cog(InviteLogger(bot))
-    bot.tree.add_command(InviteLogger.Invites())
+    cog = InviteLogger(bot)
+    await bot.add_cog(cog)
+    bot.tree.add_command(cog.Invites(bot))
