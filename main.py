@@ -240,7 +240,7 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
                 return "Unknown info action."
     elif command.startswith("kill"):
         logger.info("Killing from helper")
-        writer.write("Killing bot.")
+        writer.write(b"Killing bot.")
         await bot.close()
         sys.exit(0)
     elif command.startswith("update"):
