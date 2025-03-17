@@ -106,8 +106,8 @@ async def autocomplete_invites(interaction: discord.Interaction, current: str) -
     invites = await guild.invites()
     invite_codes = [invite.code for invite in invites]
 
-    return discord.Invite([
+    return [
         app_commands.Choice(name=f"discord.gg/{code}", value=f"discord.gg/{code}")
         for code in invite_codes
         if current.lower() in code.lower()
-    ])
+    ]

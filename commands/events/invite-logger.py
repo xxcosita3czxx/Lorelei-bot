@@ -19,8 +19,9 @@ class InviteLogger(commands.Cog):
         @app_commands.command(name="invite", description="Get info about invite")
         @app_commands.autocomplete(invite=autocomplete_invites)
         async def invite(self, interaction: discord.Interaction, invite: str):  # noqa: E501
+            invite_obj = await self.bot.fetch_invite(invite)
             await interaction.response.send_message(
-                content=f"Invite {invite.code} was created by {invite.inviter.name}#{invite.inviter.discriminator} and has {invite.uses} uses.",  # noqa: E501
+                content=f"Invite {invite_obj.code} was created by {invite_obj.inviter.name} and has {invite_obj.uses} uses.",  # noqa: E501
                 ephemeral=True,
             )
 
