@@ -125,7 +125,7 @@ async def handle_client(reader, writer, bot):
         writer.close()
         await writer.wait_closed()
 
-async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,writer):  # noqa: C901
+async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,writer):  # noqa: C901, E501
     if command.startswith('help'):
         return 'Available commands: reload_all, unload, load, profiler [start|stop|stats], info [guilds|lat|uptime], kill, update, bugreports [index]'  # noqa: E501
     if command.startswith('extensions'):
