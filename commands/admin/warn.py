@@ -32,7 +32,7 @@ class Warn(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="warn", description="Warns a user.")
-    @app_commands.default_permissions(manage_members=True)
+    @app_commands.default_permissions(moderate_members=True)
     async def warn(self, interaction: discord.Interaction, user: discord.Member, reason: str):  # noqa: E501
         guild_id = interaction.guild.id
         user_id = user.id
