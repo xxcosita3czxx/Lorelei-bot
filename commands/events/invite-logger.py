@@ -19,7 +19,7 @@ class InviteLogger(commands.Cog):
         @app_commands.command(name="invite", description="Get info about invite")
         @app_commands.autocomplete(invite=autocomplete_invites)
         async def invite(self, interaction: discord.Interaction, invite: str):  # noqa: E501
-            invite_obj = await self.bot.fetch_invite(invite)
+            invite_obj:discord.Invite = await self.bot.fetch_invite(invite)
             await interaction.response.send_message(
                 content=f"Invite {invite_obj.code} was created by {invite_obj.inviter.name} and has {invite_obj.uses} uses.",  # noqa: E501
                 ephemeral=True,
@@ -30,13 +30,14 @@ class InviteLogger(commands.Cog):
             invites = await interaction.guild.invites()
             user_invites = [invite for invite in invites if invite.inviter == user]
             if user_invites:
+                total_uses = sum(invite.uses or 0 for invite in user_invites)
                 await interaction.response.send_message(
-                    content=f"{user.name}#{user.discriminator} has created {len(user_invites)} invites.",  # noqa: E501
+                    content=f"{user.name}#{user.discriminator} has created {len(user_invites)} invites with a total of {total_uses} uses.",  # noqa: E501
                     ephemeral=True,
                 )
             else:
                 await interaction.response.send_message(
-                    content=f"{user.name}#{user.discriminator} has not created any invites.",  # noqa: E501
+                    content=f"{user.name} has not created any invites.",  # noqa: E501
                     ephemeral=True,
                 )
 
