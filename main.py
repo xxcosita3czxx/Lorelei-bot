@@ -249,6 +249,9 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
             return "Updated succesfully"
         except Exception as e:
             return f'Failed to update. Error: {e}'
+    elif command.startswith("lang-reload"):
+        lang._load_all_configs()
+        return "Reloaded language files."
     elif command.startswith("bugreports"):
         parts = command.split(" ", 1)
         if os.path.exists("data/bug-reports") and os.listdir("data/bug-reports"):
