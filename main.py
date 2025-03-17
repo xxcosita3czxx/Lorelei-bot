@@ -206,6 +206,10 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
                     return f"Unknown error while reloading extension: {e}"
             except Exception as e:
                 return f"Failed to reload: {e}"
+        elif command.startswith("list"):
+            return "\n".join(list(bot.extensions))
+        else:
+            return "Unknown extensions command."  # noqa: E501
     elif command.startswith("profiler"):
         # Handle profiler commands
         parts = command.split(" ", 1)
