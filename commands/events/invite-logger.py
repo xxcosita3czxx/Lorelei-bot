@@ -32,7 +32,7 @@ class InviteLogger(commands.Cog):
             if user_invites:
                 total_uses = sum(invite.uses or 0 for invite in user_invites)
                 await interaction.response.send_message(
-                    content=f"{user.name}#{user.discriminator} has created {len(user_invites)} invites with a total of {total_uses} uses.",  # noqa: E501
+                    content=f"{user.name} has created {len(user_invites)} invites with a total of {total_uses} uses.",  # noqa: E501
                     ephemeral=True,
                 )
             else:
