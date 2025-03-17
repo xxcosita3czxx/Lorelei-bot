@@ -13,7 +13,7 @@ Because having too much of bots is very annoying, every single one have differen
 
 | Language | Progress |
 |----------|----------|
-| CZ | 74.36% |
+| CZ | 80.77% |
 | DE | 46.15% |
 | HU | 46.15% |
 | SK | 46.15% |
