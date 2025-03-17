@@ -48,7 +48,7 @@ class BugReport(commands.Cog):
                     f.write(f"Bots permissions on server: {interaction.app_permissions}\n")  # noqa: E501
                     f.write("End of report.\n")
                     f.close()
-                await interaction.response.send_message(lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","report_sent"))  # noqa: E501
+                await interaction.response.send_message(lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","report_sent"), ephemeral=True)  # noqa: E501
             except commands.errors.CommandOnCooldown as e:
                 await interaction.response.send_message(e)  # noqa: E501
             except Exception as e:
