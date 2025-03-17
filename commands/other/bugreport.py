@@ -28,7 +28,7 @@ class BugReport(commands.Cog):
     @app_commands.command(name="bugreport",description="Here you can report bug")
     @app_commands.checks.cooldown(1, 45, key=lambda i: (i.guild_id, i.user.id))
     async def bugreport(self,interaction: discord.Interaction, command:str,explanation:str):  # noqa: E501
-        if getattr(config, 'bugreport', True):
+        if config.bugreport:
             try:
                 local_time = time.localtime()
                 formatted_time = time.strftime("%Y-%m-%d_%H-%M-%S", local_time)
@@ -59,5 +59,5 @@ class BugReport(commands.Cog):
 async def setup(bot:commands.Bot):
     cog = BugReport(bot=bot)
     await bot.add_cog(cog)
-    helpmanager = HelpManager()
-    helpmanager.set_help_page("other", "/bugreport", "Used to report bugs", embed=discord.Embed(title="/bugreport",description="Usage: /bugreport <command name> <description of what went wrong>"))  # noqa: E501
+#    helpmanager = HelpManager()
+#    helpmanager.set_help_page("other", "/bugreport", "Used to report bugs", embed=discord.Embed(title="/bugreport",description="Usage: /bugreport <command name> <description of what went wrong>"))  # noqa: E501
