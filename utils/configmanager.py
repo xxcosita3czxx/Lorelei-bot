@@ -63,9 +63,12 @@ class ConfigManager:
     def _save_config(self, id):
         id = str(id)
         file_path = os.path.join(self.config_dir, f"{id}.toml")
-        logger.debug(f"Saving config for {id} to {file_path}")
-        with open(file_path, 'w') as f:
-            toml.dump(self.config[id], f)
+        try:
+            logger.debug(f"Saving config for {id} to {file_path}")
+            with open(file_path, 'w') as f:
+                toml.dump(self.config[id], f)
+        except Exception as e:
+            logger.error(f"Failed to save config for {id}: {e}")
 
     def delete(self, id, title=None, key=None):
         id = str(id)
