@@ -2,6 +2,7 @@ import logging
 import os
 from collections import defaultdict
 
+import chardet
 import coloredlogs
 import toml
 
@@ -31,8 +32,18 @@ class ConfigManager:
                     file_path = os.path.join(self.config_dir, filename)
                     with open(file_path,encoding="utf-8") as f:
                         self.config[id] = toml.load(f)
-            except UnicodeDecodeError:
-                logger.warning(f"{filename} Cannot be decoded! Check encoding, for now skipping")  # noqa: E501
+            except UnicodeDecodeError as e:
+                logger.warning(
+                    f"{filename} cannot be decoded with UTF-8! Error: {e}. Attempting to detect encoding...",  # noqa: E501
+                )
+                try:
+                    with open(file_path, 'rb') as f_binary:
+                        raw_data = f_binary.read()
+                        detected_encoding = chardet.detect(raw_data)['encoding']
+                        logger.debug(f"Detected encoding for {filename}: {detected_encoding}")  # noqa: E501
+                        self.config[id] = toml.loads(raw_data.decode(detected_encoding))  # noqa: E501
+                except Exception as e:
+                    logger.error(f"Failed to load {filename} with detected encoding. Error: {e}")  # noqa: E501
         logger.debug(f"Loaded configs: {self.config}")
 
     def get(self, id, title, key, default=None):
