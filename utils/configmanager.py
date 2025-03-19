@@ -41,7 +41,10 @@ class ConfigManager:
                         raw_data = f_binary.read()
                         detected_encoding = chardet.detect(raw_data)['encoding']
                         logger.debug(f"Detected encoding for {filename}: {detected_encoding}")  # noqa: E501
-                        self.config[id] = toml.loads(raw_data.decode(detected_encoding))  # noqa: E501
+                        with open(file_path, 'w', encoding='utf-8') as f_utf8:
+                            f_utf8.write(raw_data.decode(detected_encoding))
+                        with open(file_path, encoding='utf-8') as f:
+                            self.config[id] = toml.load(f)
                 except Exception as e:
                     logger.error(f"Failed to load {filename} with detected encoding. Error: {e}")  # noqa: E501
         logger.debug(f"Loaded configs: {self.config}")
