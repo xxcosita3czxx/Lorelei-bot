@@ -9,6 +9,8 @@
 #TODO Level system logic for leaderboards and levels
 #TODO Better config system (Embed style preferences + being able to add to it from the cog)  # noqa: E501
 #TODO Giveaway logic
+#IDEA ids could be if num not in list then add, else continue
+#IDEA Also edit could add/edit already existing
 
 
 import asyncio
