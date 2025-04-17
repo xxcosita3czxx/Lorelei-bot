@@ -10,3 +10,4 @@ click
 fastapi
 uvicorn
 pillow
+chardet
