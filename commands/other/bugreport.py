@@ -30,7 +30,8 @@ class BugReport(commands.Cog):
     async def bugreport(self,interaction: discord.Interaction, command:str,explanation:str,nosave:bool=False):  # noqa: E501
         if nosave:
             logging.info("-----LAST LOGS-----")
-            for line in last_logs:
+            last_logs_final = last_logs
+            for line in last_logs_final:
                 logging.info(line+"\n")
             logging.info("-----END OF LAST LOGS-----")
             await interaction.response.send_message(lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","report_sent"), ephemeral=True)  # noqa: E501
