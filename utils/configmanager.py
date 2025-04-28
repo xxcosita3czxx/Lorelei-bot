@@ -47,6 +47,8 @@ class ConfigManager:
                             self.config[id] = toml.load(f)
                 except Exception as e:
                     logger.error(f"Failed to load {filename} with detected encoding. Error: {e}")  # noqa: E501
+            except Exception as e:
+                logger.error(f"Failed to load {filename}. Error: {e}")
         logger.debug(f"Loaded configs: {self.config}")
 
     def get(self, id, title, key, default=None):
