@@ -1,6 +1,6 @@
 # Lorelei-bot License  
 
-**Version 1.2**
+Version 1.2
 
 ## Terms and Conditions
 
@@ -29,7 +29,7 @@ You may not use the Code for commercial purposes, including selling or distribut
 You may not use the Code on more than 100 servers without obtaining prior written permission from the copyright holder (i.e., Cosita Development).  
 You may not use parts of the Code in your own bot or any derivative works without including a `COPYRIGHT.md` file or following content on top of any script using the code:
 
-```
+```plain
 © 2023 Cosita Development. All rights reserved. Contact: cosita3cz@proton.me
 ```
 
