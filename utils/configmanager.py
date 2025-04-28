@@ -10,7 +10,7 @@ import config
 
 coloredlogs.install(
     level=config.loglevel,
-    fmt='%(asctime)s %(levelname)s: %(message)s',
+    fmt='%(asctime)s %(levelname) %(logger)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
 )
 
@@ -83,6 +83,7 @@ class ConfigManager:
             logger.debug(f"Saving config for {id} to {file_path}")
             with open(file_path, 'w') as f:
                 toml.dump(self.config[id], f)
+                logger.debug(f"Config for {id} saved successfully.")  # noqa: E501
         except Exception as e:
             logger.error(f"Failed to save config for {id}: {e}")
 
@@ -104,13 +105,6 @@ class ConfigManager:
             self._load_all_configs()  # Reload all configs after saving
         logger.debug(f"Deleted {id}:{title}:{key}")
 
-    def save_config(self):
-        try:
-            with open(self.config_file, "w") as f:
-                toml.dump(self.config, f)
-                logger.debug(f"Configuration saved successfully to {self.config_file}.")  # noqa: E501
-        except Exception as e:
-            logger.error(f"Failed to save configuration: {e}")
 
 gconfig = ConfigManager("data/guilds")
 uconfig = ConfigManager("data/users")
