@@ -27,8 +27,14 @@ class BugReport(commands.Cog):
         self.bot = bot
     @app_commands.command(name="bugreport",description="Here you can report bug")
     @app_commands.checks.cooldown(1, 45, key=lambda i: (i.guild_id, i.user.id))
-    async def bugreport(self,interaction: discord.Interaction, command:str,explanation:str):  # noqa: E501
-        if config.bugreport:
+    async def bugreport(self,interaction: discord.Interaction, command:str,explanation:str,nosave:bool=False):  # noqa: E501
+        if nosave:
+            logging.info("-----LAST LOGS-----")
+            for line in last_logs:
+                logging.info(line+"\n")
+            logging.info("-----END OF LAST LOGS-----")
+            await interaction.response.send_message(lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","report_sent")+" (not saved in files)", ephemeral=True)  # noqa: E501
+        elif config.bugreport:
             try:
                 local_time = time.localtime()
                 formatted_time = time.strftime("%Y-%m-%d_%H-%M-%S", local_time)
