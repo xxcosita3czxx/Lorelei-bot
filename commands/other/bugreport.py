@@ -31,7 +31,7 @@ class BugReport(commands.Cog):
         if nosave:
             logging.info("-----LAST LOGS-----")
             last_logs_final = last_logs
-            for line in last_logs_final:
+            for line in list(last_logs_final):
                 logging.info(line+"\n")
             logging.info("-----END OF LAST LOGS-----")
             await interaction.response.send_message(lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","report_sent"), ephemeral=True)  # noqa: E501
