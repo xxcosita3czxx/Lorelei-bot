@@ -102,6 +102,14 @@ class ConfigManager:
             self._load_all_configs()  # Reload all configs after saving
         logger.debug(f"Deleted {id}:{title}:{key}")
 
+    def save_config(self):
+        try:
+            with open(self.config_file, "w") as f:
+                toml.dump(self.config, f)
+                logger.debug(f"Configuration saved successfully to {self.config_file}.")  # noqa: E501
+        except Exception as e:
+            logger.error(f"Failed to save configuration: {e}")
+
 gconfig = ConfigManager("data/guilds")
 uconfig = ConfigManager("data/users")
 lang = ConfigManager("data/lang","data/lang/en.toml")

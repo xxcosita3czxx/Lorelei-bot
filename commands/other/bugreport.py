@@ -11,7 +11,7 @@ from utils.configmanager import lang, uconfig
 
 from ..other.help import HelpManager  # noqa: F401
 
-last_logs = deque(maxlen=50)
+last_logs = deque(maxlen=60)
 class LastLogsHandler(logging.Handler):
     def emit(self, record):
         log_entry = self.format(record)
@@ -38,7 +38,7 @@ class BugReport(commands.Cog):
                     f.write(f"Command: {command}\n")
                     f.write(f"User explanation: {explanation}\n")
                     f.write("\n")
-                    f.write("Last 30 logs\n")
+                    f.write("Last 60 logs\n")
                     for line in last_logs:
                         f.write(line+"\n")
                     f.write("End of logs.\n")

@@ -51,7 +51,7 @@ class InviteLogger(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member):
-        used_invite = await self.get_used_invite(member)
+        used_invite = await self.get_used_invite(self,member)
         if used_invite:
             inviter: discord.Member = used_invite.inviter
             logger.debug(f"{member} was invited by {inviter.name}")
