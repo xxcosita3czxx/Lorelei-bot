@@ -33,7 +33,7 @@ class BugReport(commands.Cog):
             for line in last_logs:
                 logging.info(line+"\n")
             logging.info("-----END OF LAST LOGS-----")
-            await interaction.response.send_message(lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","report_sent")+" (not saved in files)", ephemeral=True)  # noqa: E501
+            await interaction.response.send_message(lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","report_sent"), ephemeral=True)  # noqa: E501
         elif config.bugreport:
             try:
                 local_time = time.localtime()
