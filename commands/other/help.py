@@ -70,7 +70,7 @@ class HelpCommand(commands.Cog):
                 if page not in pages:
                     raise ValueError(f"Page '{page}' does not exist for command '{command}' in group '{group}'.")  # noqa: E501
 
-                embed = discord.Embed(title=help_manager.get_help_page(group, command, page,"title"),description=help_manager.get_help_page(group, command, page,"description"))  # noqa: E501
+                embed = discord.Embed(title=help_manager.get_help_page(group, command, page)["title"],description=help_manager.get_help_page(group, command, page)["description"])  # noqa: E501
                 embed.set_footer(text=f"Page {page} of {len(pages)}")
 
                 if len(pages) > 1:
