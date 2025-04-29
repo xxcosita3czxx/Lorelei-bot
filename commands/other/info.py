@@ -1,4 +1,5 @@
 import discord
+import help as helpmanager
 from discord import app_commands
 from discord.ext import commands
 
@@ -48,3 +49,5 @@ class Info(commands.Cog):
 
 async def setup(bot:commands.Bot):
     await bot.add_cog(Info(bot))
+    hm = helpmanager.HelpManager.new_help("other","info","Shows info about bot")
+    hm.set_help_page(1,"Info","Shows info about the bot. Its used as /info only. Useful for new users.")  # noqa: E501
