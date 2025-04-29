@@ -22,7 +22,6 @@ import os
 import sys
 import time
 
-import coloredlogs
 import discord
 import discord.ext
 import discord.ext.commands
@@ -33,11 +32,6 @@ from utils.configmanager import lang
 
 ############################### Logging ############################################
 
-coloredlogs.install(
-    level=config.loglevel,
-    fmt='%(asctime)s %(levelname)s %(name)s: %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S',
-)
 conflang=config.language
 
 # Set the logging level for specific loggers if needed

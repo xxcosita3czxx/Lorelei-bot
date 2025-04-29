@@ -1,5 +1,4 @@
-discord
-coloredlogs
+discord.py
 psutil
 pytest
 requests

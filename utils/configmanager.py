@@ -3,16 +3,7 @@ import os
 from collections import defaultdict
 
 import chardet
-import coloredlogs
 import toml
-
-import config
-
-coloredlogs.install(
-    level=config.loglevel,
-    fmt='%(asctime)s %(levelname) %(logger)s: %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S',
-)
 
 logger = logging.getLogger("configmanager")
 
