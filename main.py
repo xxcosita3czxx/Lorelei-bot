@@ -60,13 +60,13 @@ async def load_cogs(directory, bot):
     for root, _, files in os.walk(directory):
         for file in files:
             if file.endswith('.py') and file != '__init__.py':
-                cog_path = os.path.relpath(os.path.join(root, file), directory)
+                # Construct the module path relative to the project root
+                cog_path = os.path.relpath(os.path.join(root, file), start=os.getcwd())  # noqa: E501
                 module_name = cog_path.replace(os.sep, '.').replace('.py', '')
-                full_module_path = f'{directory}.{module_name}'
 
                 try:
                     # Dynamically import the module to get __PRIORITY__
-                    module = importlib.import_module(full_module_path)
+                    module = importlib.import_module(module_name)
                     priority = getattr(module, "__PRIORITY__", 0)
 
                     # Clamp priority between 0 and 10
@@ -76,7 +76,7 @@ async def load_cogs(directory, bot):
                         )
                         priority = 0
 
-                    cogs.append((priority, full_module_path))
+                    cogs.append((priority, module_name))
                 except Exception as e:
                     logger.error(lang.get(conflang, "Bot", "cog_fail").format(module_name=module_name, error=e))  # noqa: E501
 
