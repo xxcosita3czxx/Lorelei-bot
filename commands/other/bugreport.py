@@ -7,9 +7,8 @@ from discord import app_commands
 from discord.ext import commands
 
 import config
+from commands.other.help import HelpManager  # noqa: F401
 from utils.configmanager import lang, uconfig
-
-from ..other.help import HelpManager  # noqa: F401
 
 last_logs = deque(maxlen=60)
 class LastLogsHandler(logging.Handler):

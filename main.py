@@ -48,7 +48,7 @@ logging.getLogger('nsfw.e621')     .setLevel(config.loglevel)
 logging.getLogger('ban')           .setLevel(config.loglevel)
 logging.getLogger('invite-logger') .setLevel(config.loglevel)
 logging.getLogger('configmanager') .setLevel(config.loglevel)
-logging.getLogger('discord.client').setLevel(logging.ERROR)
+logging.getLogger('discord.client').setLevel(logging.ERROR  )
 
 
 logger = logging.getLogger("main")
