@@ -1,7 +1,10 @@
+import logging
+
 import discord
 from discord import app_commands
 from discord.ext import commands
 
+logger = logging.getLogger("help")
 __PRIORITY__ = 10
 
 class HelpCommand(commands.Cog):
@@ -106,6 +109,7 @@ class HelpManager:
         if cls._instance is None:
             cls._instance = super().__new__(cls)
             cls._instance.help_pages = {}  # Initialize the dictionary once
+            logger.info("HelpManager initialized.")
         return cls._instance
 
     class new_help:
