@@ -50,5 +50,6 @@ class Info(commands.Cog):
 
 async def setup(bot:commands.Bot):
     await bot.add_cog(Info(bot))
-    hm = HelpManager.new_help("other","info","Shows info about bot")
-    hm.set_help_page(1,"Info","Shows info about the bot. Its used as /info only. Useful for new users.")  # noqa: E501
+    hm = HelpManager()
+    hmhelp = hm.new_help("other","info","Shows info about bot")
+    hmhelp.set_help_page(1,"Info","Shows info about the bot. Its used as /info only. Useful for new users.")  # noqa: E501
