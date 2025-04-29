@@ -1,14 +1,12 @@
-
-import importlib
 import logging
 import re
 
 import discord
 from discord.ext import commands
 
+import commands.events.invite_logger as invite_logger
 from utils.configmanager import gconfig
 
-invite_logger = importlib.import_module("invite-logger")
 logger = logging.getLogger("welcome")
 
 def format_string(template, placeholders):
