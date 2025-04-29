@@ -35,7 +35,7 @@ from utils.configmanager import lang
 
 coloredlogs.install(
     level=config.loglevel,
-    fmt='%(asctime)s %(levelname)s %(logger)s: %(message)s',
+    fmt='%(asctime)s %(levelname)s %(name)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
 )
 conflang=config.language
