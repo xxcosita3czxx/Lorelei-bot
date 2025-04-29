@@ -8,6 +8,8 @@ from discord import app_commands
 
 from utils.dices import dices
 
+from ..commands.other.help import HelpManager
+
 logger = logging.getLogger("autocomplete")
 
 async def fetch_tags(query):
@@ -111,3 +113,35 @@ async def autocomplete_invites(interaction: discord.Interaction, current: str) -
         for code in invite_codes
         if current.lower() in code.lower()
     ]
+
+async def autocomplete_help_groups(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:  # noqa: E501, UP006
+    help_manager = HelpManager()
+    groups = help_manager.list_groups()
+    return [
+        app_commands.Choice(name=group, value=group)
+        for group in groups
+        if current.lower() in group.lower()
+    ]  # noqa: E501
+async def autocomplete_help_commands(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:  # noqa: E501, UP006
+    group = interaction.namespace.group
+    if group is None:
+        return [app_commands.Choice(name="No group selected", value="No group selected")]  # noqa: E501
+    help_manager = HelpManager()
+    commands = help_manager.list_commands(group)
+    return [
+        app_commands.Choice(name=command, value=command)
+        for command in commands
+        if current.lower() in command.lower()
+    ]  # noqa: E501
+async def autocomplete_help_pages(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:  # noqa: E501, UP006
+    group = interaction.namespace.group
+    command = interaction.namespace.command
+    if group is None or command is None:
+        return [app_commands.Choice(name="No group or command selected", value="No group or command selected")]  # noqa: E501
+    help_manager = HelpManager()
+    pages = help_manager.list_pages(group, command)
+    return [
+        app_commands.Choice(name=str(page), value=str(page))
+        for page in pages
+        if current.lower() in str(page).lower()
+    ]  # noqa: E501

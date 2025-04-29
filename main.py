@@ -41,18 +41,23 @@ coloredlogs.install(
 conflang=config.language
 
 # Set the logging level for specific loggers if needed
-logging.getLogger('automessages') .setLevel(config.loglevel)
-logging.getLogger('welcome')      .setLevel(config.loglevel)
-logging.getLogger('anti-invites') .setLevel(config.loglevel)
-logging.getLogger('nsfw.e621')    .setLevel(config.loglevel)
-logging.getLogger('ban')          .setLevel(config.loglevel)
-logging.getLogger('invite-logger').setLevel(config.loglevel)
-logging.getLogger('configmanager').setLevel(config.loglevel)
+logging.getLogger('automessages')  .setLevel(config.loglevel)
+logging.getLogger('welcome')       .setLevel(config.loglevel)
+logging.getLogger('anti-invites')  .setLevel(config.loglevel)
+logging.getLogger('nsfw.e621')     .setLevel(config.loglevel)
+logging.getLogger('ban')           .setLevel(config.loglevel)
+logging.getLogger('invite-logger') .setLevel(config.loglevel)
+logging.getLogger('configmanager') .setLevel(config.loglevel)
+logging.getLogger('discord.client').setLevel(logging.ERROR)
 
 
 logger = logging.getLogger("main")
-logging.getLogger('discord.client').setLevel(logging.ERROR)
-
+# Set the logging format for the root logger
+logging.basicConfig(
+    level=config.loglevel,
+    format='%(asctime)s %(levelname)s %(name)s: %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+)
 ############################### Functions ##########################################
 
 async def load_cogs(directory, bot):

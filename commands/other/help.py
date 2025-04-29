@@ -4,6 +4,12 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+from utils.autocomplete import (
+    autocomplete_help_commands,
+    autocomplete_help_groups,
+    autocomplete_help_pages,
+)
+
 logger = logging.getLogger("help")
 __PRIORITY__ = 10
 
@@ -12,6 +18,11 @@ class HelpCommand(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="help", description="Shows help information for commands.")  # noqa: E501
+    @app_commands.autocomplete(
+        group=autocomplete_help_groups,  # noqa: E501
+        command=autocomplete_help_commands,  # noqa: E501
+        page=autocomplete_help_pages,  # noqa: E501
+    )
     async def helpcommand(self, interaction: discord.Interaction, group: str = None, command: str = None, page: int = 1):  # noqa: E501
         await self.handle_help(interaction, group, command, page)
 

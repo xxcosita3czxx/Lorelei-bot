@@ -64,8 +64,6 @@ class BugReport(commands.Cog):
             await interaction.response.send_message(lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","report_disabled"), ephemeral=True)  # noqa: E501
 
 async def setup(bot:commands.Bot):
-#    helpmanager = HelpManager()
-#    helpmanager.set_help_page("other", "/bugreport", "Used to report bugs", embed=discord.Embed(title="/bugreport",description="Usage: /bugreport <command name> <description of what went wrong>"))  # noqa: E501
     hm = HelpManager()
     hmhelp = hm.new_help("other","bugreport","Report a bug")
     hmhelp.set_help_page(1,"BugReport","This command can be used to report a bug or any feature that is broken.\n There is also a optional flag 'nosave'. Please dont use it to report as it just prints the logs into the console where it gets lost after some time")  # noqa: E501
