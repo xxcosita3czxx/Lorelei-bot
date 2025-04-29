@@ -5,7 +5,6 @@ import threading
 import time
 
 import click
-import coloredlogs
 import psutil
 
 import config
@@ -13,14 +12,12 @@ from utils.configmanager import lang
 
 conflang = f"{config.language}"
 
-coloredlogs.install(
+logging.basicConfig(
     level=config.loglevel,
-    fmt='%(asctime)s %(levelname)s: %(message)s',
+    format='%(asctime)s %(levelname)s %(name)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
 )
-
 logger = logging.getLogger("runner")
-
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def update():
