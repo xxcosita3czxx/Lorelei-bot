@@ -1,11 +1,12 @@
 import discord
-import help as helpmanager
 from discord import app_commands
 from discord.ext import commands
 
 import config
 import utils.cosita_toolkit as ctkit
 from utils.configmanager import lang, uconfig
+
+from ..other.help import HelpManager as helpmanager
 
 mowner,mrepo = config.repository.split("/")
 def info_text_gen(userid):
