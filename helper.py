@@ -2,20 +2,12 @@ import logging
 import socket
 import sys
 
-import coloredlogs
-
 try:
     import config as c
     loglevel = c.loglevel
 except ImportError:
     print("RUNNING OUTSIDE BOT ENVIRONMENT")  # noqa: T201
     loglevel = logging.INFO
-
-coloredlogs.install(
-    level=loglevel,
-    fmt='%(asctime)s HELPER: %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S',
-)
 
 logger = logging.getLogger("helper")
 
