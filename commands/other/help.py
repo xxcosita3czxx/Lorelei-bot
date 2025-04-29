@@ -12,7 +12,7 @@ class HelpCommand(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="help", description="Shows help information for commands.")  # noqa: E501
-    async def helpcommand(self, interaction: discord.Interaction, group: str = None, command: str = None, page: int = 1):  # noqa: C901, E501
+    async def handle_help(self, interaction: discord.Interaction, group: str = None, command: str = None, page: int = 1):  # noqa: C901, E501
         help_manager = HelpManager()
         embed = discord.Embed(title="Help", color=discord.Color.blurple())
         message_sent = False
@@ -28,7 +28,7 @@ class HelpCommand(commands.Cog):
 
             async def select_callback(interaction: discord.Interaction):
                 selected_group = select.values[0]
-                await self.helpcommand(interaction, group=selected_group)
+                await self.handle_help(interaction, group=selected_group)
 
             select.callback = select_callback
             view = discord.ui.View()
