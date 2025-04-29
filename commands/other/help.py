@@ -109,7 +109,6 @@ class HelpManager:
         return cls._instance
     class new_help:
         def __init__(self,group_name: str, command_name: str, description: str):  # noqa: E501
-            super().__init__(HelpManager._instance)
             self.group_name = group_name
             self.command_name = command_name
             self.description = description
