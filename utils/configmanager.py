@@ -57,8 +57,9 @@ class ConfigManager:
         logger.debug("Final result: " + str(result))
         return result
 
-    def set(self, id, title, key, value):
+    def set(self, id:str, title, key, value):
         logger.debug(f"Setting {id}:{title}:{key} to {value}")
+        id = str(id)
         if id not in self.config:
             self.config[id] = {}
         if title not in self.config[id]:
@@ -68,7 +69,7 @@ class ConfigManager:
         self._load_all_configs()  # Reload all configs after saving
         logger.debug(f"Set {id}:{title}:{key} to {value}")
 
-    def _save_config(self, id):
+    def _save_config(self, id:str):
         id = str(id)
         file_path = os.path.join(self.config_dir, f"{id}.toml")
         try:
@@ -79,7 +80,7 @@ class ConfigManager:
         except Exception as e:
             logger.error(f"Failed to save config for {id}: {e}")
 
-    def delete(self, id, title=None, key=None):
+    def delete(self, id:str, title=None, key=None):
         id = str(id)
         logger.debug(f"Deleting {id}:{title}:{key}")
         if id in self.config:

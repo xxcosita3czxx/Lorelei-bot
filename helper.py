@@ -7,7 +7,7 @@ try:
     loglevel = c.loglevel
 except ImportError:
     print("RUNNING OUTSIDE BOT ENVIRONMENT")  # noqa: T201
-    loglevel = logging.INFO
+    loglevel = logging.DEBUG
 
 logger = logging.getLogger("helper")
 

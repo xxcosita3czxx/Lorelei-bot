@@ -1,7 +1,6 @@
 #############################
 #    By Cosita              #
 #############################
-#TODO Invite tracking
 #TODO more verify modes
 #TODO AntiLinks block all messages (Test please)
 #TODO Embeds and translations of strings
@@ -10,7 +9,6 @@
 #TODO Better config system (Embed style preferences + being able to add to it from the cog)  # noqa: E501
 #TODO Giveaway logic
 #TODO Welcome message when bot joins
-#TODO FIX THE HELP ASAP
 #IDEA ids could be if num not in list then add, else continue
 #IDEA Also edit could add/edit already existing
 
