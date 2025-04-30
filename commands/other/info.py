@@ -4,8 +4,8 @@ from discord.ext import commands
 
 import config
 import utils.cosita_toolkit as ctkit
-from commands.other.help import HelpManager
 from utils.configmanager import lang, uconfig
+from utils.helpmanager import HelpManager
 
 mowner,mrepo = config.repository.split("/")
 def info_text_gen(userid):

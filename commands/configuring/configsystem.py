@@ -322,7 +322,7 @@ class GuildConfig(commands.Cog):
                     ephemeral=True,
                 )
             except Exception as e:
-                logging.error("AUTOROLE-SAVE-ERR")
+                logger.error("AUTOROLE-SAVE-ERR")
                 await interaction.response.send_message(
                     content=f"Exception happened: {e}",
                     ephemeral=True,

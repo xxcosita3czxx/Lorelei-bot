@@ -17,6 +17,7 @@ class LastLogsHandler(logging.Handler):
         last_logs.append(log_entry)
 
 # Add the custom handler to the root logger
+logger = logging.getLogger("bugreport")
 handler = LastLogsHandler()
 handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
 logging.getLogger().addHandler(handler)
@@ -28,11 +29,11 @@ class BugReport(commands.Cog):
     @app_commands.checks.cooldown(1, 45, key=lambda i: (i.guild_id, i.user.id))
     async def bugreport(self,interaction: discord.Interaction, command:str,explanation:str,nosave:bool=False):  # noqa: E501
         if nosave:
-            logging.info("-----LAST LOGS-----")
+            logger.info("-----LAST LOGS-----")
             last_logs_final = last_logs
             for line in list(last_logs_final):
-                logging.info(line+"\n")
-            logging.info("-----END OF LAST LOGS-----")
+                logger.info(line+"\n")
+            logger.info("-----END OF LAST LOGS-----")
             await interaction.response.send_message(lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","report_sent"), ephemeral=True)  # noqa: E501
         elif config.bugreport:
             try:
