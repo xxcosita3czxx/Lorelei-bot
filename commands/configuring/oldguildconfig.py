@@ -426,8 +426,10 @@ class GuildConfig(commands.Cog):
         )
         async def export(self,interaction:discord.Interaction):
             try:
+                if not interaction.guild:
+                    await interaction.response.send_message("This command is runnable only from guilds")  # noqa: E501
                 file = "data/guilds"+ str(interaction.guild.id) + ".toml"
-                interaction.response.send_message(
+                await interaction.response.send_message(
                     content="Here is exported content that bot has saved. Remember that exports of message id dependent functions will not be ported over.",  # noqa: E501
                     file=file,
                     ephemeral=True,
@@ -448,6 +450,8 @@ class GuildConfig(commands.Cog):
         )
         async def import_config(self,interaction:discord.Interaction):  # noqa: E501
             try:
+                if not interaction.guild:
+                    await interaction.response.send_message("This command is runnable only from guilds")  # noqa: E501
                 if not interaction.data['attachments']:
                     await interaction.response.send_message(
                         content="No file uploaded. Please upload a config file.",
