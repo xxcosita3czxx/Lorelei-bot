@@ -35,6 +35,8 @@ class ReactionRoles(commands.Cog):
         message = await interaction.channel.send(embed=embed)
         gconfig.set(interaction.guild.id,"reaction-roles","message-id",message.id)
         await message.add_reaction(string2emoji(":thumbs_up:"))
+        await interaction.response.send_message("Reaction roles message sent!", ephemeral=True)  # noqa: E501
+
     @commands.Cog.listener("on_reaction_add")
     async def on_react(self, reaction:discord.Reaction, user):
         if user.bot:
