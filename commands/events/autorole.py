@@ -4,8 +4,7 @@ import discord
 from discord.ext import commands
 
 from utils.configmanager import gconfig
-
-#TODO Autorole not giving actually a role
+from utils.helpmanager import HelpManager
 
 logger = logging.getLogger("autorole")
 class AutoRole(commands.Cog):
@@ -32,3 +31,6 @@ class AutoRole(commands.Cog):
 
 async def setup(bot:commands.Bot):
     await bot.add_cog(AutoRole(bot))
+    hm = HelpManager()
+    hmhelp = hm.new_help("members","autorole","Automatically assigns a role to new members")  # noqa: E501
+    hmhelp.set_help_page(1,"AutoRole","Automatically assigns a role to new members. Useful for default role or permissions that doesnt use everyone")  # noqa: E501

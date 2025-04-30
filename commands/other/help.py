@@ -93,7 +93,7 @@ class HelpCommand(commands.Cog):
                         prev_button = discord.ui.Button(label="Previous", style=discord.ButtonStyle.primary)  # noqa: E501
 
                         async def prev_callback(interaction: discord.Interaction):
-                            await self.helpcommand(interaction, group=group, command=command, page=page - 1)  # noqa: E501
+                            await self.handle_help(interaction, group=group, command=command, page=page - 1)  # noqa: E501
 
                         prev_button.callback = prev_callback
                         view.add_item(prev_button)
@@ -102,7 +102,7 @@ class HelpCommand(commands.Cog):
                         next_button = discord.ui.Button(label="Next", style=discord.ButtonStyle.primary)  # noqa: E501
 
                         async def next_callback(interaction: discord.Interaction):
-                            await self.helpcommand(interaction, group=group, command=command, page=page + 1)  # noqa: E501
+                            await self.handle_help(interaction, group=group, command=command, page=page + 1)  # noqa: E501
 
                         next_button.callback = next_callback
                         view.add_item(next_button)

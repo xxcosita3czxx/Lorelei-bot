@@ -89,14 +89,14 @@ async def setup(bot:commands.Bot):
     await bot.add_cog(Welcome(bot))
     hm = HelpManager()
     hmhelp = hm.new_help(
-        group_name="events",
+        group_name="members",
         command_name="welcome",
         description="Welcome system for the server.",
     )
     hmhelp.set_help_page(
         page=1,
         title="Welcome System",
-        description="This is the welcome system for the server. It can be configured to send a message to a channel or to the user in DMs.",
+        description="This is the welcome system for the server. It can be configured to send a message to a channel or to the user in DMs.",  # noqa: E501
     )
     hmhelp.set_help_page(
         page=2,
