@@ -10,8 +10,9 @@
 #TODO Giveaway logic
 #TODO Welcome message when bot joins
 #IDEA ids could be if num not in list then add, else continue
-#IDEA Also edit could add/edit already existing
-
+# Also edit could add/edit already existing
+#IDEA Job to clean left guilds after a day or 12 hours,
+# So it wont cry about guild not existing
 
 import asyncio
 import importlib

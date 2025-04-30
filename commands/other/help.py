@@ -14,6 +14,8 @@ from utils.helpmanager import HelpManager
 logger = logging.getLogger("help")
 __PRIORITY__ = 10
 
+#TODO add nsfw flag to exclude help when not in nsfw channel
+
 class HelpCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
