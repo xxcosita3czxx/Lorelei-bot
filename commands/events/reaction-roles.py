@@ -30,10 +30,7 @@ class ReactionRoles(commands.Cog):
         guild = reaction.message.guild
         if reaction.message.id == gconfig.get(guild.id,"reaction-roles","message-id"):  # Replace with your message ID  # noqa: E501, SIM102
             if str(reaction.emoji) == ":thumbs_up:":  # Replace with your emoji
-                role = discord.utils.get(guild.roles, name="ExampleRole")  # Replace with your role name  # noqa: E501
-                if role:
-                    await user.add_roles(role)
-                    await user.send("You have been given the role!")
+                await user.send("You have been given the role!")
 
     @commands.Cog.listener("on_reaction_remove")
     async def on_react_remove(self, reaction, user):
