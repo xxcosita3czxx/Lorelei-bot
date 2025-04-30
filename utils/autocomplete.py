@@ -6,9 +6,8 @@ import discord
 import requests
 from discord import app_commands
 
+from commands.other.help import HelpManager
 from utils.dices import dices
-
-from ..commands.other.help import HelpManager
 
 logger = logging.getLogger("autocomplete")
 
