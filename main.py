@@ -58,8 +58,10 @@ async def load_cogs(directory, bot):
     cogs = []
     # Walk through the directory and collect cogs with priority
     for root, _, files in os.walk(directory):
+        logger.debug(files)
         for file in files:
             if file.endswith('.py') and file != '__init__.py':
+                logger.debug(file)
                 # Construct the module path relative to the project root
                 cog_path = os.path.relpath(os.path.join(root, file), start=os.getcwd())  # noqa: E501
                 module_name = cog_path.replace(os.sep, '.').replace('.py', '')
