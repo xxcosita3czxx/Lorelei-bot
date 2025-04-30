@@ -306,13 +306,13 @@ class GuildConfig(commands.Cog):
         ):
             try:
                 gconfig.set(
-                    id=interaction.guild_id,
+                    id=str(interaction.guild_id),
                     title="MEMBERS",
                     key="autorole-role",
                     value=role.id,
                 )
                 gconfig.set(
-                    id=interaction.guild_id,
+                    id=str(interaction.guild_id),
                     title="MEMBERS",
                     key="autorole-enabled",
                     value=enabled,
