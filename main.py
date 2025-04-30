@@ -109,9 +109,9 @@ async def load_cogs(directory, bot):  # noqa: C901
             datefmt='%Y-%m-%d %H:%M:%S',
         ))
         logging.getLogger(logger_name).addHandler(handler)
-    logging.getLogger('discord.client').setLevel(logging.ERROR  )
-    logging.getLogger('discord.gateway').setLevel(logging.INFO  )
-
+    logging.getLogger('discord.client') .setLevel(logging.ERROR)
+    logging.getLogger('discord.gateway').setLevel(logging.INFO )
+    logging.getLogger('discord.http')   .setLevel(logging.INFO )
 
 async def unload_cogs(bot):
     for extension in list(bot.extensions):
