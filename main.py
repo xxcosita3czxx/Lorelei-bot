@@ -68,6 +68,7 @@ async def load_cogs(directory, bot):  # noqa: C901
 
                 try:
                     # Dynamically import the module to get __PRIORITY__
+                    logger.debug(f"Constructed module path: {module_name}")
                     module = importlib.import_module(module_name)
                     priority = getattr(module, "__PRIORITY__", 0)
 
