@@ -42,8 +42,6 @@ logging.getLogger('nsfw.e621')     .setLevel(config.loglevel)
 logging.getLogger('ban')           .setLevel(config.loglevel)
 logging.getLogger('invite-logger') .setLevel(config.loglevel)
 logging.getLogger('configmanager') .setLevel(config.loglevel)
-logging.getLogger('discord.client').setLevel(logging.ERROR  )
-
 
 logger = logging.getLogger("main")
 # Set the logging format for the root logger
@@ -52,6 +50,7 @@ logging.basicConfig(
     format='%(asctime)s %(levelname)s %(name)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
 )
+
 
 ############################### Functions ##########################################
 
@@ -100,6 +99,16 @@ async def load_cogs(directory, bot):  # noqa: C901
     # Ensure all imported cogs inherit this logging configuration
     for logger_name in logging.root.manager.loggerDict:
         logging.getLogger(logger_name).setLevel(config.loglevel)
+    # Apply the same format to all loggers
+    for logger_name in logging.root.manager.loggerDict:
+        logging.getLogger(logger_name).handlers.clear()
+        handler = logging.StreamHandler()
+        handler.setFormatter(logging.Formatter(
+            fmt='%(asctime)s %(levelname)s %(name)s: %(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S',
+        ))
+        logging.getLogger(logger_name).addHandler(handler)
+    logging.getLogger('discord.client').setLevel(logging.ERROR  )
 
 async def unload_cogs(bot):
     for extension in list(bot.extensions):
