@@ -17,7 +17,7 @@ def string2emoji(emoji_string:str):
         emoji_id = int(parts[1])
         return PartialEmoji(name=name, id=emoji_id)
     else:  # Standard Unicode emoji
-        return emoji.emojize(emoji_string, use_aliases=True)
+        return emoji.emojize(emoji_string)
 
 #TODO add reaction roles
 #TODO pls its really importante
