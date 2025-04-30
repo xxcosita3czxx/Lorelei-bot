@@ -13,6 +13,7 @@ class ConfigManager:
         self.config = defaultdict(dict)
         self.fallback_file = fallback_file
         self._load_all_configs()
+        logger.info(f"Loaded {self}")
 
     def _load_all_configs(self):
         logger.debug("Loading all configs...")
