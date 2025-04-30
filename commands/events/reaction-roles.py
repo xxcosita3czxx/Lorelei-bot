@@ -42,8 +42,8 @@ class ReactionRoles(commands.Cog):
 
         # Example: Reaction role logic
         guild = reaction.message.guild
-        if reaction.message.id == gconfig.get(guild.id,"reaction-roles","message-id"):  # Replace with your message ID  # noqa: E501, SIM102
-            if str(reaction.emoji) == ":thumbs_up:":  # Replace with your emoji
+        if reaction.message.id == gconfig.get(guild.id,"reaction-roles","message-id"): # noqa: E501, SIM102
+            if str(reaction.emoji) == string2emoji(":thumbs_up:"):
                 await user.send("You have been given the role!")
 
     @commands.Cog.listener("on_reaction_remove")
@@ -53,8 +53,8 @@ class ReactionRoles(commands.Cog):
 
         # Example: Reaction role removal logic
         guild = reaction.message.guild
-        if reaction.message.id == gconfig.get(guild.id,"reaction-roles","message-id"):  # Replace with your message ID  # noqa: E501, SIM102
-            if str(reaction.emoji) == "👍":  # Replace with your emoji
+        if reaction.message.id == gconfig.get(guild.id,"reaction-roles","message-id"): # noqa: E501, SIM102
+            if str(reaction.emoji) == string2emoji(":thumbs_up:"):
                 await user.send("The role has been removed.")
 async def setup(bot:commands.Bot):
     cog = ReactionRoles(bot)
