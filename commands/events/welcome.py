@@ -6,6 +6,7 @@ from discord.ext import commands
 
 import commands.events.invite_logger as invite_logger
 from utils.configmanager import gconfig
+from utils.helpmanager import HelpManager
 
 logger = logging.getLogger("welcome")
 
@@ -86,3 +87,28 @@ class Welcome(commands.Cog):
 
 async def setup(bot:commands.Bot):
     await bot.add_cog(Welcome(bot))
+    hm = HelpManager()
+    hmhelp = hm.new_help(
+        group_name="events",
+        command_name="welcome",
+        description="Welcome system for the server.",
+    )
+    hmhelp.set_help_page(
+        page=1,
+        title="Welcome System",
+        description="This is the welcome system for the server. It can be configured to send a message to a channel or to the user in DMs.",
+    )
+    hmhelp.set_help_page(
+        page=2,
+        title="Placeholders",
+        description="The following placeholders can be used in the welcome message:\n"  # noqa: E501
+                    "{mention} - The mention of the user.\n"
+                    "{user} - The name of the user.\n"
+                    "{display} - The display name of the user.\n"
+                    "{jointime} - The time the user joined the server.\n"
+                    "{owner} - The owner of the server.\n"
+                    "{server} - The name of the server.\n"
+                    "{membercount} - The number of members in the server.\n"
+                    "{invite} - The invite code used by the user.\n"
+                    "{inviter} - The user who invited the new member.",
+    )
