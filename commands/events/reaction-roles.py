@@ -27,13 +27,15 @@ class ReactionRoles(commands.Cog):
 
     @app_commands.command(name="test-reaction-roles",description="pls dont use, its testing only")  # noqa: E501
     @app_commands.default_permissions(administrator=True)  # noqa: E501
-    async def create_reaction(self, interaction: discord.Interaction):
+    async def create_reaction(self, interaction: discord.Interaction,title:str,description:str,channel:discord.TextChannel="self"):  # noqa: E501
+        if channel == "self":
+            channel = interaction.channel
         embed = discord.Embed(
-            title="Reaction Roles",
-            description="React with 👍 to get the ExampleRole!",
+            title=title,
+            description=description,
             color=discord.Color.blurple(),
         )
-        message = await interaction.channel.send(embed=embed)
+        message = await channel.send(embed=embed)
         gconfig.set(interaction.guild.id,"reaction-roles","message-id",message.id)
         await message.add_reaction(string2emoji(":thumbs_up:"))
         await interaction.response.send_message("Reaction roles message sent!", ephemeral=True)  # noqa: E501
