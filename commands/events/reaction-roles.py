@@ -66,9 +66,10 @@ class ReactionRoles(commands.Cog):
         # Example: Reaction role logic
         guild = reaction.message.guild
         reaction_roles_config = gconfig.config.get(str(guild.id), {}).get("reaction-roles", {})  # noqa: E501
-        for key, _ in reaction_roles_config.items():
+        for key, value in reaction_roles_config.items():
             if key.startswith(f"{reaction.message.id}-"):
-                _, emoji, role_id = key.split("-")
+                _, emoji, _ = key.split("-")
+                role_id = value
                 if str(reaction.emoji) == string2emoji(emoji):
                     role = guild.get_role(int(role_id))
                     if role:
@@ -80,9 +81,10 @@ class ReactionRoles(commands.Cog):
             return
         guild = reaction.message.guild
         reaction_roles_config = gconfig.config.get(str(guild.id), {}).get("reaction-roles", {})  # noqa: E501
-        for key, _ in reaction_roles_config.items():
+        for key, value in reaction_roles_config.items():
             if key.startswith(f"{reaction.message.id}-"):
-                _, emoji, role_id = key.split("-")
+                _, emoji, _ = key.split("-")
+                role_id = int(value)
                 if str(reaction.emoji) == string2emoji(emoji):
                     role = guild.get_role(int(role_id))
                     if role:
