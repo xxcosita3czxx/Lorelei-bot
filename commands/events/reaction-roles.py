@@ -69,10 +69,10 @@ class ReactionRoles(commands.Cog):
         for key, _ in reaction_roles_config.items():
             if key.startswith(f"{reaction.message.id}-"):
                 _, emoji, role_id = key.split("-")
-            if str(reaction.emoji) == string2emoji(emoji):
-                role = guild.get_role(int(role_id))
-                if role:
-                    await user.add_roles(role)
+                if str(reaction.emoji) == string2emoji(emoji):
+                    role = guild.get_role(int(role_id))
+                    if role:
+                        await user.add_roles(role)
 
     @commands.Cog.listener("on_reaction_remove")
     async def on_react_remove(self, reaction, user):
@@ -83,10 +83,10 @@ class ReactionRoles(commands.Cog):
         for key, _ in reaction_roles_config.items():
             if key.startswith(f"{reaction.message.id}-"):
                 _, emoji, role_id = key.split("-")
-            if str(reaction.emoji) == string2emoji(emoji):
-                role = guild.get_role(int(role_id))
-                if role:
-                    await user.add_roles(role)
+                if str(reaction.emoji) == string2emoji(emoji):
+                    role = guild.get_role(int(role_id))
+                    if role:
+                        await user.add_roles(role)
 async def setup(bot:commands.Bot):
     cog = ReactionRoles(bot)
     await bot.add_cog(cog)
