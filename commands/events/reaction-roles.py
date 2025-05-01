@@ -7,6 +7,7 @@ from discord import (
 from discord.ext import commands
 
 from utils.configmanager import gconfig
+from utils.helpmanager import HelpManager
 
 
 def string2emoji(emoji_string: str):
@@ -34,7 +35,7 @@ class ReactionRoles(commands.Cog):
     # <message-id>-<emoji>-role = <role>
     # PEAK EFFICIENCI :fire:
 
-    @app_commands.command(name="add-reaction-role",description="pls dont use, its testing only")  # noqa: E501
+    @app_commands.command(name="add-reaction-role",description="Create reaction roles")  # noqa: E501
     @app_commands.default_permissions(administrator=True)  # noqa: E501
     async def create_reaction(self, interaction: discord.Interaction,title:str,description:str,emoji:str,role:discord.Role,messageid:str=None,channel:discord.TextChannel=None):  # noqa: E501
         if channel is None:
@@ -92,3 +93,7 @@ class ReactionRoles(commands.Cog):
 async def setup(bot:commands.Bot):
     cog = ReactionRoles(bot)
     await bot.add_cog(cog)
+    hm = HelpManager()
+    hmhelp = hm.new_help("reaction-roles","add-reaction-roles","Reaction roles")
+    hmhelp.set_help_page(1,"Reaction roles",descriptions="Reaction roles are a way to assign roles to users based on their reactions to a message. This can be used for self-assignable roles, event roles, and more.")  # noqa: E501
+    hmhelp.set_help_page(2,"Multiple reaction roles",descriptions="You can add multiple reaction roles to a single message. Just use the same message ID and different emojis. Just ignore title and description as it gets ignored (put anything in there)")  # noqa: E501
