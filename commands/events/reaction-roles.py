@@ -27,8 +27,8 @@ class ReactionRoles(commands.Cog):
 
     @app_commands.command(name="reaction-roles",description="pls dont use, its testing only")  # noqa: E501
     @app_commands.default_permissions(administrator=True)  # noqa: E501
-    async def create_reaction(self, interaction: discord.Interaction,title:str,description:str,emoji:str,channel:discord.TextChannel="self"):  # noqa: E501
-        if channel == "self":
+    async def create_reaction(self, interaction: discord.Interaction,title:str,description:str,emoji:str,channel:discord.TextChannel=None):  # noqa: E501
+        if channel is None:
             channel = interaction.channel
         embed = discord.Embed(
             title=title,
