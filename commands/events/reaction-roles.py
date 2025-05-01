@@ -36,7 +36,7 @@ class ReactionRoles(commands.Cog):
 
     @app_commands.command(name="add-reaction-role",description="pls dont use, its testing only")  # noqa: E501
     @app_commands.default_permissions(administrator=True)  # noqa: E501
-    async def create_reaction(self, interaction: discord.Interaction,title:str,description:str,emoji:str,messageid:str=None,channel:discord.TextChannel=None):  # noqa: E501
+    async def create_reaction(self, interaction: discord.Interaction,title:str,description:str,emoji:str,role:discord.Role,messageid:str=None,channel:discord.TextChannel=None):  # noqa: E501
         if channel is None:
             channel = interaction.channel
         if messageid is None:
@@ -46,7 +46,7 @@ class ReactionRoles(commands.Cog):
                 color=discord.Color.blurple(),
             )
             message = await channel.send(embed=embed)
-            gconfig.set(interaction.guild.id,"reaction-roles",f"{message.id}-{emoji2string(emoji)}-role",message.id)
+            gconfig.set(interaction.guild.id,"reaction-roles",f"{message.id}-{emoji2string(emoji)}-role",role.id)
             await message.add_reaction(string2emoji(emoji))
             await interaction.response.send_message("Reaction roles message sent!", ephemeral=True)  # noqa: E501
         else:
@@ -54,7 +54,7 @@ class ReactionRoles(commands.Cog):
             if message is None:
                 await interaction.response.send_message("Message not found!", ephemeral=True)  # noqa: E501
                 return
-            gconfig.set(interaction.guild.id,"reaction-roles",f"{message.id}-{emoji2string(emoji)}-role",message.id)
+            gconfig.set(interaction.guild.id,"reaction-roles",f"{message.id}-{emoji2string(emoji)}-role",role.id)
             await message.add_reaction(string2emoji(emoji))
             await interaction.response.send_message("Reaction role added!", ephemeral=True)  # noqa: E501
 
