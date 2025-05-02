@@ -25,7 +25,7 @@ class _GuildConfigCommands(commands.Cog):
         def __init__(self):
             super().__init__()
             self.name = "newguildconfig"
-            self.description = "Config for server"
+            self.description = "Config for server, PLEASE DO NOT USE YET"
 
         @app_commands.command(
             name="reset",
@@ -115,8 +115,8 @@ class _GuildConfigCommands(commands.Cog):
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
 async def setup(bot:commands.Bot):
-#    cog = _GuildConfigCommands(bot)
-#    await bot.add_cog(cog)
-#    bot.tree.add_command(cog.configure())
+    cog = _GuildConfigCommands(bot)
+    await bot.add_cog(cog)
+    bot.tree.add_command(cog.configure())
     pass
 # Aint doing it yet and i will do mostly commands, as functionalities are needed more  # noqa: E501
