@@ -8,70 +8,11 @@ from discord import app_commands
 from discord.ext import commands
 
 from utils.configmanager import gconfig, lang, uconfig
+from utils.guildconfig import GuildConfig
 
 __PRIORITY__ = 10
 
-#TODO System will be able to still have commands like guildconfig export, import and reset  # noqa: E501
 #TODO Yet it will have new option named guildconfig configure
-#TODO Possibility of having display in help menu (gotta recreate that also)
-#
-# There will be command named "/guildconfig configure"
-# in there will be options of categories that will be listed in embed with
-# descriptions
-# Inside those there will be options for commands
-#
-# The config system will work like this:
-# config_session = GuildConfig(gconfig)
-# configs = config_session.new_setting("class (for instance SECURITY)","name")
-# configs.new_option("name","description","type (int, str bool....)")  # noqa: E501
-
-def _ClassEmbed(title):
-    return discord.Embed(
-        title=title,
-        description=f"What do you want to configure in category {title}",
-    )
-# Example usage:
-# config_session = GuildConfig()
-# security_category = config_session.new_category("SECURITY")
-# setting = security_category.new_setting("max_login_attempts")
-# setting.new_option("attempts", "Maximum number of login attempts", int)
-
-class GuildConfig:
-    _instance = None  # Singleton instance
-
-    def __init__(self):
-        self.Configs = {}
-
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
-
-    def new_category(self, name):
-        if name not in self.Configs:
-            self.Configs[name] = {}
-        return self.Category(name, self.Configs)
-
-    class Category:
-        def __init__(self, name, configs):
-            self.name = name
-            self.configs = configs
-
-        def new_setting(self, name):
-            return GuildConfig.Setting(name, self.configs[self.name])
-
-    class Setting:
-        def __init__(self, name, category):
-            self.name = name
-            self.category = category
-            self.category[name] = {}
-
-        def new_option(self, option_name, description, option_type):
-            self.category[self.name][option_name] = {
-                "type": option_type,
-                "description": description,
-                "variable": None,
-            }
 
 class _GuildConfigCommands(commands.Cog):
     def __init__(self, bot):
