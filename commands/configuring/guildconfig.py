@@ -12,8 +12,6 @@ from utils.guildconfig import GuildConfig
 
 __PRIORITY__ = 10
 
-#TODO Yet it will have new option named guildconfig configure
-
 class _GuildConfigCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
