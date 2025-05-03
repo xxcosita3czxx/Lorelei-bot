@@ -1,0 +1,1 @@
+find . -type f -exec wc -l {} + | tail -n 1

@@ -1,6 +1,3 @@
-import discord
-
-#
 # There will be command named "/guildconfig configure"
 # in there will be options of categories that will be listed in embed with
 # descriptions
@@ -11,16 +8,6 @@ import discord
 # configs = config_session.new_setting("class (for instance SECURITY)","name")
 # configs.new_option("name","description","type (int, str bool....)")  # noqa: E501
 
-def _ClassEmbed(title):
-    return discord.Embed(
-        title=title,
-        description=f"What do you want to configure in category {title}",
-    )
-# Example usage:
-# config_session = GuildConfig()
-# security_category = config_session.new_category("SECURITY")
-# setting = security_category.new_setting("max_login_attempts")
-# setting.new_option("attempts", "Maximum number of login attempts", int)
 
 class GuildConfig:
     _instance = None  # Singleton instance

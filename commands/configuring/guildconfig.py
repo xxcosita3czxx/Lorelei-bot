@@ -108,13 +108,17 @@ class _GuildConfigCommands(commands.Cog):
                 title="Configuration Categories",
                 description="Select a category to configure",
             )
-            for category in config_session.Configs:
-                embed.add_field(name=category, value=f"Configure {category}", inline=False)  # noqa: E501
+            #for category in config_session.Configs:
+            #    embed.add_field(name=category, value=f"Configure {category}", inline=False)  # noqa: E501
+            embed.add_field(name="Security", value="Configure security settings", inline=False)  # noqa: E501
+            embed.add_field(name="Moderation", value="Configure moderation settings", inline=False)
+            embed.add_field(name="Fun", value="Configure fun settings", inline=False)
+            embed.add_field(name="Economy", value="Configure economy settings", inline=False)
+            embed.add_field(name="MOCK CONTENT", value="MOCK CONTENT", inline=False)  # noqa: E501
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
 async def setup(bot:commands.Bot):
     cog = _GuildConfigCommands(bot)
     await bot.add_cog(cog)
     bot.tree.add_command(cog.configure())
-    pass
 # Aint doing it yet and i will do mostly commands, as functionalities are needed more  # noqa: E501
