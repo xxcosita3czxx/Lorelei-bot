@@ -63,7 +63,6 @@ class _GuildConfigCommands(commands.Cog):
             embed = discord.Embed(
                 title="Configuration Categories",
                 description="Select a category to configure",
-                view = DropdownView(["test 1","test 2"]),  # noqa: E501
             )
             #for category in config_session.Configs:
             #    embed.add_field(name=category, value=f"Configure {category}", inline=False)  # noqa: E501
@@ -72,7 +71,7 @@ class _GuildConfigCommands(commands.Cog):
             embed.add_field(name="Fun", value="Configure fun settings", inline=False)  # noqa: E501
             embed.add_field(name="Economy", value="Configure economy settings", inline=False)  # noqa: E501
             embed.add_field(name="MOCK CONTENT", value="MOCK CONTENT", inline=False)  # noqa: E501
-            await interaction.response.send_message(embed=embed, ephemeral=True)
+            await interaction.response.send_message(embed=embed,view= DropdownView(["Test 1", "Test 2"]), ephemeral=True)  # noqa: E501
 
         @app_commands.command(
             name="reset",
