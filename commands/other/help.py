@@ -34,7 +34,7 @@ class HelpCommand(commands.Cog):
         embed = discord.Embed(title="Help", color=discord.Color.blurple())
         message_sent = False
 
-        if group is None:
+        if group is None and command is None:
             # Show list of groups
             embed.description = "Select a group:"
             options = [
@@ -53,7 +53,7 @@ class HelpCommand(commands.Cog):
             await interaction.response.send_message(embed=embed, view=view)
             message_sent = True
 
-        elif command is None:
+        elif command is None and group:
             # Show list of commands in the group
             try:
                 commands = help_manager.list_commands(group)

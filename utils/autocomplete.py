@@ -124,7 +124,13 @@ async def autocomplete_help_groups(interaction: discord.Interaction, current: st
 async def autocomplete_help_commands(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:  # noqa: E501, UP006
     group = interaction.namespace.group
     if group is None:
-        return [app_commands.Choice(name="No group selected", value="No group selected")]  # noqa: E501
+        help_manager = HelpManager()
+        all_commands = help_manager.list_all_commands()
+        return [
+            app_commands.Choice(name=command, value=command)
+            for command in all_commands
+            if current.lower() in command.lower()
+        ]
     help_manager = HelpManager()
     commands = help_manager.list_commands(group)
     return [
@@ -136,7 +142,7 @@ async def autocomplete_help_pages(interaction: discord.Interaction, current: str
     group = interaction.namespace.group
     command = interaction.namespace.command
     if group is None or command is None:
-        return [app_commands.Choice(name="No group or command selected", value="No group or command selected")]  # noqa: E501
+        return [app_commands.Choice(name="No command selected", value="No command selected")]  # noqa: E501
     help_manager = HelpManager()
     pages = help_manager.list_pages(group, command)
     return [
