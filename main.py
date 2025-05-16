@@ -13,6 +13,7 @@
 # Also edit could add/edit already existing
 #IDEA Job to clean left guilds after a day or 12 hours,
 # So it wont cry about guild not existing
+#NOTE: see if something can use p-value
 
 import asyncio
 import importlib

@@ -58,7 +58,7 @@ class HelpManager:
         all_commands = []
         for group, commands in self.help_pages.items():
             all_commands.append((group, list(commands.keys())))
-        return all_commands
+        return list(all_commands)
 
     def list_pages(self, group_name: str,command_name: str) -> list:
         """Lists all commands in a given group."""

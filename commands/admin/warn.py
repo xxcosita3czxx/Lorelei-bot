@@ -13,7 +13,7 @@ from .kick import kick_member
 #TODO Add automations to configs
 
 async def add_warns(guild_id, user:discord.Member,interaction:discord.Interaction):
-    # Add or update the user's warn count
+# Add or update the user's warn count
     user_id = user.id
     if gconfig.get(guild_id, "warns", user_id,default=None) is not None:
         gconfig.set(guild_id, "warns", user_id, gconfig.get(guild_id, "warns", user_id) + 1)  # noqa: E501

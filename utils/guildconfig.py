@@ -45,3 +45,4 @@ class GuildConfig:
                 "description": description,
                 "variable": None,
             }
+

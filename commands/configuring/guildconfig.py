@@ -59,19 +59,20 @@ class _GuildConfigCommands(commands.Cog):
             description="Configure the bot",  # noqa: E501
         )
         async def configure(self,interaction:discord.Interaction):
-            config_session = GuildConfig()
+            config_session = GuildConfig()  # noqa: F841
             embed = discord.Embed(
                 title="Configuration Categories",
                 description="Select a category to configure",
             )
             #for category in config_session.Configs:
             #    embed.add_field(name=category, value=f"Configure {category}", inline=False)  # noqa: E501
-            embed.add_field(name="Security", value="Configure security settings", inline=False)  # noqa: E501
-            embed.add_field(name="Moderation", value="Configure moderation settings", inline=False)  # noqa: E501
-            embed.add_field(name="Fun", value="Configure fun settings", inline=False)  # noqa: E501
-            embed.add_field(name="Economy", value="Configure economy settings", inline=False)  # noqa: E501
-            embed.add_field(name="MOCK CONTENT", value="MOCK CONTENT", inline=False)  # noqa: E501
-            await interaction.response.send_message(embed=embed,view= DropdownView(["Test 1", "Test 2"]), ephemeral=True)  # noqa: E501
+            config_session = GuildConfig()  # noqa: F841
+            categories = config_session.Configs.keys()  # Assuming Configs is a dictionary  # noqa: E501
+            await interaction.response.send_message(
+                embed=embed,
+                view=DropdownView(categories),
+                ephemeral=True,
+            )  # noqa: E501
 
         @app_commands.command(
             name="reset",
