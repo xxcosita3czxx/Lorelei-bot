@@ -64,8 +64,8 @@ class _GuildConfigCommands(commands.Cog):
                 title="Configuration Categories",
                 description="Select a category to configure",
             )
-            #for category in config_session.Configs:
-            #    embed.add_field(name=category, value=f"Configure {category}", inline=False)  # noqa: E501
+            for category in config_session.Configs:
+                embed.add_field(name=category, value=f"Configure {category}", inline=False)  # noqa: E501
             config_session = GuildConfig()  # noqa: F841
             categories = config_session.Configs.keys()  # Assuming Configs is a dictionary  # noqa: E501
             await interaction.response.send_message(

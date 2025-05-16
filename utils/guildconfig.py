@@ -38,7 +38,7 @@ class GuildConfig:
             self.name = name
             self.category = category
             self.category[name] = {}
-
+        # type should be str, bool or list
         def new_option(self, option_name, description, option_type):
             self.category[self.name][option_name] = {
                 "type": option_type,
