@@ -129,7 +129,7 @@ async def autocomplete_help_commands(interaction: discord.Interaction, current: 
         return [
             app_commands.Choice(name=command, value=command)
             for command in all_commands
-            if current.lower() in command.lower()
+            if isinstance(command, str) and current.lower() in command.lower()
         ]
     help_manager = HelpManager()
     commands = help_manager.list_commands(group)
