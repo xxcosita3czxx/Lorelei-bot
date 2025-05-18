@@ -30,6 +30,7 @@ class Setting:
 class GuildConfig:
     def __init__(self):
         self.categories = {}
+        self.Configs = self.categories  # For backward compatibility
 
     def add_setting(self, category_name, setting_name, description):
         if category_name not in self.categories:
