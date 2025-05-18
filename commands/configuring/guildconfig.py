@@ -15,29 +15,28 @@ __PRIORITY__ = 10
 def category():
     pass
 
-class DynamicDropdown(discord.ui.Select):
-    def __init__(self, options):
-        # Create the dropdown options dynamically from the external list
-        select_options = [
-            discord.SelectOption(label=option, value=option) for option in options
-        ]
-        super().__init__(
-            placeholder="Choose an option...",
-            options=select_options,
-        )
-
-    async def callback(self, interaction: discord.Interaction):
-        # Handle the user's selection
-        selected_option = self.values[0]
-        await interaction.response.send_message(
-            f"You selected: {selected_option}", ephemeral=True,
-        )
-
-
 class DropdownView(discord.ui.View):
     def __init__(self, options):
         super().__init__()
         # Add the dropdown to the view
+        class DynamicDropdown(discord.ui.Select):
+            def __init__(self, options):
+                # Create the dropdown options dynamically from the external list
+                select_options = [
+                    discord.SelectOption(label=option, value=option) for option in options  # noqa: E501
+                ]
+                super().__init__(
+                    placeholder="Choose an option...",
+                    options=select_options,
+                )
+
+            async def callback(self, interaction: discord.Interaction):
+                # Handle the user's selection
+                selected_option = self.values[0]
+                await interaction.response.send_message(
+                    f"You selected: {selected_option}", ephemeral=True,
+                )
+
         self.add_item(DynamicDropdown(options))
 
 
@@ -73,6 +72,8 @@ class _GuildConfigCommands(commands.Cog):
                 view=DropdownView(categories),
                 ephemeral=True,
             )  # noqa: E501
+
+
 
         @app_commands.command(
             name="reset",

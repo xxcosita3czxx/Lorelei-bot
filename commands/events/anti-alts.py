@@ -5,6 +5,7 @@ import discord
 from discord.ext import commands
 
 from utils.configmanager import gconfig
+from utils.guildconfig import GuildConfig
 
 #from humanfriendly import format_timespan
 logger = logging.getLogger("anti-alts")
@@ -38,3 +39,14 @@ class AntiAlts(commands.Cog):
 
 async def setup(bot:commands.Bot):
     await bot.add_cog(AntiAlts(bot))
+    configman = GuildConfig()
+    setting = configman.add_setting(
+        category_name="Security",
+        setting_name="Anti-Alts",
+        description="Enable Anti-Alts",
+    )
+    setting.add_option(
+        name="Enabled",
+        description="Enable Anti-Alts",
+        default=False,
+    )

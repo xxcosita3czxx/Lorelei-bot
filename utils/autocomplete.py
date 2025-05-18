@@ -121,16 +121,21 @@ async def autocomplete_help_groups(interaction: discord.Interaction, current: st
         for group in groups
         if current.lower() in group.lower()
     ]  # noqa: E501
+
 async def autocomplete_help_commands(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:  # noqa: E501, UP006
     group = interaction.namespace.group
     if group is None or not isinstance(group, str):
         help_manager = HelpManager()
         all_commands = help_manager.list_all_commands()
-        return [
-            app_commands.Choice(name=command, value=command)
-            for command in all_commands
-            if isinstance(command, str) and current.lower() in command.lower()
-        ]
+        if group is None or not isinstance(group, str):
+            help_manager = HelpManager()
+            all_commands = help_manager.list_all_commands()
+            unique_commands = {(command.split()[0], group) for command, group in all_commands if isinstance(command, str)}  # noqa: E501
+            return [
+                app_commands.Choice(name=f"{command} (Group: {group})", value=command)  # noqa: E501
+                for command, group in unique_commands
+                if current.lower() in command.lower()
+            ]
     help_manager = HelpManager()
     commands = help_manager.list_commands(group)
     return [
@@ -138,6 +143,7 @@ async def autocomplete_help_commands(interaction: discord.Interaction, current: 
         for command in commands
         if isinstance(command, str) and current.lower() in command.lower()
     ]  # noqa: E501
+
 async def autocomplete_help_pages(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:  # noqa: E501, UP006
     group = interaction.namespace.group
     command = interaction.namespace.command
