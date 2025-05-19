@@ -84,7 +84,7 @@ class _GuildConfigCommands(commands.Cog):
             interaction: discord.Interaction,
         ):
             try:
-                os.remove(f"data/guilds/{interaction.guild.id}.toml")
+                os.remove(f"data/guilds/{interaction.guild.id}.toml") # type: ignore
                 gconfig._load_all_configs()
                 await interaction.response.send_message(
                     content=lang.get(uconfig.get(interaction.user.id,"APPEARANCE","language"),"Responds","config_reset"),
@@ -107,10 +107,10 @@ class _GuildConfigCommands(commands.Cog):
         )
         async def export(self,interaction:discord.Interaction):
             try:
-                file = "data/guilds"+ str(interaction.guild.id) + ".toml"
-                interaction.response.send_message(
+                file = f"data/guilds {str(interaction.guild.id}.toml" # type: ignore
+                await interaction.response.send_message(
                     content="Here is exported content that bot has saved. Remember that exports of message id dependent functions will not be ported over.",  # noqa: E501
-                    file=file,
+                    file=file, # type: ignore
                     ephemeral=True,
                 )
             except PermissionError:
@@ -129,15 +129,15 @@ class _GuildConfigCommands(commands.Cog):
         )
         async def import_config(self,interaction:discord.Interaction):  # noqa: E501
             try:
-                if not interaction.data['attachments']:
+                if not interaction.data['attachments']: # type: ignore
                     await interaction.response.send_message(
                         content="No file uploaded. Please upload a config file.",
                         ephemeral=True,
                     )
                     return
-                attachment = interaction.data['attachments'][0]
+                attachment = interaction.data['attachments'][0] # type: ignore
                 file_content = await attachment.read()
-                with open("data/guilds"+ str(interaction.guild.id) + ".toml", "w") as f:  # noqa: E501
+                with open("data/guilds"+ str(interaction.guild.id) + ".toml", "w") as f:  # type: ignore # noqa: E501
                     f.write(file_content)
                 await interaction.response.send_message(
                     content="Config imported successfully.",
