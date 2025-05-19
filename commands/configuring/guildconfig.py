@@ -84,7 +84,7 @@ class _GuildConfigCommands(commands.Cog):
             interaction: discord.Interaction,
         ):
             try:
-                os.remove(f"data/guilds/{interaction.guild.;id}.toml") # type: ignore
+                os.remove(f"data/guilds/{interaction.guild.id}.toml") # type: ignore
                 gconfig._load_all_configs()
                 await interaction.response.send_message(
                     content=lang.get(uconfig.get(interaction.user.id,"APPEARANCE","language"),"Responds","config_reset"),
