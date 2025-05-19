@@ -84,7 +84,7 @@ class _GuildConfigCommands(commands.Cog):
             interaction: discord.Interaction,
         ):
             try:
-                os.remove(f"data/guilds/{interaction.guild.id}.toml") # type: ignore
+                os.remove(f"data/guilds/{interaction.guild.;id}.toml") # type: ignore
                 gconfig._load_all_configs()
                 await interaction.response.send_message(
                     content=lang.get(uconfig.get(interaction.user.id,"APPEARANCE","language"),"Responds","config_reset"),
@@ -107,7 +107,7 @@ class _GuildConfigCommands(commands.Cog):
         )
         async def export(self,interaction:discord.Interaction):
             try:
-                file = f"data/guilds {str(interaction.guild.id}.toml" # type: ignore
+                file = f"data/guilds/{str(interaction.guild.id)}.toml" # type: ignore
                 await interaction.response.send_message(
                     content="Here is exported content that bot has saved. Remember that exports of message id dependent functions will not be ported over.",  # noqa: E501
                     file=file, # type: ignore
