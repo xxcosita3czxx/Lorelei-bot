@@ -31,8 +31,8 @@ class AntiAlts(commands.Cog):
                     title="ALT Account Detected!",
                     description=text,
                 )
-                member.send(embed=embed)
-                member.kick("[Lorelei] Alternative Account")
+                await member.send(embed=embed)
+                await member.kick(reason="[Lorelei] Alternative Account")
             else:
                 logger.debug("Acc okay")
         logger.debug("antialts disabled :<")
