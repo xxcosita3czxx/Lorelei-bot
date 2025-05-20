@@ -39,7 +39,7 @@ class DropdownView(discord.ui.View):
                 # Handle the user's selection
                 selected_option = self.values[0]
                 logger.debug(f"Selected option: {selected_option}")
-                
+
                 embed = discord.Embed(
                     title="Selected Option",
                     description=f"You selected: {selected_option}",
