@@ -8,6 +8,7 @@
 # configs = config_session.new_setting("class (for instance SECURITY)","name")
 # configs.new_option("name","description","type (int, str bool....)")  # noqa: E501
 
+logger = logging.getLogger("guildconfig-manager")
 
 class Setting:
     def __init__(self, name, description):
@@ -34,6 +35,7 @@ class GuildConfig:
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(GuildConfig,cls).__new__(cls) # noqa: UP008
+            logger.info("GuildConfig initialized")
         return cls._instance
 
     def __init__(self):
