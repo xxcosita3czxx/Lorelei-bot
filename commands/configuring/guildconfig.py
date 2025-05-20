@@ -75,7 +75,7 @@ class _GuildConfigCommands(commands.Cog):
             for category in config_session.Configs:
                 embed.add_field(name=category, value=f"Configure {category}", inline=False)  # noqa: E501
             config_session = GuildConfig()  # noqa: F841
-            categories = config_session.get_categories  # Assuming Configs is a dictionary  # noqa: E501
+            categories = config_session.get_categories()  # Assuming Configs is a dictionary  # noqa: E501
             await interaction.response.send_message(
                 embed=embed,
                 view=DropdownView(categories),
