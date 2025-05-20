@@ -28,9 +28,19 @@ class Setting:
 
 
 class GuildConfig:
+    _instance = None
+    _initialized = False
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(GuildConfig, cls).__new__(cls)
+        return cls._instance
+
     def __init__(self):
-        self.categories = {}
-        self.Configs = self.categories  # For backward compatibility
+        if not self.__class__._initialized:
+            self.categories = {}
+            self.Configs = self.categories  # Backward compatibility
+            self.__class__._initialized = True
 
     def add_setting(self, category_name, setting_name, description):
         if category_name not in self.categories:
