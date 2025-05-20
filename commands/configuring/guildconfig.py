@@ -38,9 +38,13 @@ class DropdownView(discord.ui.View):
             async def callback(self, interaction: discord.Interaction):
                 # Handle the user's selection
                 selected_option = self.values[0]
-                await interaction.response.send_message(
-                    f"You selected: {selected_option}", ephemeral=True,
+                logger.debug(f"Selected option: {selected_option}")
+                
+                embed = discord.Embed(
+                    title="Selected Option",
+                    description=f"You selected: {selected_option}",
                 )
+                await interaction.response.edit_message(embed=embed, view=None)  # type: ignore
 
         self.add_item(DynamicDropdown(options))
 
@@ -71,7 +75,7 @@ class _GuildConfigCommands(commands.Cog):
             for category in config_session.Configs:
                 embed.add_field(name=category, value=f"Configure {category}", inline=False)  # noqa: E501
             config_session = GuildConfig()  # noqa: F841
-            categories = config_session.get_categories()  # Assuming Configs is a dictionary  # noqa: E501
+            categories = config_session.get_categories  # Assuming Configs is a dictionary  # noqa: E501
             await interaction.response.send_message(
                 embed=embed,
                 view=DropdownView(categories),
