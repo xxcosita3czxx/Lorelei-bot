@@ -29,7 +29,7 @@ class DropdownView(discord.ui.View):
                 ]
                 logger.info(f"Options: {select_options}")  # noqa: E501
                 if select_options is None:
-                    discord.SelectOption(label="No options available", value="none")
+                    select_options = [discord.SelectOption(label="No options available", value="none")]
                 super().__init__(
                     placeholder="Choose an option...",
                     options=select_options,
