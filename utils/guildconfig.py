@@ -1,3 +1,4 @@
+import logging
 # There will be command named "/guildconfig configure"
 # in there will be options of categories that will be listed in embed with
 # descriptions
@@ -24,7 +25,6 @@ class Setting:
             "description": description,
             "title": title,
             "key": key,
-            "value": None,
         }
 
 
@@ -51,7 +51,7 @@ class GuildConfig:
                 "settings": {},
             }
         if setting_name in self.categories[category_name]["settings"]:
-            raise ValueError(f"Setting '{setting_name}' already exists in category '{category_name}'.")  # noqa: E501
+            self.categories[category_name]["settings"][setting_name] = {}
         setting = Setting(setting_name, description)
         self.categories[category_name]["settings"][setting_name] = setting
         return setting

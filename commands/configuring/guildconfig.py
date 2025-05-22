@@ -14,9 +14,6 @@ __PRIORITY__ = 10
 
 logger = logging.getLogger("guildconfig")
 
-def category():
-    pass
-
 class DropdownView(discord.ui.View):
     def __init__(self, options):
         super().__init__()
@@ -49,7 +46,7 @@ class DropdownView(discord.ui.View):
         self.add_item(DynamicDropdown(options))
 
 
-class _GuildConfigCommands(commands.Cog):
+class GuildConfigCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -81,8 +78,6 @@ class _GuildConfigCommands(commands.Cog):
                 view=DropdownView(categories),
                 ephemeral=True,
             )  # noqa: E501
-
-
 
         @app_commands.command(
             name="reset",
@@ -159,7 +154,7 @@ class _GuildConfigCommands(commands.Cog):
                 )
 
 async def setup(bot:commands.Bot):
-    cog = _GuildConfigCommands(bot)
+    cog = GuildConfigCommands(bot)
     await bot.add_cog(cog)
     bot.tree.add_command(cog.configure())
 # Aint doing it yet and i will do mostly commands, as functionalities are needed more  # noqa: E501
