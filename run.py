@@ -21,14 +21,42 @@ logger = logging.getLogger("runner")
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def update():
-    if config.autoupdate:
-        try:
-            os.system("git stash push -- config.py") # noqa: S605
-            os.system("git pull") # noqa: S605
-            os.system("git stash pop") # noqa: S605
-        except Exception as e:
-            logger.warning("UPDATER FAILED")
-            logger.warning(e)
+    if not config.autoupdate:
+        return
+
+    try:
+        os.system("git stash push -- config.py")  # noqa: S605
+        changed_files = os.popen("git diff --name-only origin/main").read().splitlines()
+        os.system("git pull")  # noqa: S605
+        os.system("git stash pop")  # noqa: S605
+
+        if changed_files:
+            logger.info("Changed files: %s", changed_files)
+
+        lang_updated = any("lang/" in f or "language/" in f for f in changed_files)
+        command_updated = any("commands/" in f for f in changed_files)
+        other_updated = any(
+            not (f.startswith("commands/") or f.startswith("lang/") or f.startswith("language/"))
+            for f in changed_files
+        )
+
+        if other_updated:
+            logger.info("Other files updated. Restarting bot immediately...")
+            os.system("python3 helper.py kill")  # noqa: S605, S607
+            return  # Stop here, no need to do more
+
+        if lang_updated:
+            logger.info("Language files updated. Reloading language...")
+            os.system("python3 helper.py reload_lang")  # noqa: S605, S607
+
+        if command_updated:
+            logger.info("Command files updated. Reloading commands...")
+            os.system("python3 helper.py reload_commands")  # noqa: S605, S607
+
+    except Exception as e:
+        logger.warning("UPDATER FAILED")
+        logger.warning(e)
+
 def update_loop():
     while True:
         update()

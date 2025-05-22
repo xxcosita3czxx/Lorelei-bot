@@ -138,7 +138,7 @@ async def handle_client(reader, writer, bot):
         data = await reader.read(1024)
         command = data.decode('utf-8').strip()
         response = await handle_command(command, bot,writer)
-        writer.write(response.encode('utf-8'))
+        writer.write(response.encode('utf-8')) # type: ignore
         await writer.drain()
     except Exception as e:
         logger.error(lang.get(config.language,"Bot","err_client_handle").format(error=e))
@@ -160,7 +160,7 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
                 await bot.tree.sync()
                 await load_cogs(directory="commands", bot=bot)
                 await bot.tree.sync()
-                return lang.config(config.language,"Bot","reload_success")
+                return lang.config(config.language,"Bot","reload_success") # type: ignore
             except Exception as e:
                 return f'Failed to reload. Error: {e}'
 
