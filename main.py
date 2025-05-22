@@ -355,6 +355,13 @@ class aclient(discord.ext.commands.AutoShardedBot):
         await self.wait_until_ready()
 
         if not self.synced:
+            await bot.change_presence(
+                activity=discord.Activity(
+                    type=discord.ActivityType.listening,
+                    name="Loading bot...",
+                ),
+                status=discord.Status.idle,
+            )
             # Not sure if it should be also on start?
             await bot.tree.sync()
             await load_cogs(bot=self,directory="commands")
