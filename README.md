@@ -29,6 +29,7 @@ Everything about contributing is [here](https://github.com/xxcosita3czxx/Lorelei
 | FI | 12.82% |
 | PL | 12.82% |
 | TR | 12.82% |
+| EN-WINGDINGS | 2.56% |
 
 ## Support the creator
 
