@@ -17,8 +17,8 @@ Everything about contributing is [here](https://github.com/xxcosita3czxx/Lorelei
 
 | Language | Progress |
 |----------|----------|
+| EN-WINGDINGS | 98.72% |
 | CZ | 80.77% |
-| EN-WINGDINGS | 57.69% |
 | SK | 48.72% |
 | EN-LOLSPEAK | 47.44% |
 | DE | 46.15% |
