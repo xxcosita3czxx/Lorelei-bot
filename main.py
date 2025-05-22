@@ -149,6 +149,7 @@ async def handle_client(reader, writer, bot):
 async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,writer):  # noqa: C901, E501
     if command.startswith('help'):
         return 'Available commands: reload_all, unload, load, profiler [start|stop|stats], info [guilds|lat|uptime], kill, update, bugreports [index]'  # noqa: E501
+
     if command.startswith('extensions'):
         parts = command.split(" ", 1)
         if len(parts) < 2:  # noqa: PLR2004
@@ -266,12 +267,20 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
         writer.write(b"Killing bot.")
         await bot.close()
         sys.exit(0)
+    elif command.startswith("reload_lang"):
+        try:
+            lang._load_all_configs()
+            return "Language files reloaded successfully."
+        except Exception as e:
+            return f"Failed to reload language files: {e}"
+
     elif command.startswith("update"):
         try:
             os.system("git pull")  # noqa: S605
             return "Updated succesfully"
         except Exception as e:
             return f'Failed to update. Error: {e}'
+
     elif command.startswith("lang-reload"):
         lang._load_all_configs()
         return "Reloaded language files."
