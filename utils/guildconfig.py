@@ -1,4 +1,5 @@
 import logging
+
 # There will be command named "/guildconfig configure"
 # in there will be options of categories that will be listed in embed with
 # descriptions
@@ -47,14 +48,16 @@ class GuildConfig:
     def add_setting(self, category_name, setting_name, description):
         if category_name not in self.categories:
             self.categories[category_name] = {
-                "description": "",
                 "settings": {},
             }
         if setting_name in self.categories[category_name]["settings"]:
-            self.categories[category_name]["settings"][setting_name] = {}
-        setting = Setting(setting_name, description)
-        self.categories[category_name]["settings"][setting_name] = setting
-        return setting
+            raise ValueError(f"Setting '{setting_name}' already exists in category '{category_name}'.") # noqa: E501
+
+        self.categories[category_name]["settings"][setting_name] = {
+            "description": description,
+            "options": {},
+        }
+
 
     def get_setting(self, category_name, setting_name):
         if category_name not in self.categories:
