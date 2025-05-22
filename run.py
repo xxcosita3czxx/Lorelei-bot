@@ -51,7 +51,7 @@ def update():
 
         if command_updated:
             logger.info("Command files updated. Reloading commands...")
-            os.system("python3 helper.py reload_commands")  # noqa: S605, S607
+            os.system("python3 helper.py extensions reloadall")  # noqa: S605, S607
 
     except Exception as e:
         logger.warning("UPDATER FAILED")
