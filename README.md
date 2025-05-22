@@ -22,8 +22,8 @@ Everything about contributing is [here](https://github.com/xxcosita3czxx/Lorelei
 | EN-LOLSPEAK | 47.44% |
 | DE | 46.15% |
 | HU | 46.15% |
+| EN-UWU | 32.05% |
 | RU | 32.05% |
-| EN-UWU | 24.36% |
 | AL | 12.82% |
 | CN | 12.82% |
 | FI | 12.82% |
