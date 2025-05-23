@@ -43,9 +43,9 @@ async def setup(bot:commands.Bot):
     setting = configman.add_setting(
         category_name="Security",
         setting_name="Anti-Alts",
-        description="Enable Anti-Alts",
+        description="Anti-Alts system to prevent alternative accounts from joining the server.",  # noqa: E501
     )
-    setting.add_option(
+    setting.add_option( # type: ignore
         name="Enabled",
         description="Enable Anti-Alts",
         option_type=bool,

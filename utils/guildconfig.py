@@ -28,12 +28,12 @@ class GuildConfig:
             self.Configs = self.categories  # Backward compatibility
             self.__class__._initialized = True
 
-    def add_setting(self, category_name, setting_name):
+    def add_setting(self, category_name, setting_name,description):
         if category_name not in self.categories:
             self.categories[category_name] = {}
         if setting_name in self.categories[category_name]:
             raise ValueError(f"Setting '{setting_name}' already exists in category '{category_name}'.")  # noqa: E501
-        self.categories[category_name][setting_name] = {}
+        self.categories[category_name][setting_name] = {description: description}
 
     def add_option(self, category_name, setting_name, name, description, option_type, title, key):
         setting = self.get_setting(category_name, setting_name)
