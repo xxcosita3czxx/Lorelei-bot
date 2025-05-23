@@ -20,9 +20,9 @@ class AutoRole(commands.Cog):
                 role_id = gconfig.get(str(member.guild.id),"MEMBERS","autorole-role")  # noqa: E501
                 logger.debug("Role_id:"+str(role_id))
                 role = member.guild.get_role(int(role_id))
-                await member.add_roles(role)
+                await member.add_roles(role) # type: ignore
         except discord.Forbidden:
-            member.send("Autorole failed, tell administrator to check permissions")
+            await member.send("Autorole failed, tell administrator to check permissions")
             logger.info("Autorole failed due to permissions")
         except discord.HTTPException:
             logger.warning("Autorole adding failed, HTTPException")

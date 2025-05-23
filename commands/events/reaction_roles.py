@@ -37,7 +37,7 @@ class ReactionRoles(commands.Cog):
 
     @app_commands.command(name="add-reaction-role",description="Create reaction roles")  # noqa: E501
     @app_commands.default_permissions(administrator=True)  # noqa: E501
-    async def create_reaction(self, interaction: discord.Interaction,title:str,description:str,emoji:str,role:discord.Role,messageid:str=None,channel:discord.TextChannel=None):  # noqa: E501
+    async def create_reaction(self, interaction: discord.Interaction,title:str,description:str,emoji:str,role:discord.Role,messageid:str=None,channel:discord.TextChannel=None):  # type: ignore # noqa: E501
         if channel is None:
             channel = interaction.channel
         if messageid is None:
@@ -51,11 +51,11 @@ class ReactionRoles(commands.Cog):
             await message.add_reaction(string2emoji(emoji))
             await interaction.response.send_message("Reaction roles message sent!", ephemeral=True)  # noqa: E501
         else:
-            message = await channel.fetch_message(messageid)
+            message = await channel.fetch_message(int(messageid))
             if message is None:
                 await interaction.response.send_message("Message not found!", ephemeral=True)  # noqa: E501
                 return
-            gconfig.set(interaction.guild.id,"reaction-roles",f"{message.id}-{emoji2string(emoji)}-role",role.id)
+            gconfig.set(interaction.guild.id,"reaction-roles",f"{message.id}-{emoji2string(emoji)}-role",role.id) # type: ignore
             await message.add_reaction(string2emoji(emoji))
             await interaction.response.send_message("Reaction role added!", ephemeral=True)  # noqa: E501
 
@@ -66,13 +66,13 @@ class ReactionRoles(commands.Cog):
 
         # Example: Reaction role logic
         guild = reaction.message.guild
-        reaction_roles_config = gconfig.config.get(str(guild.id), {}).get("reaction-roles", {})  # noqa: E501
+        reaction_roles_config = gconfig.config.get(str(guild.id), {}).get("reaction-roles", {})  # type: ignore # noqa: E501
         for key, value in reaction_roles_config.items():
             if key.startswith(f"{reaction.message.id}-"):
                 _, emoji, _ = key.split("-")
                 role_id = value
                 if str(reaction.emoji) == string2emoji(emoji):
-                    role = guild.get_role(int(role_id))
+                    role = guild.get_role(int(role_id)) # type: ignore
                     if role:
                         await user.add_roles(role)
 
