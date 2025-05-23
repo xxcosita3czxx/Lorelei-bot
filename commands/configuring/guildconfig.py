@@ -14,36 +14,68 @@ __PRIORITY__ = 10
 
 logger = logging.getLogger("guildconfig")
 
-class DropdownView(discord.ui.View):
-    def __init__(self, options):
+python
+class SettingView(discord.ui.View):
+    def __init__(self, settings):
         super().__init__()
-        # Add the dropdown to the view
-        class DynamicDropdown(discord.ui.Select):
-            def __init__(self, options):
-                # Create the dropdown options dynamically from the external list
+
+        class SettingDropdown(discord.ui.Select):
+            def __init__(self, settings):
                 select_options = [
-                    discord.SelectOption(label=option, value=option) for option in options  # noqa: E501
-                ]
-                logger.info(f"Options: {select_options}")  # noqa: E501
-                if not select_options:
-                    select_options.append(discord.SelectOption(label="No options available", value="none")) # noqa: E501
+                    discord.SelectOption(label=s, value=s) for s in settings
+                ] or [discord.SelectOption(label="No settings available", value="none")]
+
                 super().__init__(
-                    placeholder="Choose an option...",
-                    options=select_options,
+                    placeholder="Choose a setting...",
+                    options=select_options
                 )
 
             async def callback(self, interaction: discord.Interaction):
-                # Handle the user's selection
-                selected_option = self.values[0]
-                logger.debug(f"Selected option: {selected_option}")
+                selected = self.values[0]
+                embed = discord.Embed(
+                    title="Selected Setting",
+                    description=f"You selected the setting: {selected}",
+                )
+                await interaction.response.edit_message(embed=embed, view=None)
+
+        self.add_item(SettingDropdown(settings))
+
+
+class CategoryView(discord.ui.View):
+    def __init__(self, options, config_session: GuildConfig):
+        super().__init__()
+
+        class CategoryDropdown(discord.ui.Select):
+            def __init__(self, options):
+                select_options = [
+                    discord.SelectOption(label=option, value=option) for option in options
+                ] or [discord.SelectOption(label="No options available", value="none")]
+                super().__init__(
+                    placeholder="Choose a category...",
+                    options=select_options
+                )
+
+            async def callback(self, interaction: discord.Interaction):
+                selected_category = self.values[0]
+                logger.debug(f"Selected category: {selected_category}")
+
+                settings = config_session.Configs.get(selected_category, {}).keys()
+                if not settings:
+                    settings = ["No settings available"]
 
                 embed = discord.Embed(
-                    title="Selected Option",
-                    description=f"You selected: {selected_option}",
+                    title=f"Settings in {selected_category}",
+                    description="Choose a setting to modify"
                 )
-                await interaction.response.edit_message(embed=embed, view=None)  # type: ignore
+                for setting in settings:
+                    embed.add_field(name=setting, value="Modify this setting", inline=False)
 
-        self.add_item(DynamicDropdown(options))
+                await interaction.response.edit_message(
+                    embed=embed,
+                    view=SettingView(settings)
+                )
+
+        self.add_item(CategoryDropdown(options))
 
 
 class GuildConfigCommands(commands.Cog):
@@ -74,7 +106,7 @@ class GuildConfigCommands(commands.Cog):
             categories = config_session.get_categories()  # Assuming Configs is a dictionary  # noqa: E501
             await interaction.response.send_message(
                 embed=embed,
-                view=DropdownView(categories),
+                view=CategoryView(categories, config_session),
                 ephemeral=True,
             )  # noqa: E501
 
