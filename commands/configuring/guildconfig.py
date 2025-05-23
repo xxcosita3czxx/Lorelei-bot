@@ -14,7 +14,6 @@ __PRIORITY__ = 10
 
 logger = logging.getLogger("guildconfig")
 
-python
 class SettingView(discord.ui.View):
     def __init__(self, settings):
         super().__init__()
