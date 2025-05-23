@@ -26,7 +26,7 @@ class SettingView(discord.ui.View):
 
                 super().__init__(
                     placeholder="Choose a setting...",
-                    options=select_options
+                    options=select_options,
                 )
 
             async def callback(self, interaction: discord.Interaction):
@@ -51,7 +51,7 @@ class CategoryView(discord.ui.View):
                 ] or [discord.SelectOption(label="No options available", value="none")]
                 super().__init__(
                     placeholder="Choose a category...",
-                    options=select_options
+                    options=select_options,
                 )
 
             async def callback(self, interaction: discord.Interaction):
@@ -64,14 +64,14 @@ class CategoryView(discord.ui.View):
 
                 embed = discord.Embed(
                     title=f"Settings in {selected_category}",
-                    description="Choose a setting to modify"
+                    description="Choose a setting to modify",
                 )
                 for setting in settings:
                     embed.add_field(name=setting, value="Modify this setting", inline=False)
 
                 await interaction.response.edit_message(
                     embed=embed,
-                    view=SettingView(settings)
+                    view=SettingView(settings),
                 )
 
         self.add_item(CategoryDropdown(options))

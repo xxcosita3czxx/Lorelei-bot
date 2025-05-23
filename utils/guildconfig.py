@@ -35,10 +35,10 @@ class GuildConfig:
             raise ValueError(f"Setting '{setting_name}' already exists in category '{category_name}'.")  # noqa: E501
         self.categories[category_name][setting_name] = {description: description}
 
-    def add_option(self, category_name, setting_name, name, description, option_type, title, key):
+    def add_option(self, category_name, setting_name, name, description, option_type, title, key):  # noqa: E501
         setting = self.get_setting(category_name, setting_name)
         if name in setting:
-            raise ValueError(f"Option '{name}' already exists in setting '{setting_name}'.")
+            raise ValueError(f"Option '{name}' already exists in setting '{setting_name}'.")  # noqa: E501
         setting[name] = {
             "type": option_type,
             "description": description,

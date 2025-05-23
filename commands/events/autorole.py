@@ -22,7 +22,7 @@ class AutoRole(commands.Cog):
                 role = member.guild.get_role(int(role_id))
                 await member.add_roles(role) # type: ignore
         except discord.Forbidden:
-            await member.send("Autorole failed, tell administrator to check permissions")
+            await member.send("Autorole failed, tell administrator to check permissions")  # noqa: E501
             logger.info("Autorole failed due to permissions")
         except discord.HTTPException:
             logger.warning("Autorole adding failed, HTTPException")
