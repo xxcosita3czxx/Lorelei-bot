@@ -100,6 +100,7 @@ class GuildConfigCommands(commands.Cog):
                 title="Configuration Categories",
                 description="Select a category to configure",
             )
+            logger.debug(config_session.Configs)
             for category in config_session.Configs:
                 embed.add_field(name=category, value=f"Configure {category}", inline=False)  # noqa: E501
             categories = config_session.get_categories()  # Assuming Configs is a dictionary  # noqa: E501
