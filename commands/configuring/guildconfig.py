@@ -22,7 +22,7 @@ class SettingView(discord.ui.View):
             def __init__(self, settings):
                 select_options = [
                     discord.SelectOption(label=s, value=s) for s in settings
-                ] or [discord.SelectOption(label="No settings available", value="none")]
+                ] or [discord.SelectOption(label="No settings available", value="none")]  # noqa: E501
 
                 super().__init__(
                     placeholder="Choose a setting...",
@@ -47,8 +47,8 @@ class CategoryView(discord.ui.View):
         class CategoryDropdown(discord.ui.Select):
             def __init__(self, options):
                 select_options = [
-                    discord.SelectOption(label=option, value=option) for option in options
-                ] or [discord.SelectOption(label="No options available", value="none")]
+                    discord.SelectOption(label=option, value=option) for option in options  # noqa: E501
+                ] or [discord.SelectOption(label="No options available", value="none")]  # noqa: E501
                 super().__init__(
                     placeholder="Choose a category...",
                     options=select_options,
@@ -67,7 +67,7 @@ class CategoryView(discord.ui.View):
                     description="Choose a setting to modify",
                 )
                 for setting in settings:
-                    embed.add_field(name=setting, value="Modify this setting", inline=False)
+                    embed.add_field(name=setting, value="Modify this setting", inline=False)  # noqa: E501
 
                 await interaction.response.edit_message(
                     embed=embed,

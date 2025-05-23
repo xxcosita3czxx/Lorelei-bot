@@ -26,7 +26,7 @@ def update():
 
     try:
         os.system("git stash push -- config.py")  # noqa: S605
-        changed_files = os.popen("git diff --name-only origin/main").read().splitlines()
+        changed_files = os.popen("git diff --name-only origin/main").read().splitlines()  # noqa: E501, S605
         os.system("git pull")  # noqa: S605
         os.system("git stash pop")  # noqa: S605
 
@@ -36,7 +36,7 @@ def update():
         lang_updated = any("lang/" in f or "language/" in f for f in changed_files)
         command_updated = any("commands/" in f for f in changed_files)
         other_updated = any(
-            not (f.startswith("commands/") or f.startswith("lang/") or f.startswith("language/"))
+            not (f.startswith("commands/") or f.startswith("lang/") or f.startswith("language/"))  # noqa: E501
             for f in changed_files
         )
 
