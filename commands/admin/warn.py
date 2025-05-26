@@ -20,11 +20,11 @@ async def add_warns(guild_id, user:discord.Member,interaction:discord.Interactio
     else:
         gconfig.set(guild_id, "warns", user_id, 1)
     if gconfig.get(guild_id, "warns", user_id) >= gconfig.get(guild_id,"warns-settings","timeout",3):  # noqa: E501
-        user.timeout(reason="Too many warns", until=gconfig.get(guild_id,"warns-settings","timeout_duration",timedelta(hours=5)))  # noqa: E501
+        user.timeout(reason="Too many warns", until=gconfig.get(guild_id,"warns-settings","timeout_duration",timedelta(hours=5)))  # type: ignore # noqa: E501
     elif gconfig.get(guild_id, "warns", user_id) >= gconfig.get(guild_id,"warns-settings","kick",5):  # noqa: E501, SIM114
         await kick_member(user, "Too many warns", interaction)
     elif gconfig.get(guild_id, "warns", user_id) >= gconfig.get(guild_id,"warns-settings","ban",10):  # noqa: E501
-        await ban_member(user, "Too many warns", interaction)
+        await ban_member(user, "Too many warns", interaction) # type: ignore
 
 
 class Warn(commands.Cog):
@@ -34,7 +34,7 @@ class Warn(commands.Cog):
     @app_commands.command(name="warn", description="Warns a user.")
     @app_commands.default_permissions(moderate_members=True)
     async def warn(self, interaction: discord.Interaction, user: discord.Member, reason: str):  # noqa: E501
-        guild_id = interaction.guild.id
+        guild_id = interaction.guild.id # type: ignore
         user_id = user.id
 
         await add_warns(guild_id, user,interaction)

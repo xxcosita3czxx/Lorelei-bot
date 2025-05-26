@@ -67,7 +67,7 @@ class Ticketing(commands.Cog):
         @app_commands.command(name="remove",description="Remove user or role from ticket")  # noqa: E501
         @app_commands.describe(user="Member to remove")
         @app_commands.describe(role="Role to remove")
-        async def ticket_remove(self,interaction: discord.Interaction, user:discord.member.Member=None, role:discord.role.Role=None):  # noqa: E501, F811
+        async def ticket_remove(self,interaction: discord.Interaction, user:discord.member.Member=None, role:discord.role.Role=None):  # type: ignore # noqa: E501, F811
             try:
                 if user is None and role is not None:
                     await interaction.channel.set_permissions(
@@ -116,7 +116,7 @@ class Ticketing(commands.Cog):
                 description = text,
                 color = discord.Colour.blurple(),
             )
-            await interaction.channel.send(
+            await interaction.channel.send( # type: ignore
                 embed = embed,
                 view = Ticketing.ticket_launcher(),
             )
@@ -148,10 +148,10 @@ class Ticketing(commands.Cog):
         )
         async def ticket(self, interaction: discord.Interaction, button: discord.ui.Button):  # noqa: E501, ANN201, ANN101
 
-            interaction.message.author = interaction.user
+            interaction.message.author = interaction.user # type: ignore
             retry = self.cooldown.get_bucket(
                 interaction.message,
-            ).update_rate_limit()
+            ).update_rate_limit() # type: ignore
 
             if retry:
                 return await interaction.response.send_message(
@@ -159,7 +159,7 @@ class Ticketing(commands.Cog):
                     ephemeral = True,
                 )
             ticket = utils.get(
-                interaction.guild.text_channels,
+                interaction.guild.text_channels, # type: ignore
                 name = f"ticket-{interaction.user.name.lower().replace(' ', '-')}-{interaction.user.discriminator}")  # noqa: E501
 
             if ticket is not None:
@@ -170,7 +170,7 @@ class Ticketing(commands.Cog):
 
             else:
                 overwrites = {
-                    interaction.guild.default_role: discord.PermissionOverwrite(
+                    interaction.guild.default_role: discord.PermissionOverwrite( # type: ignore
                         view_channel = False,
                     ),
                     interaction.user: discord.PermissionOverwrite(
@@ -180,14 +180,14 @@ class Ticketing(commands.Cog):
                         attach_files = True,
                         embed_links = True,
                     ),
-                    interaction.guild.me: discord.PermissionOverwrite(
+                    interaction.guild.me: discord.PermissionOverwrite( # type: ignore
                         view_channel = True,
                         send_messages = True,
                         read_message_history = True,
                     ),
                 }
                 try:
-                    channel = await interaction.guild.create_text_channel(
+                    channel = await interaction.guild.create_text_channel( # type: ignore
                         name = f"ticket-for-{interaction.user.name}-{interaction.user.discriminator}",  # noqa: E501
                         overwrites = overwrites,
                         reason = f"Ticket for {interaction.user}",
@@ -252,7 +252,7 @@ class Ticketing(commands.Cog):
             # Specify the path where the file will be saved
             file_dir = ".cache/"
 
-            file_path = os.path.join(file_dir, f"transcript-{interaction.channel.id}.md")  # noqa: E501
+            file_path = os.path.join(file_dir, f"transcript-{interaction.channel.id}.md")  # type: ignore # noqa: E501
 
             if os.path.exists(file_path):
                 return await interaction.followup.send(
@@ -262,8 +262,8 @@ class Ticketing(commands.Cog):
 
             try:
                 with open(file_path, 'a', encoding='utf-8') as f:
-                    f.write(f"# Transcript of {interaction.channel.name}:\n\n")
-                    async for message in interaction.channel.history(
+                    f.write(f"# Transcript of {interaction.channel.name}:\n\n") # type: ignore
+                    async for message in interaction.channel.history( # type: ignore
                         limit=None,
                         oldest_first=True,
                     ):
@@ -292,7 +292,7 @@ class Ticketing(commands.Cog):
 
                 with open(file_path, 'rb') as f:
                     await interaction.followup.send(
-                        file=discord.File(f, f"{interaction.channel.name}.md"),
+                        file=discord.File(f, f"{interaction.channel.name}.md"), # type: ignore
                         content="Here is the transcript:",
                     )
             finally:
@@ -318,8 +318,8 @@ class Ticketing(commands.Cog):
                 description=lang.get(interaction.user.id,"TicketingCommand","embed_review_description"),
             )
             try:
-                await interaction.channel.delete()
-                if gconfig.get(interaction.guild.id,"Ticketing","reviews-enabled") is True:  # noqa: E501
+                await interaction.channel.delete() # type: ignore
+                if gconfig.get(interaction.guild.id,"Ticketing","reviews-enabled") is True:  # type: ignore # noqa: E501
                     await interaction.user.send(embed=embed,view=Ticketing.reviews(guild=interaction.guild))  # noqa: E501
 
             except discord.Forbidden :
@@ -329,9 +329,9 @@ class Ticketing(commands.Cog):
                 )
 
     class reviews(discord.ui.View):
-        def __init__(self,guild:discord.Interaction.guild) -> None:  # noqa: ANN101
+        def __init__(self,guild:discord.Interaction.guild) -> None:  # type: ignore # noqa: ANN101
             super().__init__(timeout = None)
-            self.guild:discord.Interaction.guild = guild
+            self.guild:discord.Interaction.guild = guild # type: ignore
 
         def rev_embed(self,interaction:discord.Interaction):
             review_embed = discord.Embed(
@@ -345,7 +345,7 @@ class Ticketing(commands.Cog):
                     child.disabled = True
             await interaction.response.edit_message(view=self)
 
-        @discord.ui.button(label="1 star")
+        @discord.ui.button(label="1 star") # type: ignore
         async def rev_star1(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
             await self.disable_all_buttons(interaction)
             response_embed = discord.Embed(
@@ -359,7 +359,7 @@ class Ticketing(commands.Cog):
             )
             await channel.send(content=f"Rating: 1\nUser: {interaction.user.name}")  # noqa: E501
 
-        @discord.ui.button(label="2 star")
+        @discord.ui.button(label="2 star") # type: ignore
         async def rev_star2(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
             await self.disable_all_buttons(interaction)
             response_embed = discord.Embed(
@@ -373,7 +373,7 @@ class Ticketing(commands.Cog):
             )
             await channel.send(content=f"Rating: 2\nUser: {interaction.user.name}")  # noqa: E501
 
-        @discord.ui.button(label="3 star")
+        @discord.ui.button(label="3 star") # type: ignore
         async def rev_star3(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
             await self.disable_all_buttons(interaction)
             response_embed = discord.Embed(
@@ -387,7 +387,7 @@ class Ticketing(commands.Cog):
             )
             await channel.send(content=f"Rating: 3\nUser: {interaction.user.name}")  # noqa: E501
 
-        @discord.ui.button(label="4 star")
+        @discord.ui.button(label="4 star") # type: ignore
         async def rev_star4(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
             await self.disable_all_buttons(interaction)
             response_embed = discord.Embed(
@@ -401,7 +401,7 @@ class Ticketing(commands.Cog):
             )
             await channel.send(content=f"Rating: 4\nUser: {interaction.user.name}")  # noqa: E501
 
-        @discord.ui.button(label="5 star")
+        @discord.ui.button(label="5 star") # type: ignore
         async def rev_star5(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
             await self.disable_all_buttons(interaction)
             response_embed = discord.Embed(
