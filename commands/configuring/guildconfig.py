@@ -18,6 +18,20 @@ class SettingView(discord.ui.View):
     def __init__(self, settings, config_session: GuildConfig, category_name: str):
         super().__init__()
 
+        class BoolOptionButton(discord.ui.Button):
+            def __init__(self, option_name, value=True):
+                label = f"{option_name}: {'True' if value else 'False'}"
+                style = discord.ButtonStyle.success if value else discord.ButtonStyle.danger  # noqa: E501
+                super().__init__(label=label, style=style)
+                self.option_name = option_name
+                self.value = value
+
+            async def callback(self, interaction: discord.Interaction):
+                self.value = not self.value
+                self.label = f"{self.option_name}: {'True' if self.value else 'False'}"  # noqa: E501
+                self.style = discord.ButtonStyle.success if self.value else discord.ButtonStyle.danger  # noqa: E501
+                await interaction.response.edit_message(view=self) # type: ignore
+
         class SettingDropdown(discord.ui.Select):
             def __init__(self, settings):
                 select_options = [
@@ -37,11 +51,18 @@ class SettingView(discord.ui.View):
                     title=f"Options for {selected}",
                     description="Here are the options for this setting:",
                 )
+                # For each option, if it's a bool, add a button, else add as embed field  # noqa: E501
+                view = discord.ui.View()
                 for option in options:
                     option_data = config_session.get_option(category_name, selected, option)  # noqa: E501
                     desc = option_data.get("description", "No description")
-                    embed.add_field(name=option, value=desc, inline=False)
-                await interaction.response.edit_message(embed=embed, view=None)
+                    opt_type = option_data.get("type", "str")
+                    if opt_type == "bool":
+                        # Default value True for now
+                        view.add_item(BoolOptionButton(option, value=True))
+                    else:
+                        embed.add_field(name=option, value=desc, inline=False)
+                await interaction.response.edit_message(embed=embed, view=view if len(view.children) > 0 else None)  # noqa: E501
 
         self.add_item(SettingDropdown(settings))
 
