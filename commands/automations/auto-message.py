@@ -44,9 +44,9 @@ class AutoMessages(commands.Cog):
                         embed = None
                     if timestamp + interval < now:
                         if embed is None:
-                            await channel.send(message)
+                            await channel.send(message) # type: ignore
                         else:
-                            await channel.send(message,embed=embed)
+                            await channel.send(message,embed=embed) # type: ignore
                         gconfig.set(guild_id,f"automessages-{channelid}","timestamp",now)
 
     @auto_message_task.before_loop

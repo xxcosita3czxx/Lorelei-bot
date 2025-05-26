@@ -45,24 +45,24 @@ class SettingView(discord.ui.View):
 
             async def callback(self, interaction: discord.Interaction):
                 selected = self.values[0]
-                # Fetch options for the selected setting from config
                 options = config_session.get_options(category_name, selected)
                 embed = discord.Embed(
                     title=f"Options for {selected}",
-                    description="Here are the options for this setting:",
+                    description="Here are the options for this setting:" if options else "No options available for this setting.",  # noqa: E501
                 )
-                # For each option, if it's a bool, add a button, else add as embed field  # noqa: E501
                 view = discord.ui.View()
                 for option in options:
                     option_data = config_session.get_option(category_name, selected, option)  # noqa: E501
                     desc = option_data.get("description", "No description")
                     opt_type = option_data.get("type", "str")
                     if opt_type == "bool":
-                        # Default value True for now
                         view.add_item(BoolOptionButton(option, value=True))
                     else:
                         embed.add_field(name=option, value=desc, inline=False)
-                await interaction.response.edit_message(embed=embed, view=view if len(view.children) > 0 else None)  # noqa: E501
+                await interaction.response.edit_message(
+                    embed=embed,
+                    view=view if len(view.children) > 0 else None,
+                )
 
         self.add_item(SettingDropdown(settings))
 

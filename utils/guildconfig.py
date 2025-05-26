@@ -1,15 +1,5 @@
 import logging
 
-# There will be command named "/guildconfig configure"
-# in there will be options of categories that will be listed in embed with
-# descriptions
-# Inside those there will be options for commands
-#
-# The config system will work like this:
-# config_session = GuildConfig(gconfig)
-# configs = config_session.new_setting("class (for instance SECURITY)","name")
-# configs.new_option("name","description","type (int, str bool....)")  # noqa: E501
-
 logger = logging.getLogger("guildconfig-manager")
 
 class GuildConfig:
