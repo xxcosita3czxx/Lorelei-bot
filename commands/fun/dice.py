@@ -17,9 +17,9 @@ class Dice(commands.Cog):
 
     @app_commands.command(name="dice",description="Roll the Dice!")
     @app_commands.autocomplete(mode=autocomplete_dice_modes)
-    async def dice(self,interaction:discord.Interaction,mode:str=None):
+    async def dice(self,interaction:discord.Interaction,mode:str=None): # type: ignore
         if mode == "" or mode is None:  # noqa: SIM118
-            mode = gconfig.get(id=interaction.guild.id,title="FUN",key="def_dice")  # noqa: E501
+            mode = gconfig.get(id=interaction.guild.id,title="FUN",key="def_dice")  # type: ignore # noqa: E501
             if mode is None:
                 mode = uconfig.get(id=interaction.user.id,title="FUN",key="def_dice")  # noqa: E501
                 if mode is None:

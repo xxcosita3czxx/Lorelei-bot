@@ -21,7 +21,7 @@ class Ticketing(commands.Cog):
         @app_commands.command(name="add",description="Add user or role into ticket")
         @app_commands.describe(user="Member to add")
         @app_commands.describe(role="Role to add")
-        async def ticket_add(self,interaction: discord.Interaction, user:discord.member.Member=None, role:discord.role.Role=None):  # noqa: E501
+        async def ticket_add(self,interaction: discord.Interaction, user:discord.member.Member=None, role:discord.role.Role=None):  # type: ignore # noqa: E501
             try:
                 overwrites = discord.PermissionOverwrite(
                     view_channel=True,
