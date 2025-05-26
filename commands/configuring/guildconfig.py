@@ -15,7 +15,7 @@ __PRIORITY__ = 10
 logger = logging.getLogger("guildconfig")
 
 class SettingView(discord.ui.View):
-    def __init__(self, settings):
+    def __init__(self, settings, config_session: GuildConfig, category_name: str):
         super().__init__()
 
         class SettingDropdown(discord.ui.Select):
@@ -31,10 +31,16 @@ class SettingView(discord.ui.View):
 
             async def callback(self, interaction: discord.Interaction):
                 selected = self.values[0]
+                # Fetch options for the selected setting from config
+                options = config_session.get_options(category_name, selected)
                 embed = discord.Embed(
-                    title="Selected Setting",
-                    description=f"You selected the setting: {selected}",
+                    title=f"Options for {selected}",
+                    description="Here are the options for this setting:",
                 )
+                for option in options:
+                    option_data = config_session.get_option(category_name, selected, option)  # noqa: E501
+                    desc = option_data.get("description", "No description")
+                    embed.add_field(name=option, value=desc, inline=False)
                 await interaction.response.edit_message(embed=embed, view=None)
 
         self.add_item(SettingDropdown(settings))
@@ -71,7 +77,7 @@ class CategoryView(discord.ui.View):
 
                 await interaction.response.edit_message(
                     embed=embed,
-                    view=SettingView(settings),
+                    view=SettingView(settings, config_session, selected_category),
                 )
 
         self.add_item(CategoryDropdown(options))

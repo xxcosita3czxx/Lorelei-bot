@@ -16,7 +16,7 @@ async def ban_member(member: discord.Member, reason: str, interaction: discord.I
     try:
         await member.send(
             embed=discord.Embed(
-                description=lang.get(userlang(interaction.user.id),"Responds","you_was_banned").format(guild=interaction.guild.name,reason=reason),  # noqa: E501
+                description=lang.get(userlang(interaction.user.id),"Responds","you_was_banned").format(guild=interaction.guild.name,reason=reason),  # noqa: E501 # type: ignore
                 color=discord.Color.blurple(),
             ),
         )
@@ -44,31 +44,31 @@ class Ban(commands.Cog):
         Bans user and let him know why
         '''
 
-        if member == interaction.user or member == interaction.guild.owner:
+        if member == interaction.user or member == interaction.guild.owner: # type: ignore
             respEmbed(
                 content=lang.get(userlang(interaction.user.id),"Responds","you_cant_ban"),
                 ephemeral=True,
-            )
+            ) # type: ignore
             return
 
-        if member.top_role >= interaction.guild.me.top_role:
+        if member.top_role >= interaction.guild.me.top_role: # type: ignore
             respEmbed(
                 content=lang.get(userlang(interaction.user.id),"Responds","i_cant_ban"),
                 ephemeral=True,
-            )
+            ) # type: ignore
             return
-        if member.top_role >= interaction.user.top_role:
+        if member.top_role >= interaction.user.top_role: # type: ignore
             respEmbed(
                 content=lang.get(userlang(interaction.user.id),"Responds","u_cant_ban_hierarchy"),
                 ephemeral=True,
-            )
+            ) # type: ignore
             return
         await ban_member(member, reason, interaction,delete_message_days)
-        await interaction.guild.ban(member, reason=reason,delete_message_days=delete_message_days)  # noqa: E501
+        await interaction.guild.ban(member, reason=reason,delete_message_days=delete_message_days)  # type: ignore # noqa: E501
         respEmbed(
             lang.get(userlang(interaction.user.id),"Responds","user_banned").format(member=member.mention),
             ephemeral=True,
-        )
+        ) # type: ignore
         await interaction.followup.send(
             embed=discord.Embed(
                 description=lang.get(userlang(interaction.user.id),"Responds","user_banned_followup").format(member=member.mention,reason=reason),  # noqa: E501
@@ -92,7 +92,7 @@ class Ban(commands.Cog):
         '''
 
         try:
-            await interaction.guild.unban(member, reason=reason)
+            await interaction.guild.unban(member, reason=reason) # type: ignore
 
         except discord.NotFound:
             return await interaction.response.send_message(

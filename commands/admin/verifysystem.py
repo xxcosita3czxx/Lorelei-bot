@@ -46,7 +46,7 @@ class VerifySystem(commands.Cog):
             )
             logger.debug(role.id)
             gconfig.set(
-                interaction.guild.id,
+                interaction.guild.id, # type: ignore
                 str(channel.id)+"-verifybutton",
                 "role",
                 role.id,
@@ -84,21 +84,21 @@ class VerifySystem(commands.Cog):
             style = discord.ButtonStyle.blurple,
             custom_id="verify",
         )
-        async def verify(self, interaction: discord.Interaction, button: discord.ui.button): # noqa: E501
+        async def verify(self, interaction: discord.Interaction, button: discord.ui.button): # type: ignore # noqa: E501
             #await interaction.response.send_message(content="Clicked :3",ephemeral=True) # noqa: E501
             try:
                 role = gconfig.get(
-                    interaction.guild.id,
-                    str(interaction.channel.id)+"-verifybutton",
+                    interaction.guild.id, # type: ignore
+                    str(interaction.channel.id)+"-verifybutton", # type: ignore
                     "role",
                 )
                 if role is None:
                     await interaction.response.send_message("interaction failed: role is none")  # noqa: E501
                 # Convert the string back to an integer and role
                 role_id = int(role)
-                role = interaction.guild.get_role(role_id)
+                role = interaction.guild.get_role(role_id) # type: ignore
 
-                await interaction.user.add_roles(role)
+                await interaction.user.add_roles(role) # type: ignore
                 await interaction.response.send_message(
                     content="Verified!",
                     ephemeral=True,
