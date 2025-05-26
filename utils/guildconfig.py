@@ -18,18 +18,31 @@ class GuildConfig:
             self.Configs = self.categories  # Backward compatibility
             self.__class__._initialized = True
 
-    def add_setting(self, category_name, setting_name,description):
+    def add_setting(self, category_name, setting_name, description):
         if category_name not in self.categories:
             self.categories[category_name] = {}
         if setting_name in self.categories[category_name]:
-            raise ValueError(f"Setting '{setting_name}' already exists in category '{category_name}'.")  # noqa: E501
-        self.categories[category_name][setting_name] = {description: description}
+            raise ValueError(
+                f"Setting '{setting_name}' already exists in category "
+                f"'{category_name}'.",
+            )
+        self.categories[category_name][setting_name] = {
+            "description": description,
+            "options": {},
+        }
 
-    def add_option(self, category_name, setting_name, name, description, option_type, title, key):  # noqa: E501
+    def add_option(
+        self, category_name, setting_name, name, description,
+        option_type, title, key,
+    ):
         setting = self.get_setting(category_name, setting_name)
-        if name in setting:
-            raise ValueError(f"Option '{name}' already exists in setting '{setting_name}'.")  # noqa: E501
-        setting[name] = {
+        options = setting["options"]
+        if name in options:
+            raise ValueError(
+                f"Option '{name}' already exists in setting "
+                f"'{setting_name}'.",
+            )
+        options[name] = {
             "type": option_type,
             "description": description,
             "title": title,
@@ -40,7 +53,10 @@ class GuildConfig:
         if category_name not in self.categories:
             raise ValueError(f"Category '{category_name}' does not exist.")
         if setting_name not in self.categories[category_name]:
-            raise ValueError(f"Setting '{setting_name}' does not exist in category '{category_name}'.")  # noqa: E501
+            raise ValueError(
+                f"Setting '{setting_name}' does not exist in category "
+                f"'{category_name}'.",
+            )
         return self.categories[category_name][setting_name]
 
     def get_categories(self):
@@ -53,13 +69,17 @@ class GuildConfig:
 
     def get_options(self, category_name, setting_name):
         setting = self.get_setting(category_name, setting_name)
-        return list(setting.keys())
+        return list(setting["options"].keys())
 
     def get_option(self, category_name, setting_name, option_name):
         setting = self.get_setting(category_name, setting_name)
-        if option_name not in setting:
-            raise ValueError(f"Option '{option_name}' does not exist in setting '{setting_name}'.")  # noqa: E501
-        return setting[option_name]
+        options = setting["options"]
+        if option_name not in options:
+            raise ValueError(
+                f"Option '{option_name}' does not exist in setting "
+                f"'{setting_name}'.",
+            )
+        return options[option_name]
 
     def search_setting(self, setting_name):
         for _, settings in self.categories.items():
