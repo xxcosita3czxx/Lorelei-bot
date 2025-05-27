@@ -27,14 +27,33 @@ class GuildConfig:
                 f"'{category_name}'.",
             )
         self.categories[category_name][setting_name] = {
-            "description": description,
             "options": {},
+            "description": description,
         }
 
     def add_option(
-        self, category_name, setting_name, name, description,
-        option_type, title, key,
+        self,
+        category_name,
+        setting_name,
+        name,
+        option_type,
+        button_title,
+        config_title,
+        config_key,
+        description,
     ):
+        """
+        Add an option to a setting.
+        Args:
+            category_name: str
+            setting_name: str
+            name: str (option name)
+            option_type: str (e.g. 'bool', 'int', 'str')
+            button_title: str (title for UI button)
+            config_title: str (title for config storage)
+            config_key: str (key for config storage)
+            description: str (description for UI)
+        """
         setting = self.get_setting(category_name, setting_name)
         options = setting["options"]
         if name in options:
@@ -44,9 +63,10 @@ class GuildConfig:
             )
         options[name] = {
             "type": option_type,
+            "button_title": button_title,
+            "config_title": config_title,
+            "config_key": config_key,
             "description": description,
-            "title": title,
-            "key": key,
         }
 
     def get_setting(self, category_name, setting_name):

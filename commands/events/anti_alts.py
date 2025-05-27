@@ -40,15 +40,18 @@ class AntiAlts(commands.Cog):
 async def setup(bot:commands.Bot):
     await bot.add_cog(AntiAlts(bot))
     configman = GuildConfig()
-    setting = configman.add_setting(
+    configman.add_setting(
         category_name="Security",
         setting_name="Anti-Alts",
         description="Anti-Alts system to prevent alternative accounts from joining the server.",  # noqa: E501
     )
-    setting.add_option( # type: ignore
+    configman.add_option( # type: ignore
+        category_name="Security",
+        setting_name="Anti-Alts",
         name="Enabled",
-        description="Enable Anti-Alts",
         option_type="bool",
-        title="SECURITY",
-        key="antialts-enabled",
+        button_title="Enable",
+        config_title="SECURITY",
+        config_key="antialts-enabled",
+        description="Enable Anti-Alts",
     )
