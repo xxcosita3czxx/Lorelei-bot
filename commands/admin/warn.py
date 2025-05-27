@@ -19,7 +19,7 @@ async def add_warns(guild_id, user:discord.Member,interaction:discord.Interactio
         gconfig.set(guild_id, "warns", user_id, gconfig.get(guild_id, "warns", user_id) + 1)  # noqa: E501
     else:
         gconfig.set(guild_id, "warns", user_id, 1)
-    if gconfig.get(guild_id, "warns", user_id) >= gconfig.get(guild_id,"warns-settings","timeout",3):  # noqa: E501
+    if gconfig.get(guild_id, "warns", user_id) >= gconfig.get(guild_id,"warns-settings","timeout",3):  # type: ignore # noqa: E501
         user.timeout(reason="Too many warns", until=gconfig.get(guild_id,"warns-settings","timeout_duration",timedelta(hours=5)))  # type: ignore # noqa: E501
     elif gconfig.get(guild_id, "warns", user_id) >= gconfig.get(guild_id,"warns-settings","kick",5):  # noqa: E501, SIM114
         await kick_member(user, "Too many warns", interaction)

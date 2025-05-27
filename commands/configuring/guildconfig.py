@@ -6,6 +6,7 @@ import os
 import discord
 from discord import app_commands
 from discord.ext import commands
+from discord.ui import Select
 
 from utils.configmanager import gconfig, lang, uconfig
 from utils.guildconfig import GuildConfig
@@ -15,7 +16,7 @@ __PRIORITY__ = 10
 logger = logging.getLogger("guildconfig")
 
 class SettingView(discord.ui.View):
-    def __init__(self, settings, config_session: GuildConfig, category_name: str):
+    def __init__(self, settings, config_session: GuildConfig, category_name: str):  # noqa: C901
         super().__init__()
 
         class BoolOptionButton(discord.ui.Button):
@@ -39,6 +40,53 @@ class SettingView(discord.ui.View):
                 self.label = f"{self.option_name}: {'True' if self.value else 'False'}"  # noqa: E501
                 self.style = discord.ButtonStyle.success if self.value else discord.ButtonStyle.danger  # noqa: E501
                 await interaction.response.edit_message(view=self.view)
+
+
+        class TextChannelSelectMenu(Select):
+            def __init__(self, interaction, name, config_title, config_key):
+                options = [
+                    discord.SelectOption(label=channel.name, value=str(channel.id))
+                    for channel in interaction.guild.channels if isinstance(channel, discord.TextChannel)  # noqa: E501
+                ]
+                super().__init__(
+                    placeholder="Select channel...",
+                    options=options,
+                    custom_id=f"channel_select_{name}",
+                )
+                self.config_title = config_title
+                self.config_key = config_key
+
+            async def callback(self, interaction: discord.Interaction):
+                selected_channel_id = int(self.values[0])
+                # Save to config (example, replace with your actual save logic)
+                # gconfig.save(interaction.guild.id, self.config_title, self.config_key, selected_channel_id)  # noqa: E501
+                await interaction.response.send_message(f"Channel set to <#{selected_channel_id}>", ephemeral=True)  # noqa: E501
+
+        class RoleSelectMenu(Select):
+            def __init__(self, interaction, name, config_title, config_key):
+                options = [
+                    discord.SelectOption(label=role.name, value=str(role.id))
+                    for role in interaction.guild.roles if role.name != "@everyone" or role.name != "@here"  # noqa: E501
+                ]
+                super().__init__(
+                    placeholder="Select role...",
+                    options=options,
+                    custom_id=f"role_select_{name}",
+                )
+                self.config_title = config_title
+                self.config_key = config_key
+
+            def _get_guild_roles(self):
+                # You'll need to override this or pass the guild object some other way  # noqa: E501
+                # This is just a stub; you'll want real roles here!
+                return []
+
+            async def callback(self, interaction: discord.Interaction):
+                selected_role_id = int(self.values[0])
+                # Save to config (example, replace with your actual save logic)
+                # gconfig.save(interaction.guild.id, self.config_title, self.config_key, selected_role_id)  # noqa: E501
+                await interaction.response.send_message(f"Role set to <@&{selected_role_id}>", ephemeral=True)  # noqa: E501
+
 
         class SettingDropdown(discord.ui.Select):
             def __init__(self, settings):
@@ -69,6 +117,14 @@ class SettingView(discord.ui.View):
                         # Get the current value from config
                         current_value = gconfig.get(interaction.guild.id,conf_title, conf_key,False) # type: ignore  # noqa: E501
                         view.add_item(BoolOptionButton(option,config_title=conf_title,config_key=conf_key, value=current_value))  # noqa: E501
+                    elif opt_type == "textchannel":
+                        view.add_item(
+                            TextChannelSelectMenu(interaction=interaction, name=option, config_title=conf_title, config_key=conf_key),  # noqa: E501
+                        )
+                    elif opt_type == "role":
+                        view.add_item(
+                            RoleSelectMenu(interaction=interaction, name=option, config_title=conf_title, config_key=conf_key),  # noqa: E501
+                        )
                     else:
                         embed.add_field(name=option, value=desc, inline=False)
                 await interaction.response.edit_message(

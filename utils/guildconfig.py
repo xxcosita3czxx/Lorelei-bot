@@ -64,6 +64,51 @@ class GuildConfig:
             "description": description,
         }
 
+    def add_option_textchannel(
+        self,
+        category_name,
+        setting_name,
+        name,
+        config_title,
+        config_key,
+        description,
+    ):
+        setting = self.get_setting(category_name, setting_name)
+        options = setting["options"]
+        if name in options:
+            raise ValueError(
+                f"Option '{name}' already exists in setting '{setting_name}'.",
+            )
+        options[name] = {
+            "type": "textchannel",
+            "config_title": config_title,
+            "config_key": config_key,
+            "description": description,
+        }
+
+    def add_option_role(
+        self,
+        category_name,
+        setting_name,
+        name,
+        config_title,
+        config_key,
+        description,
+    ):
+        setting = self.get_setting(category_name, setting_name)
+        options = setting["options"]
+        if name in options:
+            raise ValueError(
+                f"Option '{name}' already exists in setting '{setting_name}'.",
+            )
+        options[name] = {
+            "type": "role",
+            "config_title": config_title,
+            "config_key": config_key,
+            "description": description,
+        }
+
+
     def get_setting(self, category_name, setting_name):
         if category_name not in self.categories:
             raise ValueError(f"Category '{category_name}' does not exist.")
