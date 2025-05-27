@@ -21,11 +21,7 @@ class GuildConfig:
     def add_setting(self, category_name, setting_name, description):
         if category_name not in self.categories:
             self.categories[category_name] = {}
-        if setting_name in self.categories[category_name]:
-            raise ValueError(
-                f"Setting '{setting_name}' already exists in category "
-                f"'{category_name}'.",
-            )
+        # Overwrite the setting and reset options if it already exists
         self.categories[category_name][setting_name] = {
             "options": {},
             "description": description,
