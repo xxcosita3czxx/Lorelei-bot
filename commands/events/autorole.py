@@ -4,6 +4,7 @@ import discord
 from discord.ext import commands
 
 from utils.configmanager import gconfig
+from utils.guildconfig import GuildConfig
 from utils.helpmanager import HelpManager
 
 logger = logging.getLogger("autorole")
@@ -34,3 +35,26 @@ async def setup(bot:commands.Bot):
     hm = HelpManager()
     hmhelp = hm.new_help("members","autorole","Automatically assigns a role to new members")  # noqa: E501
     hmhelp.set_help_page(1,"AutoRole","Automatically assigns a role to new members. Useful for default role or permissions that doesnt use everyone")  # noqa: E501
+    configman = GuildConfig()
+    configman.add_setting(
+        category_name="Members",
+        setting_name="AutoRole",
+        description="Automatically assigns a role to new members.",
+    )
+    configman.add_option_bool( # type: ignore
+        category_name="Members",
+        setting_name="AutoRole",
+        name="Enabled",
+        button_title="Enable",
+        config_title="MEMBERS",
+        config_key="autorole-enabled",
+        description="Enable AutoRole",
+    )
+    configman.add_option_role( # type: ignore
+        category_name="Members",
+        setting_name="AutoRole",
+        name="Role",
+        config_title="MEMBERS",
+        config_key="autorole-role",
+        description="Role to assign to new members.",
+    )
