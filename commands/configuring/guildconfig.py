@@ -30,7 +30,7 @@ class SettingView(discord.ui.View):
                 self.value = not self.value
                 self.label = f"{self.option_name}: {'True' if self.value else 'False'}"  # noqa: E501
                 self.style = discord.ButtonStyle.success if self.value else discord.ButtonStyle.danger  # noqa: E501
-                await interaction.response.edit_message(view=self) # type: ignore
+                await interaction.response.edit_message(view=self.view)
 
         class SettingDropdown(discord.ui.Select):
             def __init__(self, settings):
