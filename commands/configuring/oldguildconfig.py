@@ -62,7 +62,7 @@ class GuildConfig(commands.Cog):
         async def anti_invites(self,interaction: discord.Interaction,value: bool):
             try:
                 gconfig.set(
-                    id=interaction.guild_id,
+                    id=interaction.guild_id, # type: ignore
                     title="SECURITY",
                     key="anti-invite",
                     value=value,
@@ -79,10 +79,10 @@ class GuildConfig(commands.Cog):
             name="anti-alts",
             description="No alts on the server allowed!",
         )
-        async def antialts(self,interaction:discord.Interaction,enabled:bool,time:app_commands.Transform[str, TimeConverter]=None):  # noqa: E501
+        async def antialts(self,interaction:discord.Interaction,enabled:bool,time:app_commands.Transform[str, TimeConverter]=None):  # type: ignore # noqa: E501
             try:
-                gconfig.set(interaction.guild.id,"SECURITY","antialts-enabled",enabled)
-                gconfig.set(interaction.guild.id,"SECURITY","antialts-time",time)
+                gconfig.set(interaction.guild.id,"SECURITY","antialts-enabled",enabled) # type: ignore
+                gconfig.set(interaction.guild.id,"SECURITY","antialts-time",time) # type: ignore
             except Exception as e:
                 logger.info(f"There was error in settings {e}")
 
@@ -92,7 +92,7 @@ class GuildConfig(commands.Cog):
         async def anti_links(self,interaction: discord.Interaction,value: bool):
             try:
                 gconfig.set(
-                    id=interaction.guild_id,
+                    id=interaction.guild_id, # type: ignore
                     title="SECURITY",
                     key="anti-links",
                     value=value,
@@ -125,7 +125,7 @@ class GuildConfig(commands.Cog):
         ):
             try:
                 gconfig.set(
-                    id=interaction.guild_id,
+                    id=interaction.guild_id, # type: ignore
                     title="APPEARANCE",
                     key="color",
                     value=color,
@@ -152,7 +152,7 @@ class GuildConfig(commands.Cog):
         ):
             try:
                 gconfig.set(
-                    id=interaction.guild_id,
+                    id=interaction.guild_id, # type: ignore
                     title="APPEARANCE",
                     key="language",
                     value=language,
@@ -180,7 +180,7 @@ class GuildConfig(commands.Cog):
         async def conf_fun_dice(self, interaction:discord.Interaction,mode:str):
             if mode is None or mode == "" and mode not in dices.keys():  # noqa: SIM118
                 mode = "classic (6 sides)"
-            gconfig.set(interaction.guild.id,"FUN","def_dice",mode)
+            gconfig.set(interaction.guild.id,"FUN","def_dice",mode) # type: ignore
             await interaction.response.send_message(content="Value set.")
 
     @app_commands.default_permissions(
@@ -199,8 +199,8 @@ class GuildConfig(commands.Cog):
         async def conf_ticketing_reviews(
             self,
             interaction: discord.Interaction,
-            channel: discord.TextChannel = None,
-            value: bool = None,
+            channel: discord.TextChannel = None, # type: ignore
+            value: bool = None, # type: ignore
         ):
             try:
                 lang_key = uconfig.get(
@@ -216,13 +216,13 @@ class GuildConfig(commands.Cog):
 
                 if channel is not None and value is not None:
                     gconfig.set(
-                        id=interaction.guild_id,
+                        id=interaction.guild_id, # type: ignore
                         title="Ticketing",
                         key="reviews-enabled",
                         value=value,
                     )
                     gconfig.set(
-                        id=interaction.guild_id,
+                        id=interaction.guild_id, # type: ignore
                         title="Ticketing",
                         key="reviews-channel",
                         value=channel.id,
@@ -340,31 +340,31 @@ class GuildConfig(commands.Cog):
         ):
             try:
                 gconfig.set(
-                    id=interaction.guild_id,
+                    id=interaction.guild_id, # type: ignore
                     title="MEMBERS",
                     key="welcome-text",
                     value=text,
                 )
                 gconfig.set(
-                    id=interaction.guild_id,
+                    id=interaction.guild_id, # type: ignore
                     title="MEMBERS",
                     key="welcome-enabled",
                     value=enabled,
                 )
                 gconfig.set(
-                    id=interaction.guild_id,
+                    id=interaction.guild_id, # type: ignore
                     title="MEMBERS",
                     key="welcome-rich",
                     value=rich,
                 )
                 gconfig.set(
-                    id=interaction.guild_id,
+                    id=interaction.guild_id, # type: ignore
                     title="MEMBERS",
                     key="welcome-channel",
                     value=channel.id,
                 )
                 gconfig.set(
-                    id=interaction.guild_id,
+                    id=interaction.guild_id, # type: ignore
                     title="MEMBERS",
                     key="welcome-in_dms",
                     value=in_dms,
@@ -403,7 +403,7 @@ class GuildConfig(commands.Cog):
             interaction: discord.Interaction,
         ):
             try:
-                os.remove(f"data/guilds/{interaction.guild.id}.toml")
+                os.remove(f"data/guilds/{interaction.guild.id}.toml") # type: ignore
                 gconfig._load_all_configs()
                 await interaction.response.send_message(
                     content=lang.get(uconfig.get(interaction.user.id,"APPEARANCE","language"),"Responds","config_reset"),
@@ -428,10 +428,10 @@ class GuildConfig(commands.Cog):
             try:
                 if not interaction.guild:
                     await interaction.response.send_message("This command is runnable only from guilds")  # noqa: E501
-                file = "data/guilds"+ str(interaction.guild.id) + ".toml"
+                file = "data/guilds"+ str(interaction.guild.id) + ".toml" # type: ignore
                 await interaction.response.send_message(
                     content="Here is exported content that bot has saved. Remember that exports of message id dependent functions will not be ported over.",  # noqa: E501
-                    file=file,
+                    file=file, # type: ignore
                     ephemeral=True,
                 )
             except PermissionError:
@@ -452,15 +452,15 @@ class GuildConfig(commands.Cog):
             try:
                 if not interaction.guild:
                     await interaction.response.send_message("This command is runnable only from guilds")  # noqa: E501
-                if not interaction.data['attachments']:
+                if not interaction.data['attachments']: # type: ignore
                     await interaction.response.send_message(
                         content="No file uploaded. Please upload a config file.",
                         ephemeral=True,
                     )
                     return
-                attachment = interaction.data['attachments'][0]
+                attachment = interaction.data['attachments'][0] # type: ignore
                 file_content = await attachment.read()
-                with open("data/guilds"+ str(interaction.guild.id) + ".toml", "w") as f:  # noqa: E501
+                with open("data/guilds"+ str(interaction.guild.id) + ".toml", "w") as f:  # type: ignore # noqa: E501
                     f.write(file_content)
                 await interaction.response.send_message(
                     content="Config imported successfully.",

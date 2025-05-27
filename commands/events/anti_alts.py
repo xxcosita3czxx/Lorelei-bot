@@ -48,7 +48,7 @@ async def setup(bot:commands.Bot):
     setting.add_option( # type: ignore
         name="Enabled",
         description="Enable Anti-Alts",
-        option_type=bool,
+        option_type="bool",
         title="SECURITY",
         key="antialts-enabled",
     )
