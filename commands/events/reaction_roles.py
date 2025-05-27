@@ -26,8 +26,7 @@ def emoji2string(emoji_obj: PartialEmoji | str):
     else:  # Standard Unicode emoji
         return emoji.demojize(emoji_obj)
 
-#TODO add reaction roles
-#TODO pls its really importante
+#TODO Make it nicer and configurable trough new config system
 class ReactionRoles(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

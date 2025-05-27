@@ -107,7 +107,9 @@ class GuildConfig:
             "config_key": config_key,
             "description": description,
         }
-
+        #TODO Modal text edit and add
+        #TODO Language / custom list options
+        #TODO some more things i forgot discord could do
 
     def get_setting(self, category_name, setting_name):
         if category_name not in self.categories:

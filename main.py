@@ -6,14 +6,13 @@
 #TODO Embeds and translations of strings
 #TODO Level system more theme files
 #TODO Level system logic for leaderboards and levels
-#TODO Better config system (Embed style preferences + being able to add to it from the cog)  # noqa: E501
 #TODO Giveaway logic
 #TODO Welcome message when bot joins
+#TODO Finish adding settings to new config system
 #IDEA ids could be if num not in list then add, else continue
 # Also edit could add/edit already existing
 #IDEA Job to clean left guilds after a day or 12 hours,
 # So it wont cry about guild not existing
-#NOTE: see if something can use p-value
 
 import asyncio
 import importlib

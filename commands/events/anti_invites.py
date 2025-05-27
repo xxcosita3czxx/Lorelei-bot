@@ -1,6 +1,7 @@
 
 #TODO Anybody with manage-messages permissions shouldnt have deleted invites/links
 #TODO Antilinks deleting everything
+
 import logging
 
 import discord
@@ -31,8 +32,8 @@ class AntiInvites(commands.Cog):
                     logger.debug(message.author)
                     if message.author == self.bot.user:
                         return
-                    #if message.author.guild_permissions.administrator:
-                    #    return
+                    if message.author.guild_permissions.manage_messages:
+                        return
                     if 'discord.gg' in message.content:
                         try:
                             await message.delete()
@@ -65,8 +66,8 @@ class AntiInvites(commands.Cog):
                     )
                     if message.author == self.bot.user:
                         return
-#                    if message.author.guild_permissions.administrator:
-#                        return
+                    if message.author.guild_permissions.manage_messages:
+                        return
                     if 'https://' in message.content.lower() or "http://" in message.content.lower() or "www." in message.content.lower():  # noqa: SIM222, E501
                         try:
                             await message.delete()
