@@ -19,15 +19,23 @@ class SettingView(discord.ui.View):
         super().__init__()
 
         class BoolOptionButton(discord.ui.Button):
-            def __init__(self, option_name, value=True):
+            def __init__(self, option_name,config_title,config_key, value=True):  # noqa: E501
                 label = f"{option_name}: {'True' if value else 'False'}"
                 style = discord.ButtonStyle.success if value else discord.ButtonStyle.danger  # noqa: E501
                 super().__init__(label=label, style=style)
                 self.option_name = option_name
                 self.value = value
+                self.config_title = config_title
+                self.config_key = config_key
 
             async def callback(self, interaction: discord.Interaction):
                 self.value = not self.value
+                gconfig.set(
+                    interaction.guild.id,  # type: ignore
+                    self.config_title,
+                    self.config_key,
+                    self.value,  # type: ignore
+                )  # type: ignore
                 self.label = f"{self.option_name}: {'True' if self.value else 'False'}"  # noqa: E501
                 self.style = discord.ButtonStyle.success if self.value else discord.ButtonStyle.danger  # noqa: E501
                 await interaction.response.edit_message(view=self.view)
@@ -60,7 +68,7 @@ class SettingView(discord.ui.View):
                     if opt_type == "bool":
                         # Get the current value from config
                         current_value = gconfig.get(interaction.guild.id,conf_title, conf_key,False) # type: ignore  # noqa: E501
-                        view.add_item(BoolOptionButton(option, value=current_value))
+                        view.add_item(BoolOptionButton(option,config_title=conf_title,config_key=conf_key, value=current_value))  # noqa: E501
                     else:
                         embed.add_field(name=option, value=desc, inline=False)
                 await interaction.response.edit_message(
