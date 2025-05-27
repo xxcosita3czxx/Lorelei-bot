@@ -66,7 +66,7 @@ class SettingView(discord.ui.View):
             def __init__(self, interaction, name, config_title, config_key):
                 options = [
                     discord.SelectOption(label=role.name, value=str(role.id))
-                    for role in interaction.guild.roles if role.name != "@everyone" or role.name != "@here"  # noqa: E501
+                    for role in interaction.guild.roles if role.name != "@everyone"
                 ]
                 super().__init__(
                     placeholder="Select role...",
@@ -76,17 +76,15 @@ class SettingView(discord.ui.View):
                 self.config_title = config_title
                 self.config_key = config_key
 
-            def _get_guild_roles(self):
-                # You'll need to override this or pass the guild object some other way  # noqa: E501
-                # This is just a stub; you'll want real roles here!
-                return []
-
             async def callback(self, interaction: discord.Interaction):
                 selected_role_id = int(self.values[0])
-                # Save to config (example, replace with your actual save logic)
+                gconfig.set(
+                    interaction.guild.id,  # type: ignore
+                    self.config_title,
+                    self.config_key,
+                    selected_role_id,  # type: ignore
+                )  # type: ignore
                 # gconfig.save(interaction.guild.id, self.config_title, self.config_key, selected_role_id)  # noqa: E501
-                await interaction.response.send_message(f"Role set to <@&{selected_role_id}>", ephemeral=True)  # noqa: E501
-
 
         class SettingDropdown(discord.ui.Select):
             def __init__(self, settings):
