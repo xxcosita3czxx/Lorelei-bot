@@ -5,4 +5,4 @@ async def respEmbed(interaction:discord.Interaction,content:str,ephemeral:bool=F
     embed = discord.Embed(
         description=content,
     )
-    interaction.response.send_message(embed=embed,ephemeral=ephemeral)
+    await interaction.response.send_message(embed=embed,ephemeral=ephemeral)

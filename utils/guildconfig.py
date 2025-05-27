@@ -27,12 +27,11 @@ class GuildConfig:
             "description": description,
         }
 
-    def add_option(
+    def add_option_bool(
         self,
         category_name,
         setting_name,
         name,
-        option_type,
         button_title,
         config_title,
         config_key,
@@ -58,7 +57,7 @@ class GuildConfig:
                 f"'{setting_name}'.",
             )
         options[name] = {
-            "type": option_type,
+            "type": "bool",
             "button_title": button_title,
             "config_title": config_title,
             "config_key": config_key,

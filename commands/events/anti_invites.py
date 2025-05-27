@@ -96,11 +96,10 @@ async def setup(bot:commands.Bot):
         setting_name="Anti-Invites",
         description="Anti-Invites system to prevent invites from being sent in the server.",  # noqa: E501
     )
-    configman.add_option( # type: ignore
+    configman.add_option_bool( # type: ignore
         category_name="Security",
         setting_name="Anti-Invites",
         name="Enabled",
-        option_type="bool",
         button_title="Enable",
         config_title="SECURITY",
         config_key="anti-invite",
@@ -111,11 +110,10 @@ async def setup(bot:commands.Bot):
         setting_name="Anti-Links",
         description="Anti-Links system to prevent links from being sent in the server.",  # noqa: E501
     )
-    configman.add_option( # type: ignore
+    configman.add_option_bool( # type: ignore
         category_name="Security",
         setting_name="Anti-Links",
         name="Enabled",
-        option_type="bool",
         button_title="Enable",
         config_title="SECURITY",
         config_key="anti-links",

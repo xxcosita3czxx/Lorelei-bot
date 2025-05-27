@@ -19,7 +19,7 @@ def info_text_gen(userid):
         "info_text_raw",
     )
 
-    contributors = ctkit.GithubApi.get_repo_contributors(owner=mowner,repo=mrepo)
+    contributors = ctkit.GithubApi.get_repo_contributors(owner=mowner,repo=mrepo) # type: ignore
     contributors = [
         contributor for contributor in contributors if contributor != mowner
     ]

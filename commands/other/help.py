@@ -26,10 +26,10 @@ class HelpCommand(commands.Cog):
         command=autocomplete_help_commands,  # noqa: E501
         page=autocomplete_help_pages,  # noqa: E501
     )
-    async def helpcommand(self, interaction: discord.Interaction, group: str = None, command: str = None, page: int = 1):  # noqa: E501
+    async def helpcommand(self, interaction: discord.Interaction, group: str = None, command: str = None, page: int = 1):  # type: ignore # noqa: E501
         await self.handle_help(interaction, group, command, page)
 
-    async def handle_help(self, interaction: discord.Interaction, group: str = None, command: str = None, page: int = 1):  # noqa: C901, E501
+    async def handle_help(self, interaction: discord.Interaction, group: str = None, command: str = None, page: int = 1):  # type: ignore # noqa: C901, E501
         help_manager = HelpManager()
         embed = discord.Embed(title="Help", color=discord.Color.blurple())
         message_sent = False
@@ -84,7 +84,7 @@ class HelpCommand(commands.Cog):
                 if page not in pages:
                     raise ValueError(f"Page '{page}' does not exist for command '{command}' in group '{group}'.")  # noqa: E501
 
-                embed = discord.Embed(title=help_manager.get_help_page(group, command, page)["title"],description=help_manager.get_help_page(group, command, page)["description"])  # noqa: E501
+                embed = discord.Embed(title=help_manager.get_help_page(group, command, page)["title"],description=help_manager.get_help_page(group, command, page)["description"])  # type: ignore # noqa: E501
                 embed.set_footer(text=f"Page {page} of {len(pages)}")
 
                 if len(pages) > 1:
@@ -121,4 +121,4 @@ class HelpCommand(commands.Cog):
 
 async def setup(bot:discord.AutoShardedClient):
     cog = HelpCommand(bot=bot)
-    await bot.add_cog(cog)
+    await bot.add_cog(cog) # type: ignore
