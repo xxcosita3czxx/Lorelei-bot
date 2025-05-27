@@ -7,6 +7,7 @@ import discord
 from discord.ext import commands
 
 from utils.configmanager import gconfig, lang, uconfig
+from utils.guildconfig import GuildConfig
 
 logger = logging.getLogger("anti-invites")
 
@@ -89,3 +90,34 @@ class AntiInvites(commands.Cog):
 
 async def setup(bot:commands.Bot):
     await bot.add_cog(AntiInvites(bot))
+    configman = GuildConfig()
+    configman.add_setting(
+        category_name="Security",
+        setting_name="Anti-Invites",
+        description="Anti-Invites system to prevent invites from being sent in the server.",  # noqa: E501
+    )
+    configman.add_option( # type: ignore
+        category_name="Security",
+        setting_name="Anti-Invites",
+        name="Enabled",
+        option_type="bool",
+        button_title="Enable",
+        config_title="SECURITY",
+        config_key="anti-invite",
+        description="Enable Anti-Invites",
+    )
+    configman.add_setting(
+        category_name="Security",
+        setting_name="Anti-Links",
+        description="Anti-Links system to prevent links from being sent in the server.",  # noqa: E501
+    )
+    configman.add_option( # type: ignore
+        category_name="Security",
+        setting_name="Anti-Links",
+        name="Enabled",
+        option_type="bool",
+        button_title="Enable",
+        config_title="SECURITY",
+        config_key="anti-links",
+        description="Enable Anti-Links",
+    )
