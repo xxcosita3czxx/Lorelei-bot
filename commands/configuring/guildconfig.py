@@ -54,9 +54,13 @@ class SettingView(discord.ui.View):
                 for option in options:
                     option_data = config_session.get_option(category_name, selected, option)  # noqa: E501
                     desc = option_data.get("description", "No description")
+                    conf_title = option_data.get("config_title", option)
+                    conf_key = option_data.get("config_key", option)
                     opt_type = option_data.get("type", "str")
                     if opt_type == "bool":
-                        view.add_item(BoolOptionButton(option, value=True))
+                        # Get the current value from config
+                        current_value = gconfig.get(interaction.guild.id,conf_title, conf_key,False) # type: ignore  # noqa: E501
+                        view.add_item(BoolOptionButton(option, value=current_value))
                     else:
                         embed.add_field(name=option, value=desc, inline=False)
                 await interaction.response.edit_message(
