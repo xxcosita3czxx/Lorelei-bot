@@ -85,7 +85,7 @@ class SettingView(discord.ui.View):
                     selected_role_id,  # type: ignore
                 )  # type: ignore
                 # gconfig.save(interaction.guild.id, self.config_title, self.config_key, selected_role_id)  # noqa: E501
-
+                await interaction.response.defer(ephemeral=True)
         class SettingDropdown(discord.ui.Select):
             def __init__(self, settings):
                 select_options = [
