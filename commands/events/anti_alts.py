@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 
 from utils.configmanager import gconfig
-from utils.guildconfig import GuildConfig
+from utils.guildconfig import GuildConfig  # noqa: F401
 
 #from humanfriendly import format_timespan
 logger = logging.getLogger("anti-alts")

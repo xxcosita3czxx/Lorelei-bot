@@ -59,8 +59,14 @@ class SettingView(discord.ui.View):
             async def callback(self, interaction: discord.Interaction):
                 selected_channel_id = int(self.values[0])
                 # Save to config (example, replace with your actual save logic)
+                gconfig.set(
+                    interaction.guild.id,  # type: ignore
+                    self.config_title,
+                    self.config_key,
+                    selected_channel_id,  # type: ignore
+                )  # type: ignore
                 # gconfig.save(interaction.guild.id, self.config_title, self.config_key, selected_channel_id)  # noqa: E501
-                await interaction.response.send_message(f"Channel set to <#{selected_channel_id}>", ephemeral=True)  # noqa: E501
+                await interaction.response.defer(ephemeral=True)
 
         class RoleSelectMenu(Select):
             def __init__(self, interaction, name, config_title, config_key):
