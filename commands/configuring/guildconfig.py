@@ -153,6 +153,10 @@ class SettingView(discord.ui.View):
                         view.add_item(
                             RoleSelectMenu(interaction=interaction, name=option, config_title=conf_title, config_key=conf_key),  # noqa: E501
                         )
+                    elif opt_type == "category":
+                        view.add_item(
+                            CategorySelectMenu(interaction=interaction,name=option, config_title=conf_title,config_key=conf_key),  # noqa: E501
+                        )
                     else:
                         embed.add_field(name=option, value=desc, inline=False)
                 await interaction.response.edit_message(
