@@ -41,7 +41,6 @@ class SettingView(discord.ui.View):
                 self.style = discord.ButtonStyle.success if self.value else discord.ButtonStyle.danger  # noqa: E501
                 await interaction.response.edit_message(view=self.view)
 
-
         class TextChannelSelectMenu(Select):
             def __init__(self, interaction, name, config_title, config_key):
                 options = [
@@ -68,11 +67,36 @@ class SettingView(discord.ui.View):
                 # gconfig.save(interaction.guild.id, self.config_title, self.config_key, selected_channel_id)  # noqa: E501
                 await interaction.response.defer(ephemeral=True)
 
+        class CategorySelectMenu(Select):
+            def __init__(self, interaction:discord.Interaction, name, config_title, config_key):  # noqa: E501
+                options = [
+                    discord.SelectOption(label=category.name, value=str(category.id))  # noqa: E501
+                    for category in interaction.guild.categories if isinstance(category,discord.CategoryChannel) # type: ignore  # noqa: E501
+                ]
+                super().__init__(
+                    placeholder="Select category...",
+                    options=options,
+                    custom_id=f"category_select_{name}",
+                )
+                self.config_title = config_title
+                self.config_key = config_key
+
+            async def callback(self, interaction: discord.Interaction):
+                selected_category_id = int(self.values[0])
+                gconfig.set(
+                    interaction.guild.id, # type: ignore
+                    self.config_title,
+                    self.config_key,
+                    selected_category_id,
+                )
+                await interaction.response.defer(ephemeral=True)
+
+
         class RoleSelectMenu(Select):
             def __init__(self, interaction, name, config_title, config_key):
                 options = [
                     discord.SelectOption(label=role.name, value=str(role.id))
-                    for role in interaction.guild.roles if role.name != "@everyone"
+                    for role in interaction.guild.roles if role.name != "everyone"
                 ]
                 super().__init__(
                     placeholder="Select role...",
