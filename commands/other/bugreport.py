@@ -27,7 +27,8 @@ class BugReport(commands.Cog):
         self.bot = bot
     @app_commands.command(name="bugreport",description="Here you can report bug")
     @app_commands.checks.cooldown(1, 45, key=lambda i: (i.guild_id, i.user.id))
-    async def bugreport(self,interaction: discord.Interaction, command:str,explanation:str,nosave:bool=False):  # noqa: E501
+    async def bugreport(self,interaction: discord.Interaction, command:str,explanation:str):  # noqa: E501
+        nosave:bool=False
         if nosave:
             logger.info("-----LAST LOGS-----")
             last_logs_final = last_logs
@@ -39,7 +40,7 @@ class BugReport(commands.Cog):
             try:
                 local_time = time.localtime()
                 formatted_time = time.strftime("%Y-%m-%d_%H-%M-%S", local_time)
-                with open(f"data/bug-reports/bugreport-{command}-{interaction.guild.id}-{interaction.user.name}-{interaction.user.id}-{formatted_time}.txt", mode="w") as f:  # noqa: E501
+                with open(f"data/bug-reports/bugreport-{command}-{interaction.guild.id}-{interaction.user.name}-{interaction.user.id}-{formatted_time}.txt", mode="w") as f:  # type: ignore # noqa: E501
                     f.write(f"Reported by: {interaction.user.name}\n")
                     f.write(f"Reported at: {formatted_time}\n")
                     f.write(f"Command: {command}\n")
@@ -49,9 +50,9 @@ class BugReport(commands.Cog):
                     for line in last_logs:
                         f.write(line+"\n")
                     f.write("End of logs.\n")
-                    f.write(f"Happened on server: {interaction.guild.name}\n")
-                    f.write(f"Channel: {interaction.channel.id}\n")
-                    f.write(f"User permissions: {interaction.user.guild_permissions}\n")  # noqa: E501
+                    f.write(f"Happened on server: {interaction.guild.name}\n") # type: ignore
+                    f.write(f"Channel: {interaction.channel.id}\n") # type: ignore
+                    f.write(f"User permissions: {interaction.user.guild_permissions}\n")  # type: ignore # noqa: E501
                     f.write(f"Bots permissions on server: {interaction.app_permissions}\n")  # noqa: E501
                     f.write("End of report.\n")
                     f.close()
