@@ -38,5 +38,5 @@ class OnJoin(commands.Cog):
             logger.debug(f"No channel found to send welcome at {guild.id}")
 
 
-def setup(bot):
-    bot.add_cog(OnJoin(bot))
+async def setup(bot):
+    await bot.add_cog(OnJoin(bot))
