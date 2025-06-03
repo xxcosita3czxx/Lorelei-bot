@@ -215,7 +215,7 @@ class GuildConfigCommands(commands.Cog):
         def __init__(self):
             super().__init__()
             self.name = "guildconfig"
-            self.description = "Config for server, PLEASE DO NOT USE YET"
+            self.description = "Config for server"
 
         @app_commands.command(
             name="configure",
