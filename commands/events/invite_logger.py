@@ -24,13 +24,13 @@ class InviteLogger(commands.Cog):
         async def invite(self, interaction: discord.Interaction, invite: str):  # noqa: E501
             invite_obj:discord.Invite = await self.bot.fetch_invite(invite)
             await interaction.response.send_message(
-                content=f"Invite {invite_obj.code} was created by {invite_obj.inviter.name} and has {invite_obj.uses} uses.",  # noqa: E501
+                content=f"Invite {invite_obj.code} was created by {invite_obj.inviter.name} and has {invite_obj.uses} uses.",  # noqa: E501 # type: ignore
                 ephemeral=True,
             )
 
         @app_commands.command(name="user", description="Get all invites from a user")  # noqa: E501
         async def user(self, interaction: discord.Interaction, user: discord.User):
-            invites = await interaction.guild.invites()
+            invites = await interaction.guild.invites() # type: ignore
             user_invites = [invite for invite in invites if invite.inviter == user]
             if user_invites:
                 total_uses = sum(invite.uses or 0 for invite in user_invites)
@@ -57,7 +57,7 @@ class InviteLogger(commands.Cog):
             logger.debug(f"{member} was invited by {inviter.name}")
 
     @staticmethod
-    async def get_used_invite(self, member: discord.Member):
+    async def get_used_invite(self, member: discord.Member): # type: ignore
         invites_before = self.invites[member.guild.id]
         invites_after = await member.guild.invites()
 

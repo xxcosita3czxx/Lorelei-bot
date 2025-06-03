@@ -32,7 +32,7 @@ class AntiInvites(commands.Cog):
                     logger.debug(message.author)
                     if message.author == self.bot.user:
                         return
-                    if message.author.guild_permissions.manage_messages:
+                    if message.author.guild_permissions.manage_messages: # type: ignore
                         return
                     if 'discord.gg' in message.content:
                         try:
@@ -66,7 +66,7 @@ class AntiInvites(commands.Cog):
                     )
                     if message.author == self.bot.user:
                         return
-                    if message.author.guild_permissions.manage_messages:
+                    if message.author.guild_permissions.manage_messages: # type: ignore
                         return
                     if 'https://' in message.content.lower() or "http://" in message.content.lower() or "www." in message.content.lower():  # noqa: SIM222, E501
                         try:

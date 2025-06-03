@@ -15,7 +15,8 @@ class Hello(commands.Cog):
         await interaction.response.send_message("Hello!")
 
 async def setup(bot:commands.Bot):
-    await bot.add_cog(Hello(bot))
+    cog = Hello(bot)
+    await bot.add_cog(cog)
 ```
 
 Dont worry about adding into main.py, as it is added automaticaly after restart if syntax is correct, else it will throw error

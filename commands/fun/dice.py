@@ -19,9 +19,17 @@ class Dice(commands.Cog):
     @app_commands.autocomplete(mode=autocomplete_dice_modes)
     async def dice(self,interaction:discord.Interaction,mode:str=None): # type: ignore
         if mode == "" or mode is None:  # noqa: SIM118
-            mode = gconfig.get(id=interaction.guild.id,title="FUN",key="def_dice")  # type: ignore # noqa: E501
+            mode = gconfig.get(
+                id=interaction.guild.id, # type: ignore
+                title="FUN",
+                key="def_dice",
+            )
             if mode is None:
-                mode = uconfig.get(id=interaction.user.id,title="FUN",key="def_dice")  # noqa: E501
+                mode = uconfig.get(
+                    id=interaction.user.id,
+                    title="FUN",
+                    key="def_dice",
+                )
                 if mode is None:
                     mode = "classic (D6)"
         elif mode not in dices.keys():  # noqa: SIM118
@@ -29,7 +37,7 @@ class Dice(commands.Cog):
                 title="Error",
                 description="Invalid dice mode",
             )
-            await interaction.response.send_message(embed=embed,ephemeral=True)  # noqa: E501
+            await interaction.response.send_message(embed=embed,ephemeral=True)
             return
         try:
             min_val, max_val = dices[mode]
