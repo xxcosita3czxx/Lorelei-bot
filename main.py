@@ -324,7 +324,7 @@ async def change_status() -> None:
         await bot.change_presence(
             activity=discord.Activity(
                 type=discord.ActivityType.listening,
-                name="/info",
+                name="/help",
             ),
             status=config.status,
         )
