@@ -30,7 +30,7 @@ class OnJoin(commands.Cog):
         if channel:
             embed = discord.Embed(
                 title="Thank you for adding me!",
-                description="I'm here to help you manage your server. Use `/help` to see what I can do, or start right by using `/guildconfig configure.\nHope you like it.\n\n(Bot is in constant development, if you find any bug or want anything to change, feel free to do /bugreport)",  # noqa: E501
+                description="I'm here to help you manage your server. Use `/help` to see what I can do, or start right by using `/guildconfig configure.`\nHope you like it.\n\n(Bot is in constant development, if you find any bug or want anything to change, feel free to do /bugreport)",  # noqa: E501
                 color=discord.Color.blurple(),
             )
             await channel.send(embed=embed)
