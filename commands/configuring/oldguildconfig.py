@@ -385,7 +385,7 @@ class GuildConfig(commands.Cog):
     class configure(app_commands.Group):
         def __init__(self):
             super().__init__()
-            self.name = "guildconfig"
+            self.name = "oldguildconfig"
             self.description = "Config for server"
             self.add_command(GuildConfig.configure_sec())
             self.add_command(GuildConfig.configure_appear())
