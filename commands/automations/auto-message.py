@@ -5,6 +5,7 @@ import discord
 from discord.ext import commands, tasks
 
 from utils.configmanager import gconfig
+from utils.guildconfig import GuildConfig
 
 #TODO add support for cron style
 
@@ -56,3 +57,5 @@ class AutoMessages(commands.Cog):
 async def setup(bot: commands.Bot):
     cog = AutoMessages(bot)
     await bot.add_cog(cog)
+    configman = GuildConfig()
+    configman.add_setting("Automations", "Auto Messages", "Configure automatic messages sent to channels at regular intervals.")  # noqa: E501

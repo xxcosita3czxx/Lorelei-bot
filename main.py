@@ -386,7 +386,21 @@ tree = bot.tree
 # just to be sure bcs context commands with this version of client also works
 # so no .help
 tree.remove_command("help")
+# ...existing code...
 
+@bot.tree.error
+async def on_app_command_error(interaction: discord.Interaction, error: discord.app_commands.AppCommandError):  # noqa: E501
+    if isinstance(error, discord.NotFound) and "Unknown interaction" in str(error):
+        try:  # noqa: SIM105
+            await interaction.response.send_message(
+                "This interaction is no longer valid. Please reload Discord and try again.",  # noqa: E501
+                ephemeral=True,
+            )
+        except Exception:  # noqa: S110
+            pass  # Can't respond if interaction is already expired
+
+
+# ...existing code...
 ########################## Main Runner #############################################
 
 if __name__=="__main__":

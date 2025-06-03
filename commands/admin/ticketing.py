@@ -6,6 +6,7 @@ from discord import app_commands, utils
 from discord.ext import commands
 
 from utils.configmanager import gconfig, lang, uconfig
+from utils.guildconfig import GuildConfig
 
 
 class Ticketing(commands.Cog):
@@ -422,3 +423,18 @@ async def setup(bot:commands.Bot):
     bot.add_view(Ticketing.main())
     bot.add_view(Ticketing.confirm())
     bot.tree.add_command(cog.ticketing_group())
+    configman = GuildConfig()
+    configman.add_setting(
+        "Admin",
+        "Ticketing",
+        "Ticketing Settings",
+    )
+    configman.add_option_bool(
+        "Admin",
+        "Ticketing",
+        "reviews-enabled",
+        "Enable Reviews",
+        "Ticketing",
+        "reviews-enabled",
+        "Enable reviews for tickets.",
+    )
