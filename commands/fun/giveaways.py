@@ -46,23 +46,23 @@ class Giveaways(commands.Cog):
             interaction:discord.Interaction,
             message:str,
         ):
-            pass
+            await interaction.response.defer(ephemeral=True)  # type: ignore
 
         @app_commands.command(name="running",description="List of all running Giveaways.")  # noqa: E501
         async def giveaway_list(
             self,
             interaction:discord.Interaction,
         ):
-            Giveaways.giveaway_list().create(interaction=interaction)
+            await Giveaways.giveaway_list().create(interaction=interaction)
 
     class giveaway_list(discord.ui.View):
         def __init__(self):
             super().__init__(timeout = None)
-        def create(self,interaction:discord.Interaction):
+        async def create(self,interaction:discord.Interaction):
             embed= discord.Embed(
                 title="Running Giveaways in the server",
             )
-            interaction.response.send_message(embed=embed,view=self) # type: ignore
+            await interaction.response.send_message(embed=embed,view=self) # type: ignore
         @discord.ui.button(
             label="Previous",
             style=discord.ButtonStyle.blurple,
