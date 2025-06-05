@@ -20,7 +20,7 @@ class OnJoin(commands.Cog):
                 c for c in guild.text_channels
                 if c.permissions_for(guild.me).send_messages
             ]
-            preferred = [c for c in candidates if "welcome" in c.name.lower() or "general" in c.name.lower()]  # noqa: E501
+            preferred = [c for c in candidates if "welcome" in c.name.lower() or "general" in c.name.lower() or "chat" in c.name.lower()]  # noqa: E501
             if preferred:
                 channel = preferred[0]
             elif candidates:
