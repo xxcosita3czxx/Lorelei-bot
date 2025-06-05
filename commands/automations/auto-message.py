@@ -16,7 +16,7 @@ class AutoMessages(commands.Cog):
         self.bot:discord.AutoShardedClient = bot
         self.auto_message_task.start()
 
-    @tasks.loop(seconds=30)
+    @tasks.loop(seconds=60)  # Increased interval to reduce intensity
     async def auto_message_task(self):
         """Background task to send the auto messages based on their intervals."""
         now = datetime.now().timestamp()
@@ -48,7 +48,9 @@ class AutoMessages(commands.Cog):
                             await channel.send(message) # type: ignore
                         else:
                             await channel.send(message,embed=embed) # type: ignore
-                        gconfig.set(guild_id,f"automessages-{channelid}","timestamp",now)
+                        # Synchronize to the next full interval (e.g., next minute)
+                        next_time = ((int(now) // interval) + 1) * interval
+                        gconfig.set(guild_id,f"automessages-{channelid}","timestamp",next_time)
 
     @auto_message_task.before_loop
     async def before_auto_message_task(self):
@@ -59,3 +61,8 @@ async def setup(bot: commands.Bot):
     await bot.add_cog(cog)
     configman = GuildConfig()
     configman.add_setting("Automations", "Auto Messages", "Configure automatic messages sent to channels at regular intervals.")  # noqa: E501
+#                gconfig.set(guild_id,f"automessages-{channel_id}", "embed", embed)
+#                gconfig.set(guild_id,f"automessages-{channel_id}", "message", message)  # noqa: E501
+#                gconfig.set(guild_id,f"automessages-{channel_id}", "interval", interval)  # noqa: E501
+#                gconfig.set(guild_id,f"automessages-{channel_id}", "timestamp", timestamp)  # noqa: E501
+# need to make a id list type config / selector

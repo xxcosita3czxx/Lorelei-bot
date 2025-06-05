@@ -116,7 +116,7 @@ class Giveaways(commands.Cog):
             logger.debug(gconfig.get(interaction.guild.id,"Giveaways",f"{interaction.message.id}-joined"))
 
 async def setup(bot:commands.Bot):
-#    cog = Giveaways(bot)
-#    await bot.add_cog(cog)
-#    bot.tree.add_command(cog.giveaway())
-    pass
+    cog = Giveaways(bot)
+    await bot.add_cog(cog)
+    bot.tree.add_command(cog.giveaway())
+#    pass
