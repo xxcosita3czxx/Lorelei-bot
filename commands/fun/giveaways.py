@@ -61,6 +61,7 @@ class Giveaways(commands.Cog):
         async def create(self,interaction:discord.Interaction):
             embed= discord.Embed(
                 title="Running Giveaways in the server",
+                description="This is a list of all running giveaways in the server. MOCKED",  # noqa: E501
             )
             await interaction.response.send_message(embed=embed,view=self) # type: ignore
         @discord.ui.button(
