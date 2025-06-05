@@ -1,69 +1,39 @@
+import logging  # noqa: F401
+
 import discord
 from discord import app_commands
 from discord.ext import commands
 
-from utils.autocomplete import (
-    autocomplete_color,
-    autocomplete_dice_modes,
-    autocomplete_lang,
-)
-from utils.configmanager import lang, uconfig
-from utils.dices import dices
+from commands.configuring.guildconfig import CategoryView
+from utils.guildconfig import GuildConfig
 
-__PRIORITY__ = 9
+logger = logging.getLogger("userconfig")
 
-class UserConfig(commands.Cog):
+class UserConfigCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-    @app_commands.default_permissions(
-        administrator=True,
-    )
-    class userconfig(app_commands.Group):
-        def __init__(self):
-            super().__init__()
-            self.name = "userconfig"
-            self.description = "Config for users"
-        @app_commands.command(name="color",description="Default color bot will respond for you")  # noqa: E501
-        @app_commands.autocomplete(color=autocomplete_color)
-        async def conf_user_color(self,interaction:discord.Interaction, color:str):
-            try:
-                uconfig.set(interaction.user.id,"Appearance","color",color)
-                await interaction.response.send_message(
-                    content=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","value_set").format(values=color),
-                    ephemeral=True,
-                )
-            except Exception as e:
-                await interaction.response.send_message(
-                    content=f"Exception happened: {e}",
-                    ephemeral=True,
-                )
-        @app_commands.command(name="dice",description="Default dice mode")
-        @app_commands.autocomplete(mode=autocomplete_dice_modes)
-        async def conf_fun_dice(self, interaction:discord.Interaction,mode:str):
-            if mode is None or mode == "" and mode not in dices.keys():  # noqa: SIM118
-                mode = "classic (6 sides)"
-            uconfig.set(interaction.guild.id,"FUN","def_dice",mode)
-            await interaction.response.send_message(content=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","value_set").format(values=mode))  # noqa: E501
 
-        @app_commands.command(
-            name="language",
-            description="Language the bot will respond to you",
+
+    @app_commands.command(
+        name="userconfig",
+        description="Configure the bot",  # noqa: E501
+    )
+    async def configure(self,interaction:discord.Interaction):
+        config_session = GuildConfig()  # noqa: F841
+        embed = discord.Embed(
+            title="Configuration Categories",
+            description="Select a category to configure",
         )
-        @app_commands.autocomplete(language=autocomplete_lang)
-        async def conf_user_lang(self,interaction:discord.Interaction,language:str):
-            try:
-                uconfig.set(interaction.user.id,"Appearance","language",language)
-                await interaction.response.send_message(
-                    content=f"Setted value {str(language)}",
-                    ephemeral=True,
-                )
-            except Exception as e:
-                await interaction.response.send_message(
-                    content=f"Exception happened: {e}",
-                    ephemeral=True,
-                )
+        logger.debug(config_session.Configs)
+        for category in config_session.Configs:
+            embed.add_field(name=category, value=f"Configure {category}", inline=False)  # noqa: E501
+        categories = config_session.get_categories()  # Assuming Configs is a dictionary  # noqa: E501
+        await interaction.response.send_message(
+            embed=embed,
+            view=CategoryView(categories, config_session),
+            ephemeral=True,
+        )  # noqa: E501
 
 async def setup(bot:commands.Bot):
-    cog = UserConfig(bot)
+    cog = UserConfigCommands(bot)
     await bot.add_cog(cog)
-    bot.tree.add_command(cog.userconfig())

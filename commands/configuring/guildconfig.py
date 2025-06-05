@@ -315,4 +315,5 @@ async def setup(bot:commands.Bot):
     cog = GuildConfigCommands(bot)
     await bot.add_cog(cog)
     bot.tree.add_command(cog.configure())
+
 # Aint doing it yet and i will do mostly commands, as functionalities are needed more  # noqa: E501
