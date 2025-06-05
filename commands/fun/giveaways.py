@@ -53,7 +53,7 @@ class Giveaways(commands.Cog):
             self,
             interaction:discord.Interaction,
         ):
-            Giveaways.giveaway_list().create(self,interaction=interaction)
+            Giveaways.giveaway_list().create(interaction=interaction)
 
     class giveaway_list(discord.ui.View):
         def __init__(self):
@@ -62,22 +62,22 @@ class Giveaways(commands.Cog):
             embed= discord.Embed(
                 title="Running Giveaways in the server",
             )
-            interaction.response.send_message(embed=embed,view=self)
+            interaction.response.send_message(embed=embed,view=self) # type: ignore
         @discord.ui.button(
             label="Previous",
             style=discord.ButtonStyle.blurple,
             custom_id="prev_giveaway_list",
-        )
+        ) # type: ignore
         async def previous(self,interaction:discord.Interaction,button:discord.Button):  # noqa: E501
-            interaction.response.send_message("Previous",ephemeral=True)
+            await interaction.response.send_message("Previous",ephemeral=True)
 
         @discord.ui.button(
             label="Next",
             style=discord.ButtonStyle.blurple,
             custom_id="next_giveaway_list",
-        )
+        ) # type: ignore
         async def next(self,interaction:discord.Interaction,button:discord.Button):
-            interaction.response.send_message("Next",ephemeral=True)
+            await interaction.response.send_message("Next",ephemeral=True)
 
     class giveaway_open(discord.ui.View):
         def __init__(self) -> None:  # noqa: ANN101
@@ -105,15 +105,15 @@ class Giveaways(commands.Cog):
             label = "Join",
             style = discord.ButtonStyle.blurple,
             custom_id = "join",
-        )
+        ) # type: ignore
         async def join_giv(self,interaction: discord.Interaction, button: discord.Button): # noqa: E501
-            if gconfig.get(interaction.guild.id,"Giveaways",f"{interaction.message.id}-joined") is not None:  # noqa: E501
-                old = gconfig.get(interaction.guild.id,"Giveaways",f"{interaction.message.id}-joined")  # noqa: E501
-                gconfig.set(interaction.guild.id,"Giveaways",f"{interaction.message.id}-joined",f"{old} {interaction.user.id}")  # noqa: E501
+            if gconfig.get(interaction.guild.id,"Giveaways",f"{interaction.message.id}-joined") is not None:  # type: ignore # noqa: E501
+                old = gconfig.get(interaction.guild.id,"Giveaways",f"{interaction.message.id}-joined")  # type: ignore # noqa: E501
+                gconfig.set(interaction.guild.id,"Giveaways",f"{interaction.message.id}-joined",f"{old} {interaction.user.id}")  # type: ignore # noqa: E501
             else:
-                gconfig.set(interaction.guild.id,"Giveaways",f"{interaction.message.id}-joined",interaction.user.id)
+                gconfig.set(interaction.guild.id,"Giveaways",f"{interaction.message.id}-joined",interaction.user.id) # type: ignore
             await interaction.response.send_message(content="Joined!",ephemeral=True)  # noqa: E501
-            logger.debug(gconfig.get(interaction.guild.id,"Giveaways",f"{interaction.message.id}-joined"))
+            logger.debug(gconfig.get(interaction.guild.id,"Giveaways",f"{interaction.message.id}-joined")) # type: ignore
 
 async def setup(bot:commands.Bot):
     cog = Giveaways(bot)
