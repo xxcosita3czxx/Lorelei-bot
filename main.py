@@ -51,8 +51,8 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S',
 )
 
+global _status
 _status = True
-
 ############################### Functions ##########################################
 
 async def load_cogs(directory, bot):  # noqa: C901
@@ -135,6 +135,7 @@ async def socket_listener(bot):
         await server.serve_forever()
 
 async def handle_client(reader, writer, bot):
+    global _status
     try:
         data = await reader.read(1024)
         command = data.decode('utf-8').strip()
@@ -148,6 +149,7 @@ async def handle_client(reader, writer, bot):
         await writer.wait_closed()
 
 async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,writer):  # noqa: C901, E501
+    global _status
     if command.startswith('help'):
         return 'Available commands: reload_all, unload, load, profiler [start|stop|stats], info [guilds|lat|uptime], kill, update, bugreports [index]'  # noqa: E501
 
@@ -190,6 +192,7 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
                 _status = True
                 return lang.config(config.language,"Bot","reload_success") # type: ignore
             except Exception as e:
+                _status = True
                 return f'Failed to reload. Error: {e}'
 
         elif command.startswith("unload"):
