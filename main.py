@@ -51,8 +51,7 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S',
 )
 
-global _status
-_status = True
+
 ############################### Functions ##########################################
 
 async def load_cogs(directory, bot):  # noqa: C901
@@ -135,7 +134,6 @@ async def socket_listener(bot):
         await server.serve_forever()
 
 async def handle_client(reader, writer, bot):
-    global _status
     try:
         data = await reader.read(1024)
         command = data.decode('utf-8').strip()
@@ -149,7 +147,6 @@ async def handle_client(reader, writer, bot):
         await writer.wait_closed()
 
 async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,writer):  # noqa: C901, E501
-    global _status
     if command.startswith('help'):
         return 'Available commands: reload_all, unload, load, profiler [start|stop|stats], info [guilds|lat|uptime], kill, update, bugreports [index]'  # noqa: E501
 
@@ -160,16 +157,6 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
         _, command = parts
         if command.startswith('reload_all'):
             try:
-                _status = False
-                # --- Set status to reloading ---
-                await bot.change_presence(
-                    activity=discord.Activity(
-                        type=discord.ActivityType.playing,
-                        name="Reloading commands, please wait...",
-                    ),
-                    status=discord.Status.idle,
-                )
-
                 # --- RELOAD ALL UTILS FIRST ---
                 def list_utils_modules():
                     modules = []
@@ -189,10 +176,8 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
                 await bot.tree.sync()
                 await load_cogs(directory="commands", bot=bot)
                 await bot.tree.sync()
-                _status = True
                 return lang.config(config.language,"Bot","reload_success") # type: ignore
             except Exception as e:
-                _status = True
                 return f'Failed to reload. Error: {e}'
 
         elif command.startswith("unload"):
@@ -348,42 +333,32 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
 
 async def change_status() -> None:
     while True:
-        if _status:
-            await bot.change_presence(
-                activity=discord.Activity(
-                    type=discord.ActivityType.playing,
-                    name="Some Chords...",
-                ),
-                status=config.status,
-            )
-            logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
-        else:
-            await asyncio.sleep(30)
-        if _status:
-            await bot.change_presence(
-                activity=discord.Activity(
-                    type=discord.ActivityType.watching,
-                    name=f"On {len(bot.guilds)} servers",
-                ),
-                status=config.status,
-            )
-            logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
-        else:
-            await asyncio.sleep(30)
-
-        if _status:
-            await asyncio.sleep(5)
-            await bot.change_presence(
-                activity=discord.Activity(
-                    type=discord.ActivityType.listening,
-                    name="/help",
-                ),
-                status=config.status,
-            )
-            logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
-            await asyncio.sleep(5)
-        else:
-            await asyncio.sleep(30)
+        await bot.change_presence(
+            activity=discord.Activity(
+                type=discord.ActivityType.playing,
+                name="Some Chords...",
+            ),
+            status=config.status,
+        )
+        logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
+        await bot.change_presence(
+            activity=discord.Activity(
+                type=discord.ActivityType.watching,
+                name=f"On {len(bot.guilds)} servers",
+            ),
+            status=config.status,
+        )
+        logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
+        await asyncio.sleep(5)
+        await bot.change_presence(
+            activity=discord.Activity(
+                type=discord.ActivityType.listening,
+                name="/help",
+            ),
+            status=config.status,
+        )
+        logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
+        await asyncio.sleep(5)
 
 #########################################################################################
 
