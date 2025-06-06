@@ -357,6 +357,8 @@ async def change_status() -> None:
                 status=config.status,
             )
             logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
+        else:
+            await asyncio.sleep(30)
         if _status:
             await bot.change_presence(
                 activity=discord.Activity(
@@ -366,6 +368,9 @@ async def change_status() -> None:
                 status=config.status,
             )
             logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
+        else:
+            await asyncio.sleep(30)
+
         if _status:
             await asyncio.sleep(5)
             await bot.change_presence(
@@ -377,6 +382,8 @@ async def change_status() -> None:
             )
             logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
             await asyncio.sleep(5)
+        else:
+            await asyncio.sleep(30)
 
 #########################################################################################
 
