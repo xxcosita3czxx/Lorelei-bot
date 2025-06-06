@@ -51,6 +51,7 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S',
 )
 
+_status = True
 
 ############################### Functions ##########################################
 
@@ -157,6 +158,16 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
         _, command = parts
         if command.startswith('reload_all'):
             try:
+                _status = False
+                # --- Set status to reloading ---
+                await bot.change_presence(
+                    activity=discord.Activity(
+                        type=discord.ActivityType.playing,
+                        name="Reloading commands, please wait...",
+                    ),
+                    status=discord.Status.idle,
+                )
+
                 # --- RELOAD ALL UTILS FIRST ---
                 def list_utils_modules():
                     modules = []
@@ -176,6 +187,7 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
                 await bot.tree.sync()
                 await load_cogs(directory="commands", bot=bot)
                 await bot.tree.sync()
+                _status = True
                 return lang.config(config.language,"Bot","reload_success") # type: ignore
             except Exception as e:
                 return f'Failed to reload. Error: {e}'
@@ -333,32 +345,35 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
 
 async def change_status() -> None:
     while True:
-        await bot.change_presence(
-            activity=discord.Activity(
-                type=discord.ActivityType.playing,
-                name="Some Chords...",
-            ),
-            status=config.status,
-        )
-        logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
-        await bot.change_presence(
-            activity=discord.Activity(
-                type=discord.ActivityType.watching,
-                name=f"On {len(bot.guilds)} servers",
-            ),
-            status=config.status,
-        )
-        logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
-        await asyncio.sleep(5)
-        await bot.change_presence(
-            activity=discord.Activity(
-                type=discord.ActivityType.listening,
-                name="/help",
-            ),
-            status=config.status,
-        )
-        logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
-        await asyncio.sleep(5)
+        if _status:
+            await bot.change_presence(
+                activity=discord.Activity(
+                    type=discord.ActivityType.playing,
+                    name="Some Chords...",
+                ),
+                status=config.status,
+            )
+            logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
+        if _status:
+            await bot.change_presence(
+                activity=discord.Activity(
+                    type=discord.ActivityType.watching,
+                    name=f"On {len(bot.guilds)} servers",
+                ),
+                status=config.status,
+            )
+            logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
+        if _status:
+            await asyncio.sleep(5)
+            await bot.change_presence(
+                activity=discord.Activity(
+                    type=discord.ActivityType.listening,
+                    name="/help",
+                ),
+                status=config.status,
+            )
+            logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
+            await asyncio.sleep(5)
 
 #########################################################################################
 
