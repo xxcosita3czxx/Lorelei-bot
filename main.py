@@ -9,6 +9,7 @@
 #TODO Giveaway logic
 #TODO Welcome message when bot joins
 #TODO Finish adding settings to new config system
+#TODO Some kind of filtering words (may use automod if it allows me to also do custom messages)  # noqa: E501
 #IDEA ids could be if num not in list then add, else continue
 # Also edit could add/edit already existing
 #IDEA Job to clean left guilds after a day or 12 hours,
@@ -156,6 +157,21 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
         _, command = parts
         if command.startswith('reload_all'):
             try:
+                # --- RELOAD ALL UTILS FIRST ---
+                def list_utils_modules():
+                    modules = []
+                    utils_dir = "utils"
+                    for filename in os.listdir(utils_dir):
+                        if filename.endswith(".py") and filename != "__init__.py":
+                            modules.append(f"{utils_dir}.{filename[:-3]}")
+                    return modules
+
+                utils_modules = list_utils_modules()
+                for mod in utils_modules:
+                    if mod in sys.modules:
+                        importlib.reload(sys.modules[mod])
+
+                # --- THEN RELOAD ALL COGS ---
                 await unload_cogs(bot=bot)
                 await bot.tree.sync()
                 await load_cogs(directory="commands", bot=bot)
@@ -233,6 +249,19 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
             return "\n".join(list(bot.extensions))
         else:
             return "Unknown extensions command."  # noqa: E501
+    elif command.startswith("reload_util"):
+        try:
+            parts = command.split(" ", 1)
+            if len(parts) < 2:  # noqa: PLR2004
+                return "Usage: reload_util <module_name> (e.g. utils.guildconfig)"
+            mod = parts[1].strip()
+            if mod in sys.modules:
+                importlib.reload(sys.modules[mod])
+                return f"Reloaded util module: {mod}"
+            else:
+                return f"Module {mod} not loaded."
+        except Exception as e:
+            return f"Failed to reload util: {e}"
     elif command.startswith("profiler"):
         # Handle profiler commands
         parts = command.split(" ", 1)
