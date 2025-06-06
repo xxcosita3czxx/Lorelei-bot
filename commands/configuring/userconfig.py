@@ -38,3 +38,8 @@ class UserConfigCommands(commands.Cog):
 async def setup(bot:commands.Bot):
     cog = UserConfigCommands(bot)
     await bot.add_cog(cog)
+    configman = GuildConfig()
+    configman.set_config_set("user")
+    configman.add_setting("Appearance", "Color", "Configure your default color")
+    configman.add_setting("Appearance", "Language", "Configure your appearance settings")  # noqa: E501
+    configman.add_setting("Fun", "Default Dice Mode", "Configure your default dice mode")  # noqa: E501
