@@ -103,6 +103,50 @@ class GuildConfig:
             "config_key": config_key,
             "description": description,
         }
+    def add_option_list(
+        self,
+        category_name,
+        setting_name,
+        name,
+        options_list,
+        config_title,
+        config_key,
+        description,
+    ):
+        setting = self.get_setting(category_name, setting_name)
+        options = setting["options"]
+        if name in options:
+            raise ValueError(
+                f"Option '{name}' already exists in setting '{setting_name}'.",
+            )
+        options[name] = {
+            "type": "list",
+            "options": options_list,
+            "config_title": config_title,
+            "config_key": config_key,
+            "description": description,
+        }
+    def add_option_text(
+        self,
+        category_name,
+        setting_name,
+        name,
+        config_title,
+        config_key,
+        description,
+    ):
+        setting = self.get_setting(category_name, setting_name)
+        options = setting["options"]
+        if name in options:
+            raise ValueError(
+                f"Option '{name}' already exists in setting '{setting_name}'.",
+            )
+        options[name] = {
+            "type": "text",
+            "config_title": config_title,
+            "config_key": config_key,
+            "description": description,
+        }
 
     def get_setting(self, category_name, setting_name):
         if category_name not in self.categories:

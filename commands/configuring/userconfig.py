@@ -1,10 +1,12 @@
 import logging  # noqa: F401
+import os  # <-- Add this import
 
 import discord
 from discord import app_commands
 from discord.ext import commands
 
 from commands.configuring.guildconfig import CategoryView
+from utils.dices import dices  # Import the array from utils.dices
 from utils.guildconfig import GuildConfig
 
 logger = logging.getLogger("userconfig")
@@ -42,4 +44,31 @@ async def setup(bot:commands.Bot):
     configman.set_config_set("user")
     configman.add_setting("Appearance", "Color", "Configure your default color")
     configman.add_setting("Appearance", "Language", "Configure your appearance settings")  # noqa: E501
+
+    # Get language options from data/langs directory
+    langs_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data", "langs")  # noqa: E501
+    language_options = []
+    if os.path.isdir(langs_dir):
+        for fname in os.listdir(langs_dir):
+            if fname.endswith(".json"):
+                language_options.append(os.path.splitext(fname)[0])
+
+    configman.add_option_list(
+        "Appearance",
+        "Language",
+        "language",
+        language_options,  # Use detected language options
+        "Language",
+        "language",
+        "Choose your language for the bot responses",
+    )
     configman.add_setting("Fun", "Default Dice Mode", "Configure your default dice mode")  # noqa: E501
+    configman.add_option_list(
+        "Fun",
+        "Default Dice Mode",
+        "dice",
+        list(dices.keys()),  # Use the imported array for dice modes
+        "Default Dice Mode",
+        "default_dice_mode",
+        "Choose your default dice mode",
+    )
