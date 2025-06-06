@@ -20,6 +20,7 @@ class UserConfigCommands(commands.Cog):
     )
     async def configure(self,interaction:discord.Interaction):
         config_session = GuildConfig()  # noqa: F841
+        config_session.set_config_set("user")
         embed = discord.Embed(
             title="Configuration Categories",
             description="Select a category to configure",

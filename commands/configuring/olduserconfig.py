@@ -21,7 +21,7 @@ class UserConfig(commands.Cog):
     class userconfig(app_commands.Group):
         def __init__(self):
             super().__init__()
-            self.name = "olduserconfig"
+            self.name = "oldquserconfig"
             self.description = "Config for users"
         @app_commands.command(name="color",description="Default color bot will respond for you")  # noqa: E501
         @app_commands.autocomplete(color=autocomplete_color)
