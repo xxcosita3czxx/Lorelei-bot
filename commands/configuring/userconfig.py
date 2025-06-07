@@ -41,7 +41,7 @@ async def setup(bot:commands.Bot):
     cog = UserConfigCommands(bot)
     await bot.add_cog(cog)
     # Get language options from data/langs directory
-    langs_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data", "langs")  # noqa: E501
+    langs_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data", "lang")  # noqa: E501
     language_options = []
     if os.path.isdir(langs_dir):
         for fname in os.listdir(langs_dir):
