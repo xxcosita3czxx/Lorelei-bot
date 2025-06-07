@@ -31,8 +31,9 @@ class SettingView(discord.ui.View):
 
             async def callback(self, interaction: discord.Interaction):
                 self.value = not self.value
+                config_id = interaction.user.id if cconfig is uconfig else interaction.guild.id  # type: ignore  # noqa: E501
                 cconfig.set(
-                    interaction.guild.id,  # type: ignore
+                    config_id,
                     self.config_title,
                     self.config_key,
                     self.value,  # type: ignore
@@ -55,8 +56,9 @@ class SettingView(discord.ui.View):
 
             async def callback(self, interaction: discord.Interaction):
                 selected_option = self.values[0]
+                config_id = interaction.user.id if cconfig is uconfig else interaction.guild.id  # type: ignore  # noqa: E501
                 cconfig.set(
-                    interaction.guild.id,  # type: ignore
+                    config_id,
                     self.config_title,
                     self.config_key,
                     selected_option,  # type: ignore
@@ -75,8 +77,9 @@ class SettingView(discord.ui.View):
                 self.config_key = config_key
 
             async def on_submit(self, interaction: discord.Interaction):
+                config_id = interaction.user.id if cconfig is uconfig else interaction.guild.id  # type: ignore  # noqa: E501
                 cconfig.set(
-                    interaction.guild.id,  # type: ignore
+                    config_id,
                     self.config_title,
                     self.config_key,
                     self.text_input.value,  # type: ignore
@@ -98,9 +101,9 @@ class SettingView(discord.ui.View):
 
             async def callback(self, interaction: discord.Interaction):
                 selected_channel_id = int(self.values[0])
-                # Save to config (example, replace with your actual save logic)
+                config_id = interaction.user.id if cconfig is uconfig else interaction.guild.id  # type: ignore  # noqa: E501
                 cconfig.set(
-                    interaction.guild.id,  # type: ignore
+                    config_id,
                     self.config_title,
                     self.config_key,
                     selected_channel_id,  # type: ignore
@@ -124,8 +127,9 @@ class SettingView(discord.ui.View):
 
             async def callback(self, interaction: discord.Interaction):
                 selected_category_id = int(self.values[0])
+                config_id = interaction.user.id if cconfig is uconfig else interaction.guild.id  # type: ignore  # noqa: E501
                 cconfig.set(
-                    interaction.guild.id, # type: ignore
+                    config_id,
                     self.config_title,
                     self.config_key,
                     selected_category_id,
@@ -149,8 +153,9 @@ class SettingView(discord.ui.View):
 
             async def callback(self, interaction: discord.Interaction):
                 selected_role_id = int(self.values[0])
+                config_id = interaction.user.id if cconfig is uconfig else interaction.guild.id  # type: ignore  # noqa: E501
                 cconfig.set(
-                    interaction.guild.id,  # type: ignore
+                    config_id,
                     self.config_title,
                     self.config_key,
                     selected_role_id,  # type: ignore
@@ -184,7 +189,8 @@ class SettingView(discord.ui.View):
                     opt_type = option_data.get("type", "str")
                     if opt_type == "bool":
                         # Get the current value from config
-                        current_value = cconfig.get(interaction.guild.id,conf_title, conf_key,False) # type: ignore  # noqa: E501
+                        config_id = interaction.user.id if cconfig is uconfig else interaction.guild.id  # type: ignore  # noqa: E501
+                        current_value = cconfig.get(config_id,conf_title, conf_key,False) # type: ignore  # noqa: E501
                         view.add_item(BoolOptionButton(option,config_title=conf_title,config_key=conf_key, value=current_value))  # noqa: E501
                     elif opt_type == "textchannel":
                         view.add_item(
@@ -260,7 +266,7 @@ class CategoryView(discord.ui.View):
                 )
                 for setting in settings:
                     embed.add_field(name=setting, value="Modify this setting", inline=False)  # noqa: E501
-
+                logger.debug("CAT_VIEW: "+str(config_manager))
                 await interaction.response.edit_message(
                     embed=embed,
                     view=SettingView(settings, config_session, selected_category, config_manager),  # noqa: E501
