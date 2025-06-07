@@ -7,12 +7,16 @@ from discord.ext import commands
 
 from utils.autocomplete import autocomplete_verify_modes
 from utils.configmanager import gconfig
+from utils.helpmanager import HelpManager
 
 logger = logging.getLogger("verifysystem")
 
 class VerifySystem(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+    @commands.Cog.listener("on_raw_reaction_add")
+    async def on_react(self,member:discord.Member):
+        pass
 
     @app_commands.command(name="verify-system",description="No bots in the server")
     @app_commands.default_permissions(administrator=True)
@@ -28,7 +32,7 @@ class VerifySystem(commands.Cog):
     ):
         if mode == "emoji":
             await interaction.response.send_message(
-                content="In progress",
+                content="Selected Emoji / Reaction",
                 ephemeral=True,
             )
         elif mode == "button":
@@ -116,11 +120,19 @@ class VerifySystem(commands.Cog):
     class verify_captcha(discord.ui.View):
         def __init__(self):
             super().__init__(timeout=None)
-    class verify_emoji(discord.ui.View):
-        def __init__(self)-> None:
-            super().__init__(timeout=None)
 
 async def setup(bot: commands.Bot):  # noqa: C901
     cog = VerifySystem(bot)
     await bot.add_cog(cog)
     bot.add_view(VerifySystem.verify_button())
+    hm = HelpManager()
+    hmhelp = hm.new_help(
+        group_name="Admin",
+        command_name="verifysystem",
+        description="Manage the verification system.",
+    )
+    hmhelp.set_help_page(
+        page=1,
+        title="Verify System",
+        description="This command allows you to set up a verification system in your server. You can choose between different modes such as button, emoji, captcha, or teams.",  # noqa: E501
+    )

@@ -40,11 +40,6 @@ class UserConfigCommands(commands.Cog):
 async def setup(bot:commands.Bot):
     cog = UserConfigCommands(bot)
     await bot.add_cog(cog)
-    configman = GuildConfig()
-    configman.set_config_set("user")
-    configman.add_setting("Appearance", "Color", "Configure your default color")
-    configman.add_setting("Appearance", "Language", "Configure your appearance settings")  # noqa: E501
-
     # Get language options from data/langs directory
     langs_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data", "langs")  # noqa: E501
     language_options = []
@@ -53,6 +48,12 @@ async def setup(bot:commands.Bot):
             if fname.endswith(".json"):
                 language_options.append(os.path.splitext(fname)[0])
 
+    configman = GuildConfig()
+    configman.set_config_set("user")
+    configman.add_setting("Color", "System", "Configure color for bot responses")
+    configman.add_setting("Color", "Punishments", "Color for Bans, Warns or any punishments that will come to your dms")  # noqa: E501
+    configman.add_setting("System", "Show system messages"," Configure whether to show system messages in the chat, or only to you (server is choosing first)")  # noqa: E501
+    configman.add_setting("Appearance", "Language", "Configure your appearance settings")  # noqa: E501
     configman.add_option_list(
         "Appearance",
         "Language",
