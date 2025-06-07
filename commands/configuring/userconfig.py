@@ -60,7 +60,7 @@ async def setup(bot:commands.Bot):
         "Language",
         "language",
         language_options,  # Use detected language options
-        "Language",
+        "Appearance",
         "language",
         "Choose your language for the bot responses",
     )
@@ -70,7 +70,7 @@ async def setup(bot:commands.Bot):
         "Default Dice Mode",
         "dice",
         list(dices.keys()),  # Use the imported array for dice modes
-        "Default Dice Mode",
-        "default_dice_mode",
+        "FUN",
+        "def_dice",
         "Choose your default dice mode",
     )
