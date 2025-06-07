@@ -134,8 +134,8 @@ async def setup(bot:commands.Bot):
     configman.add_option_bool(
         "Members",
         "Welcome",
-        "rich",
-        "Enable Rich Welcome",
+        "Embed",
+        "Enable Embeds",
         "MEMBERS",
         "welcome-rich",
         "If enabled, the welcome message will be sent as an embed. If disabled, it will be sent as a plain text message.",  # noqa: E501
