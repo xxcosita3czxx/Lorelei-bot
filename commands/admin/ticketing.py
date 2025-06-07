@@ -444,5 +444,5 @@ async def setup(bot:commands.Bot):
         "channel",
         "Ticketing",
         "reviews-channel",
-        "Channel to post Reviews to."
+        "Channel to post Reviews to.",
     )

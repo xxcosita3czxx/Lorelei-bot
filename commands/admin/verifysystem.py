@@ -17,13 +17,14 @@ class VerifySystem(commands.Cog):
         self.bot = bot
     @commands.Cog.listener("on_reaction_add")
     async def on_react(self, reaction:discord.Reaction, user):
-        #if user.bot:
-        #    return
+        if user.bot:
+            return
 
         # Example: Reaction role logic
         #guild = reaction.message.guild
-        pass
-        #TODO FIX THIS ASAP
+
+
+
     @app_commands.command(name="verify-system",description="No bots in the server")
     @app_commands.default_permissions(administrator=True)
     @app_commands.autocomplete(mode=autocomplete_verify_modes)
