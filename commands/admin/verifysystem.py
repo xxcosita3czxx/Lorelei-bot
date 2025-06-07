@@ -71,7 +71,7 @@ class VerifySystem(commands.Cog):
             )
             return
 
-        if mode == "emoji":
+        if mode == "emojitest":
             await interaction.response.send_message(
                 content="Selected Emoji / Reaction",
                 ephemeral=True,
