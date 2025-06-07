@@ -45,7 +45,7 @@ async def setup(bot:commands.Bot):
     language_options = []
     if os.path.isdir(langs_dir):
         for fname in os.listdir(langs_dir):
-            if fname.endswith(".json"):
+            if fname.endswith(".toml"):
                 language_options.append(os.path.splitext(fname)[0])
 
     configman = GuildConfig()

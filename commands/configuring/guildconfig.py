@@ -200,7 +200,6 @@ class SettingView(discord.ui.View):
                                 label=option,
                                 style=discord.ButtonStyle.primary,
                                 custom_id=f"text_modal_{option}",
-                                row=len(view.children) // 5,  # Adjust row based on number of items  # noqa: E501
                             ),
                         )
 
