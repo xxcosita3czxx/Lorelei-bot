@@ -61,6 +61,7 @@ class SettingView(discord.ui.View):
                     self.config_key,
                     selected_option,  # type: ignore
                 )
+                await interaction.response.defer(ephemeral=True)
         class TextModal(discord.ui.Modal):
             def __init__(self, title, placeholder, config_title, config_key):
                 super().__init__(title=title)
@@ -202,7 +203,6 @@ class SettingView(discord.ui.View):
                                 row=len(view.children) // 5,  # Adjust row based on number of items  # noqa: E501
                             ),
                         )
-                        self.add_item(TextModal(title=option, placeholder=desc, config_title=conf_title, config_key=conf_key)) # type: ignore  # noqa: E501
 
                     elif opt_type == "category":
                         view.add_item(
