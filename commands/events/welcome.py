@@ -100,7 +100,7 @@ async def setup(bot:commands.Bot):
     configman.add_option_bool(
         "Members",
         "Welcome",
-        "enabled",
+        "Enabled",
         "Enable Welcome",
         "MEMBERS",
         "welcome-enabled",
@@ -117,7 +117,7 @@ async def setup(bot:commands.Bot):
     configman.add_option_text(
         "Members",
         "Welcome",
-        "text",
+        "Edit Text",
         "MEMBERS",
         "welcome-text",
         "The text to send when a new member joins the server. You can use placeholders in this text.",  # noqa: E501 # type: ignore
@@ -125,7 +125,7 @@ async def setup(bot:commands.Bot):
     configman.add_option_bool(
         "Members",
         "Welcome",
-        "in_dms",
+        "DM the user",
         "Enable Welcome in DMs",
         "MEMBERS",
         "welcome-in_dms",
