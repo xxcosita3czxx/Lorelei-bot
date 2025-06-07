@@ -438,3 +438,11 @@ async def setup(bot:commands.Bot):
         "reviews-enabled",
         "Enable reviews for tickets.",
     )
+    configman.add_option_textchannel(
+        "Admin",
+        "Ticketing",
+        "channel",
+        "Ticketing",
+        "reviews-channel",
+        "Channel to post Reviews to."
+    )
