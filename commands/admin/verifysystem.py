@@ -23,7 +23,7 @@ class VerifySystem(commands.Cog):
         # Example: Reaction role logic
         #guild = reaction.message.guild
         pass
-
+        #TODO FIX THIS ASAP
     @app_commands.command(name="verify-system",description="No bots in the server")
     @app_commands.default_permissions(administrator=True)
     @app_commands.autocomplete(mode=autocomplete_verify_modes)
