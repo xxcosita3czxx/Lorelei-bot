@@ -7,7 +7,6 @@ from discord.ext import commands
 
 from utils.autocomplete import autocomplete_verify_modes
 from utils.configmanager import gconfig
-from utils.emoji import string2emoji
 from utils.helpmanager import HelpManager
 
 logger = logging.getLogger("verifysystem")
@@ -19,7 +18,32 @@ class VerifySystem(commands.Cog):
     async def on_react(self, reaction:discord.Reaction, user):
         if user.bot:
             return
-
+        # Check if the reaction is on a message in a channel that has a verification system  # noqa: E501
+        guild_id = reaction.message.guild.id # type: ignore
+        channel_key = str(reaction.message.channel.id) + "-verifyemoji"
+        if (
+            guild_id in gconfig.config
+            and channel_key in gconfig.config[guild_id]
+        ):
+            # Get the role associated with the verification system
+            role_id = gconfig.get(
+                reaction.message.guild.id, # type: ignore
+                str(reaction.message.channel.id)+"-verifyemoji",
+                "role",
+            )
+            if role_id is None:
+                return
+            # Convert the string back to an integer and get the role
+            role = reaction.message.guild.get_role(int(role_id)) # type: ignore
+            if role is None:
+                logger.error(f"Role with ID {role_id} not found in guild {reaction.message.guild.id}.")  # type: ignore # noqa: E501
+                return
+#            gconfig.set(
+#                interaction.guild.id, # type: ignore
+#                str(channel.id)+"-verifyemoji",
+#                "role",
+#                role.id,
+#            )
         # Example: Reaction role logic
         #guild = reaction.message.guild
 
