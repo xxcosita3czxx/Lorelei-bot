@@ -16,7 +16,7 @@ __PRIORITY__ = 10
 logger = logging.getLogger("guildconfig")
 
 class SettingView(discord.ui.View):
-    def __init__(self, settings, config_session: GuildConfig, category_name: str):  # noqa: C901
+    def __init__(self, settings, config_session: GuildConfig, category_name: str,cconfig):  # noqa: C901, E501
         super().__init__()
 
         class BoolOptionButton(discord.ui.Button):
@@ -31,7 +31,7 @@ class SettingView(discord.ui.View):
 
             async def callback(self, interaction: discord.Interaction):
                 self.value = not self.value
-                gconfig.set(
+                cconfig.set(
                     interaction.guild.id,  # type: ignore
                     self.config_title,
                     self.config_key,
@@ -55,7 +55,7 @@ class SettingView(discord.ui.View):
 
             async def callback(self, interaction: discord.Interaction):
                 selected_option = self.values[0]
-                gconfig.set(
+                cconfig.set(
                     interaction.guild.id,  # type: ignore
                     self.config_title,
                     self.config_key,
@@ -75,7 +75,7 @@ class SettingView(discord.ui.View):
                 self.config_key = config_key
 
             async def on_submit(self, interaction: discord.Interaction):
-                gconfig.set(
+                cconfig.set(
                     interaction.guild.id,  # type: ignore
                     self.config_title,
                     self.config_key,
@@ -99,7 +99,7 @@ class SettingView(discord.ui.View):
             async def callback(self, interaction: discord.Interaction):
                 selected_channel_id = int(self.values[0])
                 # Save to config (example, replace with your actual save logic)
-                gconfig.set(
+                cconfig.set(
                     interaction.guild.id,  # type: ignore
                     self.config_title,
                     self.config_key,
@@ -124,7 +124,7 @@ class SettingView(discord.ui.View):
 
             async def callback(self, interaction: discord.Interaction):
                 selected_category_id = int(self.values[0])
-                gconfig.set(
+                cconfig.set(
                     interaction.guild.id, # type: ignore
                     self.config_title,
                     self.config_key,
@@ -149,7 +149,7 @@ class SettingView(discord.ui.View):
 
             async def callback(self, interaction: discord.Interaction):
                 selected_role_id = int(self.values[0])
-                gconfig.set(
+                cconfig.set(
                     interaction.guild.id,  # type: ignore
                     self.config_title,
                     self.config_key,
@@ -184,7 +184,7 @@ class SettingView(discord.ui.View):
                     opt_type = option_data.get("type", "str")
                     if opt_type == "bool":
                         # Get the current value from config
-                        current_value = gconfig.get(interaction.guild.id,conf_title, conf_key,False) # type: ignore  # noqa: E501
+                        current_value = cconfig.get(interaction.guild.id,conf_title, conf_key,False) # type: ignore  # noqa: E501
                         view.add_item(BoolOptionButton(option,config_title=conf_title,config_key=conf_key, value=current_value))  # noqa: E501
                     elif opt_type == "textchannel":
                         view.add_item(
@@ -232,7 +232,7 @@ class SettingView(discord.ui.View):
 
 
 class CategoryView(discord.ui.View):
-    def __init__(self, options, config_session: GuildConfig):
+    def __init__(self, options, config_session: GuildConfig, config_manager):
         super().__init__()
 
         class CategoryDropdown(discord.ui.Select):
@@ -244,6 +244,7 @@ class CategoryView(discord.ui.View):
                     placeholder="Choose a category...",
                     options=select_options,
                 )
+
 
             async def callback(self, interaction: discord.Interaction):
                 selected_category = self.values[0]
@@ -262,7 +263,7 @@ class CategoryView(discord.ui.View):
 
                 await interaction.response.edit_message(
                     embed=embed,
-                    view=SettingView(settings, config_session, selected_category),
+                    view=SettingView(settings, config_session, selected_category, config_manager),  # noqa: E501
                 )
 
         self.add_item(CategoryDropdown(options))
@@ -297,7 +298,7 @@ class GuildConfigCommands(commands.Cog):
             categories = config_session.get_categories()  # Assuming Configs is a dictionary  # noqa: E501
             await interaction.response.send_message(
                 embed=embed,
-                view=CategoryView(categories, config_session),
+                view=CategoryView(categories, config_session, config_manager=gconfig),  # noqa: E501
                 ephemeral=True,
             )  # noqa: E501
 
@@ -374,6 +375,8 @@ class GuildConfigCommands(commands.Cog):
                     content=f"Error: {e}",
                     ephemeral=True,
                 )
+            finally:
+                gconfig._load_all_configs()
 
 async def setup(bot:commands.Bot):
     cog = GuildConfigCommands(bot)

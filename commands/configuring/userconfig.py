@@ -6,6 +6,7 @@ from discord import app_commands
 from discord.ext import commands
 
 from commands.configuring.guildconfig import CategoryView
+from utils.configmanager import uconfig  # noqa: F401
 from utils.dices import dices  # Import the array from utils.dices
 from utils.guildconfig import GuildConfig
 
@@ -33,7 +34,7 @@ class UserConfigCommands(commands.Cog):
         categories = config_session.get_categories()  # Assuming Configs is a dictionary  # noqa: E501
         await interaction.response.send_message(
             embed=embed,
-            view=CategoryView(categories, config_session),
+            view=CategoryView(categories, config_session,config_manager=uconfig),
             ephemeral=True,
         )  # noqa: E501
 
