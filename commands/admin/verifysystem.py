@@ -37,6 +37,14 @@ class VerifySystem(commands.Cog):
         channel: discord.TextChannel,
         mode: str = "button",
     ):
+        # Validate role and channel
+        if role is None or channel is None:
+            await interaction.response.send_message(
+                content="Role or channel is missing. Please provide valid options.",
+                ephemeral=True,
+            )
+            return
+
         if mode == "emoji":
             await interaction.response.send_message(
                 content="Selected Emoji / Reaction",
@@ -49,7 +57,7 @@ class VerifySystem(commands.Cog):
             message = await channel.send(
                 embed=embed,
             )
-            await message.add_reaction(string2emoji(":white_check_mark:"))  # type: ignore # Add a reaction to the message
+            await message.add_reaction("✅")  # type: ignore # Add a reaction to the message
             gconfig.set(
                 interaction.guild.id, # type: ignore
                 str(channel.id)+"-verifyemoji",
