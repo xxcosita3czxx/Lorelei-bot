@@ -49,7 +49,7 @@ class VerifySystem(commands.Cog):
             message = await channel.send(
                 embed=embed,
             )
-            message.add_reaction(string2emoji("✅"))  # type: ignore # Add a reaction to the message
+            await message.add_reaction(string2emoji(":white_check_mark:"))  # type: ignore # Add a reaction to the message
             gconfig.set(
                 interaction.guild.id, # type: ignore
                 str(channel.id)+"-verifyemoji",
