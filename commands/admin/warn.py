@@ -42,5 +42,6 @@ class Warn(commands.Cog):
         await interaction.response.send_message(f"{user.mention} has been warned for: {reason}. They now have {gconfig.get(guild_id,'warns',user_id)} warns.")  # noqa: E501
 
 async def setup(bot:commands.Bot):
-    cog = Warn(bot)
-    await bot.add_cog(cog)
+#    cog = Warn(bot)
+#    await bot.add_cog(cog)
+    pass
