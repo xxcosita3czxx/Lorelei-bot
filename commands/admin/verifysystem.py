@@ -21,7 +21,7 @@ class VerifySystem(commands.Cog):
         # Check if the reaction is on a message in a channel that has a verification system  # noqa: E501
         guild_id = reaction.message.guild.id # type: ignore
         channel_key = str(reaction.message.channel.id) + "-verifyemoji"
-        logger.debug(gconfig.config)
+        logger.debug(gconfig.config.get(guild_id))
         if (
             guild_id in gconfig.config
             and channel_key in gconfig.config.get(guild_id) # type: ignore
