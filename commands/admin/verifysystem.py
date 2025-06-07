@@ -25,6 +25,7 @@ class VerifySystem(commands.Cog):
             guild_id in gconfig.config
             and channel_key in gconfig.config[guild_id]
         ):
+            logger.debug(f"Reaction added in channel {reaction.message.channel.id} for verification system.")  # noqa: E501
             # Get the role associated with the verification system
             role_id = gconfig.get(
                 reaction.message.guild.id, # type: ignore

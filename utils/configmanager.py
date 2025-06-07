@@ -10,7 +10,7 @@ logger = logging.getLogger("configmanager")
 class ConfigManager:
     def __init__(self, config_dir, fallback_file=None):
         self.config_dir = config_dir
-        self.config = defaultdict(dict)
+        self.config = defaultdict(dict) # type: ignore
         self.fallback_file = fallback_file
         self._load_all_configs()
         logger.info(f"Loaded {self}")
@@ -34,7 +34,7 @@ class ConfigManager:
                         detected_encoding = chardet.detect(raw_data)['encoding']
                         logger.debug(f"Detected encoding for {filename}: {detected_encoding}")  # noqa: E501
                         with open(file_path, 'w', encoding='utf-8') as f_utf8:
-                            f_utf8.write(raw_data.decode(detected_encoding))
+                            f_utf8.write(raw_data.decode(detected_encoding)) # type: ignore
                         with open(file_path, encoding='utf-8') as f:
                             self.config[id] = toml.load(f)
                 except Exception as e:
