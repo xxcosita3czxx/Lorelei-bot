@@ -9,6 +9,16 @@ from discord import app_commands
 from utils.dices import dices
 from utils.helpmanager import HelpManager
 
+colors = {
+        "Blurple": "#5865F2",
+        "Red": "#ED4245",
+        "Green": "#57F287",
+        "Blue": "#0096CF",  # Adding blue just in case
+        "Yellow": "#FEE75C",
+        "Purple": "#5865F2",  # Discord's purple is often Blurple
+        "White": "#FFFFFF",
+    }
+
 logger = logging.getLogger("autocomplete")
 
 async def fetch_tags(query):
@@ -22,15 +32,7 @@ async def fetch_tags(query):
 
 
 async def autocomplete_color(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:  # noqa: E501, UP006
-    colors = {
-        "Blurple": "#5865F2",
-        "Red": "#ED4245",
-        "Green": "#57F287",
-        "Blue": "#0096CF",  # Adding blue just in case
-        "Yellow": "#FEE75C",
-        "Purple": "#5865F2",  # Discord's purple is often Blurple
-        "White": "#FFFFFF",
-    }
+    global colors
 
     return [
         app_commands.Choice(name=f"{color} ({hex_value})", value=hex_value)
