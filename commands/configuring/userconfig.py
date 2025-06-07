@@ -52,6 +52,7 @@ async def setup(bot:commands.Bot):
     configman.set_config_set("user")
     configman.add_setting("Color", "System", "Configure color for bot responses")
     configman.add_setting("Color", "Punishments", "Color for Bans, Warns or any punishments that will come to your dms")  # noqa: E501
+    configman.add_setting("Color", "Override", "Please let me have my color instead of server's color (reccoment leaving this off)")  # noqa: E501
     configman.add_setting("System", "Show system messages"," Configure whether to show system messages in the chat, or only to you (server is choosing first)")  # noqa: E501
     configman.add_setting("Appearance", "Language", "Configure your appearance settings")  # noqa: E501
     configman.add_option_list(

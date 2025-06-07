@@ -380,5 +380,9 @@ async def setup(bot:commands.Bot):
     cog = GuildConfigCommands(bot)
     await bot.add_cog(cog)
     bot.tree.add_command(cog.configure())
+    configman = GuildConfig()
+    configman.add_setting("Color", "System", "Configure color for bot responses")
+    configman.add_setting("Color", "Punishments", "Color for Bans, Warns or any punishments that will come to your dms")  # noqa: E501
+    configman.add_setting("System", "Show system messages","Allow people to show system messages in chat (Administrators automaticaly can override this)")  # noqa: E501
 
 # Aint doing it yet and i will do mostly commands, as functionalities are needed more  # noqa: E501
