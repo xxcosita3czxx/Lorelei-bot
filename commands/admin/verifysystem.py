@@ -7,6 +7,7 @@ from discord.ext import commands
 
 from utils.autocomplete import autocomplete_verify_modes
 from utils.configmanager import gconfig
+from utils.emoji import string2emoji
 from utils.helpmanager import HelpManager
 
 logger = logging.getLogger("verifysystem")
@@ -14,8 +15,13 @@ logger = logging.getLogger("verifysystem")
 class VerifySystem(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-    @commands.Cog.listener("on_raw_reaction_add")
-    async def on_react(self,member:discord.Member):
+    @commands.Cog.listener("on_reaction_add")
+    async def on_react(self, reaction:discord.Reaction, user):
+        #if user.bot:
+        #    return
+
+        # Example: Reaction role logic
+        #guild = reaction.message.guild
         pass
 
     @app_commands.command(name="verify-system",description="No bots in the server")
@@ -34,6 +40,20 @@ class VerifySystem(commands.Cog):
             await interaction.response.send_message(
                 content="Selected Emoji / Reaction",
                 ephemeral=True,
+            )
+            embed = discord.Embed(
+                title=title,
+                description=description,
+            )
+            message = await channel.send(
+                embed=embed,
+            )
+            message.add_reaction(string2emoji("✅"))  # type: ignore # Add a reaction to the message
+            gconfig.set(
+                interaction.guild.id, # type: ignore
+                str(channel.id)+"-verifyemoji",
+                "role",
+                role.id,
             )
         elif mode == "button":
             await interaction.response.send_message(
