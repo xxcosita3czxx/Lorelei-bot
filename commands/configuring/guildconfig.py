@@ -40,7 +40,47 @@ class SettingView(discord.ui.View):
                 self.label = f"{self.option_name}: {'True' if self.value else 'False'}"  # noqa: E501
                 self.style = discord.ButtonStyle.success if self.value else discord.ButtonStyle.danger  # noqa: E501
                 await interaction.response.edit_message(view=self.view)
+        class ListSelectMenu(Select):
+            def __init__(self, interaction, name, config_title, config_key, options_list):  # noqa: E501
+                options = [
+                    discord.SelectOption(label=opt, value=opt) for opt in options_list  # noqa: E501
+                ]
+                super().__init__(
+                    placeholder="Select option...",
+                    options=options,
+                    custom_id=f"list_select_{name}",
+                )
+                self.config_title = config_title
+                self.config_key = config_key
 
+            async def callback(self, interaction: discord.Interaction):
+                selected_option = self.values[0]
+                gconfig.set(
+                    interaction.guild.id,  # type: ignore
+                    self.config_title,
+                    self.config_key,
+                    selected_option,  # type: ignore
+                )
+        class TextModal(discord.ui.Modal):
+            def __init__(self, title, placeholder, config_title, config_key):
+                super().__init__(title=title)
+                self.text_input = discord.ui.TextInput(
+                    label=title,
+                    placeholder=placeholder,
+                    style=discord.TextStyle.paragraph,
+                )
+                self.add_item(self.text_input)
+                self.config_title = config_title
+                self.config_key = config_key
+
+            async def on_submit(self, interaction: discord.Interaction):
+                gconfig.set(
+                    interaction.guild.id,  # type: ignore
+                    self.config_title,
+                    self.config_key,
+                    self.text_input.value,  # type: ignore
+                )
+                await interaction.response.defer(ephemeral=True)
         class TextChannelSelectMenu(Select):
             def __init__(self, interaction, name, config_title, config_key):
                 options = [
@@ -153,10 +193,35 @@ class SettingView(discord.ui.View):
                         view.add_item(
                             RoleSelectMenu(interaction=interaction, name=option, config_title=conf_title, config_key=conf_key),  # noqa: E501
                         )
+                    elif opt_type == "text":
+                        view.add_item(
+                            discord.ui.Button(
+                                label=option,
+                                style=discord.ButtonStyle.primary,
+                                custom_id=f"text_modal_{option}",
+                                row=len(view.children) // 5,  # Adjust row based on number of items  # noqa: E501
+                            ),
+                        )
+                        self.add_item(TextModal(title=option, placeholder=desc, config_title=conf_title, config_key=conf_key)) # type: ignore  # noqa: E501
+
                     elif opt_type == "category":
                         view.add_item(
                             CategorySelectMenu(interaction=interaction,name=option, config_title=conf_title,config_key=conf_key),  # noqa: E501
                         )
+                    elif opt_type == "list":
+                        options_list = option_data.get("options", [])
+                        if options_list:
+                            view.add_item(
+                                ListSelectMenu(
+                                    interaction=interaction,
+                                    name=option,
+                                    config_title=conf_title,
+                                    config_key=conf_key,
+                                    options_list=options_list,
+                                ),
+                            )
+                        else:
+                            embed.add_field(name=option, value="No options available", inline=False)  # noqa: E501
                     else:
                         embed.add_field(name=option, value=desc, inline=False)
                 await interaction.response.edit_message(
