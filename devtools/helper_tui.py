@@ -5,7 +5,7 @@ import subprocess
 
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
-from textual.widgets import Input, Static, TextLog  # type: ignore
+from textual.widgets import Input, Static
 
 SOCKET_HOST = 'localhost'
 SOCKET_PORT = 9920
@@ -17,17 +17,22 @@ def send_command(command: str) -> str:
             client.sendall(command.encode('utf-8'))
             response = client.recv(4096).decode('utf-8')
             return response
+    except ConnectionRefusedError:
+        return "Connection refused: Is the helper running?"
     except Exception as e:
         return f"Error: {e}"
 
 def get_journal_lines(n=30):
     try:
-        # Change 'your-bot.service' to your actual service name if needed
         result = subprocess.run(  # noqa: S603
             ["journalctl", "-u", "lorelei.service", "-n", str(n), "--no-pager", "--output=short"],  # noqa: E501
-            capture_output=True, text=True,
+            capture_output=True, text=True, check=True,
         )
         return result.stdout
+    except subprocess.CalledProcessError as e:
+        return f"Journalctl error: {e}\n{e.output if hasattr(e, 'output') else ''}"
+    except FileNotFoundError:
+        return "journalctl not found. Is systemd available on this system?"
     except Exception as e:
         return f"Error reading journal: {e}"
 
@@ -36,17 +41,16 @@ class BotTUI(App):
 
     def compose(self) -> ComposeResult:
         yield Vertical(
-            TextLog(highlight=False, id="journal"),
-            Static("Ready.", id="statusbar"),
+            Static(get_journal_lines(), id="journal", expand=True),  # This will take all extra space  # noqa: E501
+            Static("Ready.", id="statusbar"),                        # This will always be just above the input  # noqa: E501
             Horizontal(
-                Input(placeholder="Type command and press Enter...", id="cmd_input"),  # noqa: E501
+                Input(placeholder="Type command and press Enter..", id="cmd_input"),
             ),
+            id="main_vertical",
         )
 
     async def on_mount(self):
-        await self.query_one("#cmd_input", Input).focus() # type: ignore
-        # Fill the log on start
-        self.query_one("#journal", TextLog).write(get_journal_lines())
+        self.query_one("#cmd_input", Input).focus() # type: ignore
 
     async def on_input_submitted(self, event):
         if event.input.id == "cmd_input":
@@ -57,9 +61,7 @@ class BotTUI(App):
                 response = send_command(cmd)
                 self.query_one("#statusbar", Static).update(response)
                 # Refresh journal
-                journal = self.query_one("#journal", TextLog)
-                journal.clear()
-                journal.write(get_journal_lines())
+                self.query_one("#journal", Static).update(get_journal_lines())
                 event.input.value = ""
 
 if __name__ == "__main__":
