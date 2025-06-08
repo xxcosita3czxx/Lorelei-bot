@@ -30,3 +30,4 @@ if __name__ == "__main__":
         send_command(command)
     else:
         logger.error("Please provide a command to send.")
+
