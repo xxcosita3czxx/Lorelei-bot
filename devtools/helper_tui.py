@@ -44,8 +44,8 @@ class BotTUI(App):
     }
 
     #journal {
-        height: 90fr;
-        overflow-y: scroll;
+        height: 1fr;
+        overflow-y: auto;
         border: solid gray;
         padding: 1 1;
     }
