@@ -28,29 +28,56 @@ def get_journal_lines(n=30):
             ["journalctl", "-u", "lorelei.service", "-n", str(n), "--no-pager", "--output=short"],  # noqa: E501
             capture_output=True, text=True, check=True,
         )
-        return result.stdout
+        return result.stdout.splitlines()
     except subprocess.CalledProcessError as e:
-        return f"Journalctl error: {e}\n{e.output if hasattr(e, 'output') else ''}"
+        return [f"Journalctl error: {e}", f"{e.output if hasattr(e, 'output') else ''}"]  # noqa: E501
     except FileNotFoundError:
-        return "journalctl not found. Is systemd available on this system?"
+        return ["journalctl not found. Is systemd available on this system?"]
     except Exception as e:
-        return f"Error reading journal: {e}"
+        return [f"Error reading journal: {e}"]
 
 class BotTUI(App):
-    CSS_PATH = None
+    CSS = """
+    #main_vertical {
+        height: 100%;
+        layout: vertical;
+    }
+
+    #journal {
+        height: 90fr;
+        overflow-y: scroll;
+        border: solid gray;
+        padding: 1 1;
+    }
+
+    #statusbar {
+        height: 1;
+        color: cyan;
+    }
+
+    #cmd_input {
+        height: 5;
+        width: 100%;
+    }
+    """
 
     def compose(self) -> ComposeResult:
         yield Vertical(
-            Static(get_journal_lines(), id="journal", expand=True),  # This will take all extra space  # noqa: E501
-            Static("Ready.", id="statusbar"),                        # This will always be just above the input  # noqa: E501
+            Static("\n".join(get_journal_lines()), id="journal", markup=False),
+            Static("Ready.", id="statusbar"),
             Horizontal(
-                Input(placeholder="Type command and press Enter..", id="cmd_input"),
+                Input(placeholder="Type command and press Enter...", id="cmd_input"),  # noqa: E501
             ),
             id="main_vertical",
         )
 
     async def on_mount(self):
-        self.query_one("#cmd_input", Input).focus() # type: ignore
+        self.query_one("#cmd_input", Input).focus()
+
+    def update_journal(self):
+        self.query_one("#journal", Static).update(
+            "\n".join(get_journal_lines()),
+        )
 
     async def on_input_submitted(self, event):
         if event.input.id == "cmd_input":
@@ -60,8 +87,7 @@ class BotTUI(App):
                 await asyncio.sleep(0)
                 response = send_command(cmd)
                 self.query_one("#statusbar", Static).update(response)
-                # Refresh journal
-                self.query_one("#journal", Static).update(get_journal_lines())
+                self.update_journal()
                 event.input.value = ""
 
 if __name__ == "__main__":
