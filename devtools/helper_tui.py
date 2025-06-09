@@ -44,29 +44,33 @@ class BotTUI(App):
     }
 
     #journal {
-        height: 1fr;
+        height: 1fr;           /* Fills all available space */
         overflow-y: auto;
         border: solid gray;
         padding: 1 1;
     }
 
     #statusbar {
-        height: 1;
+        height: 1;             /* Fixed height */
         color: cyan;
     }
 
+    #cmd_row {
+        height: 3;             /* Fixed height for input row */
+    }
+
     #cmd_input {
-        height: 5;
         width: 100%;
     }
     """
 
     def compose(self) -> ComposeResult:
         yield Vertical(
-            Static("\n".join(get_journal_lines()), id="journal", markup=False),
+            Static("\n".join(get_journal_lines()), id="journal"),
             Static("Ready.", id="statusbar"),
             Horizontal(
-                Input(placeholder="Type command and press Enter...", id="cmd_input"),  # noqa: E501
+                Input(placeholder="Type command and press Enter...", id="cmd_input"),
+                id="cmd_row",
             ),
             id="main_vertical",
         )
@@ -75,9 +79,7 @@ class BotTUI(App):
         self.query_one("#cmd_input", Input).focus()
 
     def update_journal(self):
-        self.query_one("#journal", Static).update(
-            "\n".join(get_journal_lines()),
-        )
+        self.query_one("#journal", Static).update("\n".join(get_journal_lines()))
 
     async def on_input_submitted(self, event):
         if event.input.id == "cmd_input":
