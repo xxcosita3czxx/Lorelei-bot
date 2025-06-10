@@ -2,6 +2,7 @@
 import os
 import socket
 import subprocess
+
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
@@ -25,8 +26,8 @@ def send_command(command: str) -> str:
 
 def get_journal_lines(n=30):
     try:
-        result = subprocess.run(
-            ["journalctl", "-u", "lorelei.service", "-n", str(n), "--no-pager", "--output=short"],
+        result = subprocess.run(  # noqa: S603
+            ["journalctl", "-u", "lorelei.service", "-n", str(n), "--no-pager", "--output=short"],  # noqa: E501
             capture_output=True, text=True, check=True,
         )
         return result.stdout.splitlines()
@@ -43,8 +44,8 @@ def redraw(journal_lines, status, input_prompt):
     journal_height = max(1, height - reserved_lines)
     journal_text = "\n".join(journal_lines[-journal_height:])
 
-    os.system('clear')
-    console.print(Panel(journal_text, title="Journal", border_style="grey37"), width=width, height=journal_height)
+    os.system('clear')  # noqa: S605
+    console.print(Panel(journal_text, title="Journal", border_style="grey37"), width=width, height=journal_height)  # noqa: E501
     console.print(Text(status, style="cyan"), width=width)
     console.print(Text(input_prompt, style="bold"), width=width, end='')
 
