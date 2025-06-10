@@ -13,7 +13,7 @@ async def kick_member(member: discord.Member, reason: str, interaction: discord.
         await member.send(
             embed=discord.Embed(
                 #description=f"You have been kicked from {interaction.guild.name}\n**Reason**: {reason}",  # noqa: E501
-                description=lang.get(userlang(interaction.user.id),"Responds","user_kicked_dms").format(guild=interaction.guild.name,reason=reason), # type: ignore
+                description=lang.get(member.id(interaction.user.id),"Responds","user_kicked_dms").format(guild=interaction.guild.name,reason=reason), # type: ignore
                 color=discord.Color.red(),
             ),
         )

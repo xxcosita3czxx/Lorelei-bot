@@ -16,7 +16,7 @@ async def ban_member(member: discord.Member, reason: str, interaction: discord.I
     try:
         await member.send(
             embed=discord.Embed(
-                description=lang.get(userlang(interaction.user.id),"Responds","you_was_banned").format(guild=interaction.guild.name,reason=reason),  # noqa: E501 # type: ignore
+                description=lang.get(userlang(member.id),"Responds","you_was_banned").format(guild=interaction.guild.name,reason=reason),  # noqa: E501 # type: ignore
                 color=discord.Color.blurple(),
             ),
         )
