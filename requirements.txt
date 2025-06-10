@@ -9,4 +9,4 @@ click
 pillow
 chardet
 emoji
-textual
+rich
