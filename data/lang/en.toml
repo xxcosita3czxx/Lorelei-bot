@@ -73,6 +73,7 @@ i_cant_kick="I can't kick this user"
 you_cant_ban="You can't ban this user"
 you_cant_kick="You can't kick this user"
 you_was_banned="You have been banned from {guild} \n**Reason**: {reason}"
+unspecified="Unspecified"
 
 [UserInfo]
 username="Username"

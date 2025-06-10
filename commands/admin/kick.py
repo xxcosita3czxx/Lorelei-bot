@@ -74,5 +74,5 @@ async def setup(bot:commands.Bot):
     @app_commands.context_menu(name="Kick")
     @app_commands.default_permissions(kick_members=True)
     async def kick_context(interaction:discord.Interaction,member:discord.Member):
-        await Kick.kick(interaction, member,"Unspecified") # type: ignore
+        await Kick.kick(interaction, member,lang.get(userlang(interaction.user.id),"Responds","unspecified")) # type: ignore  # noqa: E501
     bot.tree.add_command(kick_context)
