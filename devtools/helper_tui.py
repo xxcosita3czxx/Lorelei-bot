@@ -51,7 +51,7 @@ def redraw(journal_lines, status, input_prompt):
 
 def main():
     status = "Ready."
-    input_prompt = "> "
+    input_prompt = "lorelei-bot@localhost: :3># "
     journal_lines = get_journal_lines(30)
 
     while True:
