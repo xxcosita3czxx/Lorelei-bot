@@ -4,13 +4,16 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+from utils.configmanager import lang, userlang
+
 logger = logging.getLogger("kick")
 
 async def kick_member(member: discord.Member, reason: str, interaction: discord.Interaction):  # noqa: E501
     try:
         await member.send(
             embed=discord.Embed(
-                description=f"You have been kicked from {interaction.guild.name}\n**Reason**: {reason}",  # noqa: E501
+                #description=f"You have been kicked from {interaction.guild.name}\n**Reason**: {reason}",  # noqa: E501
+                description=lang.get(userlang(interaction.user.id),"Responds","user_kicked_dms").format(guild=interaction.guild.name,reason=reason), # type: ignore
                 color=discord.Color.red(),
             ),
         )
@@ -33,21 +36,21 @@ class Kick(commands.Cog):
         Kicks user from guild and let him know why
         '''
 
-        if member == interaction.user or member == interaction.guild.owner:
+        if member == interaction.user or member == interaction.guild.owner: # type: ignore
             return await interaction.response.send_message(
-                "You can't kick this user",
+                lang.get(userlang(interaction.user.id),"Responds","you_cant_kick"), # type: ignore
                 ephemeral=True,
             )
 
-        if member.top_role >= interaction.guild.me.top_role:
+        if member.top_role >= interaction.guild.me.top_role: # type: ignore
             return await interaction.response.send_message(
-                "I can't kick this user",
+                lang.get(userlang(interaction.user.id),"Responds","i_cant_kick"), # type: ignore
                 ephemeral=True,
             )
 
-        if member.top_role >= interaction.user.top_role:
+        if member.top_role >= interaction.user.top_role: # type: ignore
             return await interaction.response.send_message(
-                "You can't kick this user due to role hierarchy",
+                lang.get(userlang(interaction.user.id),"Responds","u_cant_kick_role_hiearhy"), # type: ignore
                 ephemeral=True,
             )
 
@@ -55,11 +58,12 @@ class Kick(commands.Cog):
 
         await member.kick(reason=reason)
         await interaction.response.send_message(
-            f"Kicked {member.mention}",
+            lang.get(userlang(interaction.user.id),"Responds","user_kicked").format(member=member.mention), # type: ignore
             ephemeral=True,
         )
         embed = discord.Embed(
-            description=f"{member.mention} has been kicked\n**Reason**: {reason}",
+            #description=f"{member.mention} has been kicked\n**Reason**: {reason}",
+            description=lang.get(userlang(interaction.user.id),"Responds","user_kicked_embed").format(member=member.mention,reason=reason), # type: ignore
             color=0x2f3136,
         )
         await interaction.followup.send(embed=embed, ephemeral=False)
@@ -70,5 +74,5 @@ async def setup(bot:commands.Bot):
     @app_commands.context_menu(name="Kick")
     @app_commands.default_permissions(kick_members=True)
     async def kick_context(interaction:discord.Interaction,member:discord.Member):
-        await Kick.kick(interaction, member,"Unspecified")
+        await Kick.kick(interaction, member,"Unspecified") # type: ignore
     bot.tree.add_command(kick_context)
