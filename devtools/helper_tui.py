@@ -57,7 +57,6 @@ def journal_updater():
     while running:
         with lock:
             journal_lines[:] = get_journal_lines(100)
-        redraw()
         time.sleep(0.1)
 
 def main():
@@ -69,16 +68,17 @@ def main():
     updater.start()
     try:
         while True:
+            redraw()  # <-- Only redraw here, in the main thread
             user_input = input()
             if user_input.strip().lower() in ("exit", "quit"):
                 break
             with lock:
                 status = "Sending..."
-                redraw()
+            redraw()
             response = send_command(user_input)
             with lock:
                 status = response
-                redraw()
+            redraw()
     except (EOFError, KeyboardInterrupt):
         pass
     finally:
