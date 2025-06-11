@@ -1,12 +1,11 @@
 # tui_bot.py
-import asyncio
 import socket
 import subprocess
 
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.reactive import reactive
-from textual.widgets import Input, Static, Log
+from textual.widgets import Input, Log, Static
 
 SOCKET_HOST = 'localhost'
 SOCKET_PORT = 9920
@@ -26,7 +25,7 @@ def send_command(command: str) -> str:
 def get_journal_lines(n=100):
     try:
         result = subprocess.run(  # noqa: S603
-            ["journalctl", "-u", "lorelei.service", "-n", str(n), "--no-pager", "--output=short"],
+            ["journalctl", "-u", "lorelei.service", "-n", str(n), "--no-pager", "--output=short"],  # noqa: E501
             capture_output=True, text=True, check=True,
         )
         return result.stdout.splitlines()
@@ -61,9 +60,9 @@ class JournalTUI(App):
     def compose(self) -> ComposeResult:
         yield Vertical(
             Log(id="journal", highlight=False),
-            Static(self.status, id="statusbar"),
+            Static(self.status, id="statusbar",markup=True),
             Horizontal(
-                Input(placeholder="Type command and press Enter...", id="cmd_input"),
+                Input(placeholder="Type command and press Enter...", id="cmd_input"),  # noqa: E501
                 id="cmd_row",
             ),
             id="main_vertical",
