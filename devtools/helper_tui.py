@@ -2,8 +2,6 @@
 import os
 import socket
 import subprocess
-import threading
-import time
 
 from rich.console import Console
 from rich.panel import Panel
@@ -13,11 +11,6 @@ SOCKET_HOST = 'localhost'
 SOCKET_PORT = 9920
 
 console = Console()
-journal_lines = []
-status = "Ready."
-input_prompt = "lorelei-bot@localhost: :3># "
-lock = threading.Lock()
-running = True
 
 def send_command(command: str) -> str:
     try:
@@ -41,49 +34,39 @@ def get_journal_lines(n=30):
     except Exception as e:
         return [f"Error reading journal: {e}"]
 
-def redraw():
-    with lock, console.screen():
-        height = console.size.height
-        width = console.size.width
-        reserved_lines = 2
-        journal_height = max(1, height - reserved_lines)
-        journal_text = "\n".join(journal_lines[-journal_height:])
-        console.print(Panel(journal_text, title="Journal", border_style="grey37"), width=width, height=journal_height)
-        console.print(Text(status, style="cyan"), width=width)
-        console.print(Text(input_prompt, style="bold"), width=width, end='')
+def redraw(journal_lines, status, input_prompt):
+    # Get terminal size
+    height = console.size.height
+    width = console.size.width
 
-def journal_updater():
-    global journal_lines
-    while running:
-        with lock:
-            journal_lines[:] = get_journal_lines(100)
-        time.sleep(0.1)
+    # Reserve 2 lines for status and input
+    reserved_lines = 2
+    journal_height = max(1, height - reserved_lines)
+    journal_text = "\n".join(journal_lines[-journal_height:])
+
+    os.system('clear')  # noqa: S605
+    console.print(Panel(journal_text, title="Journal", border_style="grey37"), width=width, height=journal_height)  # noqa: E501
+    console.print(Text(status, style="cyan"), width=width)
+    console.print(Text(input_prompt, style="bold"), width=width, end='')
 
 def main():
-    global status, running
-    # Initial journal fetch
-    with lock:
-        journal_lines[:] = get_journal_lines(100)
-    updater = threading.Thread(target=journal_updater, daemon=True)
-    updater.start()
-    try:
-        while True:
-            redraw()  # <-- Only redraw here, in the main thread
+    status = "Ready."
+    input_prompt = "lorelei-bot@localhost: :3># "
+    journal_lines = get_journal_lines(30)
+
+    while True:
+        redraw(journal_lines, status, input_prompt)
+        try:
             user_input = input()
-            if user_input.strip().lower() in ("exit", "quit"):
-                break
-            with lock:
-                status = "Sending..."
-            redraw()
-            response = send_command(user_input)
-            with lock:
-                status = response
-            redraw()
-    except (EOFError, KeyboardInterrupt):
-        pass
-    finally:
-        running = False
-        updater.join(0.2)
+        except (EOFError, KeyboardInterrupt):
+            break
+        if user_input.strip().lower() in ("exit", "quit"):
+            break
+        status = "Sending..."
+        redraw(journal_lines, status, input_prompt + user_input)
+        response = send_command(user_input)
+        status = response
+        journal_lines = get_journal_lines(30)
 
 if __name__ == "__main__":
     main()
