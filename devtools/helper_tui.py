@@ -1,11 +1,12 @@
 # tui_bot.py
+import asyncio
 import socket
 import subprocess
 
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.reactive import reactive
-from textual.widgets import Input, Static
+from textual.widgets import Input, Static, Log
 
 SOCKET_HOST = 'localhost'
 SOCKET_PORT = 9920
@@ -25,7 +26,7 @@ def send_command(command: str) -> str:
 def get_journal_lines(n=100):
     try:
         result = subprocess.run(  # noqa: S603
-            ["journalctl", "-u", "lorelei.service", "-n", str(n), "--no-pager", "--output=short"],  # noqa: E501
+            ["journalctl", "-u", "lorelei.service", "-n", str(n), "--no-pager", "--output=short"],
             capture_output=True, text=True, check=True,
         )
         return result.stdout.splitlines()
@@ -40,7 +41,6 @@ class JournalTUI(App):
     }
     #journal {
         height: 1fr;
-        overflow-y: auto;
         border: solid gray;
         padding: 1 1;
     }
@@ -60,10 +60,10 @@ class JournalTUI(App):
 
     def compose(self) -> ComposeResult:
         yield Vertical(
-            Static("\n".join(get_journal_lines()), markup=False, id="journal"),
-            Static(self.status, id="statusbar",markup=False),
+            Log(id="journal", highlight=False),
+            Static(self.status, id="statusbar"),
             Horizontal(
-                Input(placeholder="Type command and press Enter...", id="cmd_input"),  # noqa: E501
+                Input(placeholder="Type command and press Enter...", id="cmd_input"),
                 id="cmd_row",
             ),
             id="main_vertical",
@@ -71,15 +71,22 @@ class JournalTUI(App):
 
     async def on_mount(self):
         self.query_one("#cmd_input", Input).focus()
+        self.set_interval(0.1, self.update_journal)  # 100ms auto-update
 
     def update_journal(self):
-        self.query_one("#journal", Static).update("\n".join(get_journal_lines()))
+        journal = self.query_one("#journal", Log)
+        lines = get_journal_lines()
+        if journal.lines != lines:
+            journal.clear()
+            for line in lines:
+                journal.write(line, scroll_end=False)
+            journal.scroll_end(animate=False)
 
     async def on_input_submitted(self, event):
         if event.input.id == "cmd_input":
             cmd = event.input.value
             if cmd.strip():
-                if cmd == "exit" or cmd == "quit":
+                if cmd in ("exit", "quit"):
                     self.exit()
                 self.status = "Sending..."
                 self.query_one("#statusbar", Static).update(self.status)
