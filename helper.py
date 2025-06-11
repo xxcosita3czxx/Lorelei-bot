@@ -18,7 +18,7 @@ def send_command(command: str) -> str:
             response = client.recv(4096).decode('utf-8')
             return response
     except ConnectionRefusedError:
-        return "Connection refused: Is the helper running?"
+        return "Connection refused: Is the bot running?"
     except Exception as e:
         return f"Error: {e}"
 
