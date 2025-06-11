@@ -1,16 +1,14 @@
 # tui_bot.py
-import os
 import socket
 import subprocess
 
-from rich.console import Console
-from rich.panel import Panel
-from rich.text import Text
+from textual.app import App, ComposeResult
+from textual.containers import Horizontal, Vertical
+from textual.reactive import reactive
+from textual.widgets import Input, Static
 
 SOCKET_HOST = 'localhost'
 SOCKET_PORT = 9920
-
-console = Console()
 
 def send_command(command: str) -> str:
     try:
@@ -24,7 +22,7 @@ def send_command(command: str) -> str:
     except Exception as e:
         return f"Error: {e}"
 
-def get_journal_lines(n=30):
+def get_journal_lines(n=100):
     try:
         result = subprocess.run(  # noqa: S603
             ["journalctl", "-u", "lorelei.service", "-n", str(n), "--no-pager", "--output=short"],  # noqa: E501
@@ -34,39 +32,61 @@ def get_journal_lines(n=30):
     except Exception as e:
         return [f"Error reading journal: {e}"]
 
-def redraw(journal_lines, status, input_prompt):
-    # Get terminal size
-    height = console.size.height
-    width = console.size.width
+class JournalTUI(App):
+    CSS = """
+    #main_vertical {
+        height: 100%;
+        layout: vertical;
+    }
+    #journal {
+        height: 1fr;
+        overflow-y: auto;
+        border: solid gray;
+        padding: 1 1;
+    }
+    #statusbar {
+        height: 1;
+        color: cyan;
+    }
+    #cmd_row {
+        height: 3;
+    }
+    #cmd_input {
+        width: 100%;
+    }
+    """
 
-    # Reserve 2 lines for status and input
-    reserved_lines = 2
-    journal_height = max(1, height - reserved_lines)
-    journal_text = "\n".join(journal_lines[-journal_height:])
+    status: reactive[str] = reactive("Ready.")
 
-    os.system('clear')  # noqa: S605
-    console.print(Panel(journal_text, title="Journal", border_style="grey37"), width=width, height=journal_height)  # noqa: E501
-    console.print(Text(status, style="cyan"), width=width)
-    console.print(Text(input_prompt, style="bold"), width=width, end='')
+    def compose(self) -> ComposeResult:
+        yield Vertical(
+            Static("\n".join(get_journal_lines()), id="journal"),
+            Static(self.status, id="statusbar"),
+            Horizontal(
+                Input(placeholder="Type command and press Enter...", id="cmd_input"),  # noqa: E501
+                id="cmd_row",
+            ),
+            id="main_vertical",
+        )
 
-def main():
-    status = "Ready."
-    input_prompt = "lorelei-bot@localhost: :3># "
-    journal_lines = get_journal_lines(30)
+    async def on_mount(self):
+        self.query_one("#cmd_input", Input).focus()
 
-    while True:
-        redraw(journal_lines, status, input_prompt)
-        try:
-            user_input = input()
-        except (EOFError, KeyboardInterrupt):
-            break
-        if user_input.strip().lower() in ("exit", "quit"):
-            break
-        status = "Sending..."
-        redraw(journal_lines, status, input_prompt + user_input)
-        response = send_command(user_input)
-        status = response
-        journal_lines = get_journal_lines(30)
+    def update_journal(self):
+        self.query_one("#journal", Static).update("\n".join(get_journal_lines()))
+
+    async def on_input_submitted(self, event):
+        if event.input.id == "cmd_input":
+            cmd = event.input.value
+            if cmd.strip():
+                self.status = "Sending..."
+                self.query_one("#statusbar", Static).update(self.status)
+                self.refresh()
+                response = send_command(cmd)
+                self.status = response
+                self.query_one("#statusbar", Static).update(self.status)
+                self.update_journal()
+                event.input.value = ""
 
 if __name__ == "__main__":
-    main()
+    JournalTUI().run()
