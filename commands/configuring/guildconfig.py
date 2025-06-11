@@ -201,14 +201,22 @@ class SettingView(discord.ui.View):
                             RoleSelectMenu(interaction=interaction, name=option, config_title=conf_title, config_key=conf_key),  # noqa: E501
                         )
                     elif opt_type == "text":
-                        view.add_item(
-                            discord.ui.Button(
-                                label=option,
-                                style=discord.ButtonStyle.primary,
-                                custom_id=f"text_modal_{option}",
-                            ),
+                        # Replace the button with one that opens a TextModal
+                        async def button_callback(interaction, option=option, conf_title=conf_title, conf_key=conf_key):  # noqa: E501
+                            modal = TextModal(
+                                title=f"Set {option}",
+                                placeholder=f"Enter value for {option}",
+                                config_title=conf_title,
+                                config_key=conf_key,
+                            )
+                            await interaction.response.send_modal(modal)
+                        btn = discord.ui.Button(
+                            label=option,
+                            style=discord.ButtonStyle.primary,
+                            custom_id=f"text_modal_{option}",
                         )
-
+                        btn.callback = button_callback
+                        view.add_item(btn)
                     elif opt_type == "category":
                         view.add_item(
                             CategorySelectMenu(interaction=interaction,name=option, config_title=conf_title,config_key=conf_key),  # noqa: E501
