@@ -78,7 +78,7 @@ class JournalTUI(App):
         if journal.lines != lines:
             journal.clear()
             for line in lines:
-                journal.write(line, scroll_end=False)
+                journal.write(line)
             journal.scroll_end(animate=False)
 
     async def on_input_submitted(self, event):
