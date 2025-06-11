@@ -205,7 +205,6 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
                 _, cog = command.split(maxsplit=1)
                 if cog is None or cog == "":
                     return "Specify cog."
-
                 try:
                     await bot.load_extension(cog)
                     await bot.tree.sync()
