@@ -17,19 +17,19 @@ Everything about contributing is [here](https://github.com/xxcosita3czxx/Lorelei
 
 | Language | Progress |
 |----------|----------|
-| EN-WINGDINGS | 92.86% |
-| CZ | 75.00% |
-| SK | 45.24% |
-| EN-LOLSPEAK | 44.05% |
-| DE | 42.86% |
-| HU | 42.86% |
-| EN-UWU | 29.76% |
-| RU | 29.76% |
-| AL | 11.90% |
-| CN | 11.90% |
-| FI | 11.90% |
-| PL | 11.90% |
-| TR | 11.90% |
+| EN-WINGDINGS | 90.70% |
+| CZ | 73.26% |
+| SK | 44.19% |
+| EN-LOLSPEAK | 43.02% |
+| DE | 41.86% |
+| HU | 41.86% |
+| EN-UWU | 29.07% |
+| RU | 29.07% |
+| AL | 11.63% |
+| CN | 11.63% |
+| FI | 11.63% |
+| PL | 11.63% |
+| TR | 11.63% |
 
 ## Support the creator
 
