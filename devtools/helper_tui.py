@@ -59,8 +59,8 @@ class JournalTUI(App):
 
     def compose(self) -> ComposeResult:
         yield Vertical(
-            Log(id="journal", highlight=False),
-            Static(self.status, id="statusbar",markup=True),
+            Log(id="journal", highlight=False,auto_scroll=True),
+            Static(self.status, id="statusbar",markup=False),
             Horizontal(
                 Input(placeholder="Type command and press Enter...", id="cmd_input"),  # noqa: E501
                 id="cmd_row",
