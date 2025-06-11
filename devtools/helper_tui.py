@@ -61,7 +61,7 @@ class JournalTUI(App):
     def compose(self) -> ComposeResult:
         yield Vertical(
             Static("\n".join(get_journal_lines()), markup=False, id="journal"),
-            Static(self.status, id="statusbar"),
+            Static(self.status, id="statusbar",markup=False),
             Horizontal(
                 Input(placeholder="Type command and press Enter...", id="cmd_input"),  # noqa: E501
                 id="cmd_row",
@@ -79,6 +79,8 @@ class JournalTUI(App):
         if event.input.id == "cmd_input":
             cmd = event.input.value
             if cmd.strip():
+                if cmd == "exit" or cmd == "quit":
+                    self.exit()
                 self.status = "Sending..."
                 self.query_one("#statusbar", Static).update(self.status)
                 self.refresh()
