@@ -42,14 +42,13 @@ def get_journal_lines(n=30):
         return [f"Error reading journal: {e}"]
 
 def redraw():
-    with lock:
+    with lock, console.screen():
         height = console.size.height
         width = console.size.width
         reserved_lines = 2
         journal_height = max(1, height - reserved_lines)
         journal_text = "\n".join(journal_lines[-journal_height:])
-        os.system('clear')  # noqa: S605
-        console.print(Panel(journal_text, title="Journal", border_style="grey37"), width=width, height=journal_height)  # noqa: E501
+        console.print(Panel(journal_text, title="Journal", border_style="grey37"), width=width, height=journal_height)
         console.print(Text(status, style="cyan"), width=width)
         console.print(Text(input_prompt, style="bold"), width=width, end='')
 
