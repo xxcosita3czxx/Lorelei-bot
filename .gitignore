@@ -5,3 +5,4 @@ bot.log
 .ruff_cache
 .vscode
 .toml
+.DS_Store
