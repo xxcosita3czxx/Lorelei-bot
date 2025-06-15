@@ -15,6 +15,8 @@ from utils.configmanager import gconfig
 class Counting(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+    @app_commands.default_permissions(administrator=True)
     @app_commands.command(
         name="counting",
         description="Start a counting game in the channel",
@@ -22,9 +24,17 @@ class Counting(commands.Cog):
     async def counting(self, interaction: discord.Interaction):
         await interaction.response.send_message(
             content="Counting game started! React with the next number. Im starting:\n# 1",  # noqa: E501
-            ephemeral=True,
         )
         gconfig.set(interaction.guild.id,f"{interaction.channel.id}-counting","count",1) # type: ignore
+
+    @app_commands.default_permissions(administrator=True)
+    @app_commands.command(
+        name="counting-remove",
+        description="Removes the counting",
+    ) # type: ignore
+    async def remcounting(self,interaction:discord.Interaction):
+        await interaction.response.send_message("Removing counting!")
+        gconfig.delete(interaction.guild.id,f"{interaction.channel.id}-counting") # type: ignore
 
     @commands.Cog.listener("on_message")
     async def on_message(self, message: discord.Message):
