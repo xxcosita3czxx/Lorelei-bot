@@ -11,6 +11,10 @@ from discord.ui import Select
 from utils.configmanager import gconfig, lang, uconfig
 from utils.guildconfig import GuildConfig
 
+#TODO Fix text input trough modal
+#TODO Somehow give a time button to specify time
+#TODO Cleanup commands an modules so its better sorted in categories
+
 __PRIORITY__ = 10
 
 logger = logging.getLogger("guildconfig")
