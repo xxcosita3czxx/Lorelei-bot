@@ -82,6 +82,7 @@ id="ID"
 joined_dsc="Joined Discord"
 joined_guild="Joined Server"
 roles="Roles"
+no_options="No options available for this setting."
 
 [MainLogs]
 debug_user_admin = "User is admin, ignoring..."

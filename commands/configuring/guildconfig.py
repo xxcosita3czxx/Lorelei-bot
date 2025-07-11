@@ -8,7 +8,7 @@ from discord import app_commands
 from discord.ext import commands
 from discord.ui import Select
 
-from utils.configmanager import gconfig, lang, uconfig
+from utils.configmanager import gconfig, lang, uconfig, userlang
 from utils.guildconfig import GuildConfig
 
 #TODO Fix text input trough modal
@@ -81,12 +81,12 @@ class SettingView(discord.ui.View):
                 self.config_key = config_key
 
             async def on_submit(self, interaction: discord.Interaction):
-                config_id = interaction.user.id if cconfig is uconfig else interaction.guild.id  # type: ignore  # noqa: E501
+                config_id = interaction.user.id if cconfig is uconfig else interaction.guild.id # type: ignore # noqa: E501
                 cconfig.set(
                     config_id,
                     self.config_title,
                     self.config_key,
-                    self.text_input.value,  # type: ignore
+                    self.text_input.value,
                 )
                 await interaction.response.defer(ephemeral=True)
         class TextChannelSelectMenu(Select):
@@ -111,7 +111,7 @@ class SettingView(discord.ui.View):
                     self.config_title,
                     self.config_key,
                     selected_channel_id,  # type: ignore
-                )  # type: ignore
+                )
                 # gconfig.save(interaction.guild.id, self.config_title, self.config_key, selected_channel_id)  # noqa: E501
                 await interaction.response.defer(ephemeral=True)
 
@@ -182,7 +182,7 @@ class SettingView(discord.ui.View):
                 options = config_session.get_options(category_name, selected)
                 embed = discord.Embed(
                     title=f"Options for {selected}",
-                    description="Here are the options for this setting:" if options else "No options available for this setting.",  # noqa: E501
+                    description="Here are the options for this setting:" if options else lang.get(userlang(interaction.user.id),"Responds","no_options"),  # noqa: E501
                 )
                 view = discord.ui.View()
                 for option in options:

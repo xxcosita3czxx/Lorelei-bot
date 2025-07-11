@@ -1,7 +1,3 @@
-
-#TODO Anybody with manage-messages permissions shouldnt have deleted invites/links
-#TODO Antilinks deleting everything
-
 import logging
 
 import discord

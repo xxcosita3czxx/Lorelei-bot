@@ -7,8 +7,6 @@ from discord.ext import commands, tasks
 from utils.configmanager import gconfig
 from utils.guildconfig import GuildConfig
 
-#TODO add support for cron style
-
 logger = logging
 
 class AutoMessages(commands.Cog):

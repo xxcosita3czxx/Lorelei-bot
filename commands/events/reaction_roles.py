@@ -16,8 +16,14 @@ class ReactionRoles(commands.Cog):
     # PEAK EFFICIENCI :fire:
 
     @app_commands.command(name="add-reaction-role",description="Create reaction roles")  # noqa: E501
-    @app_commands.default_permissions(administrator=True)  # noqa: E501
-    async def create_reaction(self, interaction: discord.Interaction,title:str,description:str,emoji:str,role:discord.Role,messageid:str=None,channel:discord.TextChannel=None):  # type: ignore # noqa: E501
+    @app_commands.default_permissions(administrator=True)
+    async def create_reaction(self, interaction: discord.Interaction,
+            title:str,
+            description:str,
+            emoji:str,
+            role:discord.Role,
+            messageid:str=None, # type: ignore
+            channel:discord.TextChannel=None): # type: ignore
         if channel is None:
             channel = interaction.channel
         if messageid is None:
@@ -44,7 +50,6 @@ class ReactionRoles(commands.Cog):
         if user.bot:
             return
 
-        # Example: Reaction role logic
         guild = reaction.message.guild
         reaction_roles_config = gconfig.config.get(str(guild.id), {}).get("reaction-roles", {})  # type: ignore # noqa: E501
         for key, value in reaction_roles_config.items():
@@ -70,6 +75,7 @@ class ReactionRoles(commands.Cog):
                     role = guild.get_role(int(role_id))
                     if role:
                         await user.add_roles(role)
+
 async def setup(bot:commands.Bot):
     cog = ReactionRoles(bot)
     await bot.add_cog(cog)

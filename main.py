@@ -2,14 +2,12 @@
 #    By Cosita              #
 #############################
 #TODO more verify modes
-#TODO AntiLinks block all messages (Test please)
 #TODO Embeds and translations of strings
 #TODO Level system more theme files
 #TODO Level system logic for leaderboards and levels
 #TODO Giveaway logic
 #TODO Welcome message when bot joins
 #TODO Finish adding settings to new config system
-#TODO Some kind of filtering words (may use automod if it allows me to also do custom messages)  # noqa: E501
 #IDEA ids could be if num not in list then add, else continue
 # Also edit could add/edit already existing
 #IDEA Job to clean left guilds after a day or 12 hours,
