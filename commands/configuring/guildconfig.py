@@ -10,6 +10,7 @@ from discord.ui import Select
 
 from utils.configmanager import gconfig, lang, uconfig, userlang
 from utils.guildconfig import GuildConfig
+from utils.timeconverter import discord_time_s
 
 #TODO Fix text input trough modal
 #TODO Somehow give a time button to specify time
@@ -68,6 +69,28 @@ class SettingView(discord.ui.View):
                     selected_option,  # type: ignore
                 )
                 await interaction.response.defer(ephemeral=True)
+        class TimeSelectMenu(Select):
+            def __init__(self, interaction, name, config_title, config_key):
+                options = [
+                    discord.SelectOption(label=opt, value=opt) for opt in discord_time_s  # noqa: E501
+                ]
+                super().__init__(
+                    placeholder="Select time...",
+                    options=options,
+                    custom_id=f"time_select_{name}",
+                )
+                self.config_title = config_title
+                self.config_key = config_key
+
+            async def callback(self, interaction: discord.Interaction):
+                selected_time = self.values[0]
+                config_id = interaction.user.id if cconfig is uconfig else interaction.guild.id  # type: ignore # noqa: E501
+                cconfig.set(
+                    config_id,
+                    self.config_title,
+                    self.config_key,
+                    discord_time_s[selected_time],  # type: ignore
+                )  # type: ignore
         class TextModal(discord.ui.Modal):
             def __init__(self, title, placeholder, config_title, config_key):
                 super().__init__(title=title)
@@ -140,7 +163,6 @@ class SettingView(discord.ui.View):
                 )
                 await interaction.response.defer(ephemeral=True)
 
-
         class RoleSelectMenu(Select):
             def __init__(self, interaction, name, config_title, config_key):
                 options = [
@@ -177,7 +199,7 @@ class SettingView(discord.ui.View):
                     options=select_options,
                 )
 
-            async def callback(self, interaction: discord.Interaction):
+            async def callback(self, interaction: discord.Interaction):  # noqa: C901
                 selected = self.values[0]
                 options = config_session.get_options(category_name, selected)
                 embed = discord.Embed(
@@ -224,6 +246,15 @@ class SettingView(discord.ui.View):
                     elif opt_type == "category":
                         view.add_item(
                             CategorySelectMenu(interaction=interaction,name=option, config_title=conf_title,config_key=conf_key),  # noqa: E501
+                        )
+                    elif opt_type == "time":
+                        view.add_item(
+                            TimeSelectMenu(
+                                interaction=interaction,
+                                name=option,
+                                config_title=conf_title,
+                                config_key=conf_key,
+                            ),  # noqa: E501
                         )
                     elif opt_type == "list":
                         options_list = option_data.get("options", [])
