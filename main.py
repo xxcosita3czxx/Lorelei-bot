@@ -359,7 +359,7 @@ async def change_status() -> None:
         await bot.change_presence(
             activity=discord.Activity(
                 type=discord.ActivityType.listening,
-                name=f"Current commit: {os.popen('git rev-list --count HEAD').read().strip()}",  # noqa: E501, S605
+                name=f"Version: v{os.popen('git rev-list --count HEAD').read().strip()}",  # noqa: E501, S605
             ),
             status=config.status,
         )
