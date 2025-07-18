@@ -425,12 +425,12 @@ async def setup(bot:commands.Bot):
     bot.tree.add_command(cog.ticketing_group())
     configman = GuildConfig()
     configman.add_setting(
-        "Admin",
+        "Moderation",
         "Ticketing",
         "Ticketing Settings",
     )
     configman.add_option_bool(
-        "Admin",
+        "Moderation",
         "Ticketing",
         "reviews-enabled",
         "Enable Reviews",
@@ -439,7 +439,7 @@ async def setup(bot:commands.Bot):
         "Enable reviews for tickets.",
     )
     configman.add_option_textchannel(
-        "Admin",
+        "Moderation",
         "Ticketing",
         "channel",
         "Ticketing",

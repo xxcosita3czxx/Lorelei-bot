@@ -33,7 +33,7 @@ class AutoRole(commands.Cog):
 async def setup(bot:commands.Bot):
     await bot.add_cog(AutoRole(bot))
     hm = HelpManager()
-    hmhelp = hm.new_help("members","autorole","Automatically assigns a role to new members")  # noqa: E501
+    hmhelp = hm.new_help("Members","AutoRole","Automatically assigns a role to new members")  # noqa: E501
     hmhelp.set_help_page(1,"AutoRole","Automatically assigns a role to new members. Useful for default role or permissions that doesnt use everyone")  # noqa: E501
     configman = GuildConfig()
     configman.add_setting(

@@ -80,6 +80,6 @@ async def setup(bot:commands.Bot):
     cog = ReactionRoles(bot)
     await bot.add_cog(cog)
     hm = HelpManager()
-    hmhelp = hm.new_help("reaction-roles","add-reaction-roles","Reaction roles")
+    hmhelp = hm.new_help("Members","add-reaction-roles","Reaction roles")
     hmhelp.set_help_page(1,"Reaction roles",description="Reaction roles are a way to assign roles to users based on their reactions to a message. This can be used for self-assignable roles, event roles, and more.")  # noqa: E501
     hmhelp.set_help_page(2,"Multiple reaction roles",description="You can add multiple reaction roles to a single message. Just use the same message ID and different emojis. Just ignore title and description as it gets ignored (put anything in there)")  # noqa: E501

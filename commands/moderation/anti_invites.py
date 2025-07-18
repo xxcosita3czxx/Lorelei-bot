@@ -89,12 +89,12 @@ async def setup(bot:commands.Bot):
     await bot.add_cog(AntiInvites(bot))
     configman = GuildConfig()
     configman.add_setting(
-        category_name="Security",
+        category_name="Moderation",
         setting_name="Anti-Invites",
         description="Anti-Invites system to prevent invites from being sent in the server.",  # noqa: E501
     )
     configman.add_option_bool( # type: ignore
-        category_name="Security",
+        category_name="Moderation",
         setting_name="Anti-Invites",
         name="Enabled",
         button_title="Enable",
@@ -103,12 +103,12 @@ async def setup(bot:commands.Bot):
         description="Enable Anti-Invites",
     )
     configman.add_setting(
-        category_name="Security",
+        category_name="Moderation",
         setting_name="Anti-Links",
         description="Anti-Links system to prevent links from being sent in the server.",  # noqa: E501
     )
     configman.add_option_bool( # type: ignore
-        category_name="Security",
+        category_name="Moderation",
         setting_name="Anti-Links",
         name="Enabled",
         button_title="Enable",

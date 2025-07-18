@@ -41,12 +41,12 @@ async def setup(bot:commands.Bot):
     await bot.add_cog(AntiAlts(bot))
     configman = GuildConfig()
     configman.add_setting(
-        category_name="Security",
+        category_name="Moderation",
         setting_name="Anti-Alts",
         description="Anti-Alts system to prevent alternative accounts from joining the server.",  # noqa: E501
     )
     configman.add_option_bool( # type: ignore
-        category_name="Security",
+        category_name="Moderation",
         setting_name="Anti-Alts",
         name="Enabled",
         button_title="Enable",

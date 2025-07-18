@@ -8,6 +8,7 @@ from discord.ext import commands
 from utils.autocomplete import autocomplete_dice_modes
 from utils.configmanager import gconfig, lang, uconfig
 from utils.dices import dices
+from utils.guildconfig import GuildConfig
 
 logger = logging.getLogger("dice")
 
@@ -51,3 +52,14 @@ class Dice(commands.Cog):
             logger.error(f"dice failed, \n{e}")
 async def setup(bot:commands.Bot):
     await bot.add_cog(Dice(bot))
+    configman = GuildConfig()
+    configman.add_setting("Fun", "Dice Type", "Configure the default dice type on the server")  # noqa: E501
+    configman.add_option_select(  # type: ignore
+        category_name="Fun",
+        setting_name="Dice Type",
+        name="Default Dice Type",
+        config_title="FUN",
+        config_key="def_dice",
+        options=dices.keys(),
+        description="Default dice type to use when no mode is specified.",
+    )
