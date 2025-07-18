@@ -4,7 +4,7 @@ import re
 import discord
 from discord.ext import commands
 
-import commands.events.invite_logger as invite_logger
+import commands.moderation.invite_logger as invite_logger
 from utils.configmanager import gconfig
 from utils.guildconfig import GuildConfig
 from utils.helpmanager import HelpManager

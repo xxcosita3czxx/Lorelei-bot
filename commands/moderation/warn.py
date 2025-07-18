@@ -6,7 +6,7 @@ from discord.ext import commands
 
 from utils.configmanager import gconfig, lang, userlang
 
-from .ban import ban_member
+from ..moderation.ban import ban_member
 from .kick import kick_member
 
 #TODO Automatic bans and timeouts on warns
