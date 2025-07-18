@@ -356,6 +356,15 @@ async def change_status() -> None:
         )
         logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
         await asyncio.sleep(5)
+        await bot.change_presence(
+            activity=discord.Activity(
+                type=discord.ActivityType.listening,
+                name=f"Current commit: {os.popen('git rev-list --count HEAD').read().strip()}",  # noqa: E501, S605
+            ),
+            status=config.status,
+        )
+        logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
+        await asyncio.sleep(5)
 
 #########################################################################################
 

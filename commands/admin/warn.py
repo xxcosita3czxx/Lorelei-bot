@@ -11,6 +11,7 @@ from .kick import kick_member
 
 #TODO Automatic bans and timeouts on warns
 #TODO Add automations to configs
+#TODO posibility for more custom punishments
 
 async def add_warns(guild_id, user:discord.Member,interaction:discord.Interaction):
 # Add or update the user's warn count
