@@ -358,7 +358,7 @@ async def change_status() -> None:
         await asyncio.sleep(5)
         await bot.change_presence(
             activity=discord.Activity(
-                type=discord.ActivityType.listening,
+                type=discord.ActivityType.playing,
                 name=f"Version: v{os.popen('git rev-list --count HEAD').read().strip()}",  # noqa: E501, S605
             ),
             status=config.status,
@@ -367,7 +367,7 @@ async def change_status() -> None:
         await asyncio.sleep(5)
         await bot.change_presence(
             activity=discord.Activity(
-                type=discord.ActivityType.listening,
+                type=discord.ActivityType.playing,
                 name=f"Commit: {os.popen('git rev-parse HEAD').read().strip()}",  # noqa: E501, S605
             ),
             status=config.status,
