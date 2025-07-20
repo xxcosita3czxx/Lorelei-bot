@@ -6,7 +6,6 @@
 #TODO Level system more theme files
 #TODO Level system logic for leaderboards and levels
 #TODO Giveaway logic
-#TODO Welcome message when bot joins
 #TODO Finish adding settings to new config system
 #IDEA ids could be if num not in list then add, else continue
 # Also edit could add/edit already existing

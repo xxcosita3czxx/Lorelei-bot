@@ -15,7 +15,7 @@ from utils.timeconverter import discord_time_s
 #TODO Fix text input trough modal
 #TODO Somehow give a time button to specify time
 #TODO Cleanup commands an modules so its better sorted in categories
-
+#TODO Add nsfw tag to exclude nsfw from safe channels
 __PRIORITY__ = 10
 
 logger = logging.getLogger("guildconfig")

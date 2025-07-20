@@ -147,7 +147,17 @@ class GuildConfig:
             "config_key": config_key,
             "description": description,
         }
-
+    def add_option_time(
+        self,
+        category_name,
+        setting_name,
+        name,
+        config_title,
+        config_key,
+        description,
+    ):
+        
+        pass
     def get_setting(self, category_name, setting_name):
         if category_name not in self.categories:
             raise ValueError(f"Category '{category_name}' does not exist.")
