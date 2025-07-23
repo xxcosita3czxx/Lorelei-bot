@@ -42,16 +42,16 @@ def update():
 
         if other_updated:
             logger.info("Other files updated. Restarting bot immediately...")
-            os.system("python3 helper.py kill")  # noqa: S605, S607
+            os.system("python3 devtools/helper_cli.py kill")  # noqa: S605, S607
             return  # Stop here, no need to do more
 
         if lang_updated:
             logger.info("Language files updated. Reloading language...")
-            os.system("python3 helper.py reload_lang")  # noqa: S605, S607
+            os.system("python3 devtools/helper_cli.py reload_lang")  # noqa: S605, S607
 
         if command_updated:
             logger.info("Command files updated. Reloading commands...")
-            os.system("python3 helper.py extensions reloadall")  # noqa: S605, S607
+            os.system("python3 devtools/helper_cli.py extensions reload_all")  # noqa: S605, S607
 
     except Exception as e:
         logger.warning("UPDATER FAILED")
@@ -65,7 +65,7 @@ def Is_Alive():
     while True:
         main_pid = None
         for process in psutil.process_iter(['pid', 'name', 'cmdline']):
-            if 'python3' in process.info['name'] and 'main.py' in ' '.join(process.info['cmdline']):  # noqa: E501
+            if 'python' in process.info['name'] and 'main.py' in ' '.join(process.info['cmdline']):  # noqa: E501
                 main_pid = process.info['pid']
 
                 logger.debug(
@@ -73,12 +73,12 @@ def Is_Alive():
                 )
         if not main_pid:
             logger.info(lang.get(conflang,"RunnerLogs","info_not_running"))
-            os.system("python main.py")  # noqa: S605, S607
+            os.system("python3 main.py")  # noqa: S605, S607
         time.sleep(config.Is_Alive_time)
 def update_cosita_tk():
     while True:
         try:
-            os.system("python utils/cosita_toolkit.py")  # noqa: S605, S607
+            os.system("python3 utils/cosita_toolkit.py")  # noqa: S605, S607
         except Exception:
             logger.error(lang.get(conflang,"RunnerLogs","err_costk_update_fail"))
         time.sleep(config.costk_update)
@@ -86,7 +86,7 @@ def update_cosita_tk():
 def ptero_mode():
         while True:
             for line in sys.stdin:
-                os.system("python3 helper.py " + line)  # noqa: S605
+                os.system("python3 devtools/helper_cli.py " + line)  # noqa: S605
 
 @click.command()
 @click.option("--update",is_flag=True, help="Updates the bot and exits")

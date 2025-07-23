@@ -128,6 +128,63 @@ class Ticketing(commands.Cog):
                 embed=embed,
                 ephemeral = True,
             )
+
+        @app_commands.command(name="multi_panel",description="Launches ticketing system with multiple groups")  # noqa: E501
+        async def multi_ticketing(self,interaction: discord.Interaction,title:str="Hi! If you need help or have a question, don't hesitate to create a ticket.", text:str=""):  # noqa: E501
+            '''
+            Multi Ticket command
+
+            This will actually launch the ticket system with multiple groups
+            '''
+
+            embed = discord.Embed(
+                title = title,
+                description = text,
+                color = discord.Colour.blurple(),
+            )
+            await interaction.channel.send( # type: ignore
+                embed = embed,
+                view = Ticketing.ticket_multi_launcher(),
+            )
+            embed = discord.Embed(
+                title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","panel_launch"),
+            )
+            await interaction.response.send_message(
+                embed=embed,
+                ephemeral = True,
+            )
+
+    class ticket_multi_launcher(discord.ui.View):
+        '''
+        This will create the ticket with multiple groups
+        '''
+
+        def __init__(self) -> None:  # noqa: ANN101
+            super().__init__(timeout = None)
+            self.cooldown = commands.CooldownMapping.from_cooldown(
+                1,
+                60,
+                commands.BucketType.member,
+            )
+            # Define options here
+            self.options = [
+                discord.SelectOption(
+                    label="Support",
+                    value="support",
+                    description="For support related tickets",
+                ),
+            ]
+        @discord.ui.select(
+            placeholder = "Select a group",
+            options = lambda self: self.options,
+            custom_id = "ticket_select",
+        )
+        async def ticket_select(self, interaction: discord.Interaction, select: discord.ui.Select):  # noqa: E501, ANN101
+            await interaction.response.send_message(
+                f"You selected: {select.values[0]}",
+                ephemeral = True,
+            )
+
     class ticket_launcher(discord.ui.View):
 
         '''
