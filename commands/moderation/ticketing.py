@@ -8,6 +8,7 @@ from discord.ext import commands
 from utils.configmanager import gconfig, lang, uconfig
 from utils.guildconfig import GuildConfig
 
+#TODO Claiming
 
 class Ticketing(commands.Cog):
     def __init__(self, bot):
