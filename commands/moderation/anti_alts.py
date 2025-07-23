@@ -54,4 +54,11 @@ async def setup(bot:commands.Bot):
         config_key="antialts-enabled",
         description="Enable Anti-Alts",
     )
-    #configman.add_option_time()
+    configman.add_option_time(
+        category_name="Moderation",
+        setting_name="Anti-Alts",
+        name="Time",
+        config_title="SECURITY",
+        config_key="antialts-time",
+        description="Time in seconds before account is considered an alt.",
+    )
