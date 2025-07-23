@@ -7,6 +7,7 @@
 #TODO Level system logic for leaderboards and levels
 #TODO Giveaway logic
 #TODO Finish adding settings to new config system
+#TODO Announcement system, that could also dm users
 #IDEA ids could be if num not in list then add, else continue
 # Also edit could add/edit already existing
 #IDEA Job to clean left guilds after a day or 12 hours,
@@ -326,53 +327,63 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
     else:
         return 'Unknown command.'
 #################################### Status ########################################
-
+# language: python
 async def change_status() -> None:
-    while True:
-        await bot.change_presence(
-            activity=discord.Activity(
-                type=discord.ActivityType.playing,
-                name="Some Chords...",
-            ),
-            status=config.status,
-        )
-        logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
-        await bot.change_presence(
-            activity=discord.Activity(
-                type=discord.ActivityType.watching,
-                name=f"On {len(bot.guilds)} servers",
-            ),
-            status=config.status,
-        )
-        logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
-        await asyncio.sleep(5)
-        await bot.change_presence(
-            activity=discord.Activity(
-                type=discord.ActivityType.listening,
-                name="/help",
-            ),
-            status=config.status,
-        )
-        logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
-        await asyncio.sleep(5)
-        await bot.change_presence(
-            activity=discord.Activity(
-                type=discord.ActivityType.playing,
-                name=f"Version: v{os.popen('git rev-list --count HEAD').read().strip()}",  # noqa: E501, S605
-            ),
-            status=config.status,
-        )
-        logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
-        await asyncio.sleep(5)
-        await bot.change_presence(
-            activity=discord.Activity(
-                type=discord.ActivityType.playing,
-                name=f"Commit: {os.popen('git rev-parse HEAD').read().strip()}",  # noqa: E501, S605
-            ),
-            status=config.status,
-        )
-        logger.debug(lang.get(conflang,"Bot","debug_status_chng"))
-        await asyncio.sleep(5)
+    await bot.wait_until_ready()
+    while not bot.is_closed():
+        try:
+            await bot.change_presence(
+                activity=discord.Activity(
+                    type=discord.ActivityType.playing,
+                    name="Some Chords...",
+                ),
+                status=config.status,
+            )
+            logger.debug(lang.get(conflang, "Bot", "debug_status_chng"))
+
+            await bot.change_presence(
+                activity=discord.Activity(
+                    type=discord.ActivityType.watching,
+                    name=f"On {len(bot.guilds)} servers",
+                ),
+                status=config.status,
+            )
+            logger.debug(lang.get(conflang, "Bot", "debug_status_chng"))
+            await asyncio.sleep(5)
+
+            await bot.change_presence(
+                activity=discord.Activity(
+                    type=discord.ActivityType.listening,
+                    name="/help",
+                ),
+                status=config.status,
+            )
+            logger.debug(lang.get(conflang, "Bot", "debug_status_chng"))
+            await asyncio.sleep(5)
+
+            await bot.change_presence(
+                activity=discord.Activity(
+                    type=discord.ActivityType.playing,
+                    name=f"Version: v{os.popen('git rev-list --count HEAD').read().strip()}",  # noqa: E501, S605
+                ),
+                status=config.status,
+            )
+            logger.debug(lang.get(conflang, "Bot", "debug_status_chng"))
+            await asyncio.sleep(5)
+
+            await bot.change_presence(
+                activity=discord.Activity(
+                    type=discord.ActivityType.playing,
+                    name=f"Commit: {os.popen('git rev-parse HEAD').read().strip()}",  # noqa: S605
+                ),
+                status=config.status,
+            )
+            logger.debug(lang.get(conflang, "Bot", "debug_status_chng"))
+            await asyncio.sleep(5)
+
+        except Exception as e:
+            logger.warning(f"[STATUS LOOP] Caught exception: {e}")
+            await asyncio.sleep(10)  # pause before retrying
 
 #########################################################################################
 
