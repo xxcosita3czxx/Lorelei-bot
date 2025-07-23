@@ -138,20 +138,19 @@ class Ticketing(commands.Cog):
             '''
 
             embed = discord.Embed(
-                title = title,
-                description = text,
-                color = discord.Colour.blurple(),
+                title="Multi-Panel Group Editor",
+                description="Add or remove groups for the ticket system before sending.",  # noqa: E501
+                color=discord.Colour.blurple(),
             )
-            await interaction.channel.send( # type: ignore
-                embed = embed,
-                view = Ticketing.ticket_multi_launcher(),
-            )
-            embed = discord.Embed(
-                title=lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"TicketingCommand","panel_launch"),
-            )
+
             await interaction.response.send_message(
                 embed=embed,
-                ephemeral = True,
+                view=Ticketing.ticket_group_editor(
+                    title=title,
+                    description=text,
+                    channel=interaction.channel,
+                ),
+                ephemeral=True,
             )
 
     class ticket_multi_launcher(discord.ui.View):
@@ -166,26 +165,358 @@ class Ticketing(commands.Cog):
                 60,
                 commands.BucketType.member,
             )
-            # Define options here
-            options = [
-                discord.SelectOption(
-                    label="Support",
-                    value="support",
-                    description="For support related tickets",
-                ),
+            # Default groups - will be overridden by editor
+            self.groups = [
+                {
+                    "label": "Support",
+                    "value": "support",
+                    "description": "For support related tickets",
+                },
             ]
-            # Set the options for the select component
-            for item in self.children:
-                if isinstance(item, discord.ui.Select):
-                    item.options = options
         @discord.ui.select(
             placeholder = "Select a group",
             custom_id = "ticket_select",
         )
         async def ticket_select(self, interaction: discord.Interaction, select: discord.ui.Select):  # noqa: E501, ANN101
+            # Update select options based on current groups
+            select.options = [
+                discord.SelectOption(
+                    label=group["label"],
+                    value=group["value"],
+                    description=group["description"],
+                )
+                for group in self.groups
+            ]
+
+            selected_group = select.values[0]
+            group_info = next((g for g in self.groups if g["value"] == selected_group), None)  # noqa: E501
+            if not group_info:
+                return await interaction.response.send_message(
+                    "Invalid group selected!",
+                    ephemeral=True,
+                )
+
+            # Check for existing tickets
+            ticket = utils.get(
+                interaction.guild.text_channels,  # type: ignore
+                name=f"ticket-{interaction.user.name.lower().replace(' ', '-')}-{selected_group}",  # noqa: E501
+            )
+
+            if ticket is not None:
+                return await interaction.response.send_message(
+                    f"You already have a {group_info['label']} ticket open at {ticket.mention}!",  # noqa: E501
+                    ephemeral=True,
+                )
+
+            # Create ticket with group-specific naming
+            overwrites = {
+                interaction.guild.default_role: discord.PermissionOverwrite(  # type: ignore
+                    view_channel=False,
+                ),
+                interaction.user: discord.PermissionOverwrite(
+                    view_channel=True,
+                    read_message_history=True,
+                    send_messages=True,
+                    attach_files=True,
+                    embed_links=True,
+                ),
+                interaction.guild.me: discord.PermissionOverwrite(  # type: ignore
+                    view_channel=True,
+                    send_messages=True,
+                    read_message_history=True,
+                ),
+            }
+
+            try:
+                channel = await interaction.guild.create_text_channel(  # type: ignore
+                    name=f"ticket-{interaction.user.name}-{selected_group}",
+                    overwrites=overwrites,
+                    reason=f"{group_info['label']} ticket for {interaction.user}",
+                )
+
+                embed = discord.Embed(
+                    title=f"{group_info['label']} Ticket",
+                    description=f"Welcome {interaction.user.mention}! This is your {group_info['label'].lower()} ticket.\n\nPlease describe your issue and a staff member will assist you shortly.",  # noqa: E501
+                    color=discord.Colour.blurple(),
+                )
+                embed.add_field(
+                    name="Group",
+                    value=group_info['label'],
+                    inline=True,
+                )
+                embed.add_field(
+                    name="Created by",
+                    value=interaction.user.mention,
+                    inline=True,
+                )
+
+                await channel.send(
+                    f"@everyone, {interaction.user.mention} created a {group_info['label']} ticket!",  # noqa: E501
+                    embed=embed,
+                    view=Ticketing.main(),
+                )
+
+                await interaction.response.send_message(
+                    f"I've opened a {group_info['label']} ticket for you at {channel.mention}!",  # noqa: E501
+                    ephemeral=True,
+                )
+
+            except Exception as e:
+                await interaction.response.send_message(
+                    f"Ticket creation failed! Make sure I have `manage_channels` permissions! --> {e}",  # noqa: E501
+                    ephemeral=True,
+                )
+
+    class ticket_group_editor(discord.ui.View):
+        '''
+        Editor for managing ticket groups before sending the multi-panel
+        '''
+
+        def __init__(self, title: str, description: str, channel) -> None:  # noqa: ANN101
+            super().__init__(timeout=300)  # 5 minute timeout
+            self.title = title
+            self.description = description
+            self.channel = channel
+            self.groups = [
+                {
+                    "label": "Support",
+                    "value": "support",
+                    "description": "For support related tickets",
+                },
+            ]
+
+        def create_groups_embed(self):
+            embed = discord.Embed(
+                title="Group Editor",
+                description="Current groups for the ticket system:",
+                color=discord.Colour.blurple(),
+            )
+
+            if self.groups:
+                group_list = "\n".join([
+                    f"• **{group['label']}** ({group['value']}) - {group['description']}"  # noqa: E501
+                    for group in self.groups
+                ])
+                embed.add_field(
+                    name="Groups",
+                    value=group_list,
+                    inline=False,
+                )
+            else:
+                embed.add_field(
+                    name="Groups",
+                    value="No groups added yet.",
+                    inline=False,
+                )
+
+            return embed
+
+        @discord.ui.button(
+            label="Add Group",
+            style=discord.ButtonStyle.green,
+            custom_id="add_group",
+        )
+        async def add_group(self, interaction: discord.Interaction, button: discord.ui.Button):  # noqa: E501, ANN101
+            await interaction.response.send_modal(
+                Ticketing.add_group_modal(self),
+            )
+
+        @discord.ui.button(
+            label="Remove Group",
+            style=discord.ButtonStyle.red,
+            custom_id="remove_group",
+        )
+        async def remove_group(self, interaction: discord.Interaction, button: discord.ui.Button):  # noqa: E501, ANN101
+            if not self.groups:
+                return await interaction.response.send_message(
+                    "No groups to remove!",
+                    ephemeral=True,
+                )
+
+            # Create select menu with current groups
+            options = [
+                discord.SelectOption(
+                    label=group["label"],
+                    value=str(idx),
+                    description=f"Remove: {group['description'][:50]}",
+                )
+                for idx, group in enumerate(self.groups)
+            ]
+
+            select = discord.ui.Select(
+                placeholder="Select a group to remove",
+                options=options,
+                custom_id="remove_select",
+            )
+
+            async def remove_callback(select_interaction):
+                group_idx = int(select.values[0])
+                removed_group = self.groups.pop(group_idx)
+
+                await select_interaction.response.edit_message(
+                    embed=self.create_groups_embed(),
+                    view=self,
+                )
+
+                await select_interaction.followup.send(
+                    f"Removed group: **{removed_group['label']}**",
+                    ephemeral=True,
+                )
+
+            select.callback = remove_callback
+            view = discord.ui.View()
+            view.add_item(select)
+
             await interaction.response.send_message(
-                f"You selected: {select.values[0]}",
-                ephemeral = True,
+                "Select a group to remove:",
+                view=view,
+                ephemeral=True,
+            )
+
+        @discord.ui.button(
+            label="Preview",
+            style=discord.ButtonStyle.blurple,
+            custom_id="preview",
+        )
+        async def preview(self, interaction: discord.Interaction, button: discord.ui.Button):  # noqa: E501, ANN101
+            embed = discord.Embed(
+                title=self.title,
+                description=self.description,
+                color=discord.Colour.blurple(),
+            )
+
+            view = Ticketing.ticket_multi_launcher()
+            # Update the groups in the launcher
+            view.groups = self.groups.copy()
+
+            # Update the select options
+            for item in view.children:
+                if isinstance(item, discord.ui.Select):
+                    item.options = [
+                        discord.SelectOption(
+                            label=group["label"],
+                            value=group["value"],
+                            description=group["description"],
+                        )
+                        for group in self.groups
+                    ]
+
+            await interaction.response.send_message(
+                "**Preview:**",
+                embed=embed,
+                view=view,
+                ephemeral=True,
+            )
+
+        @discord.ui.button(
+            label="Send Panel",
+            style=discord.ButtonStyle.success,
+            custom_id="send_panel",
+        )
+        async def send_panel(self, interaction: discord.Interaction, button: discord.ui.Button):  # noqa: E501, ANN101
+            if not self.groups:
+                return await interaction.response.send_message(
+                    "You need at least one group before sending the panel!",
+                    ephemeral=True,
+                )
+
+            embed = discord.Embed(
+                title=self.title,
+                description=self.description,
+                color=discord.Colour.blurple(),
+            )
+
+            view = Ticketing.ticket_multi_launcher()
+            view.groups = self.groups.copy()
+
+            # Update the select options
+            for item in view.children:
+                if isinstance(item, discord.ui.Select):
+                    item.options = [
+                        discord.SelectOption(
+                            label=group["label"],
+                            value=group["value"],
+                            description=group["description"],
+                        )
+                        for group in self.groups
+                    ]
+
+            await self.channel.send(
+                embed=embed,
+                view=view,
+            )
+
+            await interaction.response.edit_message(
+                embed=discord.Embed(
+                    title="Panel Sent!",
+                    description="The multi-group ticket panel has been sent successfully.",  # noqa: E501
+                    color=discord.Colour.green(),
+                ),
+                view=None,
+            )
+
+        @discord.ui.button(
+            label="Cancel",
+            style=discord.ButtonStyle.gray,
+            custom_id="cancel",
+        )
+        async def cancel(self, interaction: discord.Interaction, button: discord.ui.Button):  # noqa: E501, ANN101
+            await interaction.response.edit_message(
+                embed=discord.Embed(
+                    title="Cancelled",
+                    description="Group editor cancelled.",
+                    color=discord.Colour.red(),
+                ),
+                view=None,
+            )
+
+    class add_group_modal(discord.ui.Modal):
+        def __init__(self, editor_view):
+            super().__init__(title="Add New Group")
+            self.editor_view = editor_view
+
+        label = discord.ui.TextInput(
+            label="Group Label",
+            placeholder="e.g. Technical Support",
+            required=True,
+            max_length=25,
+        )
+
+        value = discord.ui.TextInput(
+            label="Group Value",
+            placeholder="e.g. tech_support",
+            required=True,
+            max_length=25,
+        )
+
+        description = discord.ui.TextInput(
+            label="Group Description",
+            placeholder="e.g. For technical issues and bugs",
+            required=True,
+            max_length=100,
+            style=discord.TextStyle.paragraph,
+        )
+
+        async def on_submit(self, interaction: discord.Interaction):
+            # Check if value already exists
+            if any(group["value"] == self.value.value for group in self.editor_view.groups):  # noqa: E501
+                return await interaction.response.send_message(
+                    f"A group with value '{self.value.value}' already exists!",
+                    ephemeral=True,
+                )
+
+            # Add the new group
+            new_group = {
+                "label": self.label.value,
+                "value": self.value.value,
+                "description": self.description.value,
+            }
+            self.editor_view.groups.append(new_group)
+
+            # Update the editor view
+            await interaction.response.edit_message(
+                embed=self.editor_view.create_groups_embed(),
+                view=self.editor_view,
             )
 
     class ticket_launcher(discord.ui.View):
@@ -480,6 +811,7 @@ async def setup(bot:commands.Bot):
     cog = Ticketing(bot)
     await bot.add_cog(cog)
     bot.add_view(Ticketing.ticket_launcher())
+    bot.add_view(Ticketing.ticket_multi_launcher())
     bot.add_view(Ticketing.main())
     bot.add_view(Ticketing.confirm())
     bot.tree.add_command(cog.ticketing_group())
