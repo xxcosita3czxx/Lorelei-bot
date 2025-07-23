@@ -2,11 +2,9 @@
 #    By Cosita              #
 #############################
 #TODO more verify modes
-#TODO Embeds and translations of strings
 #TODO Level system more theme files
 #TODO Level system logic for leaderboards and levels
 #TODO Giveaway logic
-#TODO Finish adding settings to new config system
 #TODO Announcement system, that could also dm users
 #IDEA ids could be if num not in list then add, else continue
 # Also edit could add/edit already existing

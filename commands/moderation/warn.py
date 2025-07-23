@@ -42,7 +42,14 @@ class Warn(commands.Cog):
         await add_warns(guild_id, user,interaction)
 
         await interaction.response.send_message(f"{user.mention} has been warned for: {reason}. They now have {gconfig.get(guild_id,'warns',user_id)} warns.")  # noqa: E501
+    @app_commands.command(name="warns", description="Shows the number of warns a user has.")
+    @app_commands.default_permissions(moderate_members=True)
+    async def warns(self, interaction: discord.Interaction, user: discord.Member):  # noqa: E501
+        guild_id = interaction.guild.id # type: ignore
+        user_id = user.id
 
+        warns = gconfig.get(guild_id, "warns", user_id, default=0)  # type: ignore
+        await interaction.response.send_message(f"{user.mention} has {warns} warns.", ephemeral=True)  # noqa: E501
 async def setup(bot:commands.Bot):
 #    cog = Warn(bot)
 #    await bot.add_cog(cog)
