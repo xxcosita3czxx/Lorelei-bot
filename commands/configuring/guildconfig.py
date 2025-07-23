@@ -91,6 +91,7 @@ class SettingView(discord.ui.View):
                     self.config_key,
                     discord_time_s[selected_time],  # type: ignore
                 )  # type: ignore
+                await interaction.response.defer(ephemeral=True)
         class TextModal(discord.ui.Modal):
             def __init__(self, title, placeholder, config_title, config_key):
                 super().__init__(title=title)
@@ -213,6 +214,13 @@ class SettingView(discord.ui.View):
                     conf_title = option_data.get("config_title", option)
                     conf_key = option_data.get("config_key", option)
                     opt_type = option_data.get("type", "str")
+
+                    embed.add_field(
+                        name=option,
+                        value=desc,
+                        inline=False,
+                    )
+
                     if opt_type == "bool":
                         # Get the current value from config
                         config_id = interaction.user.id if cconfig is uconfig else interaction.guild.id  # type: ignore  # noqa: E501
