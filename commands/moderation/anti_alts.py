@@ -54,6 +54,4 @@ async def setup(bot:commands.Bot):
         config_key="antialts-enabled",
         description="Enable Anti-Alts",
     )
-    configman.add_option_time(
-        
-    )
+    #configman.add_option_time()

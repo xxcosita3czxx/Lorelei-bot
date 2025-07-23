@@ -156,7 +156,7 @@ class GuildConfig:
         config_key,
         description,
     ):
-        
+
         pass
     def get_setting(self, category_name, setting_name):
         if category_name not in self.categories:

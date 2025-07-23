@@ -5,8 +5,8 @@
 #TODO if automod is too limited, i can just be normal and use events, even tho the
 #TODO automod does use discord internal functions and catches it before its sent
 
-import discord
-from discord import app_commands
+import discord  # noqa: F401
+from discord import app_commands  # noqa: F401
 from discord.ext import commands
 
 
