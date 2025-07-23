@@ -54,12 +54,12 @@ async def setup(bot:commands.Bot):
     await bot.add_cog(Dice(bot))
     configman = GuildConfig()
     configman.add_setting("Fun", "Dice Type", "Configure the default dice type on the server")  # noqa: E501
-    configman.add_option_select(  # type: ignore
+    configman.add_option_list(  # type: ignore
         category_name="Fun",
         setting_name="Dice Type",
         name="Default Dice Type",
+        options_list=dices.keys(),
         config_title="FUN",
         config_key="def_dice",
-        options=dices.keys(),
         description="Default dice type to use when no mode is specified.",
     )
