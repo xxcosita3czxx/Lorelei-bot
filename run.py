@@ -36,7 +36,12 @@ def update():
         lang_updated = any("lang/" in f or "language/" in f for f in changed_files)
         command_updated = any("commands/" in f for f in changed_files)
         other_updated = any(
-            not (f.startswith("commands/") or f.startswith("lang/") or f.startswith("language/"))  # noqa: E501
+            not (f.startswith("commands/")
+            or f.startswith("lang/")
+            or f.startswith("language/"))
+            or not f.endswith(".md")
+            or not f.startswith("devtools/")
+            or not f.endswith("ruff.toml")
             for f in changed_files
         )
 
