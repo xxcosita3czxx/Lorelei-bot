@@ -167,16 +167,19 @@ class Ticketing(commands.Cog):
                 commands.BucketType.member,
             )
             # Define options here
-            self.options = [
+            options = [
                 discord.SelectOption(
                     label="Support",
                     value="support",
                     description="For support related tickets",
                 ),
             ]
+            # Set the options for the select component
+            for item in self.children:
+                if isinstance(item, discord.ui.Select):
+                    item.options = options
         @discord.ui.select(
             placeholder = "Select a group",
-            options = lambda self: self.options,
             custom_id = "ticket_select",
         )
         async def ticket_select(self, interaction: discord.Interaction, select: discord.ui.Select):  # noqa: E501, ANN101
