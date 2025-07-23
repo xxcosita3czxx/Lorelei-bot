@@ -64,6 +64,7 @@ class UserConfig(commands.Cog):
                 )
 
 async def setup(bot:commands.Bot):
-    cog = UserConfig(bot)
-    await bot.add_cog(cog)
-    bot.tree.add_command(cog.userconfig())
+    #cog = UserConfig(bot)
+    #await bot.add_cog(cog)
+    #bot.tree.add_command(cog.userconfig())
+    pass
