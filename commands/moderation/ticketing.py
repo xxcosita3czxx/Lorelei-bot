@@ -279,9 +279,19 @@ class Ticketing(commands.Cog):
             self.channel = channel
             self.groups = [
                 {
-                    "label": "Support",
-                    "value": "support",
-                    "description": "For support related tickets",
+                    "label": "General",
+                    "value": "general",
+                    "description": "For general inquiries and issues",
+                },
+                {
+                    "label": "Admin Support",
+                    "value": "admin",
+                    "description": "For moderation related tickets",
+                },
+                {
+                    "label": "Technical Support",
+                    "value": "tech",
+                    "description": "For technical issues and troubleshooting",
                 },
             ]
 
@@ -482,19 +492,19 @@ class Ticketing(commands.Cog):
             max_length=25,
         )
 
-        value = discord.ui.TextInput(
-            label="Group Value",
-            placeholder="e.g. tech_support",
-            required=True,
-            max_length=25,
-        )
-
         description = discord.ui.TextInput(
             label="Group Description",
             placeholder="e.g. For technical issues and bugs",
             required=True,
             max_length=100,
             style=discord.TextStyle.paragraph,
+        )
+
+        value = discord.ui.TextInput(
+            label="Prefix",
+            placeholder="e.g. tech_support",
+            required=True,
+            max_length=25,
         )
 
         async def on_submit(self, interaction: discord.Interaction):
