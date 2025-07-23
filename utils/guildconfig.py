@@ -156,8 +156,19 @@ class GuildConfig:
         config_key,
         description,
     ):
+        setting = self.get_setting(category_name, setting_name)
+        options = setting["options"]
+        if name in options:
+            raise ValueError(
+                f"Option '{name}' already exists in setting '{setting_name}'.",
+            )
+        options[name] = {
+            "type": "time",
+            "config_title": config_title,
+            "config_key": config_key,
+            "description": description,
+        }
 
-        pass
     def get_setting(self, category_name, setting_name):
         if category_name not in self.categories:
             raise ValueError(f"Category '{category_name}' does not exist.")
