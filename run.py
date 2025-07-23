@@ -75,13 +75,6 @@ def Is_Alive():
             logger.info(lang.get(conflang,"RunnerLogs","info_not_running"))
             os.system("python3 main.py")  # noqa: S605, S607
         time.sleep(config.Is_Alive_time)
-def update_cosita_tk():
-    while True:
-        try:
-            os.system("python3 utils/cosita_toolkit.py")  # noqa: S605, S607
-        except Exception:
-            logger.error(lang.get(conflang,"RunnerLogs","err_costk_update_fail"))
-        time.sleep(config.costk_update)
 
 def ptero_mode():
         while True:
@@ -104,15 +97,15 @@ def main(update):
         sys.exit()
     monitor_thread = threading.Thread(target=Is_Alive)
     update_thread = threading.Thread(target=update_loop)
-    update_costk_thread = threading.Thread(target=update_cosita_tk)
+
 
     monitor_thread.start()
     update_thread.start()
-    update_costk_thread.start()
 
     if os.getenv("P_SERVER_UUID") is not None:
         ptero_thread = threading.Thread(target=ptero_mode)
         ptero_thread.start()
+        logger.info("Pterodactyl mode enabled, listening for commands...")
 
 if __name__ == "__main__":
     main()
