@@ -2,6 +2,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+#TODO add option to clear messages for all except bots / lorelei
 
 class Clear(commands.Cog):
     def __init__(self, bot):
