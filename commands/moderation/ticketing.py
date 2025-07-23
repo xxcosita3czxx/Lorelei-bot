@@ -137,19 +137,14 @@ class Ticketing(commands.Cog):
             This will actually launch the ticket system with multiple groups
             '''
 
-            embed = discord.Embed(
-                title="Multi-Panel Group Editor",
-                description="Add or remove groups for the ticket system before sending.",  # noqa: E501
-                color=discord.Colour.blurple(),
+            editor_view = Ticketing.ticket_group_editor(
+                title=title,
+                description=text,
+                channel=interaction.channel,
             )
-
             await interaction.response.send_message(
-                embed=embed,
-                view=Ticketing.ticket_group_editor(
-                    title=title,
-                    description=text,
-                    channel=interaction.channel,
-                ),
+                embed=editor_view.create_groups_embed(),
+                view=editor_view,
                 ephemeral=True,
             )
 
