@@ -1,5 +1,3 @@
-#TODO Default profile theme finsih seccond part + colors
-
 import datetime
 import logging
 import math
@@ -15,7 +13,8 @@ from PIL import Image, ImageDraw, ImageFont
 
 import config
 from utils.configmanager import themes, uconfig
-from utils.embeder import respEmbed
+
+#TODO Default profile theme finsih seccond part + colors
 
 DEFAULT_IMAGE_PATH = config.def_image
 
@@ -257,7 +256,7 @@ class LevelSystem(commands.Cog):
             # logic for going trough every user
             pass
         else:
-            respEmbed(interaction,"There is no one with level yet!")
+            await interaction.response.send_message("There is no one with level yet!")  # noqa: E501
     @app_commands.command(name="leaderboard",description="Server Leaderboard")
     async def leaderboard(self, interaction:discord.Interaction):
         pass

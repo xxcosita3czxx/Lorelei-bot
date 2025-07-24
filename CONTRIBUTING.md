@@ -20,6 +20,7 @@ This bot is made using cogs and discord.py library, its startup is as follows:
 - `on_ready()` event starts loading cogs
 - cogs get loaded based on priority, if no priority set, it goes from a -> z
 - - if cog fails to load, displays failed and continues loading other
+- cogs load from function `async def setup()`
 - `on_ready()` starts activity status changing
 - activity status sets discord bot to DND (or set status in `config.py`)
 - `on_ready()` is complete and bot is loaded
@@ -74,6 +75,48 @@ async def setup(bot:commands.Bot):
         description="Allow example to do something",
     )
 ```
+
+### How to Contribute
+
+Okay so now you know few things, lets start on actualy contributing:
+
+1. **Fork the Repository**: Start by forking the repository to your GitHub account.
+
+2. **Clone the Repository**: Clone the forked repository to your local machine if you wanna use commands, else, just open on github directly.
+
+    ```sh
+    git clone https://github.com/your-username/Lorelei-bot.git
+    cd Lorelei-bot
+    ```
+
+3. **Edit the Main Branch**: You don't need to create a new branch. Just edit the main branch in your fork.
+
+4. **Setup your environment**: The most minimal environment is basicaly git, python and ruff, but if using VSC, i reccoment VSC-Essentials Extension pack
+
+5. **Create a discord bot**: You should create your own discord bot for testing, its pretty much required for making new things, as you dont know how the bot will respond if you dont have one. Make sure you enable all intents.
+
+6. **Create .secret.key**: Create `.secret.key` and put your token in there.
+
+7. **Contribute!**: Make your changes, test the bot, and see if it worked.
+
+8. **Commit Your Changes**: Commit your changes with a descriptive commit message.
+   Upload it using commit button or with commands:
+
+    ```sh
+    git add .
+    git commit -m "Adding Example commands"
+    ```
+
+9. **Push Your Changes**: Push your changes to your forked repository.
+   When commiting, its already pushed, when using commands, use this:
+
+    ```sh
+    git push
+    ```
+
+10. **Create a Pull Request**: Go to the original repository on GitHub and create a pull request from your forked repository. Provide a clear description of the changes you made.
+
+11. **Wait**: You can wait for your pull request to be reviewed and pulled, or it can be denied and you should repair things pointed out in the review. Also any unformated ruff rules get denied, you can enable those checks in actions -> ruff
 
 ## How to Contribute Translations
 

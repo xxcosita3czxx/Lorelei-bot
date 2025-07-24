@@ -2,10 +2,10 @@
 import socket
 import subprocess
 
-from textual.app import App, ComposeResult
-from textual.containers import Horizontal, Vertical
-from textual.reactive import reactive
-from textual.widgets import Input, Log, Static
+from textual.app import App, ComposeResult  # type: ignore
+from textual.containers import Horizontal, Vertical  # type: ignore
+from textual.reactive import reactive  # type: ignore
+from textual.widgets import Input, Log, Static  # type: ignore
 
 SOCKET_HOST = 'localhost'
 SOCKET_PORT = 9920
