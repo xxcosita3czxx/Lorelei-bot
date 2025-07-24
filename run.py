@@ -58,8 +58,13 @@ def update():
             os.system("python3 devtools/helper_cli.py reload_lang")  # noqa: S605, S607
 
         if command_updated:
-            logger.info("Command files updated. Reloading commands...")
-            os.system("python3 devtools/helper_cli.py extensions reload_all")  # noqa: S605, S607
+            logger.info("Command files updated. Reloading only changed commands...")
+            for f in changed_files:
+                if f.startswith("commands/") and f.endswith(".py"):
+                    # Convert file path to module path, e.g. commands/moderation/ban.py -> commands.moderation.ban  # noqa: E501
+                    cog_path = f.replace("/", ".").replace(".py", "")
+                    logger.info(f"Reloading command: {cog_path}")
+                    os.system(f"python3 devtools/helper_cli.py extensions reload {cog_path}")  # noqa: E501, S605, S607
 
     except Exception as e:
         logger.warning("UPDATER FAILED")

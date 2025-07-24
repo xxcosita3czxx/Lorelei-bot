@@ -7,6 +7,7 @@
 #TODO Giveaway logic
 #TODO Announcement system, that could also dm users, should ask them first
 #TODO Add logging system, preferably to a channel, im not sure about logging to the bot itself, could be alot in size.  # noqa: E501
+#TODO Timezone converter
 #IDEA ids could be if num not in list then add, else continue
 # Also edit could add/edit already existing
 #IDEA Job to clean left guilds after a day or 12 hours,
