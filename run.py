@@ -32,7 +32,7 @@ def update():
 
         if changed_files:
             logger.info("Changed files: %s", changed_files)
-
+        run_py_updated = any(f == "run.py" for f in changed_files)
         lang_updated = any("lang/" in f or "language/" in f for f in changed_files)
         command_updated = any("commands/" in f for f in changed_files)
         other_updated = any(
@@ -44,7 +44,10 @@ def update():
             or not f.endswith("ruff.toml")
             for f in changed_files
         )
-
+        if run_py_updated:
+            logger.info("run.py updated. Restarting bot immediately...")
+            os.system("systemctl restart lorelei")  # noqa: S605, S607
+            return
         if other_updated:
             logger.info("Other files updated. Restarting bot immediately...")
             os.system("python3 devtools/helper_cli.py kill")  # noqa: S605, S607
