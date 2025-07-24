@@ -4,7 +4,6 @@ from discord.ext import commands
 
 from utils.autocomplete import autocomplete_color
 from utils.configmanager import gconfig
-from utils.embeder import respEmbed
 
 #TODO Make echo and only echo editable after send
 
@@ -25,15 +24,13 @@ class Echo(commands.Cog):
             if color:
                 embed.color = discord.Color.from_str(color)
             await channel.send(embed=embed)
-            await respEmbed(
-                interaction,
-                content="Message sent succesfuly!",
+            await interaction.response.send_message(
+                "Message sent successfully!",
                 ephemeral=True,
             )
         except Exception as e:
-            await respEmbed(
-                interaction,
-                content=f"Echo Failed!: {e}",
+            await interaction.response.send_message(
+                f"Echo Failed!: {e}",
                 ephemeral=True,
             )
 
