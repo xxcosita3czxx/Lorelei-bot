@@ -12,8 +12,7 @@ from utils.configmanager import gconfig, lang, uconfig, userlang
 from utils.guildconfig import GuildConfig
 from utils.timeconverter import discord_time_s
 
-#TODO Fix text input trough modal
-#TODO Somehow give a time button to specify time
+#TODO Okay add 2 buttons so one time specifier will be for bans, and one for longer periods, like more than a week  # noqa: E501
 #TODO Add nsfw tag to exclude nsfw from safe channels
 
 __PRIORITY__ = 10
@@ -255,7 +254,7 @@ class SettingView(discord.ui.View):
                         view.add_item(
                             CategorySelectMenu(interaction=interaction,name=option, config_title=conf_title,config_key=conf_key),  # noqa: E501
                         )
-                    elif opt_type == "time":
+                    elif opt_type == "time_low":
                         view.add_item(
                             TimeSelectMenu(
                                 interaction=interaction,

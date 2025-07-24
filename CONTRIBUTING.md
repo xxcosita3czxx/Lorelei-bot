@@ -76,6 +76,18 @@ async def setup(bot:commands.Bot):
     )
 ```
 
+### How to manage the bot using commands?
+
+The bot has indeed a way to manage using `helper.py` (or `/devtools/helper_cli.py` if you dont like tui) and here are few useful commands:
+
+- extensions - this is a group used for managing cogs / extensions
+- - reload - will reload a cog, if it fails to load, it will load last usable version. Also can start a cog if it didnt start.
+- - reload_all - same as above, but applicated to all
+- update - updates the bot, will not handle the reloading like auto updating in run.py does
+- kill - will gracefully stop the main.py script, useful for restarting the bot if you edited dependencies or main.py
+
+There are more commands, but you can use `help` command to look at all of them.
+
 ### How to Contribute
 
 Okay so now you know few things, lets start on actualy contributing:

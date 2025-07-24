@@ -147,7 +147,7 @@ class GuildConfig:
             "config_key": config_key,
             "description": description,
         }
-    def add_option_time(
+    def add_option_time_low(
         self,
         category_name,
         setting_name,
@@ -156,6 +156,30 @@ class GuildConfig:
         config_key,
         description,
     ):
+        """Time usually used for punishments, from 1 minute to 1 week."""
+        setting = self.get_setting(category_name, setting_name)
+        options = setting["options"]
+        if name in options:
+            raise ValueError(
+                f"Option '{name}' already exists in setting '{setting_name}'.",
+            )
+        options[name] = {
+            "type": "time",
+            "config_title": config_title,
+            "config_key": config_key,
+            "description": description,
+        }
+
+    def add_option_time_high(
+        self,
+        category_name,
+        setting_name,
+        name,
+        config_title,
+        config_key,
+        description,
+    ):
+        """Time usually used time checks, from 1 week to 1 year."""
         setting = self.get_setting(category_name, setting_name)
         options = setting["options"]
         if name in options:
