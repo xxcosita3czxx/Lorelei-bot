@@ -33,7 +33,7 @@ def update():
         if changed_files:
             logger.info("Changed files: %s", changed_files)
         run_py_updated = any(f == "run.py" for f in changed_files)
-        lang_updated = any("lang/" in f or "language/" in f for f in changed_files)
+        lang_updated = any("data/lang/" in f for f in changed_files)
         command_updated = any("commands/" in f for f in changed_files)
         other_updated = any(
             not (f.startswith("commands/")
@@ -61,6 +61,7 @@ def update():
             logger.info("Command files updated. Reloading only changed commands...")
             for f in changed_files:
                 if f.startswith("commands/") and f.endswith(".py"):
+                    logger.debug(f"Reloading command: {f}")
                     # Convert file path to module path, e.g. commands/moderation/ban.py -> commands.moderation.ban  # noqa: E501
                     cog_path = f.replace("/", ".").replace(".py", "")
                     logger.info(f"Reloading command: {cog_path}")
