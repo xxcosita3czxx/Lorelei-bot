@@ -128,7 +128,7 @@ Okay so now you know few things, lets start on actualy contributing:
 
 10. **Create a Pull Request**: Go to the original repository on GitHub and create a pull request from your forked repository. Provide a clear description of the changes you made.
 
-11. **Wait**: You can wait for your pull request to be reviewed and pulled, or it can be denied and you should repair things pointed out in the review. Also any unformated ruff rules get denied, you can enable those checks in actions -> ruff
+11. **Wait**: You can wait for your pull request to be reviewed and pulled, or it can be denied and you should repair things pointed out in the review. Also any unformated ruff rules get denied, you can enable those checks in actions -> ruff-check
 
 ## How to Contribute Translations
 
