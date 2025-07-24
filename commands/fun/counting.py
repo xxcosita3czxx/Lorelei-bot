@@ -43,38 +43,50 @@ class Counting(commands.Cog):
 
     @commands.Cog.listener("on_message")
     async def on_message(self, message: discord.Message):
-        logger.debug(f"Received message: {message.content} for counter")  # noqa: E501
+        logger.debug(f"Received message: {message.content} (author: {message.author}, channel: {message.channel.id})")  # noqa: E501
         guild_id = message.guild.id if message.guild else None
         if not guild_id:
+            logger.debug("No guild_id found, returning.")
             return
         config: dict = gconfig.config.get(guild_id, {})
+        logger.debug(f"Guild config: {config}")
         # Find the counting channel for this guild
         counting_channel_id = None
         for key in config:
             if key.endswith("-counting"):
                 counting_channel_id = int(key.split("-")[0])
-                logger.debug(f"Counting channel found: {counting_channel_id}")  # noqa: E501
-                if counting_channel_id and message.channel.id == counting_channel_id:  # noqa: E501, SIM102
+                logger.debug(f"Counting channel found: {counting_channel_id}")
+                if counting_channel_id and message.channel.id == counting_channel_id:  # noqa: E501
+                    logger.debug(f"Message is in the counting channel: {counting_channel_id}")  # noqa: E501
                     try:
-                        # Evaluate math expressions safely
                         expr = message.content.replace(" ", "")
+                        logger.debug(f"Evaluating expression: {expr}")
                         node = ast.parse(expr, mode='eval')
                         allowed_nodes = (ast.Expression, ast.BinOp, ast.UnaryOp, ast.Num, ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Pow, ast.Mod, ast.USub, ast.UAdd, ast.FloorDiv, ast.LShift, ast.RShift, ast.BitOr, ast.BitAnd, ast.BitXor, ast.Invert)  # noqa: E501
+                        for n in ast.walk(node):
+                            logger.debug(f"AST node: {type(n).__name__}")
                         if not all(isinstance(n, allowed_nodes) for n in ast.walk(node)):  # noqa: E501
-                            await message.delete()# type: ignor  # noqa: E501
+                            logger.debug("Disallowed AST node detected, deleting message.")  # noqa: E501
+                            await message.delete()
                             return
-                        number = int(ast.literal_eval(compile(node, "<string>", "eval"))) # type: ignore  # noqa: E501
-                    except Exception:
+                        number = int(ast.literal_eval(compile(node, "<string>", "eval")))  # noqa: E501
+                        logger.debug(f"Parsed number: {number}")
+                    except Exception as e:
+                        logger.debug(f"Exception during parsing/eval: {e}")
                         await message.delete()
                         return
 
-                    if number == gconfig.get(message.guild.id,f"{message.channel.id}-counting","count") + 1:  # type: ignore # noqa: E501
+                    current_count = gconfig.get(message.guild.id, f"{message.channel.id}-counting", "count")  # noqa: E501
+                    logger.debug(f"Current count: {current_count}, Next expected: {current_count + 1}")  # noqa: E501
+                    if number == current_count + 1:
+                        logger.debug("Correct number! Adding :white_check_mark: reaction.")  # noqa: E501
                         await message.add_reaction(":white_check_mark:")
-                        gconfig.set(message.guild.id,f"{message.channel.id}-counting","count",gconfig.get(message.guild.id,f"{message.channel.id}-counting","count")+1) # type: ignore
+                        gconfig.set(message.guild.id, f"{message.channel.id}-counting", "count", current_count + 1)  # noqa: E501
                     else:
+                        logger.debug(f"Incorrect number! Got {number}, expected {current_count + 1}.")  # noqa: E501
                         await message.add_reaction(":x:")
                         await message.reply(f"{message.author.mention} has broken the count! Starting again..\n# 1")  # noqa: E501
-                        gconfig.set(interaction.guild.id,f"{interaction.channel.id}-counting","count",1) # type: ignore  # noqa: F821
+                        gconfig.set(message.guild.id, f"{message.channel.id}-counting", "count", 1)  # noqa: E501
 
 async def setup(bot:commands.Bot):
     cog = Counting(bot)
