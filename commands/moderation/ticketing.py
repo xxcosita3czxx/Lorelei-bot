@@ -642,7 +642,13 @@ class Ticketing(commands.Cog):
             channel = self.guild.get_channel(
                 gconfig.get(self.guild.id,"Ticketing","reviews-channel"),
             )
-            await channel.send(content=f"Rating: 1\nUser: {interaction.user.name}")  # noqa: E501
+            #await channel.send(content=f"Rating: 1\nUser: {interaction.user.name}")  # noqa: E501
+            await channel.send(
+                embed=discord.Embed(
+                    title=f"Review from {interaction.user.name}",
+                    description="Rating: 1",
+                ),
+            )
 
         @discord.ui.button(label="2 star") # type: ignore
         async def rev_star2(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
@@ -656,8 +662,12 @@ class Ticketing(commands.Cog):
             channel = self.guild.get_channel(
                 gconfig.get(self.guild.id,"Ticketing","reviews-channel"),
             )
-            await channel.send(content=f"Rating: 2\nUser: {interaction.user.name}")  # noqa: E501
-
+            await channel.send(
+                embed=discord.Embed(
+                    title=f"Review from {interaction.user.name}",
+                    description="Rating: 2",
+                ),
+            )
         @discord.ui.button(label="3 star") # type: ignore
         async def rev_star3(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
             await self.disable_all_buttons(interaction)
@@ -670,7 +680,13 @@ class Ticketing(commands.Cog):
             channel = self.guild.get_channel(
                 gconfig.get(self.guild.id,"Ticketing","reviews-channel"),
             )
-            await channel.send(content=f"Rating: 3\nUser: {interaction.user.name}")  # noqa: E501
+            #await channel.send(content=f"Rating: 3\nUser: {interaction.user.name}")  # noqa: E501
+            await channel.send(
+                embed=discord.Embed(
+                    title=f"Review from {interaction.user.name}",
+                    description="Rating: 3",
+                ),
+            )
 
         @discord.ui.button(label="4 star") # type: ignore
         async def rev_star4(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
@@ -684,8 +700,13 @@ class Ticketing(commands.Cog):
             channel = self.guild.get_channel(
                 gconfig.get(self.guild.id,"Ticketing","reviews-channel"),
             )
-            await channel.send(content=f"Rating: 4\nUser: {interaction.user.name}")  # noqa: E501
-
+            #await channel.send(content=f"Rating: 4\nUser: {interaction.user.name}")  # noqa: E501
+            await channel.send(
+                embed=discord.Embed(
+                    title=f"Review from {interaction.user.name}",
+                    description="Rating: 4",
+                ),
+            )
         @discord.ui.button(label="5 star") # type: ignore
         async def rev_star5(self, interaction: discord.Interaction, button: discord.Button):  # noqa: E501
             await self.disable_all_buttons(interaction)
@@ -698,7 +719,13 @@ class Ticketing(commands.Cog):
             channel = self.guild.get_channel(
                 gconfig.get(self.guild.id,"Ticketing","reviews-channel"),
             )
-            await channel.send(content=f"Rating: 5\nUser: {interaction.user.name}")  # noqa: E501
+            #await channel.send(content=f"Rating: 5\nUser: {interaction.user.name}")  # noqa: E501
+            await channel.send(
+                embed=discord.Embed(
+                    title=f"Review from {interaction.user.name}",
+                    description="Rating: 5",
+                ),
+            )
 
 async def setup(bot:commands.Bot):
     cog = Ticketing(bot)
