@@ -142,7 +142,7 @@ async def setup(bot:commands.Bot):
     )
     hm = HelpManager()
     hmhelp = hm.new_help(
-        group_name="members",
+        group_name="Members",
         command_name="welcome",
         description="Welcome system for the server.",
     )
