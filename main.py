@@ -146,7 +146,22 @@ async def handle_client(reader, writer, bot):
 
 async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,writer):  # noqa: C901, E501
     if command.startswith('help'):
-        return 'Available commands: reload_all, unload, load, profiler [start|stop|stats], info [guilds|lat|uptime], kill, update, bugreports [index]'  # noqa: E501
+        return (
+            'Available commands: '
+            'extensions reload_all | '
+            'extensions reload <cog> | '
+            'extensions unload <cog> | '
+            'extensions load <cog> | '
+            'extensions list | '
+            'reload_util <module> | '
+            'profiler [start|stop|stats] | '
+            'info [guilds|lat|uptime] | '
+            'kill | '
+            'update | '
+            'reload_lang | '
+            'lang-reload | '
+            'bugreports [index]'
+        )
 
     if command.startswith('extensions'):
         parts = command.split(" ", 1)
