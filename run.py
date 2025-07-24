@@ -26,6 +26,7 @@ def update():
 
     try:
         os.system("git stash push -- config.py")  # noqa: S605
+        os.system("git fetch origin")  # noqa: S605
         changed_files = os.popen("git diff --name-only origin/main").read().splitlines()  # noqa: E501, S605
         os.system("git pull")  # noqa: S605
         os.system("git stash pop")  # noqa: S605
