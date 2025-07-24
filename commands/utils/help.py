@@ -15,6 +15,7 @@ logger = logging.getLogger("help")
 __PRIORITY__ = 10
 
 #TODO add nsfw flag to exclude help when not in nsfw channel
+#TODO Help should edit single message
 
 class HelpCommand(commands.Cog):
     def __init__(self, bot):
@@ -50,7 +51,7 @@ class HelpCommand(commands.Cog):
             select.callback = select_callback
             view = discord.ui.View()
             view.add_item(select)
-            await interaction.response.send_message(embed=embed, view=view)
+            await interaction.response.send_message(embed=embed, view=view, ephemeral=True)  # noqa: E501
             message_sent = True
 
         elif command is None and group:
@@ -72,7 +73,7 @@ class HelpCommand(commands.Cog):
                 select.callback = select_callback
                 view = discord.ui.View()
                 view.add_item(select)
-                await interaction.response.send_message(embed=embed, view=view)
+                await interaction.response.send_message(embed=embed, view=view, ephemeral=True)  # noqa: E501
                 message_sent = True
             except ValueError as e:
                 embed.description = str(e)
@@ -109,7 +110,7 @@ class HelpCommand(commands.Cog):
                         next_button.callback = next_callback
                         view.add_item(next_button)
 
-                    await interaction.response.send_message(embed=embed, view=view)
+                    await interaction.response.send_message(embed=embed, view=view, ephemeral=True)  # noqa: E501
                     message_sent = True
                 else:
                     embed.set_footer(text="Page 1 of 1")
@@ -117,7 +118,7 @@ class HelpCommand(commands.Cog):
                 embed.description = str(e)
 
         if not message_sent:
-            await interaction.response.send_message(embed=embed)
+            await interaction.response.send_message(embed=embed, ephemeral=True)  # noqa: E501
 
 async def setup(bot:discord.AutoShardedClient):
     cog = HelpCommand(bot=bot)
