@@ -58,10 +58,18 @@ class E6_commands(commands.Cog):
                 current_index = random.randint(0, len(posts) - 1)  # Start with a random post  # noqa: E501, S311
 
                 embed, video_url = self.create_embed(posts[current_index])
-                await interaction.response.send_message(
-                    embed=embed,
-                    view=E6_commands.e6_view(posts, current_index),
-                )
+                file_url = posts[current_index]["file"]["url"]
+                if file_url.endswith((".mp4", ".webm")) and not uconfig.get("NSFW", "E621", "preview"):  # noqa: E501
+                    await interaction.response.send_message(
+                        content=f"Video: {file_url}",
+                        embed=embed,
+                        view=E6_commands.e6_view(posts, current_index),
+                    )
+                else:
+                    await interaction.response.send_message(
+                        embed=embed,
+                        view=E6_commands.e6_view(posts, current_index),
+                    )
             except Exception as e:
                 await interaction.response.send_message(content=f"Exception: {e}")
 
@@ -73,13 +81,17 @@ class E6_commands(commands.Cog):
             video_url = None
             file_url = post["file"]["url"]
             if file_url.endswith((".mp4", ".webm")):
-                video_url = file_url
-                # Discord does not support direct video embedding, but you can use set_image for a preview thumbnail if available  # noqa: E501
-                # If a preview image exists, use it
-                preview_url = post["preview"].get("url") if "preview" in post and post["preview"].get("url") else None  # noqa: E501
-                if preview_url:
-                    embed.set_image(url=preview_url)
-                embed.description = f"[Click here to view the video]({video_url})"
+                if uconfig.get("NSFW", "E621", "preview") is True:
+                    video_url = file_url
+                    # Discord does not support direct video embedding, but you can use set_image for a preview thumbnail if available  # noqa: E501
+                    # If a preview image exists, use it
+                    preview_url = post["preview"].get("url") if "preview" in post and post["preview"].get("url") else None  # noqa: E501
+                    if preview_url:
+                        embed.set_image(url=preview_url)
+                    embed.description = f"[Click here to view the video]({video_url})"  # noqa: E501
+                else:
+                    # put the video as attachment under the embed
+                    embed.description = f"[Click here to view the video]({file_url})"  # noqa: E501
             elif file_url.endswith(".swf"):
                 embed.description = f"Flash files are no longer supported!\n[Click here to view the post]({file_url})"  # noqa: E501
             else:
