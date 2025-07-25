@@ -32,7 +32,7 @@ def update():
         os.system("git stash pop")  # noqa: S605
 
         if changed_files:
-            logger.info("Changed files: %s", changed_files)
+            logger.debug("Changed files: %s", changed_files)
         run_py_updated = any(f == "run.py" for f in changed_files)
         lang_updated = any("data/lang/" in f for f in changed_files)
         command_updated = any("commands/" in f for f in changed_files)
