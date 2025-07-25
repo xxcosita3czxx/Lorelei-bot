@@ -339,20 +339,30 @@ class CategoryView(discord.ui.View):
                 selected_category = self.values[0]
                 logger.debug(f"Selected category: {selected_category}")
 
-                settings = config_session.Configs.get(selected_category, {}).keys()
-                if not settings:
-                    settings = ["No settings available"]
+                # Get all settings for the category
+                all_settings = list(config_session.Configs.get(selected_category, {}).keys())  # noqa: E501
+                # Filter out nsfw settings in non-nsfw channels
+                is_nsfw = hasattr(interaction.channel, "is_nsfw") and interaction.channel.is_nsfw()  # noqa: E501
+                filtered_settings = []
+                for s in all_settings:
+                    setting_data = config_session.Configs.get(selected_category, {}).get(s, {})  # noqa: E501
+                    nsfw = setting_data.get("nsfw", False)
+                    if nsfw and not is_nsfw:
+                        continue
+                    filtered_settings.append(s)
+                if not filtered_settings:
+                    filtered_settings = ["No settings available"]
 
                 embed = discord.Embed(
                     title=f"Settings in {selected_category}",
                     description="Choose a setting to modify",
                 )
-                for setting in settings:
+                for setting in filtered_settings:
                     embed.add_field(name=setting, value="Modify this setting", inline=False)  # noqa: E501
                 logger.debug("CAT_VIEW: "+str(config_manager))
                 await interaction.response.edit_message(
                     embed=embed,
-                    view=SettingView(settings, config_session, selected_category, config_manager),  # noqa: E501
+                    view=SettingView(filtered_settings, config_session, selected_category, config_manager),  # noqa: E501
                 )
 
         self.add_item(CategoryDropdown(options))
