@@ -425,14 +425,24 @@ class GuildConfigCommands(commands.Cog):
                 description="Select a category to configure",
             )
             logger.debug(config_session.Configs)
-            for category in config_session.Configs:
-                embed.add_field(name=category, value=f"Configure {category}", inline=False)  # noqa: E501
-            categories = config_session.get_categories()  # Assuming Configs is a dictionary  # noqa: E501
+            visible_categories = []
+            for category, settings_dict in config_session.Configs.items():
+                # Filter out settings that are nsfw in non-nsfw channels
+                is_nsfw = hasattr(interaction.channel, "is_nsfw") and interaction.channel.is_nsfw()  # noqa: E501
+                visible_settings = [
+                    s for s, data in settings_dict.items()
+                    if not data.get("nsfw", False) or is_nsfw
+                ]
+                if visible_settings:
+                    embed.add_field(name=category, value=f"Configure {category}", inline=False)  # noqa: E501
+                    visible_categories.append(category)
+            if not visible_categories:
+                embed.description = "No categories available for this channel."
             await interaction.response.send_message(
                 embed=embed,
-                view=CategoryView(categories, config_session, config_manager=gconfig),  # noqa: E501
+                view=CategoryView(visible_categories, config_session, config_manager=gconfig),  # noqa: E501
                 ephemeral=True,
-            )  # noqa: E501
+            )
 
         @app_commands.command(
             name="reset",
