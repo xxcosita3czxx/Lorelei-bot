@@ -9,7 +9,7 @@ from utils.guildconfig import GuildConfig
 logger = logging.getLogger("anti-invites")
 
 #TODO guild_permissions cry about webhook not being a real user
-
+#hasattr() could be used
 class AntiInvites(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
