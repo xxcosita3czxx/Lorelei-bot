@@ -37,7 +37,7 @@ def update():
         lang_updated = any("data/lang/" in f for f in changed_files)
         command_updated = any("commands/" in f for f in changed_files)
         other_updated = any(
-            not (f.startswith("commands/")
+            (not f.startswith("commands/")
             or f.startswith("lang/")
             or f.startswith("language/")
             or not f.endswith(".md")
