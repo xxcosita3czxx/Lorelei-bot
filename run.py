@@ -33,19 +33,19 @@ def update():
 
         if changed_files:
             logger.debug("Changed files: %s", changed_files)
+
         run_py_updated = any(f == "run.py" for f in changed_files)
         lang_updated = any("data/lang/" in f for f in changed_files)
         command_updated = any("commands/" in f for f in changed_files)
         other_updated = any(
             (not f.startswith("commands/")
-            or f.startswith("lang/")
-            or f.startswith("language/")
-            or not f.endswith(".md")
-            or not f.startswith("devtools/")
-            or not f.endswith("ruff.toml"))
+            and not f.startswith("data/lang/")
+            and not f.startswith("data/")
+            and not f.endswith(".md")
+            and not f.startswith("devtools/")
+            and not f.endswith("ruff.toml"))
             for f in changed_files
         )
-
         if run_py_updated:
             logger.info("run.py updated. Restarting bot immediately...")
             os.system("systemctl restart lorelei")  # noqa: S605, S607
