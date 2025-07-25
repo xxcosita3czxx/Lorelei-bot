@@ -428,7 +428,7 @@ class GuildConfigCommands(commands.Cog):
             visible_categories = []
             for category, settings_dict in config_session.Configs.items():
                 # Filter out settings that are nsfw in non-nsfw channels
-                is_nsfw = hasattr(interaction.channel, "is_nsfw") and interaction.channel.is_nsfw()  # noqa: E501
+                is_nsfw = hasattr(interaction.channel, "nsfw") and interaction.channel.is_nsfw()  # noqa: E501
                 visible_settings = [
                     s for s, data in settings_dict.items()
                     if not data.get("nsfw", False) or is_nsfw
