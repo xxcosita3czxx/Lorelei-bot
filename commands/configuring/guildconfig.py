@@ -190,17 +190,52 @@ class SettingView(discord.ui.View):
                 await interaction.response.defer(ephemeral=True)
         class SettingDropdown(discord.ui.Select):
             def __init__(self, settings):
-                select_options = [
-                    discord.SelectOption(label=s, value=s) for s in settings
-                ] or [discord.SelectOption(label="No settings available", value="none")]  # noqa: E501
-
+                # Filter settings for NSFW logic
+                filtered_settings = []
+                for s in settings:
+                    # Get setting data from config_session
+                    setting_data = config_session.Configs.get(category_name, {}).get(s, {})  # noqa: E501
+                    nsfw = setting_data.get("nsfw", False)
+                    # If nsfw is True, only show in nsfw channels
+                    # If interaction is not available, show all
+                    filtered_settings.append((s, nsfw))
+                select_options = []
+                # If interaction is available, check channel nsfw status
+                def is_nsfw_channel(interaction):
+                    try:
+                        return hasattr(interaction.channel, "is_nsfw") and interaction.channel.is_nsfw()  # noqa: E501
+                    except Exception:
+                        return False
+                # Only show settings with nsfw=True in nsfw channels
+                # Show all others everywhere
+                for s, nsfw in filtered_settings:
+                    # If nsfw True, only show if channel is nsfw
+                    if nsfw:
+                        select_options.append(discord.SelectOption(label=s, value=s))  # noqa: E501
+                    else:
+                        select_options.append(discord.SelectOption(label=s, value=s))  # noqa: E501
+                if not select_options:
+                    select_options = [discord.SelectOption(label="No settings available", value="none")]  # noqa: E501
                 super().__init__(
                     placeholder="Choose a setting...",
                     options=select_options,
                 )
 
             async def callback(self, interaction: discord.Interaction):  # noqa: C901
+                # Filter settings for NSFW logic
+                filtered_settings = []
+                for s in settings:
+                    setting_data = config_session.Configs.get(category_name, {}).get(s, {})  # noqa: E501
+                    nsfw = setting_data.get("nsfw", False)
+                    filtered_settings.append((s, nsfw))
+                # Only show settings with nsfw=True in nsfw channels
+                # Show all others everywhere
+                is_nsfw = hasattr(interaction.channel, "is_nsfw") and interaction.channel.is_nsfw()  # noqa: E501
+                available_settings = [s for s, nsfw in filtered_settings if not nsfw or is_nsfw]  # noqa: E501
                 selected = self.values[0]
+                if selected not in available_settings:
+                    await interaction.response.send_message(content="This setting is only available in NSFW channels.", ephemeral=True)  # noqa: E501
+                    return
                 options = config_session.get_options(category_name, selected)
                 embed = discord.Embed(
                     title=f"Options for {selected}",
@@ -221,10 +256,9 @@ class SettingView(discord.ui.View):
                     )
 
                     if opt_type == "bool":
-                        # Get the current value from config
-                        config_id = interaction.user.id if cconfig is uconfig else interaction.guild.id  # type: ignore  # noqa: E501
-                        current_value = cconfig.get(config_id,conf_title, conf_key,False) # type: ignore  # noqa: E501
-                        view.add_item(BoolOptionButton(option,config_title=conf_title,config_key=conf_key, value=current_value))  # noqa: E501
+                        config_id = interaction.user.id if cconfig is uconfig else interaction.guild.id  # noqa: E501
+                        current_value = cconfig.get(config_id, conf_title, conf_key, False)  # noqa: E501
+                        view.add_item(BoolOptionButton(option, config_title=conf_title, config_key=conf_key, value=current_value))  # noqa: E501
                     elif opt_type == "textchannel":
                         view.add_item(
                             TextChannelSelectMenu(interaction=interaction, name=option, config_title=conf_title, config_key=conf_key),  # noqa: E501
@@ -234,7 +268,6 @@ class SettingView(discord.ui.View):
                             RoleSelectMenu(interaction=interaction, name=option, config_title=conf_title, config_key=conf_key),  # noqa: E501
                         )
                     elif opt_type == "text":
-                        # Replace the button with one that opens a TextModal
                         async def button_callback(interaction, option=option, conf_title=conf_title, conf_key=conf_key):  # noqa: E501
                             modal = TextModal(
                                 title=f"Set {option}",
@@ -252,7 +285,7 @@ class SettingView(discord.ui.View):
                         view.add_item(btn)
                     elif opt_type == "category":
                         view.add_item(
-                            CategorySelectMenu(interaction=interaction,name=option, config_title=conf_title,config_key=conf_key),  # noqa: E501
+                            CategorySelectMenu(interaction=interaction, name=option, config_title=conf_title, config_key=conf_key),  # noqa: E501
                         )
                     elif opt_type == "time_low":
                         view.add_item(
@@ -261,7 +294,7 @@ class SettingView(discord.ui.View):
                                 name=option,
                                 config_title=conf_title,
                                 config_key=conf_key,
-                            ),  # noqa: E501
+                            ),
                         )
                     elif opt_type == "list":
                         options_list = option_data.get("options", [])
@@ -439,8 +472,6 @@ async def setup(bot:commands.Bot):
     await bot.add_cog(cog)
     bot.tree.add_command(cog.configure())
     configman = GuildConfig()
-    configman.add_setting("Color", "System", "Configure color for bot responses")
-    configman.add_setting("Color", "Punishments", "Color for Bans, Warns or any punishments that will come to your dms")  # noqa: E501
-    configman.add_setting("System", "Show system messages","Allow people to show system messages in chat (Administrators automaticaly can override this)")  # noqa: E501
-
-# Aint doing it yet and i will do mostly commands, as functionalities are needed more  # noqa: E501
+    configman.add_setting("Color", "System", "Configure color for bot responses", nsfw=False)
+    configman.add_setting("Color", "Punishments", "Color for Bans, Warns or any punishments that will come to your dms", nsfw=False)  # noqa: E501
+    configman.add_setting("System", "Show system messages","Allow people to show system messages in chat (Administrators automaticaly can override this)", nsfw=False)  # noqa: E501
