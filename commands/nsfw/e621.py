@@ -44,13 +44,8 @@ class E6_commands(commands.Cog):
                 )
                 data = response.json()
                 if not data["posts"]:
-                    if tags is not None:
-                        await interaction.response.send_message(
-                            content=f"No images found for these tags: {tags}",
-                        )
-                    else:
-                        await interaction.response.send_message(
-                        content="No image found.",
+                    await interaction.response.send_message(
+                        content="Nobody here but us chickens!",
                     )
                 #post = random.choice(data["posts"]) # noqa: S311
 
