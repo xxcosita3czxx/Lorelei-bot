@@ -9,7 +9,6 @@ from utils.configmanager import gconfig, lang, uconfig
 from utils.guildconfig import GuildConfig
 
 #TODO Claiming
-#TODO Please add embed for reviews
 
 class Ticketing(commands.Cog):
     def __init__(self, bot):
