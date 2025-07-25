@@ -2,7 +2,6 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-#TODO add option to clear messages for all except bots / lorelei
 
 class Clear(commands.Cog):
     def __init__(self, bot):
@@ -10,13 +9,17 @@ class Clear(commands.Cog):
 
     @app_commands.command(name="clear", description="Clear n messages specific user")  # noqa: E501
     @app_commands.default_permissions(manage_messages=True)
-    async def clear(self,interaction: discord.Interaction, amount:int, member: discord.Member = None):  # noqa: E501
+    async def clear(self,interaction: discord.Interaction, amount:int, member: discord.Member = None,ignore_bots: bool = False):  # noqa: E501
         try:
             await interaction.response.defer()
             channel = interaction.channel
 
             if member is None:
-                await channel.purge(limit=amount)
+                if ignore_bots:
+                    # Clear messages from all users except bots
+                    await channel.purge(limit=amount, check=lambda m: not m.author.bot)  # noqa: E501
+                else:
+                    await channel.purge(limit=amount)
                 await interaction.followup.send(
                     embed=discord.Embed(
                         description=f"Successfully deleted {amount} messages.",
@@ -25,7 +28,11 @@ class Clear(commands.Cog):
                 )
 
             elif member is not None:
-                await channel.purge(limit=amount)
+                if ignore_bots:
+                    # Clear messages from specific user except bots
+                    await channel.purge(limit=amount, check=lambda m: m.author == member and not m.author.bot)  # noqa: E501
+                else:
+                    await channel.purge(limit=amount, check=lambda m: m.author == member)  # noqa: E501
                 await interaction.followup.send(
                     embed=discord.Embed(
                         description=f"Successfully deleted {amount} messages from {member.name}",  # noqa: E501
