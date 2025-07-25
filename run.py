@@ -39,24 +39,22 @@ def update():
         other_updated = any(
             not (f.startswith("commands/")
             or f.startswith("lang/")
-            or f.startswith("language/"))
+            or f.startswith("language/")
             or not f.endswith(".md")
             or not f.startswith("devtools/")
-            or not f.endswith("ruff.toml")
+            or not f.endswith("ruff.toml"))
             for f in changed_files
         )
+
         if run_py_updated:
             logger.info("run.py updated. Restarting bot immediately...")
             os.system("systemctl restart lorelei")  # noqa: S605, S607
             return
+
         if other_updated:
             logger.info("Other files updated. Restarting bot immediately...")
             os.system("python3 devtools/helper_cli.py kill")  # noqa: S605, S607
             return  # Stop here, no need to do more
-
-        if lang_updated:
-            logger.info("Language files updated. Reloading language...")
-            os.system("python3 devtools/helper_cli.py reload_lang")  # noqa: S605, S607
 
         if command_updated:
             logger.info("Command files updated. Reloading only changed commands...")
@@ -67,6 +65,10 @@ def update():
                     cog_path = f.replace("/", ".").replace(".py", "")
                     logger.info(f"Reloading command: {cog_path}")
                     os.system(f"python3 devtools/helper_cli.py extensions reload {cog_path}")  # noqa: E501, S605, S607
+
+        if lang_updated:
+            logger.info("Language files updated. Reloading language...")
+            os.system("python3 devtools/helper_cli.py reload_lang")  # noqa: S605, S607
 
     except Exception as e:
         logger.warning("UPDATER FAILED")
