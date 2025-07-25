@@ -10,9 +10,8 @@ from discord.ui import Select
 
 from utils.configmanager import gconfig, lang, uconfig, userlang
 from utils.guildconfig import GuildConfig
-from utils.timeconverter import discord_time_s
+from utils.timeconverter import discord_time_h, discord_time_l
 
-#TODO Okay add 2 buttons so one time specifier will be for bans, and one for longer periods, like more than a week  # noqa: E501
 #TODO Add nsfw tag to exclude nsfw from safe channels
 
 __PRIORITY__ = 10
@@ -68,11 +67,11 @@ class SettingView(discord.ui.View):
                     selected_option,  # type: ignore
                 )
                 await interaction.response.defer(ephemeral=True)
-        class TimeSelectMenu(Select):
-            def __init__(self, interaction, name, config_title, config_key):
+        class TimeSelectMenuLow(Select):
+            def __init__(self, interaction, name, config_title, config_key):  # noqa: E501
                 options = [
-                    discord.SelectOption(label=opt, value=opt) for opt in discord_time_s  # noqa: E501
-                ]
+                        discord.SelectOption(label=opt, value=opt) for opt in discord_time_l  # noqa: E501
+                    ]
                 super().__init__(
                     placeholder="Select time...",
                     options=options,
@@ -88,9 +87,33 @@ class SettingView(discord.ui.View):
                     config_id,
                     self.config_title,
                     self.config_key,
-                    discord_time_s[selected_time],  # type: ignore
+                    discord_time_l[selected_time],  # type: ignore
                 )  # type: ignore
                 await interaction.response.defer(ephemeral=True)
+        class TimeSelectMenuHigh(Select):
+            def __init__(self, interaction, name, config_title, config_key):  # noqa: E501
+                options = [
+                        discord.SelectOption(label=opt, value=opt) for opt in discord_time_h  # noqa: E501
+                    ]
+                super().__init__(
+                    placeholder="Select time...",
+                    options=options,
+                    custom_id=f"time_select_{name}",
+                )
+                self.config_title = config_title
+                self.config_key = config_key
+
+            async def callback(self, interaction: discord.Interaction):
+                selected_time = self.values[0]
+                config_id = interaction.user.id if cconfig is uconfig else interaction.guild.id  # type: ignore # noqa: E501
+                cconfig.set(
+                    config_id,
+                    self.config_title,
+                    self.config_key,
+                    discord_time_h[selected_time],  # type: ignore
+                )  # type: ignore
+                await interaction.response.defer(ephemeral=True)
+
         class TextModal(discord.ui.Modal):
             def __init__(self, title, placeholder, config_title, config_key):
                 super().__init__(title=title)
@@ -289,13 +312,23 @@ class SettingView(discord.ui.View):
                         )
                     elif opt_type == "time_low":
                         view.add_item(
-                            TimeSelectMenu(
+                            TimeSelectMenuLow(
                                 interaction=interaction,
                                 name=option,
                                 config_title=conf_title,
                                 config_key=conf_key,
                             ),
                         )
+                    elif opt_type == "time_high":
+                        view.add_item(
+                            TimeSelectMenuHigh(
+                                interaction=interaction,
+                                name=option,
+                                config_title=conf_title,
+                                config_key=conf_key,
+                            ),
+                        )
+
                     elif opt_type == "list":
                         options_list = option_data.get("options", [])
                         if options_list:
