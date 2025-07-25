@@ -6,7 +6,9 @@ import requests
 from discord import app_commands
 from discord.ext import commands
 
+from utils.guildconfig import GuildConfig
 from utils.autocomplete import autocomplete_tags
+from utils.configmanager import uconfig
 
 logger_e6 = logging.getLogger("nsfw.e621")
 class E6_commands(commands.Cog):
@@ -25,7 +27,7 @@ class E6_commands(commands.Cog):
             description="Gives you random post from e6",
         )
         @app_commands.autocomplete(tags=autocomplete_tags)
-        async def e6_random_post(self,interaction:discord.Interaction,tags:str="",web:str="https://e621.net"):
+        async def e6_random_post(self,interaction:discord.Interaction,tags:str="",web:str=uconfig.get("NSFW","E621","web")):  # type: ignore  # noqa: E501
             try:
                 tags = tags.replace(" ","+")
                 if web.endswith("/"):
@@ -72,7 +74,7 @@ class E6_commands(commands.Cog):
                 video_url = post["file"]["url"]
                 embed.description = f"[Click here to view the video]({video_url})"  # Add video link to description  # noqa: E501
             elif post["file"]["url"].endswith(".swf"):
-                embed.description = "Flash files are no longer supported!"
+                embed.description = f"Flash files are no longer supported!\n[Click here to view the post]({post['file']['url']})"  # noqa: E501
             else:
                 embed.set_image(url=post["file"]["url"])
             return embed, video_url
@@ -115,3 +117,14 @@ async def setup(bot: commands.Bot):
     cog = E6_commands(bot)
     bot.tree.add_command(cog.e6_commands())
     await bot.add_cog(cog)
+    configman = GuildConfig()
+    configman.set_config_set("user")
+    configman.add_setting("NSFW", "E621", "E621 Command options", nsfw=True)  # noqa: E501
+    configman.add_option_text(
+        "NSFW",
+        "E621",
+        "web",
+        "E621",
+        "web",
+        "The web URL to use for e621 commands. Default is https://e621.net",  # noqa: E501
+    )
