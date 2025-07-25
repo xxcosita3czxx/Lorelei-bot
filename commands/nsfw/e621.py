@@ -6,9 +6,9 @@ import requests
 from discord import app_commands
 from discord.ext import commands
 
-from utils.guildconfig import GuildConfig
 from utils.autocomplete import autocomplete_tags
 from utils.configmanager import uconfig
+from utils.guildconfig import GuildConfig
 
 logger_e6 = logging.getLogger("nsfw.e621")
 class E6_commands(commands.Cog):
@@ -68,15 +68,22 @@ class E6_commands(commands.Cog):
         def create_embed(self, post):
             embed = discord.Embed(
                 title=f"Post {post['id']}, by {', '.join(post['tags']['artist'])}",
+                url=f"https://e621.net/posts/{post['id']}",
             )
             video_url = None
-            if post["file"]["url"].endswith((".mp4", ".webm")):  # If the file is a video  # noqa: E501
-                video_url = post["file"]["url"]
-                embed.description = f"[Click here to view the video]({video_url})"  # Add video link to description  # noqa: E501
-            elif post["file"]["url"].endswith(".swf"):
-                embed.description = f"Flash files are no longer supported!\n[Click here to view the post]({post['file']['url']})"  # noqa: E501
+            file_url = post["file"]["url"]
+            if file_url.endswith((".mp4", ".webm")):
+                video_url = file_url
+                # Discord does not support direct video embedding, but you can use set_image for a preview thumbnail if available  # noqa: E501
+                # If a preview image exists, use it
+                preview_url = post["preview"].get("url") if "preview" in post and post["preview"].get("url") else None  # noqa: E501
+                if preview_url:
+                    embed.set_image(url=preview_url)
+                embed.description = f"[Click here to view the video]({video_url})"
+            elif file_url.endswith(".swf"):
+                embed.description = f"Flash files are no longer supported!\n[Click here to view the post]({file_url})"  # noqa: E501
             else:
-                embed.set_image(url=post["file"]["url"])
+                embed.set_image(url=file_url)
             return embed, video_url
 
     class e6_view(discord.ui.View):
