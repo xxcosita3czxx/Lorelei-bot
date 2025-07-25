@@ -27,7 +27,7 @@ class E6_commands(commands.Cog):
             description="Gives you random post from e6",
         )
         @app_commands.autocomplete(tags=autocomplete_tags)
-        async def e6_random_post(self,interaction:discord.Interaction,tags:str="",web:str=uconfig.get("NSFW","E621","web")):  # type: ignore  # noqa: E501
+        async def e6_random_post(self,interaction:discord.Interaction,tags:str="",web:str=uconfig.get("NSFW","E621","web","https://e621.net")):  # type: ignore  # noqa: E501
             try:
                 tags = tags.replace(" ","+")
                 if web.endswith("/"):
@@ -58,8 +58,8 @@ class E6_commands(commands.Cog):
                 current_index = random.randint(0, len(posts) - 1)  # Start with a random post  # noqa: E501, S311
 
                 embed, video_url = self.create_embed(posts[current_index])
-                file_url = posts[current_index]["file"]["url"]
-                if file_url.endswith((".mp4", ".webm")) and not uconfig.get("NSFW", "E621", "preview"):  # noqa: E501
+                file_url = posts[current_index]["file"].get("url")
+                if file_url and file_url.endswith((".mp4", ".webm")) and not uconfig.get("NSFW", "E621", "preview", False):  # noqa: E501
                     await interaction.response.send_message(
                         content=f"Video: {file_url}",
                         embed=embed,
@@ -81,7 +81,7 @@ class E6_commands(commands.Cog):
             video_url = None
             file_url = post["file"]["url"]
             if file_url.endswith((".mp4", ".webm")):
-                if uconfig.get("NSFW", "E621", "preview") is True:
+                if uconfig.get("NSFW", "E621", "preview", False) is True:
                     video_url = file_url
                     # Discord does not support direct video embedding, but you can use set_image for a preview thumbnail if available  # noqa: E501
                     # If a preview image exists, use it
