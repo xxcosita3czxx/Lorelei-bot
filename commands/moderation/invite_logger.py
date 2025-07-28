@@ -58,7 +58,13 @@ class InviteLogger(commands.Cog):
 
     @staticmethod
     async def get_used_invite(self, member: discord.Member): # type: ignore
-        invites_before = self.invites[member.guild.id]
+        if not hasattr(member, "guild") or member.guild is None:
+            return None
+        try:
+            invites_before = self.invites[member.guild.id]
+        except KeyError:
+            # No invites cached for this guild
+            invites_before = []
         invites_after = await member.guild.invites()
 
         used_invite = None
