@@ -726,6 +726,36 @@ class Ticketing(commands.Cog):
                 ),
             )
 
+    class ticket_multi_launcher(discord.ui.View):
+        def __init__(self):
+            super().__init__(timeout=None)
+            self.groups = []
+
+            # Add a select menu for group selection
+            self.select = discord.ui.Select(
+                placeholder="Choose a group...",
+                options=[
+                    discord.SelectOption(
+                        label="General",
+                        value="general",
+                        description="For general inquiries and issues",
+                    ),
+                ],
+                custom_id="group_select",
+            )
+            self.add_item(self.select)
+
+        async def interaction_check(self, interaction: discord.Interaction) -> bool:
+            # You can add permission checks here if needed
+            return True
+
+        @discord.ui.select(custom_id="group_select")
+        async def select_callback(self, interaction: discord.Interaction, select: discord.ui.Select):  # noqa: E501
+            await interaction.response.send_message(
+                f"You selected: {select.values[0]}",
+                ephemeral=True,
+            )
+
 async def setup(bot:commands.Bot):
     cog = Ticketing(bot)
     await bot.add_cog(cog)
