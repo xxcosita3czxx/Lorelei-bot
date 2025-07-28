@@ -727,34 +727,118 @@ class Ticketing(commands.Cog):
             )
 
     class ticket_multi_launcher(discord.ui.View):
-        def __init__(self):
-            super().__init__(timeout=None)
-            self.groups = []
+        '''
+        This will create the ticket with multiple groups
+        '''
 
-            # Add a select menu for group selection
-            self.select = discord.ui.Select(
-                placeholder="Choose a group...",
-                options=[
-                    discord.SelectOption(
-                        label="General",
-                        value="general",
-                        description="For general inquiries and issues",
-                    ),
-                ],
-                custom_id="group_select",
+        def __init__(self) -> None:  # noqa: ANN101
+            super().__init__(timeout = None)
+            self.cooldown = commands.CooldownMapping.from_cooldown(
+                1,
+                60,
+                commands.BucketType.member,
             )
-            self.add_item(self.select)
+            # Default groups - will be overridden by editor
+            self.groups = [
+                {
+                    "label": "Support",
+                    "value": "support",
+                    "description": "For support related tickets",
+                },
+            ]
+        @discord.ui.select(
+            placeholder = "Select a group",
+            custom_id = "ticket_select",
+        )
+        async def ticket_select(self, interaction: discord.Interaction, select: discord.ui.Select):  # noqa: E501, ANN101
+            # Update select options based on current groups
+            select.options = [
+                discord.SelectOption(
+                    label=group["label"],
+                    value=group["value"],
+                    description=group["description"],
+                )
+                for group in self.groups
+            ]
 
-        async def interaction_check(self, interaction: discord.Interaction) -> bool:
-            # You can add permission checks here if needed
-            return True
+            selected_group = select.values[0]
+            group_info = next((g for g in self.groups if g["value"] == selected_group), None)  # noqa: E501
+            if not group_info:
+                return await interaction.response.send_message(
+                    "Invalid group selected!",
+                    ephemeral=True,
+                )
 
-        @discord.ui.select(custom_id="group_select")
-        async def select_callback(self, interaction: discord.Interaction, select: discord.ui.Select):  # noqa: E501
-            await interaction.response.send_message(
-                f"You selected: {select.values[0]}",
-                ephemeral=True,
+            # Check for existing tickets
+            ticket = utils.get(
+                interaction.guild.text_channels,  # type: ignore
+                name=f"ticket-{interaction.user.name.lower().replace(' ', '-')}-{selected_group}",  # noqa: E501
             )
+
+            if ticket is not None:
+                return await interaction.response.send_message(
+                    f"You already have a {group_info['label']} ticket open at {ticket.mention}!",  # noqa: E501
+                    ephemeral=True,
+                )
+
+            # Create ticket with group-specific naming
+            overwrites = {
+                interaction.guild.default_role: discord.PermissionOverwrite(  # type: ignore
+                    view_channel=False,
+                ),
+                interaction.user: discord.PermissionOverwrite(
+                    view_channel=True,
+                    read_message_history=True,
+                    send_messages=True,
+                    attach_files=True,
+                    embed_links=True,
+                ),
+                interaction.guild.me: discord.PermissionOverwrite(  # type: ignore
+                    view_channel=True,
+                    send_messages=True,
+                    read_message_history=True,
+                ),
+            }
+
+            try:
+                channel = await interaction.guild.create_text_channel(  # type: ignore
+                    name=f"ticket-{interaction.user.name}-{selected_group}",
+                    overwrites=overwrites,
+                    reason=f"{group_info['label']} ticket for {interaction.user}",
+                )
+
+                embed = discord.Embed(
+                    title=f"{group_info['label']} Ticket",
+                    description=f"Welcome {interaction.user.mention}! This is your {group_info['label'].lower()} ticket.\n\nPlease describe your issue and a staff member will assist you shortly.",  # noqa: E501
+                    color=discord.Colour.blurple(),
+                )
+                embed.add_field(
+                    name="Group",
+                    value=group_info['label'],
+                    inline=True,
+                )
+                embed.add_field(
+                    name="Created by",
+                    value=interaction.user.mention,
+                    inline=True,
+                )
+
+                await channel.send(
+                    f"@everyone, {interaction.user.mention} created a {group_info['label']} ticket!",  # noqa: E501
+                    embed=embed,
+                    view=Ticketing.main(),
+                )
+
+                await interaction.response.send_message(
+                    f"I've opened a {group_info['label']} ticket for you at {channel.mention}!",  # noqa: E501
+                    ephemeral=True,
+                )
+
+            except Exception as e:
+                await interaction.response.send_message(
+                    f"Ticket creation failed! Make sure I have `manage_channels` permissions! --> {e}",  # noqa: E501
+                    ephemeral=True,
+                )
 
 async def setup(bot:commands.Bot):
     cog = Ticketing(bot)
