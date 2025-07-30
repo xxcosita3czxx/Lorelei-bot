@@ -50,50 +50,47 @@ class Counting(commands.Cog):
             return
         config: dict = gconfig.config.get(str(guild_id),{})  # type: ignore
         logger.debug(f"Guild config: {config} for id {guild_id}")
-        # Find the counting channel for this guild
-        counting_channel_id = None
-        for key in config:
-            logger.debug(f"Checking config key: {key}")
-            if key.endswith("-counting"):
-                counting_channel_id = int(key.split("-")[0])
-                logger.debug(f"Counting channel found: {counting_channel_id}")
-                if counting_channel_id and message.channel.id == counting_channel_id:  # noqa: E501
-                    logger.debug(f"Message is in the counting channel: {counting_channel_id}")  # noqa: E501
-                    try:
-                        expr = message.content.replace(" ", "")
-                        logger.debug(f"Evaluating expression: {expr}")
-                        node = ast.parse(expr, mode='eval')
-                        # Only allow +, -, *, / and numbers
-                        allowed_nodes = (
-                            ast.Expression, ast.BinOp, ast.UnaryOp,
-                            ast.Num,  # for Python <3.8
-                            ast.Constant,  # for Python 3.8+
-                            ast.Add, ast.Sub, ast.Mult, ast.Div, ast.USub, ast.UAdd,
-                        )
-                        for n in ast.walk(node):
-                            logger.debug(f"AST node: {type(n).__name__}")
-                        if not all(isinstance(n, allowed_nodes) for n in ast.walk(node)):  # noqa: E501
-                            logger.debug("Disallowed AST node detected, deleting message.")  # noqa: E501
-                            await message.delete()
-                            return
-                        number = int(ast.literal_eval(node))  # noqa: E501
-                        logger.debug(f"Parsed number: {number}")
-                    except Exception as e:
-                        logger.debug(f"Exception during parsing/eval: {e}")
+        # Directly check for the counting key for this channel
+        counting_key = f"{message.channel.id}-counting"
+        if counting_key in config:
+            logger.debug(f"Counting channel found: {message.channel.id}")
+            if message.channel.id == int(counting_key.split('-')[0]):
+                logger.debug(f"Message is in the counting channel: {message.channel.id}")  # noqa: E501
+                try:
+                    expr = message.content.replace(" ", "")
+                    logger.debug(f"Evaluating expression: {expr}")
+                    node = ast.parse(expr, mode='eval')
+                    # Only allow +, -, *, / and numbers
+                    allowed_nodes = (
+                        ast.Expression, ast.BinOp, ast.UnaryOp,
+                        ast.Num,  # for Python <3.8
+                        ast.Constant,  # for Python 3.8+
+                        ast.Add, ast.Sub, ast.Mult, ast.Div, ast.USub, ast.UAdd,
+                    )
+                    for n in ast.walk(node):
+                        logger.debug(f"AST node: {type(n).__name__}")
+                    if not all(isinstance(n, allowed_nodes) for n in ast.walk(node)):  # noqa: E501
+                        logger.debug("Disallowed AST node detected, deleting message.")  # noqa: E501
                         await message.delete()
                         return
+                    number = int(ast.literal_eval(node))
+                    logger.debug(f"Parsed number: {number}")
+                except Exception as e:
+                    logger.debug(f"Exception during parsing/eval: {e}")
+                    await message.delete()
+                    return
 
-                    current_count = gconfig.get(message.guild.id, f"{message.channel.id}-counting", "count")  # noqa: E501
-                    logger.debug(f"Current count: {current_count}, Next expected: {current_count + 1}")  # noqa: E501
-                    if number == current_count + 1:
-                        logger.debug("Correct number! Adding :white_check_mark: reaction.")  # noqa: E501
-                        await message.add_reaction(":white_check_mark:")
-                        gconfig.set(message.guild.id, f"{message.channel.id}-counting", "count", current_count + 1)  # noqa: E501
-                    else:
-                        logger.debug(f"Incorrect number! Got {number}, expected {current_count + 1}.")  # noqa: E501
-                        await message.add_reaction(":x:")
-                        await message.reply(f"{message.author.mention} has broken the count! Starting again..\n# 1")  # noqa: E501
-                        gconfig.set(message.guild.id, f"{message.channel.id}-counting", "count", 1)  # noqa: E501
+                current_count = gconfig.get(message.guild.id, f"{message.channel.id}-counting", "count")  # noqa: E501
+                logger.debug(f"Current count: {current_count}, Next expected: {current_count + 1}")  # noqa: E501
+                if number == current_count + 1:
+                    logger.debug("Correct number! Adding :white_check_mark: reaction.")  # noqa: E501
+                    await message.add_reaction(":white_check_mark:")
+                    gconfig.set(message.guild.id, f"{message.channel.id}-counting", "count", current_count + 1)  # noqa: E501
+                else:
+                    logger.debug(f"Incorrect number! Got {number}, expected {current_count + 1}.")  # noqa: E501
+                    await message.add_reaction(":x:")
+                    await message.reply(f"{message.author.mention} has broken the count! Starting again..\n# 1")  # noqa: E501
+                    gconfig.set(message.guild.id, f"{message.channel.id}-counting", "count", 1)  # noqa: E501
 
 async def setup(bot:commands.Bot):
     cog = Counting(bot)
