@@ -40,7 +40,7 @@ class Counting(commands.Cog):
         gconfig.delete(interaction.guild.id,f"{interaction.channel.id}-counting") # type: ignore
 
     @commands.Cog.listener("on_message")
-    async def on_message(self, message: discord.Message):
+    async def on_message(self, message: discord.Message):  # noqa: C901
         logger.debug(f"Received message: {message.content} (author: {message.author}, channel: {message.channel.id})")  # noqa: E501
         guild_id = message.guild.id if message.guild else None
         if not guild_id:
@@ -72,6 +72,10 @@ class Counting(commands.Cog):
                         if message.author.id != self.bot.user.id:  # type: ignore
                             await message.delete()
                             return
+                    # For mode='eval', node.body is the root expression
+                    if not isinstance(node, ast.Expression):
+                        logger.debug(f"AST root is not Expression: {type(node).__name__}")  # noqa: E501
+                        raise ValueError("Malformed expression")
                     number = int(ast.literal_eval(node.body))
                     logger.debug(f"Parsed number: {number}")
                 except Exception as e:
