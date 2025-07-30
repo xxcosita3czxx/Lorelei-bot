@@ -1,10 +1,7 @@
+
 #TODO Classic counting system like carl or smt
-#TODO Basicaly counting, validate with reaction, if wrong raise embed
 #TODO Basic math would be fun
 #TODO Maybe could implement in the level system
-#TODO Be able to set the counting channel
-
-#TODO WARNING, DOESNT WORK
 
 import ast
 import logging
@@ -79,8 +76,9 @@ class Counting(commands.Cog):
                     logger.debug(f"Parsed number: {number}")
                 except Exception as e:
                     logger.debug(f"Exception during parsing/eval: {e}")
-                    await message.delete()
-                    return
+                    if message.author.id != self.bot.user.id:  # type: ignore
+                        await message.delete()
+                        return
 
                 current_count = gconfig.get(message.guild.id, f"{message.channel.id}-counting", "count")  # noqa: E501
                 logger.debug(f"Current count: {current_count}, Next expected: {current_count + 1}")  # noqa: E501
