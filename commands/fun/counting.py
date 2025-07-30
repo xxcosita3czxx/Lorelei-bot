@@ -76,7 +76,8 @@ class Counting(commands.Cog):
                     if not isinstance(node, ast.Expression):
                         logger.debug(f"AST root is not Expression: {type(node).__name__}")  # noqa: E501
                         raise ValueError("Malformed expression")
-                    number = int(ast.literal_eval(node.body))
+                    # Use eval(compile(...)) since ast.literal_eval does not support BinOp  # noqa: E501
+                    number = int(eval(compile(node, '<string>', 'eval'), {"__builtins__": {}}))  # noqa: E501, S307 #TODO Replace with something safers
                     logger.debug(f"Parsed number: {number}")
                 except Exception as e:
                     logger.debug(f"Exception during parsing/eval: {e}")
