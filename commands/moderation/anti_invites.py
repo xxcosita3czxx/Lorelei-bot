@@ -8,7 +8,6 @@ from utils.guildconfig import GuildConfig
 
 logger = logging.getLogger("anti-invites")
 
-#TODO guild_permissions cry about webhook not being a real user
 #hasattr() could be used
 class AntiInvites(commands.Cog):
     def __init__(self, bot):
@@ -18,6 +17,8 @@ class AntiInvites(commands.Cog):
     async def antiinvites(self,message:discord.Message):
         try:
             logger.debug("on_message was triggered")
+            if getattr(message.author, "guild_permissions", False):
+                return
             ulanguage = uconfig.get(message.author.id,"Appearance","language")
             if message.guild:
                 guild_id = message.guild.id
@@ -30,7 +31,7 @@ class AntiInvites(commands.Cog):
                     logger.debug(message.author)
                     if message.author == self.bot.user:
                         return
-                    if message.author.guild_permissions.manage_messages: # type: ignore
+                    if message.author.guild_permissions.manage_messages: # type: ignore  # noqa: E501
                         return
                     if 'discord.gg' in message.content:
                         try:
@@ -53,6 +54,8 @@ class AntiInvites(commands.Cog):
     async def antilinks(self,message:discord.Message):
         try:
             logger.debug("on_message was triggered")
+            if getattr(message.author, "guild_permissions", False):
+                return
             ulanguage = uconfig.get(message.author.id,"Appearance","language")
             if message.guild:
                 guild_id = message.guild.id
