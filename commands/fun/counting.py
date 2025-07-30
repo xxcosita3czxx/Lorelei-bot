@@ -68,7 +68,7 @@ class Counting(commands.Cog):
                             ast.Expression, ast.BinOp, ast.UnaryOp,
                             ast.Num,  # for Python <3.8
                             ast.Constant,  # for Python 3.8+
-                            ast.Add, ast.Sub, ast.Mult, ast.Div, ast.USub, ast.UAdd
+                            ast.Add, ast.Sub, ast.Mult, ast.Div, ast.USub, ast.UAdd,
                         )
                         for n in ast.walk(node):
                             logger.debug(f"AST node: {type(n).__name__}")
