@@ -6,7 +6,6 @@ from discord.ext import commands
 
 import config
 from utils.configmanager import lang, userlang
-from utils.embeder import respEmbed
 
 #from utils.timeconverter import TimeConverter
 #from humanfriendly import format_timespan
@@ -45,28 +44,28 @@ class Ban(commands.Cog):
         '''
 
         if member == interaction.user or member == interaction.guild.owner: # type: ignore
-            respEmbed(
+            await interaction.response.send_message(
                 content=lang.get(userlang(interaction.user.id),"Responds","you_cant_ban"),
                 ephemeral=True,
             ) # type: ignore
             return
 
         if member.top_role >= interaction.guild.me.top_role: # type: ignore
-            respEmbed(
+            await interaction.response.send_message(
                 content=lang.get(userlang(interaction.user.id),"Responds","i_cant_ban"),
                 ephemeral=True,
             ) # type: ignore
             return
         if member.top_role >= interaction.user.top_role: # type: ignore
-            respEmbed(
+            await interaction.response.send_message(
                 content=lang.get(userlang(interaction.user.id),"Responds","u_cant_ban_hierarchy"),
                 ephemeral=True,
             ) # type: ignore
             return
         await ban_member(member, reason, interaction,delete_message_days)
         await interaction.guild.ban(member, reason=reason,delete_message_days=delete_message_days)  # type: ignore # noqa: E501
-        respEmbed(
-            lang.get(userlang(interaction.user.id),"Responds","user_banned").format(member=member.mention),
+        await interaction.response.send_message(
+            content=lang.get(userlang(interaction.user.id),"Responds","user_banned").format(member=member.mention),
             ephemeral=True,
         ) # type: ignore
         await interaction.followup.send(
