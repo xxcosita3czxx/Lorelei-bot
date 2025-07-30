@@ -243,21 +243,22 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
                 if cog is None or cog == "":
                     return "Specify cog."
                 if cog not in list(bot.extensions):
-                    return "Invalid cog. Ensure cog name"
-                try:
-                    await bot.reload_extension(cog)
-                    await bot.tree.sync()
-                    return f"Reloaded {cog} successfully."
-                except discord.ext.commands.ExtensionNotLoaded:
-                    return "Extension is not loaded"
-                except discord.ext.commands.ExtensionNotFound:
-                    return "Extension not found, ensure name is correct"
-                except discord.ext.commands.ExtensionFailed as e:
-                    return f"Failed to reload: {e}"
-                except Exception as e:
-                    return f"Unknown error while reloading extension: {e}"
-            except Exception as e:
+                        await bot.load_extension(cog)
+                        await bot.tree.sync()
+                        return f"Loaded {cog} successfully."
+                await bot.reload_extension(cog)
+                await bot.tree.sync()
+                return f"Reloaded {cog} successfully."
+            except discord.ext.commands.ExtensionNotLoaded:
+                return "Extension is not loaded"
+            except discord.ext.commands.ExtensionNotFound:
+                return "Extension not found, ensure name is correct"
+            except discord.ext.commands.NoEntryPointError:
+                return "Extension has no setup function, cannot reload. Please add a setup function to the cog."  # noqa: E501
+            except discord.ext.commands.ExtensionFailed as e:
                 return f"Failed to reload: {e}"
+            except Exception as e:
+                return f"Unknown error while reloading extension: {e}"
         elif command.startswith("list"):
             return "\n".join(list(bot.extensions))
         else:
