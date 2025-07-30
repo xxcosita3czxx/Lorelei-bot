@@ -23,9 +23,9 @@ async def add_warns(guild_id, user:discord.Member,interaction:discord.Interactio
         gconfig.set(guild_id, "warns", user_id, 1)
     if gconfig.get(guild_id, "warns", user_id) >= gconfig.get(guild_id,"warns-settings","ban",10):  # noqa: E501
         await ban_member(user, reason, interaction) # type: ignore
-    elif gconfig.get(guild_id, "warns", user_id) >= gconfig.get(guild_id,"warns-settings","kick",5):  # noqa: E501, SIM114
+    elif gconfig.get(guild_id, "warns", user_id) == gconfig.get(guild_id,"warns-settings","kick",5):  # noqa: E501, SIM114
         await kick_member(user, reason, interaction)
-    elif gconfig.get(guild_id, "warns", user_id) >= gconfig.get(guild_id,"warns-settings","timeout",3):  # type: ignore # noqa: E501
+    elif gconfig.get(guild_id, "warns", user_id) == gconfig.get(guild_id,"warns-settings","timeout",3):  # type: ignore # noqa: E501
         user.timeout(reason=reason, until=gconfig.get(guild_id,"warns-settings","timeout_duration",timedelta(hours=5)))  # type: ignore # noqa: E501
 
 
