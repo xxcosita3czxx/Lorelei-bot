@@ -21,7 +21,7 @@ class Counting(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @app_commands.default_permissions(administrator=True)
+    @app_commands.default_permissions(manage_channels=True)
     @app_commands.command(
         name="counting",
         description="Start a counting game in the channel",
@@ -32,7 +32,7 @@ class Counting(commands.Cog):
         )
         gconfig.set(interaction.guild.id,f"{interaction.channel.id}-counting","count",1) # type: ignore
 
-    @app_commands.default_permissions(administrator=True)
+    @app_commands.default_permissions(manage_channels=True)
     @app_commands.command(
         name="counting-remove",
         description="Removes the counting",
