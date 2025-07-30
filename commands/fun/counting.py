@@ -83,7 +83,7 @@ class Counting(commands.Cog):
                     logger.debug(f"Exception during parsing/eval: {e}")
                     if message.author.id != self.bot.user.id:  # type: ignore
                         await message.delete()
-                        return
+                    return  # Always return after handling the exception to avoid using 'number'
 
                 current_count = gconfig.get(message.guild.id, f"{message.channel.id}-counting", "count")  # noqa: E501
                 logger.debug(f"Current count: {current_count}, Next expected: {current_count + 1}")  # noqa: E501
