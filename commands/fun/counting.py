@@ -1,8 +1,3 @@
-
-#TODO Classic counting system like carl or smt
-#TODO Basic math would be fun
-#TODO Maybe could implement in the level system
-
 import ast
 import logging
 
@@ -12,6 +7,9 @@ from discord.ext import commands
 
 from utils.configmanager import gconfig
 from utils.emoji import string2emoji
+
+#TODO Maybe could implement in the level system
+#TODO Fix name showing as raw mention
 
 logger = logging.getLogger("counting")
 
@@ -94,7 +92,7 @@ class Counting(commands.Cog):
                 else:
                     logger.debug(f"Incorrect number! Got {number}, expected {current_count + 1}.")  # noqa: E501
                     await message.add_reaction(string2emoji(":cross_mark:"))
-                    await message.reply(embed=discord.Embed(title=f"{message.author.mention} has broken the count!", description="Starting again..\n# 1"))  # noqa: E501
+                    await message.reply(embed=discord.Embed(title=f"{message.author.name} has broken the count!", description="Starting again..\n# 1"))  # noqa: E501
                     gconfig.set(message.guild.id, f"{message.channel.id}-counting", "count", 1)  # noqa: E501
 
 async def setup(bot:commands.Bot):
