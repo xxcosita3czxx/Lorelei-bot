@@ -14,6 +14,7 @@ from discord import app_commands
 from discord.ext import commands
 
 from utils.configmanager import gconfig
+from utils.emoji import string2emoji
 
 logger = logging.getLogger("counting")
 
@@ -84,11 +85,11 @@ class Counting(commands.Cog):
                 logger.debug(f"Current count: {current_count}, Next expected: {current_count + 1}")  # noqa: E501
                 if number == current_count + 1:
                     logger.debug("Correct number! Adding :white_check_mark: reaction.")  # noqa: E501
-                    await message.add_reaction(":white_check_mark:")
+                    await message.add_reaction(string2emoji(":white_check_mark:"))
                     gconfig.set(message.guild.id, f"{message.channel.id}-counting", "count", current_count + 1)  # noqa: E501
                 else:
                     logger.debug(f"Incorrect number! Got {number}, expected {current_count + 1}.")  # noqa: E501
-                    await message.add_reaction(":x:")
+                    await message.add_reaction(string2emoji(":x:"))
                     await message.reply(f"{message.author.mention} has broken the count! Starting again..\n# 1")  # noqa: E501
                     gconfig.set(message.guild.id, f"{message.channel.id}-counting", "count", 1)  # noqa: E501
 
