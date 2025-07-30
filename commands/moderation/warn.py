@@ -5,6 +5,7 @@ from discord import app_commands
 from discord.ext import commands
 
 from utils.configmanager import gconfig, lang, userlang
+from utils.guildconfig import GuildConfig
 
 from ..moderation.ban import ban_member
 from .kick import kick_member
@@ -59,8 +60,8 @@ class Warn(commands.Cog):
         await interaction.response.send_message(f"{user.mention} has {warns} warns.", ephemeral=True)  # noqa: E501
 
 async def setup(bot:commands.Bot):
-#    cog = Warn(bot)
-#    await bot.add_cog(cog)
+    cog = Warn(bot)
+    await bot.add_cog(cog)
 
     @app_commands.context_menu(name="Warn")
     @app_commands.default_permissions(kick_members=True)
@@ -74,5 +75,35 @@ async def setup(bot:commands.Bot):
             gconfig.set(interaction.guild.id, "warns", member.id, gconfig.get(interaction.guild.id, "warns", member.id) - 1)  # noqa: E501
             await interaction.response.send_message(f"{member.mention} has had a warn removed. Now they have {gconfig.get(interaction.guild.id, 'warns', member.id)} warns.", ephemeral=True)  # noqa: E501
 
-    #bot.tree.add_command(unwarn_context)
-    #bot.tree.add_command(warn_context)
+    bot.tree.add_command(unwarn_context)
+    bot.tree.add_command(warn_context)
+    numbers = [app_commands.Choice(name=i, value=i) for i in range(1, 100)]
+    configman = GuildConfig()
+    configman.add_setting("Moderation", "Warns", "Configure the warn system")  # noqa: E501
+    configman.add_option_list(
+        category_name="Moderation",
+        setting_name="Warns",
+        name="Ban Warns",
+        options_list=numbers,
+        config_title="warns-settings",
+        key="ban",
+        description="Number of warns before a user is banned. Default is 10.",
+    )
+    configman.add_option_list(
+        category_name="Moderation",
+        setting_name="Warns",
+        name="Kick Warns",
+        options_list=numbers,
+        config_title="warns-settings",
+        key="kick",
+        description="Number of warns before a user is kicked. Default is 5.",
+    )
+    configman.add_option_list(
+        category_name="Moderation",
+        setting_name="Warns",
+        name="Timeout Warns",
+        options_list=numbers,
+        config_title="warns-settings",
+        key="timeout",
+        description="Number of warns before a user is timed out. Default is 3.",
+    )
