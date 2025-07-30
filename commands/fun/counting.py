@@ -75,7 +75,7 @@ class Counting(commands.Cog):
                         if message.author.id != self.bot.user.id:  # type: ignore
                             await message.delete()
                             return
-                    number = int(ast.literal_eval(node))
+                    number = int(ast.literal_eval(node.body))
                     logger.debug(f"Parsed number: {number}")
                 except Exception as e:
                     logger.debug(f"Exception during parsing/eval: {e}")
