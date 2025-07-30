@@ -7,6 +7,13 @@ import toml
 
 logger = logging.getLogger("configmanager")
 
+#TODO WARNING THIS SHOULD BE DONE UNDER DEVELOPMENT BRANCH
+#TODO Size of the config may be problem in the future, please consider loading on demand or using a database  # noqa: E501
+#TODO Indexing could be a fix (can infinitely loop, or do on changes querried by set)  # noqa: E501
+
+# Retain the modularity of this manager with the indexer.
+
+
 class ConfigManager:
     def __init__(self, config_dir, fallback_file=None):
         self.config_dir = config_dir
@@ -97,7 +104,6 @@ class ConfigManager:
             self._save_config(id)
             self._load_all_configs()  # Reload all configs after saving
         logger.debug(f"Deleted {id}:{title}:{key}")
-
 
 gconfig = ConfigManager("data/guilds")
 uconfig = ConfigManager("data/users")

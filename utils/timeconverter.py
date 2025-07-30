@@ -7,8 +7,8 @@ time_regex = re.compile(r"(?:(\d{1,5})(h|s|m|d))+?")
 time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
 
 discord_time = ["60s", "1m", "1h", "1d","1w"]  # Discord's time format for timeouts
-discord_time_l = {"60s": 60, "1m": 60, "1h": 3600, "1d": 86400, "1w": 604800}  # Discord's time format for timeouts in seconds  # noqa: E501
-discord_time_h = {"1w": 604800, "2w": 1209600,"1M": 2592000,"3M": 7776000,"6M": 15552000,"1Y": 31536000}  # Discord's time format for timeouts in hours  # noqa: E501
+discord_time_l = {"1 Minute": 60, "1 Hour": 3600, "1 Day": 86400, "1 Week": 604800}  # Discord's time format for timeouts in seconds  # noqa: E501
+discord_time_h = {"1 Week": 604800, "2 Week": 1209600,"1 Month": 2592000,"3 Month": 7776000,"6 Month": 15552000,"1 Year": 31536000}  # Discord's time format for timeouts in hours  # noqa: E501
 
 class TimeConverter(app_commands.Transformer):
 
