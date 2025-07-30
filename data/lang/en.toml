@@ -1,6 +1,6 @@
 [LANGUAGE]
 warn = "WARNING: PLEASE EDIT THIS PART, IT IS USED FOR LANGUAGE SELECTION! IF NOT EDITED, IT WILL DISPLAY AS ENGLISH!"
-name = "English"
+name = "English (English)"
 
 [TicketingCommand]
 embed_review_title = "Would you like to review our system?"

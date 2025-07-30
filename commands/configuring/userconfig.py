@@ -1,12 +1,11 @@
 import logging  # noqa: F401
-import os  # <-- Add this import
 
 import discord
 from discord import app_commands
 from discord.ext import commands
 
 from commands.configuring.guildconfig import CategoryView
-from utils.configmanager import uconfig  # noqa: F401
+from utils.configmanager import lang, uconfig  # noqa: F401
 from utils.dices import dices  # Import the array from utils.dices
 from utils.guildconfig import GuildConfig
 
@@ -42,12 +41,11 @@ async def setup(bot:commands.Bot):
     cog = UserConfigCommands(bot)
     await bot.add_cog(cog)
     # Get language options from data/langs directory
-    langs_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data", "lang")  # noqa: E501
+    # Use configmanager's lang instance to get language options
     language_options = []
-    if os.path.isdir(langs_dir):
-        for fname in os.listdir(langs_dir):
-            if fname.endswith(".toml"):
-                language_options.append(os.path.splitext(fname)[0])
+    for code, lang_data in lang.config.items():
+        name = lang_data.get("LANGUAGE", {}).get("name", code)
+        language_options.append(name)
 
     configman = GuildConfig()
     configman.set_config_set("user")
