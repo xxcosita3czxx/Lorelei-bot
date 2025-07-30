@@ -49,7 +49,7 @@ class Counting(commands.Cog):
             logger.debug("No guild_id found, returning.")
             return
         config: dict = gconfig.config.get(guild_id,{})  # type: ignore
-        logger.debug(f"Guild config: {config}")
+        logger.debug(f"Guild config: {config} for id {guild_id}")
         # Find the counting channel for this guild
         counting_channel_id = None
         for key in config:
