@@ -72,8 +72,9 @@ class Counting(commands.Cog):
                         logger.debug(f"AST node: {type(n).__name__}")
                     if not all(isinstance(n, allowed_nodes) for n in ast.walk(node)):  # noqa: E501
                         logger.debug("Disallowed AST node detected, deleting message.")  # noqa: E501
-                        await message.delete()
-                        return
+                        if message.author.id != self.bot.user.id:  # type: ignore
+                            await message.delete()
+                            return
                     number = int(ast.literal_eval(node))
                     logger.debug(f"Parsed number: {number}")
                 except Exception as e:
