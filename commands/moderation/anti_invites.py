@@ -17,7 +17,7 @@ class AntiInvites(commands.Cog):
     async def antiinvites(self,message:discord.Message):
         try:
             logger.debug("on_message was triggered")
-            if getattr(message.author, "guild_permissions", False):
+            if not getattr(message.author, "guild_permissions", False):
                 return
             ulanguage = uconfig.get(message.author.id,"Appearance","language")
             if message.guild:
@@ -54,7 +54,7 @@ class AntiInvites(commands.Cog):
     async def antilinks(self,message:discord.Message):
         try:
             logger.debug("on_message was triggered")
-            if getattr(message.author, "guild_permissions", False):
+            if not getattr(message.author, "guild_permissions", False):
                 return
             ulanguage = uconfig.get(message.author.id,"Appearance","language")
             if message.guild:
