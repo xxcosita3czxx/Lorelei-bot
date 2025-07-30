@@ -63,14 +63,20 @@ class Counting(commands.Cog):
                         expr = message.content.replace(" ", "")
                         logger.debug(f"Evaluating expression: {expr}")
                         node = ast.parse(expr, mode='eval')
-                        allowed_nodes = (ast.Expression, ast.BinOp, ast.UnaryOp, ast.Num, ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Pow, ast.Mod, ast.USub, ast.UAdd, ast.FloorDiv, ast.LShift, ast.RShift, ast.BitOr, ast.BitAnd, ast.BitXor, ast.Invert)  # noqa: E501
+                        # Only allow +, -, *, / and numbers
+                        allowed_nodes = (
+                            ast.Expression, ast.BinOp, ast.UnaryOp,
+                            ast.Num,  # for Python <3.8
+                            ast.Constant,  # for Python 3.8+
+                            ast.Add, ast.Sub, ast.Mult, ast.Div, ast.USub, ast.UAdd
+                        )
                         for n in ast.walk(node):
                             logger.debug(f"AST node: {type(n).__name__}")
                         if not all(isinstance(n, allowed_nodes) for n in ast.walk(node)):  # noqa: E501
                             logger.debug("Disallowed AST node detected, deleting message.")  # noqa: E501
                             await message.delete()
                             return
-                        number = int(ast.literal_eval(compile(node, "<string>", "eval")))  # noqa: E501
+                        number = int(ast.literal_eval(node))  # noqa: E501
                         logger.debug(f"Parsed number: {number}")
                     except Exception as e:
                         logger.debug(f"Exception during parsing/eval: {e}")
