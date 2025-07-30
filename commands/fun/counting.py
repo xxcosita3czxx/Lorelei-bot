@@ -48,7 +48,7 @@ class Counting(commands.Cog):
         if not guild_id:
             logger.debug("No guild_id found, returning.")
             return
-        config: dict = gconfig.config.get(guild_id, {})
+        config = gconfig.config.get(guild_id)  # type: ignore
         logger.debug(f"Guild config: {config}")
         # Find the counting channel for this guild
         counting_channel_id = None
