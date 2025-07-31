@@ -12,6 +12,8 @@ from utils.guildconfig import GuildConfig
 
 logger = logging.getLogger("dice")
 
+#TODO More dices at once
+
 class Dice(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

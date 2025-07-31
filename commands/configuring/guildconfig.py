@@ -213,30 +213,15 @@ class SettingView(discord.ui.View):
                 await interaction.response.defer(ephemeral=True)
         class SettingDropdown(discord.ui.Select):
             def __init__(self, settings):
-                # Filter settings for NSFW logic
+                # Show all settings in NSFW channels, only non-NSFW in non-NSFW channels  # noqa: E501
                 filtered_settings = []
+                # We can't know channel NSFW status here, so show all for now
                 for s in settings:
-                    # Get setting data from config_session
-                    setting_data = config_session.Configs.get(category_name, {}).get(s, {})  # noqa: E501
-                    nsfw = setting_data.get("nsfw", False)
-                    # If nsfw is True, only show in nsfw channels
-                    # If interaction is not available, show all
-                    filtered_settings.append((s, nsfw))
-                select_options = []
-                # If interaction is available, check channel nsfw status
-                def is_nsfw_channel(interaction):
-                    try:
-                        return hasattr(interaction.channel, "is_nsfw") and interaction.channel.is_nsfw()  # noqa: E501
-                    except Exception:
-                        return False
-                # Only show settings with nsfw=True in nsfw channels
-                # Show all others everywhere
-                for s, nsfw in filtered_settings:
-                    # If nsfw True, only show if channel is nsfw
-                    if nsfw:
-                        select_options.append(discord.SelectOption(label=s, value=s))  # noqa: E501
-                    else:
-                        select_options.append(discord.SelectOption(label=s, value=s))  # noqa: E501
+                    filtered_settings.append(s)
+                select_options = [
+                    discord.SelectOption(label=s, value=s)
+                    for s in filtered_settings
+                ]
                 if not select_options:
                     select_options = [discord.SelectOption(label="No settings available", value="none")]  # noqa: E501
                 super().__init__(
@@ -245,18 +230,19 @@ class SettingView(discord.ui.View):
                 )
 
             async def callback(self, interaction: discord.Interaction):  # noqa: C901
-                # Filter settings for NSFW logic
+                # Only show non-nsfw settings in non-nsfw channels
                 filtered_settings = []
+                is_nsfw = hasattr(interaction.channel, "is_nsfw") and interaction.channel.is_nsfw()  # noqa: E501
                 for s in settings:
                     setting_data = config_session.Configs.get(category_name, {}).get(s, {})  # noqa: E501
                     nsfw = setting_data.get("nsfw", False)
-                    filtered_settings.append((s, nsfw))
-                # Only show settings with nsfw=True in nsfw channels
-                # Show all others everywhere
-                is_nsfw = hasattr(interaction.channel, "is_nsfw") and interaction.channel.is_nsfw()  # noqa: E501
-                available_settings = [s for s, nsfw in filtered_settings if not nsfw or is_nsfw]  # noqa: E501
+                    if not nsfw or is_nsfw:
+                        filtered_settings.append(s)
+                if not filtered_settings:
+                    await interaction.response.send_message(content="No settings available in this category for this channel.", ephemeral=True)  # noqa: E501
+                    return
                 selected = self.values[0]
-                if selected not in available_settings:
+                if selected not in filtered_settings:
                     await interaction.response.send_message(content="This setting is only available in NSFW channels.", ephemeral=True)  # noqa: E501
                     return
                 options = config_session.get_options(category_name, selected)
@@ -372,6 +358,7 @@ class CategoryView(discord.ui.View):
                 if nsfw and not is_nsfw:
                     continue
                 visible_settings.append(s)
+            # Only add category if it has visible settings
             if visible_settings:
                 filtered_options.append(option)
 
