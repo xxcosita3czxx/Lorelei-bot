@@ -257,7 +257,10 @@ class SettingView(discord.ui.View):
                     conf_title = option_data.get("config_title", option)
                     conf_key = option_data.get("config_key", option)
                     opt_type = option_data.get("type", "str")
-
+                    nsfw = option_data.get("nsfw", False)
+                    # Only show NSFW options in embed if channel is NSFW
+                    if nsfw and not is_nsfw:
+                        continue
                     embed.add_field(
                         name=option,
                         value=desc,
