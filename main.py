@@ -401,7 +401,7 @@ async def change_status() -> None:
 
             await bot.change_presence(
                 activity=discord.Activity(
-                    type=discord.ActivityType.playing,
+                    type=discord.ActivityType.unknown,
                     name=f"{os.popen('find . -type f -exec wc -l {} + | tail -n 1').read().strip()} lines of code.",  # noqa: E501, S605
                 ),
                 status=config.status,
