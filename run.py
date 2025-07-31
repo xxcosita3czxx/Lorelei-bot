@@ -20,7 +20,7 @@ logging.basicConfig(
 logger = logging.getLogger("runner")
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-def update():
+def update():  # noqa: C901
     if not config.autoupdate:
         return
 
@@ -37,6 +37,7 @@ def update():
         run_py_updated = any(f == "run.py" for f in changed_files)
         lang_updated = any("data/lang/" in f for f in changed_files)
         command_updated = any("commands/" in f for f in changed_files)
+        reqs_updated = any(f == "requirements.txt" for f in changed_files)
         other_updated = any(
             (not f.startswith("commands/")
             and not f.startswith("data/lang/")
@@ -46,14 +47,18 @@ def update():
             and not f.endswith("ruff.toml"))
             for f in changed_files
         )
+        if reqs_updated:
+            logger.info("Requirements updated. Installing new requirements...")
+            os.system("pip install -r requirements.txt")  # noqa: S605
+
         if run_py_updated:
             logger.info("run.py updated. Restarting bot immediately...")
-            os.system("systemctl restart lorelei")  # noqa: S605, S607
+            os.system("systemctl restart lorelei")  # noqa: S605
             return
 
         if other_updated:
             logger.info("Other files updated. Restarting bot immediately...")
-            os.system("python3 devtools/helper_cli.py kill")  # noqa: S605, S607
+            os.system("python3 devtools/helper_cli.py kill")  # noqa: S605
             return  # Stop here, no need to do more
 
         if command_updated:
@@ -68,7 +73,7 @@ def update():
 
         if lang_updated:
             logger.info("Language files updated. Reloading language...")
-            os.system("python3 devtools/helper_cli.py reload_lang")  # noqa: S605, S607
+            os.system("python3 devtools/helper_cli.py reload_language")  # noqa: S605
 
     except Exception as e:
         logger.warning("UPDATER FAILED")

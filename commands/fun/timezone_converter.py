@@ -1,7 +1,14 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
+from pytz import timezone
 
+from utils.configmanager import uconfig
+from utils.guildconfig import GuildConfig
+
+#TODO User config for current timezone, else disable auto from user timezone to selected  # noqa: E501
+#TODO Add a list of timezones to choose from, or use pytz.all_timezones
+#TODO Fun thing could be from user timezone to another user timezone
 
 class TimezoneConverter(commands.Cog):
     def __init__(self, bot):
@@ -9,10 +16,48 @@ class TimezoneConverter(commands.Cog):
 
     @app_commands.command(name="convert_timezone", description="Converts time between timezones")  # noqa: E501
     async def convert_timezone(self, interaction: discord.Interaction, time: str, from_tz: str, to_tz: str):  # noqa: E501
-        # Placeholder for actual timezone conversion logic
-        await interaction.response.send_message(f"Converting {time} from {from_tz} to {to_tz}...")  # noqa: E501
+        users_timezone = uconfig.get(
+            id=interaction.user.id,
+            title="FUN",
+            key="current-timezone",
+            default=None,
+        )
+        if from_tz is None and users_timezone is None:
+            await interaction.response.send_message(
+                content="Please provide a timezone to convert from, or set your default timezone in user config.",  # noqa: E501
+                ephemeral=True,
+            )
+            return
+        if from_tz is None:
+            from_tz = users_timezone
+        if to_tz is None:
+            await interaction.response.send_message(
+                content="Please provide a timezone, or user with timezone to convert to.",  # noqa: E501
+                ephemeral=True,
+            )
+            return
 
 async def setup(bot: commands.Bot):
-#    cog = TimezoneConverter(bot)
-#    await bot.add_cog(cog)
-    pass
+    cog = TimezoneConverter(bot)
+    await bot.add_cog(cog)
+    configman = GuildConfig()
+    configman.set_config_set("user")
+    configman.add_setting("Fun", "Timezone Converter", "Enable or disable the timezone converter command")  # noqa: E501
+    configman.add_option_bool(
+        category_name="Fun",
+        setting_name="Timezone Converter",
+        name="Show timezone",
+        button_title="Let users see your timezone",
+        config_title="FUN",
+        config_key="timezone-converter-enabled",
+        description="Let users know your timezone and convert times between different timezones. Also shown in user info",  # noqa: E501
+    )
+    configman.add_option_list(
+        category_name="Fun",
+        setting_name="Timezone Converter",
+        name="Current Timezone",
+        options_list=[{"label": tz, "value": tz} for tz in timezone.all_timezones],
+        config_title="FUN",
+        config_key="current-timezone",
+        description="The timezone you want to convert from",
+    )
