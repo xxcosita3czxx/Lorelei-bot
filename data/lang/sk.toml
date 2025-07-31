@@ -70,6 +70,14 @@ not_banned = "{member} is not banned"
 i_cant_ban = "I can't ban this user"
 you_cant_ban = "You can't ban this user"
 you_was_banned = "You have been banned from {guild} \n**Reason**: {reason}"
+u_cant_kick_hiearchy = "You can't kick this user due to role hierarchy"
+user_banned_dms = ""
+user_unbanned_dms = ""
+user_kicked_dms = "You have been kicked from {guild}\n**Reason**: {reason}"
+i_cant_kick = "I can't kick this user"
+you_cant_kick = "You can't kick this user"
+unspecified = "Unspecified"
+too_many_warns = "Too many warns."
 
 [MainLogs]
 debug_user_admin = "Používateľ je správca, ignoruje ..."
@@ -85,6 +93,7 @@ id = "ID"
 joined_dsc = "Pripojený k Discordu"
 joined_guild = "Pripojený k serveru"
 roles = "rola"
+no_options = "No options available for this setting."
 
 [Descriptions]
 ban_reason = "Reason for ban"
@@ -94,3 +103,7 @@ ban_user = "User to ban"
 kick_user = "User to kick"
 unban_user = "User to unban"
 ban_delete_message_days = "Delete messages from user in the last x days"
+
+[LANGUAGE]
+warn = "WARNING: PLEASE EDIT THIS PART, IT IS USED FOR LANGUAGE SELECTION! IF NOT EDITED, IT WILL DISPLAY AS ENGLISH! To dismiss this as untranslated, you can clear this and keep it only as ''. You may not delete this variable"
+name = "Slovak (Slovensky)"
