@@ -21,10 +21,10 @@ Everything about contributing is [here](https://github.com/xxcosita3czxx/Lorelei
 | EN-WINGDINGS | 86.42% |
 | EN-LOLSPEAK | 44.44% |
 | DE | 39.51% |
-| SK | 38.27% |
+| SK | 39.51% |
 | HU | 37.04% |
+| RU | 33.33% |
 | EN-UWU | 32.10% |
-| RU | 30.86% |
 | PL | 16.05% |
 | AL | 12.35% |
 | CN | 12.35% |
