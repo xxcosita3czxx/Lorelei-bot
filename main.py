@@ -399,6 +399,16 @@ async def change_status() -> None:
             logger.debug(lang.get(conflang, "Bot", "debug_status_chng"))
             await asyncio.sleep(5)
 
+            await bot.change_presence(
+                activity=discord.Activity(
+                    type=discord.ActivityType.playing,
+                    name=f"{os.popen('find . -type f -exec wc -l {} + | tail -n 1').read().strip()} lines of code.",  # noqa: E501, S605
+                ),
+                status=config.status,
+            )
+            logger.debug(lang.get(conflang, "Bot", "debug_status_chng"))
+            await asyncio.sleep(5)
+
         except Exception as e:
             logger.warning(f"[STATUS LOOP] Caught exception: {e}")
             await asyncio.sleep(10)  # pause before retrying
