@@ -21,21 +21,28 @@ class UserConfigCommands(commands.Cog):
         description="Configure the bot",  # noqa: E501
     )
     async def configure(self,interaction:discord.Interaction):
-        config_session = GuildConfig()  # noqa: F841
+        config_session = GuildConfig()
         config_session.set_config_set("user")
         embed = discord.Embed(
             title="Configuration Categories",
             description="Select a category to configure",
         )
         logger.debug(config_session.Configs)
-        for category in config_session.Configs:
-            embed.add_field(name=category, value=f"Configure {category}", inline=False)  # noqa: E501
-        categories = config_session.get_categories()  # Assuming Configs is a dictionary  # noqa: E501
+        filtered_settings_by_category = {}
+        filtered_categories = []
+        for category, settings_dict in config_session.Configs.items():
+            filtered_settings = list(settings_dict.keys())
+            if filtered_settings:
+                embed.add_field(name=category, value=f"Configure {category}", inline=False)  # noqa: E501
+                filtered_categories.append(category)
+                filtered_settings_by_category[category] = filtered_settings
+        if not filtered_categories:
+            embed.description = "No categories available."
         await interaction.response.send_message(
             embed=embed,
-            view=CategoryView(categories, config_session,config_manager=uconfig),
+            view=CategoryView(filtered_categories, filtered_settings_by_category, config_session, config_manager=uconfig),  # noqa: E501
             ephemeral=True,
-        )  # noqa: E501
+        )
 
 async def setup(bot:commands.Bot):
     cog = UserConfigCommands(bot)
