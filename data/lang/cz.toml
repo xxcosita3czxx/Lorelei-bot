@@ -103,3 +103,7 @@ ban_user = "Uživatel k zabanování"
 kick_user = "Uživatel k vyhození"
 unban_user = "Uživatel k odbanování"
 ban_delete_message_days = "Smazat zprávy od uživatele za poslední x dní"
+
+[LANGUAGE]
+warn = " WARNING: PLEASE EDIT THIS PART, IT IS USED FOR LANGUAGE SELECTION! IF NOT EDITED, IT WILL DISPLAY AS ENGLISH! To dismiss this as untranslated, you can clear this and keep it only as ''. You may not delete this variable"
+name = "Czech (Čeština)"
