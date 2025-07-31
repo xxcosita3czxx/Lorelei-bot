@@ -17,13 +17,19 @@ class Setup(commands.Cog):
 
     @app_commands.command(name="force-ftsetup", description="First time setup for user configuration DONT USE, TESTING ONLY")  # noqa: E501
     async def ftsetup(self, interaction: discord.Interaction):
-        await interaction.response.send_message("Starting first time setup...")
+        await interaction.response.send_message("Starting first time setup... Check your DMs!", ephemeral=True)  # noqa: E501
+        embed = discord.Embed(
+            title="Welcome!",
+            description="It looks like you haven't set up your user configuration yet. Would you like to do it now?",  # noqa: E501
+            color=discord.Color.blue(),
+        )
+        embed.add_field(
+            name="Why?",
+            value="Setting up your user config lets you personalize your experience, such as setting your timezone.",  # noqa: E501
+        )
         await interaction.user.send(
-            embed=discord.Embed(
-                title="Welcome!",
-                description="It looks like you haven't set up your user configuration yet. Would you like to do it now?",  # noqa: E501
-                color=discord.Color.blue(),
-            ).add_field(name="Why?", value="Setting up your user config lets you personalize your experience, such as setting your timezone."),  # noqa: E501
+            embed=embed,
+            view=self.FTSetupView(),
         )
 
     #event listener
