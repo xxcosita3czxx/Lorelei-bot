@@ -9,7 +9,6 @@
 #TODO Add logging system, preferably to a channel, im not sure about logging to the bot itself, could be alot in size.  # noqa: E501
 #TODO Logs look doubled (CHECK IF ITS NOT A BUG)
 #TODO Colors to embeds editable by config
-#TODO If user uses the bot for the first time, send them message to set their config, if userconfig opened once, assume they have configured  # noqa: E501
 
 #IDEA ids could be if num not in list then add, else continue
 # Also edit could add/edit already existing

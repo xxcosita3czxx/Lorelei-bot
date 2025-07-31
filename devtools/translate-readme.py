@@ -2,6 +2,8 @@ import os
 import re
 import subprocess
 
+import toml
+
 README_FILE = "README.md"
 TRANSLATION_SCRIPT = "devtools/translate-check.py"
 
@@ -11,12 +13,28 @@ def get_translation_percentages():
     """Runs the translation script and extracts percentages for each language."""
     result = subprocess.run(["python", TRANSLATION_SCRIPT], capture_output=True, text=True)  # noqa: E501, S603
     percentages = {}
+    lang_names = {}
+
+    # Find all TOML files in data/lang
+    lang_dir = os.path.join("data", "lang")
+    if os.path.isdir(lang_dir):
+        for fname in os.listdir(lang_dir):
+            if fname.endswith(".toml"):
+                code = fname[:-5].upper()
+                try:
+                    data = toml.load(os.path.join(lang_dir, fname))
+                    name = data.get("LANGUAGE", {}).get("name", code)
+                    lang_names[code] = name
+                except Exception:
+                    lang_names[code] = code
 
     for line in result.stdout.splitlines():
         match = re.match(r"^([\w-]+): (\d+\.\d+)%", line)  # Match "xx: YY.YY%"
         if match:
             lang, percent = match.groups()
-            percentages[lang.upper()] = float(percent)  # Store percentage as a float for sorting  # noqa: E501
+            code = lang.upper()
+            display_name = lang_names.get(code, code)
+            percentages[display_name] = float(percent)  # Use display name
     return percentages
 
 def update_readme(percentages):
