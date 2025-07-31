@@ -343,29 +343,10 @@ class SettingView(discord.ui.View):
 
 
 class CategoryView(discord.ui.View):
-    def __init__(self, options, config_session: GuildConfig, config_manager):  # noqa: C901
+    def __init__(self, filtered_categories, filtered_settings_by_category, config_session: GuildConfig, config_manager):  # noqa: E501
         super().__init__()
 
-        # Filter out categories with no visible settings for this channel
-        filtered_options = []
-        is_nsfw = False
-        # Try to get channel from config_manager if possible (for initial filter)
-        if hasattr(config_manager, 'channel'):
-            is_nsfw = hasattr(config_manager.channel, "is_nsfw") and config_manager.channel.is_nsfw()  # noqa: E501
-        for option in options:
-            all_settings = list(config_session.Configs.get(option, {}).keys())
-            visible_settings = []
-            for s in all_settings:
-                setting_data = config_session.Configs.get(option, {}).get(s, {})
-                nsfw = setting_data.get("nsfw", False)
-                if nsfw and not is_nsfw:
-                    continue
-                visible_settings.append(s)
-            # Only add category if it has visible settings
-            if visible_settings:
-                filtered_options.append(option)
-
-        if not filtered_options:
+        if not filtered_categories:
             # No categories to show, do not add dropdown
             return
 
@@ -383,18 +364,8 @@ class CategoryView(discord.ui.View):
                 selected_category = self.values[0]
                 logger.debug(f"Selected category: {selected_category}")
 
-                # Get all settings for the category
-                all_settings = list(config_session.Configs.get(selected_category, {}).keys())  # noqa: E501
-                is_nsfw = hasattr(interaction.channel, "is_nsfw") and interaction.channel.is_nsfw()  # noqa: E501
-                filtered_settings = []
-                for s in all_settings:
-                    setting_data = config_session.Configs.get(selected_category, {}).get(s, {})  # noqa: E501
-                    nsfw = setting_data.get("nsfw", False)
-                    if nsfw and not is_nsfw:
-                        continue
-                    filtered_settings.append(s)
+                filtered_settings = filtered_settings_by_category.get(selected_category, [])  # noqa: E501
                 if not filtered_settings:
-                    # If no settings, do not show the category at all
                     await interaction.response.send_message(
                         content="No settings available in this category for this channel.",  # noqa: E501
                         ephemeral=True,
@@ -413,7 +384,7 @@ class CategoryView(discord.ui.View):
                     view=SettingView(filtered_settings, config_session, selected_category, config_manager),  # noqa: E501
                 )
 
-        self.add_item(CategoryDropdown(filtered_options))
+        self.add_item(CategoryDropdown(filtered_categories))
 
 
 class GuildConfigCommands(commands.Cog):
@@ -434,28 +405,29 @@ class GuildConfigCommands(commands.Cog):
             description="Configure the bot",  # noqa: E501
         )
         async def configure(self,interaction:discord.Interaction):
-            config_session = GuildConfig()  # noqa: F841
+            config_session = GuildConfig()
             embed = discord.Embed(
                 title="Configuration Categories",
                 description="Select a category to configure",
             )
             logger.debug(config_session.Configs)
-            visible_categories = []
+            is_nsfw = hasattr(interaction.channel, "is_nsfw") and interaction.channel.is_nsfw()  # noqa: E501
+            filtered_settings_by_category = {}
+            filtered_categories = []
             for category, settings_dict in config_session.Configs.items():
-                # Filter out settings that are nsfw in non-nsfw channels
-                is_nsfw = hasattr(interaction.channel, "is_nsfw") and interaction.channel.is_nsfw()  # noqa: E501
-                visible_settings = [
+                filtered_settings = [
                     s for s, data in settings_dict.items()
                     if not data.get("nsfw", False) or is_nsfw
                 ]
-                if visible_settings:
+                if filtered_settings:
                     embed.add_field(name=category, value=f"Configure {category}", inline=False)  # noqa: E501
-                    visible_categories.append(category)
-            if not visible_categories:
+                    filtered_categories.append(category)
+                    filtered_settings_by_category[category] = filtered_settings
+            if not filtered_categories:
                 embed.description = "No categories available for this channel."
             await interaction.response.send_message(
                 embed=embed,
-                view=CategoryView(visible_categories, config_session, config_manager=gconfig),  # noqa: E501
+                view=CategoryView(filtered_categories, filtered_settings_by_category, config_session, config_manager=gconfig),  # noqa: E501
                 ephemeral=True,
             )
 
