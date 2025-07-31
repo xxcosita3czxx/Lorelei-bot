@@ -223,7 +223,7 @@ class Setup(commands.Cog):
 
     #event listener
     # event listener for slash command completion
-    @commands.Cog.listener()
+#    @commands.Cog.listener()
     async def on_app_command_completion(self, interaction: discord.Interaction, command: app_commands.Command):  # noqa: C901, E501
         logger.debug(f"User {interaction.user} ran command: {command.qualified_name}")  # noqa: E501
         # Only check for real users (not bots)
