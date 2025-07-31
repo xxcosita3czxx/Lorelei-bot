@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -36,7 +38,25 @@ class TimezoneConverter(commands.Cog):
                 ephemeral=True,
             )
             return
-
+        try:
+            from_timezone = timezone(from_tz)
+            to_timezone = timezone(to_tz)
+            # Assuming time is in HH:MM format
+            from_time = from_timezone.localize(
+                datetime.strptime(time, "%H:%M"),
+            )
+            to_time = from_time.astimezone(to_timezone)
+            formatted_time = to_time.strftime("%H:%M %Z")
+            await interaction.response.send_message(
+                content=f"The time {time} in {from_tz} is {formatted_time} in {to_tz}.",  # noqa: E501
+                ephemeral=True,
+            )
+        except Exception as e:
+            await interaction.response.send_message(
+                content=f"Error converting time: {str(e)}",
+                ephemeral=True,
+            )
+            return
 async def setup(bot: commands.Bot):
     cog = TimezoneConverter(bot)
     await bot.add_cog(cog)
