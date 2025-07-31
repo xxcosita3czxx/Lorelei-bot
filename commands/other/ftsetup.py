@@ -5,7 +5,7 @@ import pytz
 from discord import app_commands
 from discord.ext import commands
 
-from utils.configmanager import uconfig
+from utils.configmanager import lang, uconfig
 
 logger = logging.getLogger("ftsetup")
 
@@ -23,11 +23,11 @@ class FTSetupView(discord.ui.View):
         # Start the setup wizard with the first stage (timezone)
         await interaction_button.response.edit_message(
             embed=discord.Embed(
-                title="Step 1/3: Set Your Timezone",
-                description="Please select your timezone.",
+                title="Step 1/3: Which Language you speak?",
+                description="Please select your Language.",
                 color=discord.Color.blurple(),
             ),
-            view=TimezoneSetupView(interaction_button.user),
+            view=LanguageSetupView(interaction_button.user),
         )
 
     @discord.ui.button(label="Later", style=discord.ButtonStyle.gray)
@@ -35,7 +35,7 @@ class FTSetupView(discord.ui.View):
         await interaction_button.response.edit_message(
             embed=discord.Embed(
                 title="First Time Setup Deferred",
-                description="You can configure your user settings at any time with /userconfig. You will get the message next time you'll try out the bot :3",  # noqa: E501
+                description="You will get the message next time you'll try out the bot :3",  # noqa: E501
                 color=discord.Color.blurple(),
             ),
             view=None,
@@ -58,21 +58,106 @@ class FTSetupView(discord.ui.View):
             view=None,
         )
 
-class TimezoneSetupView(discord.ui.View):
+
+class LanguageSetupView(discord.ui.View):
     def __init__(self, user, data=None):
         super().__init__(timeout=180)
         self.user = user
         self.data = data or {}
-        options = [
-            discord.SelectOption(label=tz, value=tz)
-            for tz in pytz.common_timezones[:25]
-        ]
-        self.add_item(self.TimezoneDropdown(options, self))
+        options = []
+        for code, lang_data in lang.config.items():
+            name = lang_data.get("LANGUAGE", {}).get("name", code)
+            options.append(discord.SelectOption(label=name, value=code))
+        self.add_item(self.LanguageDropdown(options, self))
 
-    class TimezoneDropdown(discord.ui.Select):
+    class LanguageDropdown(discord.ui.Select):
         def __init__(self, options, parent):
             super().__init__(
-                placeholder="Select your timezone...",
+                placeholder="Select your Language...",
+                options=options,
+                min_values=1,
+                max_values=1,
+            )
+            self.parent = parent
+        async def callback(self, interaction: discord.Interaction):
+            lang_code = self.values[0]
+            lang_name = next((opt.label for opt in self.options if opt.value == lang_code), lang_code)  # noqa: E501
+            self.parent.data['language'] = lang_code
+            uconfig.set(
+                id=interaction.user.id,
+                title="Appearance",
+                key="language",
+                value=lang_code,
+            )
+            await interaction.response.edit_message(
+                embed=discord.Embed(
+                    title="Step 2/4: Select Your Continent",
+                    description="Please select your continent for timezone.",
+                    color=discord.Color.blurple(),
+                ).add_field(name="Language", value=lang_name, inline=False),
+                view=ContinentTimezoneView(self.parent.user, self.parent.data),
+            )
+
+
+# --- New: Continent and City/State Timezone Selection ---
+
+class ContinentTimezoneView(discord.ui.View):
+    def __init__(self, user, data=None):
+        super().__init__(timeout=180)
+        self.user = user
+        self.data = data or {}
+        # Get unique continents from pytz.common_timezones
+        continents = set()
+        for tz in pytz.common_timezones:
+            if '/' in tz:
+                continent = tz.split('/')[0]
+                continents.add(continent)
+        options = [discord.SelectOption(label=cont, value=cont) for cont in sorted(continents)]  # noqa: E501
+        self.add_item(self.ContinentDropdown(options, self))
+
+    class ContinentDropdown(discord.ui.Select):
+        def __init__(self, options, parent):
+            super().__init__(
+                placeholder="Select your continent...",
+                options=options,
+                min_values=1,
+                max_values=1,
+            )
+            self.parent = parent
+        async def callback(self, interaction: discord.Interaction):
+            continent = self.values[0]
+            self.parent.data['continent'] = continent
+            await interaction.response.edit_message(
+                embed=discord.Embed(
+                    title="Step 3/4: Select Your City/Region",
+                    description=f"Please select your city/region in {continent}.",
+                    color=discord.Color.blurple(),
+                ).add_field(name="Language", value=self.parent.data.get('language', 'Not set'), inline=False)  # noqa: E501
+                .add_field(name="Continent", value=continent, inline=False),
+                view=CityTimezoneView(self.parent.user, self.parent.data),
+            )
+
+class CityTimezoneView(discord.ui.View):
+    def __init__(self, user, data=None):
+        super().__init__(timeout=180)
+        self.user = user
+        self.data = data or {}
+        continent = self.data.get('continent')
+        # Get all timezones for the selected continent
+        tzs = [tz for tz in pytz.common_timezones if tz.startswith(continent + '/')]
+        # Only show the city/region part
+        options = []
+        for tz in tzs:
+            city = tz.split('/', 1)[1].replace('_', ' ')
+            options.append(discord.SelectOption(label=city, value=tz))
+        # Discord only allows up to 25 options per select, so chunk if needed
+        options = options[:25]
+        self.add_item(self.CityDropdown(options, self))
+
+    class CityDropdown(discord.ui.Select):
+        def __init__(self, options, parent):
+            super().__init__(
+                placeholder="Select your city/region...",
                 options=options,
                 min_values=1,
                 max_values=1,
@@ -87,12 +172,17 @@ class TimezoneSetupView(discord.ui.View):
                 key="current-timezone",
                 value=tz,
             )
+            # Compose summary so far
+            lang_code = self.parent.data.get('language', 'Not set')
+            continent = self.parent.data.get('continent', 'Not set')
             await interaction.response.edit_message(
                 embed=discord.Embed(
-                    title="Step 2/3: Notification Preferences",
+                    title="Step 4/4: Notification Preferences",
                     description="Would you like to enable notifications?",
                     color=discord.Color.blurple(),
-                ).add_field(name="Timezone", value=tz, inline=False),
+                ).add_field(name="Language", value=lang_code, inline=False)
+                 .add_field(name="Continent", value=continent, inline=False)
+                 .add_field(name="Timezone", value=tz, inline=False),
                 view=NotifSetupView(self.parent.user, self.parent.data),
             )
 
@@ -208,13 +298,13 @@ class Setup(commands.Cog):
     async def ftsetup(self, interaction: discord.Interaction):
         await interaction.response.send_message("Starting first time setup... Check your DMs!", ephemeral=True)  # noqa: E501
         embed = discord.Embed(
-            title="Welcome!",
+            title="Hello! Hola! Ahoj!",
             description="It looks like you haven't set up your user configuration yet. Would you like to do it now?",  # noqa: E501
             color=discord.Color.blue(),
         )
         embed.add_field(
             name="Why?",
-            value="Setting up your user config lets you personalize your experience, such as setting your timezone.",  # noqa: E501
+            value="Setting up your user config lets you personalize your experience, such as setting your language or timezone.",  # noqa: E501
         )
         await interaction.user.send(
             embed=embed,
@@ -241,16 +331,19 @@ class Setup(commands.Cog):
             return
 
         embed = discord.Embed(
-            title="Welcome!",
+            title="Hello! Hola! Ahoj!",
             description="It looks like you haven't set up your user configuration yet. Would you like to do it now?",  # noqa: E501
             color=discord.Color.blue(),
         )
-        embed.add_field(name="Why?", value="Setting up your user config lets you personalize your experience, such as setting your timezone.")  # noqa: E501
-        await interaction.followup.send(
+        embed.add_field(
+            name="Why?",
+            value="Setting up your user config lets you personalize your experience, such as setting your language or timezone. It won't take more than 1 minute.",  # noqa: E501
+        )
+        await interaction.user.send(
             embed=embed,
             view=FTSetupView(),
-            ephemeral=True,
         )
+
 
 async def setup(bot: commands.Bot):
     cog = Setup(bot)
