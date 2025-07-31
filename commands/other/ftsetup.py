@@ -168,7 +168,7 @@ class CityTimezoneView(discord.ui.View):
             self.parent.data['timezone'] = tz
             uconfig.set(
                 id=interaction.user.id,
-                title="FUN",
+                title="",
                 key="current-timezone",
                 value=tz,
             )

@@ -1,9 +1,9 @@
 import discord
+import requests
 from discord import app_commands
 from discord.ext import commands
 
 import config
-import utils.cosita_toolkit as ctkit
 from utils.configmanager import lang, uconfig
 from utils.helpmanager import HelpManager
 
@@ -19,13 +19,17 @@ def info_text_gen(userid):
         "info_text_raw",
     )
 
-    contributors = ctkit.GithubApi.get_repo_contributors(owner=mowner,repo=mrepo) # type: ignore
-    contributors = [
-        contributor for contributor in contributors if contributor != mowner
-    ]
-    for contributor in contributors:
-        if contributor is not str(mowner):
+    # Fetch contributors from GitHub API directly
+    url = f"https://api.github.com/repos/{mowner}/{mrepo}/contributors"
+    try:
+        response = requests.get(url, timeout=5)
+        response.raise_for_status()
+        contributors_data = response.json()
+        contributors = [c['login'] for c in contributors_data if c['login'] != mowner]  # noqa: E501
+        for contributor in contributors:
             info_text_raw += f"- {contributor}\n"
+    except Exception:
+        info_text_raw += "(Could not fetch contributors)\n"
     return info_text_raw
 
 class Info(commands.Cog):
