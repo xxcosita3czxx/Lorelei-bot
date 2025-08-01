@@ -199,7 +199,7 @@ class CityTimezoneView(discord.ui.View):
             uconfig.set(
                 id=interaction.user.id,
                 title="",
-                key="current-timezone",
+                key="",
                 value=tz,
             )
             # Compose summary so far
@@ -207,107 +207,42 @@ class CityTimezoneView(discord.ui.View):
             continent = self.parent.data.get('continent', 'Not set')
             await interaction.response.edit_message(
                 embed=discord.Embed(
-                    title="Step 4/4: Notification Preferences",
-                    description="Would you like to enable notifications?",
+                    title="Step 4/4: Announcements Preferences",
+                    description="How do you want to receive announcements?",
                     color=discord.Color.blurple(),
                 ).add_field(name="Language", value=lang_code, inline=False)
                  .add_field(name="Continent", value=continent, inline=False)
                  .add_field(name="Timezone", value=tz, inline=False),
-                view=NotifSetupView(self.parent.user, self.parent.data),
+                view=AnnouncementsSetupView(self.parent.user, self.parent.data),
             )
 
-class NotifSetupView(discord.ui.View):
+
+# --- Announcements Setup View ---
+class AnnouncementsSetupView(discord.ui.View):
     def __init__(self, user, data=None):
         super().__init__(timeout=180)
         self.user = user
         self.data = data or {}
-        self.add_item(self.YesButton(self))
-        self.add_item(self.NoButton(self))
+        self.add_item(self.AlwaysYesButton(self))
+        self.add_item(self.AlwaysAskButton(self))
+        self.add_item(self.NeverButton(self))
 
-    class YesButton(discord.ui.Button):
+    class AlwaysYesButton(discord.ui.Button):
         def __init__(self, parent):
-            super().__init__(label="Enable Notifications", style=discord.ButtonStyle.success)  # noqa: E501
+            super().__init__(label="Always Yes", style=discord.ButtonStyle.success)
             self.parent = parent
         async def callback(self, interaction: discord.Interaction):
-            self.parent.data['notifications'] = True
+            self.parent.data['announcements'] = 'always_yes'
             uconfig.set(
                 id=interaction.user.id,
-                title="FUN",
-                key="notifications-enabled",
-                value=True,
-            )
-            await interaction.response.edit_message(
-                embed=discord.Embed(
-                    title="Step 3/3: Profile Visibility",
-                    description="Who can see your profile?",
-                    color=discord.Color.blurple(),
-                ).add_field(name="Timezone", value=self.parent.data.get('timezone', 'Not set'), inline=False)  # noqa: E501
-                 .add_field(name="Notifications", value="Enabled", inline=False),  # noqa: E501
-                view=ProfileSetupView(self.parent.user, self.parent.data),
-            )
-
-    class NoButton(discord.ui.Button):
-        def __init__(self, parent):
-            super().__init__(label="Disable Notifications", style=discord.ButtonStyle.danger)  # noqa: E501
-            self.parent = parent
-        async def callback(self, interaction: discord.Interaction):
-            self.parent.data['notifications'] = False
-            uconfig.set(
-                id=interaction.user.id,
-                title="FUN",
-                key="notifications-enabled",
-                value=False,
-            )
-            await interaction.response.edit_message(
-                embed=discord.Embed(
-                    title="Step 3/3: Profile Visibility",
-                    description="Who can see your profile?",
-                    color=discord.Color.blurple(),
-                ).add_field(name="Timezone", value=self.parent.data.get('timezone', 'Not set'), inline=False)  # noqa: E501
-                 .add_field(name="Notifications", value="Disabled", inline=False),  # noqa: E501
-                view=ProfileSetupView(self.parent.user, self.parent.data),
-            )
-
-class ProfileSetupView(discord.ui.View):
-    def __init__(self, user, data=None):
-        super().__init__(timeout=180)
-        self.user = user
-        self.data = data or {}
-        options = [
-            discord.SelectOption(label="Public", value="public"),
-            discord.SelectOption(label="Friends Only", value="friends"),
-            discord.SelectOption(label="Private", value="private"),
-        ]
-        self.add_item(self.ProfileDropdown(options, self))
-
-    class ProfileDropdown(discord.ui.Select):
-        def __init__(self, options, parent):
-            super().__init__(
-                placeholder="Select profile visibility...",
-                options=options,
-                min_values=1,
-                max_values=1,
-            )
-            self.parent = parent
-        async def callback(self, interaction: discord.Interaction):
-            vis = self.values[0]
-            self.parent.data['profile_visibility'] = vis
-            uconfig.set(
-                id=interaction.user.id,
-                title="FUN",
-                key="profile-visibility",
-                value=vis,
-            )
-            # Show summary
-            summary = (
-                f"Timezone: {self.parent.data.get('timezone', 'Not set')}\n"
-                f"Notifications: {'Enabled' if self.parent.data.get('notifications') else 'Disabled'}\n"  # noqa: E501
-                f"Profile Visibility: {vis.capitalize()}"
+                title="",
+                key="",
+                value="",
             )
             await interaction.response.edit_message(
                 embed=discord.Embed(
                     title="Setup Complete!",
-                    description="Your first time setup is complete. You can always change your settings with /userconfig.\n\n**Summary:**\n" + summary,  # noqa: E501
+                    description="You will always receive announcements. You can change this later with /userconfig.",  # noqa: E501
                     color=discord.Color.green(),
                 ),
                 view=None,
@@ -318,6 +253,61 @@ class ProfileSetupView(discord.ui.View):
                 key="ftsetup",
                 value=True,
             )
+
+    class AlwaysAskButton(discord.ui.Button):
+        def __init__(self, parent):
+            super().__init__(label="Always Ask", style=discord.ButtonStyle.primary)
+            self.parent = parent
+        async def callback(self, interaction: discord.Interaction):
+            self.parent.data['announcements'] = 'always_ask'
+            uconfig.set(
+                id=interaction.user.id,
+                title="",
+                key="",
+                value="",
+            )
+            await interaction.response.edit_message(
+                embed=discord.Embed(
+                    title="Setup Complete!",
+                    description="You will be asked before receiving announcements. You can change this later with /userconfig.",  # noqa: E501
+                    color=discord.Color.green(),
+                ),
+                view=None,
+            )
+            uconfig.set(
+                id=interaction.user.id,
+                title="APPEARANCE",
+                key="ftsetup",
+                value=True,
+            )
+
+    class NeverButton(discord.ui.Button):
+        def __init__(self, parent):
+            super().__init__(label="Never", style=discord.ButtonStyle.danger)
+            self.parent = parent
+        async def callback(self, interaction: discord.Interaction):
+            self.parent.data['announcements'] = 'never'
+            uconfig.set(
+                id=interaction.user.id,
+                title="FUN",
+                key="announcements-preference",
+                value="never",
+            )
+            await interaction.response.edit_message(
+                embed=discord.Embed(
+                    title="Setup Complete!",
+                    description="You will never receive announcements. You can change this later with /userconfig.",  # noqa: E501
+                    color=discord.Color.green(),
+                ),
+                view=None,
+            )
+            uconfig.set(
+                id=interaction.user.id,
+                title="APPEARANCE",
+                key="ftsetup",
+                value=True,
+            )
+
 
 
 class Setup(commands.Cog):
