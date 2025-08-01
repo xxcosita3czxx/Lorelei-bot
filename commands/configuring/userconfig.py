@@ -30,7 +30,7 @@ class UserConfigCommands(commands.Cog):
         logger.debug(config_session.Configs)
         filtered_settings_by_category = {}
         filtered_categories = []
-        is_nsfw = hasattr(interaction.channel, "is_nsfw") and interaction.channel.is_nsfw()
+        is_nsfw = hasattr(interaction.channel, "is_nsfw") and interaction.channel.is_nsfw()  # noqa: E501
         for category, settings_dict in config_session.Configs.items():
             filtered_settings = [
                 s for s, data in settings_dict.items()
