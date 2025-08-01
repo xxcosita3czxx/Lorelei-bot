@@ -19,18 +19,18 @@ Everything about contributing is [here](https://github.com/xxcosita3czxx/Lorelei
 |----------|----------|
 | French (Français) | 91.36% |
 | Czech (Česky) | 87.65% |
-| EN-WINGDINGS | 86.42% |
+| English (🕈☹♋︎♏︎□☹♋︎♏︎♎︎) | 87.65% |
 | English (LoLspek) | 44.44% |
 | German (Deutsch) | 39.51% |
+| Hungarian (Magyar) | 39.51% |
 | Slovak (Slovensky) | 39.51% |
-| HU | 37.04% |
 | Russian (Русский) | 33.33% |
 | English (UwU) | 32.10% |
 | Polish (Polski) | 16.05% |
-| AL | 12.35% |
-| CN | 12.35% |
-| FI | 12.35% |
-| TR | 12.35% |
+| Albanian (Shqip) | 14.81% |
+| Chinese (中文) | 14.81% |
+| Finnish (Suomi) | 14.81% |
+| Turkish (Türkçe) | 14.81% |
 
 ## Support the creator
 
