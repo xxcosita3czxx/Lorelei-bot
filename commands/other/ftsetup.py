@@ -171,7 +171,7 @@ class CityTimezoneView(discord.ui.View):
         async def callback(self, interaction: discord.Interaction):
             await interaction.response.edit_message(
                 embed=interaction.message.embeds[0],
-                view=CityTimezoneView(self.parent.user, self.parent.data, page=self.parent.page - 1),
+                view=CityTimezoneView(self.parent.user, self.parent.data, page=self.parent.page - 1),  # noqa: E501
             )
 
     class NextButton(discord.ui.Button):
@@ -181,7 +181,7 @@ class CityTimezoneView(discord.ui.View):
         async def callback(self, interaction: discord.Interaction):
             await interaction.response.edit_message(
                 embed=interaction.message.embeds[0],
-                view=CityTimezoneView(self.parent.user, self.parent.data, page=self.parent.page + 1),
+                view=CityTimezoneView(self.parent.user, self.parent.data, page=self.parent.page + 1),  # noqa: E501
             )
 
     class CityDropdown(discord.ui.Select):
