@@ -138,10 +138,12 @@ class ContinentTimezoneView(discord.ui.View):
             )
 
 class CityTimezoneView(discord.ui.View):
-    def __init__(self, user, data=None):
+
+    def __init__(self, user, data=None, page=0):
         super().__init__(timeout=180)
         self.user = user
         self.data = data or {}
+        self.page = page
         continent = self.data.get('continent')
         # Get all timezones for the selected continent
         tzs = [tz for tz in pytz.common_timezones if tz.startswith(continent + '/')]
@@ -151,8 +153,36 @@ class CityTimezoneView(discord.ui.View):
             city = tz.split('/', 1)[1].replace('_', ' ')
             options.append(discord.SelectOption(label=city, value=tz))
         # Discord only allows up to 25 options per select, so chunk if needed
-        options = options[:25]
-        self.add_item(self.CityDropdown(options, self))
+        chunk_size = 25
+        start = self.page * chunk_size
+        end = start + chunk_size
+        self.tzs = tzs
+        self.options = options
+        self.add_item(self.CityDropdown(options[start:end], self))
+        if self.page > 0:
+            self.add_item(self.BackButton(self))
+        if end < len(options):
+            self.add_item(self.NextButton(self))
+
+    class BackButton(discord.ui.Button):
+        def __init__(self, parent):
+            super().__init__(label="Back", style=discord.ButtonStyle.secondary)
+            self.parent = parent
+        async def callback(self, interaction: discord.Interaction):
+            await interaction.response.edit_message(
+                embed=interaction.message.embeds[0],
+                view=CityTimezoneView(self.parent.user, self.parent.data, page=self.parent.page - 1),
+            )
+
+    class NextButton(discord.ui.Button):
+        def __init__(self, parent):
+            super().__init__(label="Next Cities", style=discord.ButtonStyle.primary)
+            self.parent = parent
+        async def callback(self, interaction: discord.Interaction):
+            await interaction.response.edit_message(
+                embed=interaction.message.embeds[0],
+                view=CityTimezoneView(self.parent.user, self.parent.data, page=self.parent.page + 1),
+            )
 
     class CityDropdown(discord.ui.Select):
         def __init__(self, options, parent):
