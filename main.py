@@ -30,6 +30,8 @@ import config
 import utils.profiler as profiler
 from utils.configmanager import lang
 
+start_time = time.time()
+
 ############################### Logging ############################################
 
 conflang=config.language
@@ -301,8 +303,7 @@ async def handle_command(command,bot:discord.ext.commands.bot.AutoShardedBot,wri
             elif action == "lat":
                 return str(bot.latency)
             elif action == "uptime":
-                rntime = time.time()
-                return str(time.time() - (lambda start=rntime: start)())
+                return str(time.time() - start_time)
             else:
                 return "Unknown info action."
     elif command.startswith("kill"):
