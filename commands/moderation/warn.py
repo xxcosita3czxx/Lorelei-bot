@@ -9,7 +9,6 @@ from commands.moderation.kick import kick_member
 from utils.configmanager import gconfig, lang, userlang
 from utils.guildconfig import GuildConfig
 
-#TODO Automatic bans and timeouts on warns
 #TODO Add automations to configs
 #TODO posibility for more custom punishments
 
@@ -38,6 +37,7 @@ class Warn(commands.Cog):
     async def warn(self, interaction: discord.Interaction, user: discord.Member, reason: str):  # noqa: E501
         await add_warns(interaction.guild.id, user,interaction)
         await interaction.response.send_message(f"{user.mention} has been warned for: {reason}. They now have {gconfig.get(interaction.guild.id,'warns',user.id)} warns.")  # noqa: E501
+        await user.send(f"You have been warned in {interaction.guild.name} for: {reason}. You now have {gconfig.get(interaction.guild.id,'warns',user.id)} warns.")  # noqa: E501
 
     @app_commands.command(name="unwarn", description="Removes a warn from a user.")
     @app_commands.default_permissions(moderate_members=True)
@@ -45,12 +45,14 @@ class Warn(commands.Cog):
         if gconfig.get(interaction.guild.id, "warns", user.id, default=0) > 0:
             gconfig.set(interaction.guild.id, "warns", user.id, gconfig.get(interaction.guild.id, "warns", user.id) - 1)  # noqa: E501
             await interaction.response.send_message(f"{user.mention} has had a warn removed. Now they have {gconfig.get(interaction.guild.id, 'warns', user.id)} warns.", ephemeral=True)  # noqa: E501
+            await user.send(f"You have had a warn removed in {interaction.guild.name}. You now have {gconfig.get(interaction.guild.id,'warns',user.id)} warns.")  # noqa: E501
 
     @app_commands.command(name="clear-warns", description="Clears all warns for a user.")  # noqa: E501
     @app_commands.default_permissions(moderate_members=True)
     async def clear_warns(self, interaction: discord.Interaction, user: discord.Member):  # noqa: E501
         gconfig.set(interaction.guild.id, "warns", user.id, 0)  # type: ignore
         await interaction.response.send_message(f"{user.mention} has had their warns cleared.", ephemeral=True)  # noqa: E501
+        await user.send(f"Your warns have been cleared in {interaction.guild.name}.")  # noqa: E501
 
     @app_commands.command(name="warns", description="Shows the number of warns a user has.")  # noqa: E501
     @app_commands.default_permissions(moderate_members=True)
