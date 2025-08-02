@@ -17,7 +17,7 @@ class TimezoneConverter(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="convert_timezone", description="Converts time between timezones")  # noqa: E501
-    async def convert_timezone(self, interaction: discord.Interaction, time: str, from_tz: str, to_tz: str):  # noqa: E501
+    async def convert_timezone(self, interaction: discord.Interaction, time: str= None, from_tz: str=None, to_tz: str=None, user:discord.Member=None):  # noqa: E501
         users_timezone = uconfig.get(
             id=interaction.user.id,
             title="FUN",
@@ -25,8 +25,19 @@ class TimezoneConverter(commands.Cog):
             default=None,
         )
         if from_tz is None and users_timezone is None:
+            # Show timezone selection UI (like ftsetup.py)
+            embed = discord.Embed(
+                title="Set Your Timezone",
+                description=(
+                    "You haven't set a default timezone yet. "
+                    "Please select your continent and city/region."
+                ),
+                color=discord.Color.blurple(),
+            )
+            from commands.other.ftsetup import ContinentTimezoneView
             await interaction.response.send_message(
-                content="Please provide a timezone to convert from, or set your default timezone in user config.",  # noqa: E501
+                embed=embed,
+                view=ContinentTimezoneView(interaction.user, {}),
                 ephemeral=True,
             )
             return
@@ -71,13 +82,4 @@ async def setup(bot: commands.Bot):
         config_title="FUN",
         config_key="timezone-converter-enabled",
         description="Let users know your timezone and convert times between different timezones. Also shown in user info",  # noqa: E501
-    )
-    configman.add_option_list(
-        category_name="Fun",
-        setting_name="Timezone Converter",
-        name="Current Timezone",
-        options_list=[{"label": tz, "value": tz} for tz in timezone.all_timezones],
-        config_title="FUN",
-        config_key="current-timezone",
-        description="The timezone you want to convert from",
     )
