@@ -4,11 +4,10 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+from commands.moderation.ban import ban_member
+from commands.moderation.kick import kick_member
 from utils.configmanager import gconfig, lang, userlang
 from utils.guildconfig import GuildConfig
-
-from ..moderation.ban import ban_member
-from .kick import kick_member
 
 #TODO Automatic bans and timeouts on warns
 #TODO Add automations to configs
@@ -64,12 +63,12 @@ async def setup(bot:commands.Bot):
     await bot.add_cog(cog)
 
     @app_commands.context_menu(name="Warn")
-    @app_commands.default_permissions(kick_members=True)
+    @app_commands.default_permissions(ban_member=True)
     async def warn_context(interaction:discord.Interaction,member:discord.Member):
         add_warns(interaction.guild.id, member.id,interaction) # type: ignore
 
     @app_commands.context_menu(name="Unwarn")
-    @app_commands.default_permissions(kick_members=True)
+    @app_commands.default_permissions(ban_member=True)
     async def unwarn_context(interaction:discord.Interaction,member:discord.Member):
         if gconfig.get(interaction.guild.id, "warns", member.id, default=0) > 0:
             gconfig.set(interaction.guild.id, "warns", member.id, gconfig.get(interaction.guild.id, "warns", member.id) - 1)  # noqa: E501
@@ -106,4 +105,12 @@ async def setup(bot:commands.Bot):
         config_title="warns-settings",
         key="timeout",
         description="Number of warns before a user is timed out. Default is 3.",
+    )
+    configman.add_option_time_low(
+        category_name="Moderation",
+        setting_name="Warns",
+        name="Timeout Duration",
+        config_title="warns-settings",
+        config_key="timeout_duration",
+        description="Duration of the timeout when a user reaches the timeout warn threshold. Default is 5 hours.",  # noqa: E501
     )
