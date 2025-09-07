@@ -3,6 +3,7 @@ import logging
 logger = logging.getLogger("guildconfig-manager")
 
 class GuildConfig:
+    # Shared across all instances
     _config_sets = {"default": {}}
 
     def __init__(self):
@@ -44,18 +45,6 @@ class GuildConfig:
         config_key,
         description,
     ):
-        """
-        Add an option to a setting.
-        Args:
-            category_name: str
-            setting_name: str
-            name: str (option name)
-            option_type: str (e.g. 'bool', 'int', 'str')
-            button_title: str (title for UI button)
-            config_title: str (title for config storage)
-            config_key: str (key for config storage)
-            description: str (description for UI)
-        """
         setting = self.get_setting(category_name, setting_name)
         options = setting["options"]
         if name in options:
@@ -92,49 +81,6 @@ class GuildConfig:
             "config_key": config_key,
             "description": description,
         }
-    def add_option_time_high(
-        self,
-        category_name,
-        setting_name,
-        name,
-        config_title,
-        config_key,
-        description,
-    ):
-        setting = self.get_setting(category_name, setting_name)
-        options = setting["options"]
-        if name in options:
-            raise ValueError(
-                f"Option '{name}' already exists in setting '{setting_name}'.",
-            )
-        options[name] = {
-            "type": "time_high",
-            "config_title": config_title,
-            "config_key": config_key,
-            "description": description,
-        }
-
-    def add_option_time_low(
-        self,
-        category_name,
-        setting_name,
-        name,
-        config_title,
-        config_key,
-        description,
-    ):
-        setting = self.get_setting(category_name, setting_name)
-        options = setting["options"]
-        if name in options:
-            raise ValueError(
-                f"Option '{name}' already exists in setting '{setting_name}'.",
-            )
-        options[name] = {
-            "type": "time_low",
-            "config_title": config_title,
-            "config_key": config_key,
-            "description": description,
-        }
 
     def add_option_role(
         self,
@@ -157,9 +103,95 @@ class GuildConfig:
             "config_key": config_key,
             "description": description,
         }
-        #TODO Modal text edit and add
-        #TODO Language / custom list options
-        #TODO some more things i forgot discord could do,
+    def add_option_list(
+        self,
+        category_name,
+        setting_name,
+        name,
+        options_list,
+        config_title,
+        config_key,
+        description,
+    ):
+        setting = self.get_setting(category_name, setting_name)
+        options = setting["options"]
+        if name in options:
+            raise ValueError(
+                f"Option '{name}' already exists in setting '{setting_name}'.",
+            )
+        options[name] = {
+            "type": "list",
+            "options": options_list,
+            "config_title": config_title,
+            "config_key": config_key,
+            "description": description,
+        }
+    def add_option_text(
+        self,
+        category_name,
+        setting_name,
+        name,
+        config_title,
+        config_key,
+        description,
+    ):
+        setting = self.get_setting(category_name, setting_name)
+        options = setting["options"]
+        if name in options:
+            raise ValueError(
+                f"Option '{name}' already exists in setting '{setting_name}'.",
+            )
+        options[name] = {
+            "type": "text",
+            "config_title": config_title,
+            "config_key": config_key,
+            "description": description,
+        }
+    def add_option_time_low(
+        self,
+        category_name,
+        setting_name,
+        name,
+        config_title,
+        config_key,
+        description,
+    ):
+        """Time usually used for punishments, from 1 minute to 1 week."""
+        setting = self.get_setting(category_name, setting_name)
+        options = setting["options"]
+        if name in options:
+            raise ValueError(
+                f"Option '{name}' already exists in setting '{setting_name}'.",
+            )
+        options[name] = {
+            "type": "time",
+            "config_title": config_title,
+            "config_key": config_key,
+            "description": description,
+        }
+
+    def add_option_time_high(
+        self,
+        category_name,
+        setting_name,
+        name,
+        config_title,
+        config_key,
+        description,
+    ):
+        """Time usually used time checks, from 1 week to 1 year."""
+        setting = self.get_setting(category_name, setting_name)
+        options = setting["options"]
+        if name in options:
+            raise ValueError(
+                f"Option '{name}' already exists in setting '{setting_name}'.",
+            )
+        options[name] = {
+            "type": "time",
+            "config_title": config_title,
+            "config_key": config_key,
+            "description": description,
+        }
 
     def get_setting(self, category_name, setting_name):
         if category_name not in self.categories:
