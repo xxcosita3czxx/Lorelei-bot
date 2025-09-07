@@ -3,20 +3,27 @@ import logging
 logger = logging.getLogger("guildconfig-manager")
 
 class GuildConfig:
-    _instance = None
-    _initialized = False
-
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super(GuildConfig, cls).__new__(cls)  # noqa: UP008
-            logger.info("GuildConfig initialized")
-        return cls._instance
+    _config_sets = {"default": {}}
 
     def __init__(self):
-        if not self.__class__._initialized:
-            self.categories = {}
-            self.Configs = self.categories  # Backward compatibility
-            self.__class__._initialized = True
+        self.config_set = "default"  # Each instance tracks its own active set
+
+    @property
+    def categories(self):
+        return self._config_sets[self.config_set]
+
+    @property
+    def Configs(self):
+        return self.categories  # Backward compatibility
+
+    def set_config_set(self, name: str = "default"):
+        """Switch to a different config set. If it doesn't exist, create it."""
+        if name not in self._config_sets:
+            self._config_sets[name] = {}
+        self.config_set = name
+
+    def get_config_set(self):
+        return self.config_set
 
     def add_setting(self, category_name, setting_name, description):
         if category_name not in self.categories:
