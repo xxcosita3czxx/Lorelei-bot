@@ -7,7 +7,7 @@ class Hello(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @app_commands.command(name="welcome_embed_test", description="Greets")
+    @app_commands.command(name="welcome-embed-test", description="Greets")
     async def hello(interaction:discord.Interaction):
         welcome_emeb = discord.Embed(title="Hello!", description=f"Hello {interaction.user.name}!")  # noqa: E501
         await interaction.response.send_message(embed=welcome_emeb)
