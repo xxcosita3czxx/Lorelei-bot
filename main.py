@@ -53,7 +53,7 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S',
 )
 
-
+failed_cogs = []
 ############################### Functions ##########################################
 
 async def load_cogs(directory, bot):  # noqa: C901
@@ -99,6 +99,7 @@ async def load_cogs(directory, bot):  # noqa: C901
                 logger.info(lang.get(config.language, "Bot", "cog_load").format(module_name=module_name))  # noqa: E501
         except Exception as e:
             logger.error(lang.get(conflang, "Bot", "cog_fail").format(module_name=module_name, error=e))  # noqa: E501
+            failed_cogs.append(lang.get(conflang, "Bot", "cog_fail").format(module_name=module_name, error=e))  # noqa: E501
     # Ensure all imported cogs inherit this logging configuration
     for logger_name in logging.root.manager.loggerDict:
         logging.getLogger(logger_name).setLevel(config.loglevel)
@@ -457,6 +458,11 @@ class aclient(discord.ext.commands.AutoShardedBot):
         await self.post_ready()
 
     async def post_ready(self):
+        if config.error_channel is not None and config.error_channel.is_integer():
+            channel = config.error_channel
+            channel_obj = bot.get_channel(channel)
+            for i in failed_cogs:
+                channel_obj.send(content=i)
 
         if config.helper:
             logger.info("Starting helper socket listener...")

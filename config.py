@@ -94,3 +94,9 @@ disabler_mode = "bl"
 enabled = []
 disabled = []
 ###################################
+########### Error Channel #########
+#
+# Server / Channel where should we send errors
+#
+error_channel = 1243929954744406137
+###################################

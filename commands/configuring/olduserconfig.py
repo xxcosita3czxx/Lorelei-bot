@@ -1,5 +1,5 @@
-import discord
 from discord import app_commands
+import discord
 from discord.ext import commands
 
 from utils.autocomplete import (
@@ -10,8 +10,8 @@ from utils.autocomplete import (
 from utils.configmanager import lang, uconfig
 from utils.dices import dices
 
-__PRIORITY__ = 9
 
+__PRIORITY__ = 9
 class UserConfig(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
