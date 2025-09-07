@@ -462,7 +462,7 @@ class aclient(discord.ext.commands.AutoShardedBot):
             channel = config.error_channel
             channel_obj = bot.get_channel(channel)
             for i in failed_cogs:
-                channel_obj.send(content=i)
+                await channel_obj.send(content=i)
 
         if config.helper:
             logger.info("Starting helper socket listener...")
