@@ -458,7 +458,7 @@ class aclient(discord.ext.commands.AutoShardedBot):
         await self.post_ready()
 
     async def post_ready(self):
-        if config.error_channel is not None and config.error_channel.is_integer():
+        if config.error_channel is not None and isinstance(config.error_channel,int):  # noqa: E501
             channel = config.error_channel
             channel_obj = bot.get_channel(channel)
             for i in failed_cogs:
@@ -480,9 +480,12 @@ tree.remove_command("help")
 ########################## Main Runner #############################################
 
 if __name__=="__main__":
-    with open(".secret.key") as key:
-        token = key.read()
-
+    try:
+        with open(".secret.key") as key:
+            token = key.read()
+    except FileNotFoundError:
+        open(".secret.key","w").write("<Here paste token please>").close()  # noqa: SIM115
+        logger.warning("Please check .secret.key and paste discord token inside")
     # This will run the bot, yes im too stoobid to rember
     try:
         bot.run(token=token)
