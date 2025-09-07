@@ -133,7 +133,7 @@ async def setup(bot: commands.Bot):
     await bot.add_cog(cog)
     configman = GuildConfig()
     configman.set_config_set("user")
-    configman.add_setting("NSFW", "E621", "E621 Command options", nsfw=True)  # noqa: E501
+    configman.add_setting("NSFW", "E621", "E621 Command options")  # noqa: E501
     configman.add_option_text(
         "NSFW",
         "E621",

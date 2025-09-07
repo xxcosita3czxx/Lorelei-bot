@@ -59,7 +59,7 @@ async def setup(bot:commands.Bot):
         language_options.append(name)
 
     configman = GuildConfig()
-    configman-set_config_set("user")
+    configman.set_config_set("user")
     configman.add_setting("Appearance", "System Color", "Configure color for bot responses")  # noqa: E501
     configman.add_setting("Appearance", "Punishments Color", "Color for Bans, Warns or any punishments that will come to your dms")  # noqa: E501
     configman.add_setting("Appearance", "Override Server Color", "Please let me have my color instead of server's color (reccoment leaving this off)")  # noqa: E501

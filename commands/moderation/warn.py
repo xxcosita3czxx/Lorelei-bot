@@ -65,12 +65,12 @@ async def setup(bot:commands.Bot):
     await bot.add_cog(cog)
 
     @app_commands.context_menu(name="Warn")
-    @app_commands.default_permissions(ban_member=True)
+    @app_commands.default_permissions(ban_members=True)
     async def warn_context(interaction:discord.Interaction,member:discord.Member):
         add_warns(interaction.guild.id, member.id,interaction) # type: ignore
 
     @app_commands.context_menu(name="Unwarn")
-    @app_commands.default_permissions(ban_member=True)
+    @app_commands.default_permissions(ban_members=True)
     async def unwarn_context(interaction:discord.Interaction,member:discord.Member):
         if gconfig.get(interaction.guild.id, "warns", member.id, default=0) > 0:
             gconfig.set(interaction.guild.id, "warns", member.id, gconfig.get(interaction.guild.id, "warns", member.id) - 1)  # noqa: E501
