@@ -90,7 +90,8 @@ class Welcome(commands.Cog):
             logger.error(f"Unknow error in Welcome: \n{e}")
 
 async def setup(bot:commands.Bot):
-    await bot.add_cog(Welcome(bot))
+    cog = Welcome(bot)
+    await bot.add_cog(cog)
     configman = GuildConfig()
     configman.add_setting(
         "Members",
