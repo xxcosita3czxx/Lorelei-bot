@@ -1,5 +1,7 @@
 import logging
 
+import discord
+
 logger = logging.getLogger("guildconfig-manager")
 
 class GuildConfig:
@@ -26,13 +28,26 @@ class GuildConfig:
     def get_config_set(self):
         return self.config_set
 
-    def add_setting(self, category_name, setting_name, description):
+    def add_setting(self, category_name, setting_name, description,nsfw=False):
         if category_name not in self.categories:
             self.categories[category_name] = {}
         # Overwrite the setting and reset options if it already exists
         self.categories[category_name][setting_name] = {
             "options": {},
             "description": description,
+            "nsfw":nsfw
+        }
+
+    def add_custom_setting(self,category_name,setting_name,embed,description,nsfw=False):
+        if category_name not in self.categories:
+            self.categories[category_name] = {}
+        if embed is None or embed is not isinstance(embed,discord.Embed):
+            raise AttributeError("add_custom_setting: embed should be of instance discord.Embed")
+        # Overwrite the setting and reset options if it already exists
+        self.categories[category_name][setting_name] = {
+            "embed":embed,
+            "description": description,
+            "nsfw":nsfw
         }
 
     def add_option_bool(
@@ -192,7 +207,6 @@ class GuildConfig:
             "config_key": config_key,
             "description": description,
         }
-
     def get_setting(self, category_name, setting_name):
         if category_name not in self.categories:
             raise ValueError(f"Category '{category_name}' does not exist.")
