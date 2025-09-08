@@ -9,7 +9,7 @@ class Welcome_test(commands.Cog):
 
     @app_commands.command(name="welcometest", description="testinks")
     async def welcome_test(self,interaction:discord.Interaction):
-        welcome_emeb = discord.Embed(title="Hello!", description=f"Hello {interaction.user.name}!")  # noqa: E501
+        welcome_emeb = discord.Embed(title="Hello!", description=f"Welcome {interaction.user.name}!")  # noqa: E501
         await interaction.response.send_message(embed=welcome_emeb)
 
 async def setup(bot:commands.Bot):
