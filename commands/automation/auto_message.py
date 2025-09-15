@@ -64,4 +64,6 @@ async def setup(bot: commands.Bot):
 #                gconfig.set(guild_id,f"automessages-{channel_id}", "interval", interval)  # noqa: E501
 #                gconfig.set(guild_id,f"automessages-{channel_id}", "timestamp", timestamp)  # noqa: E501
 # need to make a id list type config / selector
+#    configman.add_custom_setting("Automation","Auto Message Example",discord.Embed(title="Auto Message Example",description="This is an example of an automatic message sent to a channel at regular intervals.",color=discord.Color.blue()),"An example of an automatic message sent to a channel at regular intervals.")  # noqa: E501
+
 #TODO need a way to get interaction here, like the channel id of the channel where configuring happens  # noqa: E501

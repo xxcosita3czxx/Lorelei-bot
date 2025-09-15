@@ -68,7 +68,7 @@ class TimezoneConverter(commands.Cog):
                 ephemeral=True,
             )
             return
-async def setup(bot: commands.Bot):
+async def setup(bot: commands.Bot): #TODO this is just broken man
     cog = TimezoneConverter(bot)
     await bot.add_cog(cog)
     configman = GuildConfig()

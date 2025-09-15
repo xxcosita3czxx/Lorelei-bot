@@ -63,6 +63,8 @@ class ConfigManager:
                 result = fallback_result
         logger.debug("Final result: " + str(result))
         return result
+    def get_match(self, id,title,key,index_name):
+        pass
 
     def set(self, id:str, title, key, value):
         logger.debug(f"Setting {id}:{title}:{key} to {value}")
@@ -104,6 +106,12 @@ class ConfigManager:
             self._save_config(id)
             self._load_all_configs()  # Reload all configs after saving
         logger.debug(f"Deleted {id}:{title}:{key}")
+
+    def set_index(self, index_name, conf_title, conf_key=None):
+        pass
+
+    def get_index(self, index_name):
+        pass
 
 gconfig = ConfigManager("data/guilds")
 uconfig = ConfigManager("data/users")
