@@ -28,7 +28,7 @@ class GuildConfig:
     def get_config_set(self):
         return self.config_set
 
-    def add_setting(self, category_name, setting_name, description,nsfw=False):
+    def add_setting(self, category_name, setting_name, description, nsfw=False):
         if category_name not in self.categories:
             self.categories[category_name] = {}
         # Overwrite the setting and reset options if it already exists

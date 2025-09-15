@@ -105,7 +105,7 @@ async def setup(bot:commands.Bot):
         name="Timeout Warns",
         options_list=numbers,
         config_title="warns-settings",
-        key="timeout",
+        config_key="timeout",
         description="Number of warns before a user is timed out. Default is 3.",
     )
     configman.add_option_time_low(
