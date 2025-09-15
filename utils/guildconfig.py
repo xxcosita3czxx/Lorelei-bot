@@ -35,7 +35,7 @@ class GuildConfig:
         self.categories[category_name][setting_name] = {
             "options": {},
             "description": description,
-            "nsfw":nsfw
+            "nsfw":nsfw,
         }
 
     def add_custom_setting(self,category_name,setting_name,embed,description,nsfw=False):

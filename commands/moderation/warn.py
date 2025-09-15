@@ -87,7 +87,7 @@ async def setup(bot:commands.Bot):
         name="Ban Warns",
         options_list=numbers,
         config_title="warns-settings",
-        key="ban",
+        config_key="ban",
         description="Number of warns before a user is banned. Default is 10.",
     )
     configman.add_option_list(
@@ -96,7 +96,7 @@ async def setup(bot:commands.Bot):
         name="Kick Warns",
         options_list=numbers,
         config_title="warns-settings",
-        key="kick",
+        config_key="kick",
         description="Number of warns before a user is kicked. Default is 5.",
     )
     configman.add_option_list(
