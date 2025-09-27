@@ -38,16 +38,16 @@ class GuildConfig:
             "nsfw":nsfw,
         }
 
-    def add_custom_setting(self,category_name,setting_name,embed,description,nsfw=False):
+    def add_custom_setting(self,category_name,setting_name,embed,description,nsfw=False):  # noqa: E501
         if category_name not in self.categories:
             self.categories[category_name] = {}
         if embed is None or embed is not isinstance(embed,discord.Embed):
-            raise AttributeError("add_custom_setting: embed should be of instance discord.Embed")
+            raise AttributeError("add_custom_setting: embed should be of instance discord.Embed")  # noqa: E501
         # Overwrite the setting and reset options if it already exists
         self.categories[category_name][setting_name] = {
             "embed":embed,
             "description": description,
-            "nsfw":nsfw
+            "nsfw":nsfw,
         }
 
     def add_option_bool(

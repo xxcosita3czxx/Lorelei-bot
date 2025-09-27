@@ -455,11 +455,12 @@ class aclient(discord.ext.commands.AutoShardedBot):
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
 
         asyncio.create_task(change_status())
+
+        asyncio.create_task(_indexer())
+
         await self.post_ready()
 
     async def post_ready(self):
-        asyncio.create_task(_indexer())
-
         if config.error_channel is not None and isinstance(config.error_channel,int):  # noqa: E501
             channel = config.error_channel
             channel_obj = bot.get_channel(channel)
