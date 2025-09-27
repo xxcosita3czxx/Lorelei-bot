@@ -366,5 +366,6 @@ class Setup(commands.Cog):
 
 
 async def setup(bot: commands.Bot):
-    cog = Setup(bot)
-    await bot.add_cog(cog)
+#    cog = Setup(bot)
+#    await bot.add_cog(cog)
+    pass

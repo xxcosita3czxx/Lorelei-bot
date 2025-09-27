@@ -28,7 +28,7 @@ import discord.ext.commands
 
 import config
 import utils.profiler as profiler
-from utils.configmanager import lang
+from utils.configmanager import _indexer, lang
 
 start_time = time.time()
 
@@ -458,6 +458,8 @@ class aclient(discord.ext.commands.AutoShardedBot):
         await self.post_ready()
 
     async def post_ready(self):
+        asyncio.create_task(_indexer())
+
         if config.error_channel is not None and isinstance(config.error_channel,int):  # noqa: E501
             channel = config.error_channel
             channel_obj = bot.get_channel(channel)

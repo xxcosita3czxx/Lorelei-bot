@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 from collections import defaultdict
@@ -63,8 +64,6 @@ class ConfigManager:
                 result = fallback_result
         logger.debug("Final result: " + str(result))
         return result
-    def get_match(self, id,title,key,index_name):
-        pass
 
     def set(self, id:str, title, key, value):
         logger.debug(f"Setting {id}:{title}:{key} to {value}")
@@ -112,6 +111,12 @@ class ConfigManager:
 
     def get_index(self, index_name):
         pass
+
+async def _indexer():
+    logger.info("Indexer started.")
+    while True:
+        # Placeholder for indexing logic
+        await asyncio.sleep(300)  # Sleep for 5 minutes
 
 gconfig = ConfigManager("data/guilds")
 uconfig = ConfigManager("data/users")
