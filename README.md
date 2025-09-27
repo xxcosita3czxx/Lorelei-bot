@@ -3,6 +3,10 @@
 Open-Source discord bot in python, for people
 > disclaimer: Youre permited to host it yourself for personal purposes like single server or testings, for more than 100 servers, message me on discord (@cosita3cz)
 
+Discord support: <https://discord.gg/y3GkpeBQYA>
+
+Bot Invite: <https://discord.com/oauth2/authorize?client_id=1233881071821652108>
+
 ## Why?
 
 Because having too much of bots is very annoying, every single one have different configurations, web dashboards, and you can get lost quickly in it. Also most good bots these days are paid and very limited for free (hope dyno stays free 🙏). This is where my bot comes with all inside discord. Its free, its open-source, and you can do alot with it, edit it for your own needs, or help other people by making your own commands to the main bot.
