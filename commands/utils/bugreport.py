@@ -67,6 +67,6 @@ class BugReport(commands.Cog):
 async def setup(bot:commands.Bot):
     hm = HelpManager()
     hmhelp = hm.new_help("other","bugreport","Report a bug")
-    hmhelp.set_help_page(1,"BugReport","This command can be used to report a bug or any feature that is broken.\n There is also a optional flag 'nosave'. Please dont use it to report as it just prints the logs into the console where it gets lost after some time")  # noqa: E501
+    hmhelp.set_help_page(1,"BugReport","This command can be used to report a bug or any feature that is broken.\n There is also a optional flag 'nosave'. Please dont use it to report as it just prints the logs into the console where it gets lost after some time. \n ## Usage \n/bugreport <command> <explanation>")  # noqa: E501
     cog = BugReport(bot=bot)
     await bot.add_cog(cog)

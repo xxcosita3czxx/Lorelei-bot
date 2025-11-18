@@ -14,43 +14,58 @@ class Echo(commands.Cog):
     @app_commands.command(name="echo",description="Echoes message in embed")
     @app_commands.default_permissions(manage_messages=True)
     @app_commands.autocomplete(color=autocomplete_color)
-    async def echo(self,interaction: discord.Interaction,channel:discord.channel.TextChannel, title:str="", text:str="",color:str=None):  # noqa: E501
+    async def echo(self,interaction: discord.Interaction,channel:discord.channel.TextChannel, title:str="", text:str="",color:str=None, is_embed:bool=True):  # noqa: E501
         try:
-            embed = discord.Embed(
-                title=title,
-                description="\u200B" + text,
-                color=gconfig.get(interaction.guild.id,"APPEARANCE","color"),
-            )
-            if color:
-                embed.color = discord.Color.from_str(color)
-            await channel.send(embed=embed)
-            await interaction.response.send_message(
-                "Message sent successfully!",
-                ephemeral=True,
-            )
+            if is_embed is True:
+                embed = discord.Embed(
+                    title=title,
+                    description="\u200B" + text,
+                    color=gconfig.get(interaction.guild.id,"APPEARANCE","color"),
+                )
+                if color:
+                    embed.color = discord.Color.from_str(color)
+                await channel.send(embed=embed)
+                await interaction.response.send_message(
+                    "Message sent successfully!",
+                    ephemeral=True,
+                )
+            else:
+                await channel.send(f"# {title}\n\n"+"\u200B"+text)
+                await interaction.response.send_message(
+                    "Message sent successfully!",
+                    ephemeral=True,
+                )
         except Exception as e:
             await interaction.response.send_message(
                 f"Echo Failed!: {e}",
                 ephemeral=True,
             )
-    @app_commands.command(name="echo-edit",description="Edits the echo message with id")  # noqa: E501
+    @app_commands.command(name="echo-edit",description="Edits the echo message with id.")  # noqa: E501
     @app_commands.default_permissions(manage_messages=True)
     @app_commands.autocomplete(color=autocomplete_color)
     async def echo_edit(self,interaction: discord.Interaction, message_id:int, title:str="", text:str="",color:str=None):  # noqa: E501
         try:
             message = await interaction.channel.fetch_message(message_id)
-            embed = message.embeds[0] if message.embeds else discord.Embed()
-            # Check if the embed description contains the invisible space character
-            if embed.description and "\u200B" in embed.description:
-                await interaction.response.send_message(
-                    "This message is not echo message",
-                    ephemeral=True,
-                )
-            embed.title = title
-            embed.description = "\u200B" + text
-            if color:
-                embed.color = discord.Color.from_str(color)
-            await message.edit(embed=embed)
+            # Automatically detect whether the message contains an embed or is plain text  # noqa: E501
+            if message.embeds:
+                embed = message.embeds[0]
+                # Check that this is an echo message by looking for the invisible space marker  # noqa: E501
+                if not (embed.description and "\u200B" in embed.description):
+                    await interaction.response.send_message(
+                        "This message is not an echo message.",
+                        ephemeral=True,
+                    )
+                    return
+                embed.title = title
+                embed.description = "\u200B" + text
+                if color:
+                    embed.color = discord.Color.from_str(color)
+                await message.edit(embed=embed, content=None)
+            else:
+                # Edit raw message content. Use same format as echo when not embedding.  # noqa: E501
+                # If the message looks like an echo (starts with '# '), replace it; otherwise just replace content.  # noqa: E501
+                content = f"# {title}\n\n\u200B{text}"
+                await message.edit(content=content, embed=None)
             await interaction.response.send_message(
                 "Message edited successfully!",
                 ephemeral=True,
