@@ -43,7 +43,7 @@ class Echo(commands.Cog):
     @app_commands.command(name="echo-edit",description="Edits the echo message with id.")  # noqa: E501
     @app_commands.default_permissions(manage_messages=True)
     @app_commands.autocomplete(color=autocomplete_color)
-    async def echo_edit(self,interaction: discord.Interaction, message_id:int, title:str="", text:str="",color:str=None):  # noqa: E501
+    async def echo_edit(self,interaction: discord.Interaction, message_id:str, title:str="", text:str="",color:str=None):  # noqa: E501
         try:
             message = await interaction.channel.fetch_message(message_id)
             # Automatically detect whether the message contains an embed or is plain text  # noqa: E501

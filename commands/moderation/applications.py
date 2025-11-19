@@ -1,0 +1,12 @@
+import discord  # noqa: F401
+from discord import app_commands  # noqa: F401
+from discord.ext import commands
+
+
+class Hello(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+async def setup(bot:commands.Bot):
+    cog = Hello(bot)
+    await bot.add_cog(cog)
