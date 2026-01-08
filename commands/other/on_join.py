@@ -2,6 +2,7 @@ import logging
 
 import discord
 from discord.ext import commands
+
 from utils.configmanager import lang
 
 logger = logging.getLogger("on_join")
