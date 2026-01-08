@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands, tasks
 
 from utils.configmanager import gconfig
-from utils.guildconfig import GuildConfig
+from utils.guildconfig import GuildConfig  # noqa: F401
 
 logger = logging
 
