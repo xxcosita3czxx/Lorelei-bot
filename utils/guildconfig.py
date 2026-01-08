@@ -179,7 +179,7 @@ class GuildConfig:
                 f"Option '{name}' already exists in setting '{setting_name}'.",
             )
         options[name] = {
-            "type": "time",
+            "type": "time_low",
             "config_title": config_title,
             "config_key": config_key,
             "description": description,
@@ -202,11 +202,34 @@ class GuildConfig:
                 f"Option '{name}' already exists in setting '{setting_name}'.",
             )
         options[name] = {
-            "type": "time",
+            "type": "time_high",
             "config_title": config_title,
             "config_key": config_key,
             "description": description,
         }
+
+    def add_option_color(
+        self,
+        category_name,
+        setting_name,
+        name,
+        config_title,
+        config_key,
+        description,
+    ):
+        setting = self.get_setting(category_name, setting_name)
+        options = setting["options"]
+        if name in options:
+            raise ValueError(
+                f"Option '{name}' already exists in setting '{setting_name}'.",
+            )
+        options[name] = {
+            "type": "color",
+            "config_title": config_title,
+            "config_key": config_key,
+            "description": description,
+        }
+
     def get_setting(self, category_name, setting_name):
         if category_name not in self.categories:
             raise ValueError(f"Category '{category_name}' does not exist.")

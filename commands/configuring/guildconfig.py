@@ -8,6 +8,7 @@ from discord import app_commands
 from discord.ext import commands
 from discord.ui import Select
 
+from utils.autocomplete import colors
 from utils.configmanager import gconfig, lang, uconfig, userlang
 from utils.guildconfig import GuildConfig
 from utils.timeconverter import discord_time_h, discord_time_l
@@ -90,6 +91,7 @@ class SettingView(discord.ui.View):
                     discord_time_l[selected_time],  # type: ignore
                 )  # type: ignore
                 await interaction.response.defer(ephemeral=True)
+
         class TimeSelectMenuHigh(Select):
             def __init__(self, interaction, name, config_title, config_key):  # noqa: E501
                 options = [
@@ -99,6 +101,19 @@ class SettingView(discord.ui.View):
                     placeholder="Select time...",
                     options=options,
                     custom_id=f"time_select_{name}",
+                )
+                self.config_title = config_title
+                self.config_key = config_key
+
+        class ColorSelectMenu(Select):
+            def __init__(self, interaction, name, config_title, config_key):  # noqa: E501
+                options = [
+                        discord.SelectOption(label=opt, value=opt) for opt in colors  # noqa: E501 #TODO COLORS HERE
+                    ]
+                super().__init__(
+                    placeholder="Select color...",
+                    options=options,
+                    custom_id=f"color_select_{name}",
                 )
                 self.config_title = config_title
                 self.config_key = config_key
@@ -317,7 +332,15 @@ class SettingView(discord.ui.View):
                                 config_key=conf_key,
                             ),
                         )
-
+                    elif opt_type == "color":
+                        view.add_item(
+                            ColorSelectMenu(
+                                interaction=interaction,
+                                name=option,
+                                config_title=conf_title,
+                                config_key=conf_key,
+                            ),
+                        )
                     elif opt_type == "list":
                         options_list = option_data.get("options", [])
                         if options_list:
@@ -514,4 +537,5 @@ async def setup(bot:commands.Bot):
     configman = GuildConfig()
     configman.add_setting("Color", "System", "Configure color for bot responses")
     configman.add_setting("Color", "Punishments", "Color for Bans, Warns or any punishments that will come to your dms")  # noqa: E501
+    configman.add_setting("Color", "Welcome", "Color for welcome embeds")  # noqa: E501
     configman.add_setting("System", "Show system messages","Allow people to show system messages in chat (Administrators automaticaly can override this)")  # noqa: E501
