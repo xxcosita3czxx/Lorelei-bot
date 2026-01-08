@@ -59,6 +59,8 @@ class Echo(commands.Cog):
                     )
                     return
                 embed.title = title
+                # preserve newlines
+                text = text.replace("\n", "\n")
                 embed.description = "\u200B" + text
                 if color:
                     embed.color = discord.Color.from_str(color)
