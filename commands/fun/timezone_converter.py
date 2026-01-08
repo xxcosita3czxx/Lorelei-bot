@@ -11,6 +11,7 @@ from utils.guildconfig import GuildConfig
 #TODO User config for current timezone, else disable auto from user timezone to selected  # noqa: E501
 #TODO Add a list of timezones to choose from, or use pytz.all_timezones
 #TODO Fun thing could be from user timezone to another user timezone
+#TODO Could translate timezones for other people if they set it up
 
 class TimezoneConverter(commands.Cog):
     def __init__(self, bot):

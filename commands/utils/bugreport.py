@@ -57,6 +57,10 @@ class BugReport(commands.Cog):
                     f.write("End of report.\n")
                     f.close()
                 await interaction.response.send_message(lang.get(uconfig.get(interaction.user.id,"Appearance","language"),"Responds","report_sent"), ephemeral=True)  # noqa: E501
+                try:
+                    await interaction.client.get_channel(config.bugreport_channel).send(content=f"New bug report submitted by {interaction.user.mention} in server {interaction.guild.name} (ID: {interaction.guild.id}) for command '{command}'. Explanation: {explanation}", file=discord.File(f"data/bug-reports/bugreport-{command}-{interaction.guild.id}-{interaction.user.name}-{interaction.user.id}-{formatted_time}.txt"))  # type: ignore # noqa: E501
+                except Exception as e:
+                    logger.error(f"Could not send bugreport to channel: {e}")
             except commands.errors.CommandOnCooldown as e:
                 await interaction.response.send_message(e)  # noqa: E501
             except Exception as e:

@@ -39,6 +39,10 @@ language = "en"
 # If you dont want to see /bugreport entirely,
 # rename commands/other/bugreport.py to something like bugreport.py.disabled
 bugreport = True
+#
+# If you want bugreports to be sent to a specific channel,
+# put the channel ID here. Otherwise, leave as None
+bugreport_channel = None
 ###################################
 ############# Helper ##############
 #
@@ -100,3 +104,4 @@ disabled = []
 #
 error_channel = 1243929954744406137
 ###################################
+
