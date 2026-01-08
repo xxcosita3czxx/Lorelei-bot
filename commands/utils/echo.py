@@ -19,6 +19,7 @@ class Echo(commands.Cog):
     async def echo(self,interaction: discord.Interaction,channel:discord.channel.TextChannel, title:str="", text:str="",color:str=None, is_embed:bool=True):  # noqa: E501
         try:
             if is_embed is True:
+                text = text.replace("\n", "\n")
                 embed = discord.Embed(
                     title=title,
                     description="\u200B" + text,
