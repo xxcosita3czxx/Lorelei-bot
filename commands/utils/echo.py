@@ -19,7 +19,7 @@ class Echo(commands.Cog):
     async def echo(self,interaction: discord.Interaction,channel:discord.channel.TextChannel, title:str="", text:str="",color:str=None, is_embed:bool=True):  # noqa: E501
         try:
             if is_embed is True:
-                text = text.replace("\n", "\n")
+                text = text.replace("\\n", "\n")
                 embed = discord.Embed(
                     title=title,
                     description="\u200B" + text,
@@ -65,7 +65,7 @@ class Echo(commands.Cog):
                     # Remove the invisible space marker before preserving existing text  # noqa: E501
                     text = embed.description.replace("\u200B", "") if embed.description else ""  # noqa: E501                embed.title = title
                 # preserve newlines
-                text = text.replace("\n", "\n")
+                text = text.replace("\\n", "\n")
                 embed.description = "\u200B" + text
                 if color:
                     embed.color = discord.Color.from_str(color)
