@@ -13,5 +13,6 @@ class Welcome_test(commands.Cog):
         await interaction.response.send_message(embed=welcome_emeb)
 
 async def setup(bot:commands.Bot):
-    cog = Welcome_test(bot)
-    await bot.add_cog(cog)
+#    cog = Welcome_test(bot)
+#    await bot.add_cog(cog)
+    pass
