@@ -52,6 +52,9 @@ report_error = "There was error while making bugreport. Please report on Support
 report_disabled = "Bug reports disabled in bot config."
 u_cant_ban_hiearchy = "You can't ban this user due to role hierarchy"
 u_cant_kick_hiearchy = "You can't kick this user due to role hierarchy"
+message_sent = "Message sent succesfuly!"
+message_edited = "Message edited succesfuly!"
+message_not_an_echo = "This message is not an echo message!"
 user_banned = "Banned {member}"
 user_banned_followup = "{member} has been banned \n**Reason**: {reason}"
 user_banned_dms = ""
@@ -69,6 +72,8 @@ you_cant_kick = "You can't kick this user"
 you_was_banned = "You have been banned from {guild} \n**Reason**: {reason}"
 unspecified = "Unspecified"
 too_many_warns = "Too many warns."
+on_join_title = "Thanks for adding me!"
+on_join_desc = "I'm here to help you manage your server. Use `/help` to see what I can do, or start right by using `/guildconfig configure.`\nHope you like it.\n\n(Bot is in constant development, if you find any bug or want anything to change, feel free to do /bugreport)"
 
 [UserInfo]
 username = "Username"

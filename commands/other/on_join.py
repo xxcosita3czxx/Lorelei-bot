@@ -2,6 +2,7 @@ import logging
 
 import discord
 from discord.ext import commands
+from utils.configmanager import lang
 
 logger = logging.getLogger("on_join")
 
@@ -28,9 +29,14 @@ class OnJoin(commands.Cog):
             else:
                 channel = None
         if channel:
+            language = guild.preferred_locale
+            if language == "zh-CN":
+                language = "cn"
+            elif language == "en-US" or language == "en-GB" or language not in lang.config:  # noqa: E501
+                language = "en"
             embed = discord.Embed(
-                title="Thank you for adding me!",
-                description="I'm here to help you manage your server. Use `/help` to see what I can do, or start right by using `/guildconfig configure.`\nHope you like it.\n\n(Bot is in constant development, if you find any bug or want anything to change, feel free to do /bugreport)",  # noqa: E501
+                title=lang.get(language,"Responds","on_join_title"),
+                description=lang.get(language,"Responds","on_join_desc"),  # noqa: E501
                 color=discord.Color.blurple(),
             )
             await channel.send(embed=embed)
