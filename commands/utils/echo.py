@@ -7,6 +7,8 @@ from utils.configmanager import gconfig
 
 #TODO Be able to set more than title and description
 
+#IDEA could make simmilar editor to role editor
+
 class Echo(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

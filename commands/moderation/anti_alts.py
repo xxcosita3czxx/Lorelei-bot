@@ -23,7 +23,7 @@ class AntiAlts(commands.Cog):
             current_time = datetime.datetime.now(datetime.UTC)
             account_age = (current_time - creation_time).total_seconds()
 
-            if account_age <= int(gconfig.get(id=member.guild.id,title="SECURITY",key="antialts-time")):  # noqa: E501
+            if account_age <= int(gconfig.get(id=member.guild.id,title="SECURITY",key="antialts-time", default=604800)):  # noqa: E501
 
 
                 text = "Your account was detected to be an Alternative account, please join with your main account or wait for {time} until joining again."  # noqa: E501
@@ -54,11 +54,11 @@ async def setup(bot:commands.Bot):
         config_key="antialts-enabled",
         description="Enable Anti-Alts",
     )
-    configman.add_option_time_high(
+    configman.add_option_time_high( #TODO doubles and doesnt show anything
         category_name="Moderation",
         setting_name="Anti-Alts",
         name="Time",
         config_title="SECURITY",
         config_key="antialts-time",
-        description="Time in seconds before account is considered an alt.",
+        description="Time in seconds before account is considered an alt. Default is 7 weeks.",  # noqa: E501
     )
