@@ -54,7 +54,7 @@ async def setup(bot:commands.Bot):
         config_key="antialts-enabled",
         description="Enable Anti-Alts",
     )
-    configman.add_option_time_high( #TODO doubles and doesnt show anything
+    configman.add_option_time_high( #BUG doubles and doesnt show anything
         category_name="Moderation",
         setting_name="Anti-Alts",
         name="Time",

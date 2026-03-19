@@ -10,6 +10,7 @@ logger = logging.getLogger("invite-logger")
 #TODO Welcome message for logger
 #TODO Make the invite logger a bit more user friendly
 #TODO Track when invited user leaves the server
+#TODO unfinished work, working but not finished
 
 class InviteLogger(commands.Cog):
     def __init__(self, bot):

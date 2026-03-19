@@ -14,9 +14,9 @@ from utils.helpmanager import HelpManager
 logger = logging.getLogger("help")
 __PRIORITY__ = 10
 
-#TODO help doesnt show all commands if group is none
 #TODO add nsfw flag to exclude help when not in nsfw channel
-#TODO Help should edit single message
+#BUG Help should edit single message
+#BUG help doesnt show all commands if group is none
 
 class HelpCommand(commands.Cog):
     def __init__(self, bot):

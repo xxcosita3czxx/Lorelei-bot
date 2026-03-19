@@ -16,5 +16,6 @@ class Censore(commands.Cog):
 
 
 async def setup(bot:commands.Bot):
-    cog = Censore(bot)
-    await bot.add_cog(cog)
+#    cog = Censore(bot)
+#    await bot.add_cog(cog)
+    pass

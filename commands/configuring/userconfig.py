@@ -62,8 +62,7 @@ async def setup(bot:commands.Bot):
     configman.set_config_set("user")
     configman.add_setting("Appearance", "System Color", "Configure color for bot responses")  # noqa: E501
     configman.add_setting("Appearance", "Punishments Color", "Color for Bans, Warns or any punishments that will come to your dms")  # noqa: E501
-    configman.add_setting("Appearance", "Override Server Color", "Please let me have my color instead of server's color (reccoment leaving this off)")  # noqa: E501
-    configman.add_setting("System", "Show system messages", "Configure whether to show system messages in the chat, or only to you (server settings has priority)")  # noqa: E501
+    configman.add_setting("Appearance", "Override Server Color", "Please let me have my color instead of server's color (reccomend leaving this off)")  # noqa: E501
     configman.add_setting("Appearance", "Language", "Configure your appearance settings")  # noqa: E501
     configman.add_option_list(
         "Appearance",
@@ -74,6 +73,7 @@ async def setup(bot:commands.Bot):
         "language",
         "Choose your language for the bot responses",
     )
+    configman.add_setting("System", "Show system messages", "Configure whether to show system messages in the chat, or only to you (server settings has priority)")  # noqa: E501
     configman.add_setting("Fun", "Default Dice Mode", "Configure your default dice mode")  # noqa: E501
     configman.add_option_list(
         "Fun",

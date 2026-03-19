@@ -9,6 +9,8 @@ from utils.configmanager import gconfig, lang, uconfig
 from utils.guildconfig import GuildConfig
 
 #TODO Claiming
+#TODO Close command
+#BUG  if somebody else closes ticket, the review is sent to that user, not the creator  # noqa: E501
 
 class Ticketing(commands.Cog):
     def __init__(self, bot):
@@ -103,6 +105,7 @@ class Ticketing(commands.Cog):
                 await interaction.response.send_message(
                     content=f"Error while running: {e}",
                 )
+
         @app_commands.command(name = 'panel', description='Launches the ticketing system')  # noqa: E501
         @app_commands.checks.cooldown(3, 60, key = lambda i: (i.guild_id))
         async def ticketing(self,interaction: discord.Interaction,title:str="Hi! If you need help or have a question, don't hesitate to create a ticket.", text:str=""):  # noqa: E501

@@ -17,6 +17,7 @@ colors = {
         "Yellow": "#FEE75C",
         "Purple": "#5865F2",  # Discord's purple is often Blurple
         "White": "#FFFFFF",
+        "Black": "#000000",
     }
 
 logger = logging.getLogger("autocomplete")
