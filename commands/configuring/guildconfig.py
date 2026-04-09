@@ -16,6 +16,7 @@ from utils.guildconfig import GuildConfig
 from utils.timeconverter import discord_time_h, discord_time_l
 
 #TODO Add nsfw tag to exclude nsfw from safe channels
+#TODO BACK BUTTON
 
 __PRIORITY__ = 10
 
@@ -536,8 +537,8 @@ async def setup(bot:commands.Bot):
     cog = GuildConfigCommands(bot)
     await bot.add_cog(cog)
     bot.tree.add_command(cog.configure())
-    configman = GuildConfig()
-    configman.add_setting("Color", "System", "Configure color for bot responses")
-    configman.add_setting("Color", "Punishments", "Color for Bans, Warns or any punishments that will come to your dms")  # noqa: E501
-    configman.add_setting("Color", "Welcome", "Color for welcome embeds")  # noqa: E501
-    configman.add_setting("System", "Show system messages","Allow people to show system messages in chat (Administrators automaticaly can override this)")  # noqa: E501
+#    configman = GuildConfig()
+#    configman.add_setting("Color", "System", "Configure color for bot responses")
+#    configman.add_setting("Color", "Punishments", "Color for Bans, Warns or any punishments that will come to your dms")  # noqa: E501
+#    configman.add_setting("Color", "Welcome", "Color for welcome embeds")  # noqa: E501
+#    configman.add_setting("System", "Show system messages","Allow people to show system messages in chat (Administrators automaticaly can override this)")  # noqa: E501
