@@ -1,0 +1,44 @@
+# Work
+
+## Work checklist
+
+- main.py - Working as expected, no issues found.
+- commands
+- - automation
+- - - automessage - Partially working, needs further testing and debugging and improvements.
+- - configuring
+- - - guildconfig - Needs big refactoring, currently working but needs improvements and optimizations.
+- - - userconfig - subpart of guildconfig, needs refactoring and improvements.
+- - fun
+- - - counting - working, tested functionally, has potential vulnerability that needs testing.
+- - - dice - working, tested functionally, needs improvements.
+- - - giveaways - not working, stub, needs implementation.
+- - - levelsystem - unfinished, needs implementation. Profile system works, but not the leveling.
+- - - timezone_converter - untested, unfinished, needs implementation and testing.
+- - members
+- - - auto_role - works, tested, but needs more testing for bugs.
+- - - reaction_roles - works, needs more testing and ui refactoring
+- - - welcome - technicaly untested, needs better testing and prolly ui refactor.
+- - moderation
+- - - anti_alts - untested, should work, needs testing and improvements.
+- - - anti_invites - untested, working, has bugs.
+- - - anti_slur - stub, needs implementation.
+- - - ban - works, needs more testing
+- - - clear - works, needs improvements for job-done reply
+- - - invite_logger - untested, needs improbements
+- - - kick - works, needs more testing
+- - - slowmode - works, needs more testing and improvements.
+- - - ticketing - works, needs more testing and improvements.
+- - - verifysystem - works, needs additions and improvements.
+- - - warn - works, needs more testing.
+- - nsfw - itself needs refactoring
+- - other
+- - - ftsetup - not working, untested, needs finishing and testing.
+- - - info - works as expected
+- - - on_join - works as expected
+- - utils
+- - - bugreport - works as expected, needs more improvements
+- - - echo - works as expected, needs more testing and improvements
+- - - help - untested, but works, needs improvements to list of help.
+- - - ping - works as expected.
+- - - userinfo - works, untested, needs improvements and more testing.

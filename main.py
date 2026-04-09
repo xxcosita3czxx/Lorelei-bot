@@ -1,18 +1,22 @@
 #############################
 #    By Cosita              #
 #############################
+
+#BUG Logs look doubled (CHECK IF ITS NOT A BUG)
+
 #TODO more verify modes
 #TODO Level system more theme files
 #TODO Level system logic for leaderboards and levels
 #TODO Giveaway logic
-#TODO Announcement system, that could also dm users, should ask them first
 #TODO Add logging system, preferably to a channel, im not sure about logging to the bot itself, could be alot in size.  # noqa: E501
 #TODO Audit log system for moderation actions
-#BUG Logs look doubled (CHECK IF ITS NOT A BUG)
+
+#IDEA Announcement system, that could also dm users, should ask them first
+#IDEA Applications system
 #IDEA ids could be if num not in list then add, else continue
-# Also edit could add/edit already existing
+#IDEA Also edit could add/edit already existing
 #IDEA Job to clean left guilds after a day or 12 hours,
-# So it wont cry about guild not existing
+#IDEA So it wont cry about guild not existing
 
 import asyncio
 import importlib
