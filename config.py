@@ -42,7 +42,7 @@ bugreport = True
 #
 # If you want bugreports to be sent to a specific channel,
 # put the channel ID here. Otherwise, leave as None
-bugreport_channel = None
+bugreport_channel = 1243929954744406137
 ###################################
 ############# Helper ##############
 #
