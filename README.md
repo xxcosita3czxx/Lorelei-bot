@@ -21,7 +21,7 @@ Everything about contributing is [here](https://github.com/xxcosita3czxx/Lorelei
 
 | Language | Progress |
 |----------|----------|
-| English (🕈☹♋︎♏︎□☹♋︎♏︎♎︎) | 94.19% |
+| English (🕈︎♓︎■︎♑︎♎︎♓︎■︎♑︎⬧︎) | 100.00% |
 | French (Français) | 86.05% |
 | Czech (Česky) | 82.56% |
 | English (LoLspek) | 41.86% |
