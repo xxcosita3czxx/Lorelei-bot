@@ -5,7 +5,7 @@
 - main.py - Working as expected, no issues found.
 - commands
 - - automation
-- - - automessage - Partially working, needs further testing and debugging and improvements.
+- - - automessage - Partially working, needs further testing and debugging and improvements. Disabled for now
 - - configuring
 - - - guildconfig - Needs big refactoring, currently working but needs improvements and optimizations.
 - - - userconfig - subpart of guildconfig, needs refactoring and improvements.

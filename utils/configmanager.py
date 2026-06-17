@@ -11,9 +11,8 @@ import toml
 logger = logging.getLogger("configmanager")
 
 #TODO WARNING THIS SHOULD BE DONE UNDER DEVELOPMENT BRANCH
-#TODO Size of the config may be problem in the future, please consider loading on demand or using a database  # noqa: E501
 #TODO Indexing could be a fix (can infinitely loop, or do on changes querried by set)  # noqa: E501
-#TODO each saving of the config reloads all configs, maybe should be changed, just save it into the dict  # noqa: E501
+#TODO Some way for fixing looping searches of configs, auto-message looks for configs by scanning self.config, which will not always contain all configs  # noqa: E501
 
 # Retain the modularity of this manager with the indexer.
 

@@ -55,8 +55,9 @@ class AutoMessages(commands.Cog):
         await self.bot.wait_until_ready()
 
 async def setup(bot: commands.Bot):
-    cog = AutoMessages(bot)
-    await bot.add_cog(cog)
+#    cog = AutoMessages(bot)
+#    await bot.add_cog(cog)
+    pass
 #    configman = GuildConfig()
 #    configman.add_setting("Automation", "Auto Message", "Configure automatic messages sent to channels at regular intervals.")  # noqa: E501
 #                gconfig.set(guild_id,f"automessages-{channel_id}", "embed", embed)
