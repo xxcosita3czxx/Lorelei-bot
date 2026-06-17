@@ -26,6 +26,7 @@ class ConfigManager:
         self.config_age = {}
         self.cache_ttl = cache_ttl
         self.cache_cleaner_task = None
+        self.lock = threading.RLock()
 
         os.makedirs(self.config_dir, exist_ok=True)
 
@@ -40,12 +41,14 @@ class ConfigManager:
 
     def _ensure_loaded(self, id: str):
         id = str(id)
-        if id not in self.config:
-            self._load_config(id)
-        self._touch(id)
+        with self.lock:
+            if id not in self.config:
+                self._load_config(id)
+            self._touch(id)
 
     def _touch(self, id: str):
-        self.config_age[str(id)] = time.time()
+        with self.lock:
+            self.config_age[str(id)] = time.time()
 
     def _load_all_configs(self):
         logger.debug("Loading all configs...")
@@ -169,12 +172,12 @@ class ConfigManager:
             return
 
         now = time.time()
-
-        for id, last_used in list(self.config_age.items()):
-            if now - last_used > self.cache_ttl:
-                self.config.pop(id, None)
-                self.config_age.pop(id, None)
-                logger.debug(f"Unloaded config {id} from cache")
+        with self.lock:
+            for id, last_used in list(self.config_age.items()):
+                if now - last_used > self.cache_ttl:
+                    self.config.pop(id, None)
+                    self.config_age.pop(id, None)
+                    logger.debug(f"Unloaded config {id} from cache")
 
     def _run_cache_loop(self):
         asyncio.run(self._cache_cleaner())
