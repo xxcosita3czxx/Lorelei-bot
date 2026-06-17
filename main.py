@@ -31,7 +31,7 @@ import discord.ext.commands
 
 import config
 import utils.profiler as profiler
-from utils.configmanager import _indexer, lang
+from utils.configmanager import lang
 
 start_time = time.time()
 
@@ -458,8 +458,6 @@ class aclient(discord.ext.commands.AutoShardedBot):
         logger.info(lang.get(conflang,"Bot","info_logged").format(user=self.user))
 
         asyncio.create_task(change_status())
-
-        asyncio.create_task(_indexer())
 
         await self.post_ready()
 
