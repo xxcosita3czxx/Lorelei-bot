@@ -1,6 +1,8 @@
 import asyncio
 import logging
 import os
+import threading
+import time
 from collections import defaultdict
 
 import chardet
@@ -17,12 +19,33 @@ logger = logging.getLogger("configmanager")
 
 
 class ConfigManager:
-    def __init__(self, config_dir, fallback_file=None):
+    def __init__(self, config_dir, fallback_file=None, cache_ttl=300):
         self.config_dir = config_dir
         self.config = defaultdict(dict) # type: ignore
         self.fallback_file = fallback_file
-        self._load_all_configs()
+        self.config_age = {}
+        self.cache_ttl = cache_ttl
+        self.cache_cleaner_task = None
+
+        os.makedirs(self.config_dir, exist_ok=True)
+
+        if self.cache_ttl > 0:
+            self.cache_cleaner_thread = threading.Thread(
+                target=self._run_cache_loop,
+                daemon=True,
+            )
+            self.cache_cleaner_thread.start()
+
         logger.info(f"Loaded {self}")
+
+    def _ensure_loaded(self, id: str):
+        id = str(id)
+        if id not in self.config:
+            self._load_config(id)
+        self._touch(id)
+
+    def _touch(self, id: str):
+        self.config_age[str(id)] = time.time()
 
     def _load_all_configs(self):
         logger.debug("Loading all configs...")
@@ -55,6 +78,9 @@ class ConfigManager:
     def _load_config(self, id: str):
         id = str(id)
         file_path = os.path.join(self.config_dir, f"{id}.toml")
+        if not os.path.exists(file_path):
+            self.config[id] = {}
+            return
         try:
             with open(file_path, encoding="utf-8") as f:
                 self.config[id] = toml.load(f)
@@ -63,18 +89,23 @@ class ConfigManager:
                 f"{id}.toml cannot be decoded with UTF-8! Error: {e}. Attempting to detect encoding...",  # noqa: E501
             )
             try:
-                with open(file_path, 'rb') as f_binary:
+                with open(file_path, "rb") as f_binary:
                     raw_data = f_binary.read()
-                    detected_encoding = chardet.detect(raw_data)['encoding']
-                    logger.debug(f"Detected encoding for {id}.toml: {detected_encoding}")  # noqa: E501
-                    with open(file_path, 'w', encoding='utf-8') as f_utf8:
-                        f_utf8.write(raw_data.decode(detected_encoding)) # type: ignore
-                    with open(file_path, encoding='utf-8') as f:
-                        self.config[id] = toml.load(f)
+                    detected_encoding = chardet.detect(raw_data)["encoding"]
+
+                logger.debug(f"Detected encoding for {id}.toml: {detected_encoding}")  # noqa: E501
+
+                with open(file_path, "w", encoding="utf-8") as f_utf8:
+                    f_utf8.write(raw_data.decode(detected_encoding))  # type: ignore
+
+                with open(file_path, encoding="utf-8") as f:
+                    self.config[id] = toml.load(f)
+
             except Exception as e:
                 logger.error(f"Failed to load {id}.toml with detected encoding. Error: {e}")  # noqa: E501
         except Exception as e:
             logger.error(f"Failed to load config for {id}: {e}")
+            self.config[id] = {}
 
     def _save_config(self, id:str):
         id = str(id)
@@ -83,16 +114,18 @@ class ConfigManager:
             logger.debug(f"Saving config for {id} to {file_path}")
             with open(file_path, 'w') as f:
                 toml.dump(self.config[id], f)
-                logger.debug(f"Config for {id} saved successfully.")  # noqa: E501
+            self._touch(id)
+            logger.debug(f"Config for {id} saved successfully.")  # noqa: E501
         except Exception as e:
             logger.error(f"Failed to save config for {id}: {e}")
 
     def get(self, id, title, key, default=None):
         id = str(id)
+        self._ensure_loaded(id)
         logger.debug(f"Getting {id}:{title}:{key}")
         result = self.config.get(id, {}).get(title, {}).get(key, default)
         if result is None and self.fallback_file:
-            with open(self.fallback_file) as f:
+            with open(self.fallback_file, encoding="utf-8") as f:
                 fallback_config = toml.load(f)
             fallback_result = fallback_config.get(title, {}).get(key, default)
             if fallback_result is not None:
@@ -104,17 +137,18 @@ class ConfigManager:
     def set(self, id:str, title, key, value):
         logger.debug(f"Setting {id}:{title}:{key} to {value}")
         id = str(id)
+        self._ensure_loaded(id)
         if id not in self.config:
             self.config[id] = {}
         if title not in self.config[id]:
             self.config[id][title] = {}
         self.config[id][title][key] = value
         self._save_config(id)
-        self._load_all_configs()  # Reload all configs after saving
         logger.debug(f"Set {id}:{title}:{key} to {value}")
 
     def delete(self, id:str, title=None, key=None):
         id = str(id)
+        self._ensure_loaded(id)
         logger.debug(f"Deleting {id}:{title}:{key}")
         if id in self.config:
             if title and key:
@@ -128,8 +162,35 @@ class ConfigManager:
             else:
                 del self.config[id]
             self._save_config(id)
-            self._load_all_configs()  # Reload all configs after saving
         logger.debug(f"Deleted {id}:{title}:{key}")
+
+    def cleanup_cache(self):
+        if self.cache_ttl <= 0:
+            return
+
+        now = time.time()
+
+        for id, last_used in list(self.config_age.items()):
+            if now - last_used > self.cache_ttl:
+                self.config.pop(id, None)
+                self.config_age.pop(id, None)
+                logger.debug(f"Unloaded config {id} from cache")
+
+    def _run_cache_loop(self):
+        asyncio.run(self._cache_cleaner())
+
+    async def _cache_cleaner(self):
+        logger.info("Config cache cleaner started.")
+
+        while True:
+            self.cleanup_cache()
+            await asyncio.sleep(60)
+
+    async def _indexer(self):
+        logger.info("Indexer started.")
+        while True:
+            # Placeholder for indexing logic
+            await asyncio.sleep(300)  # Sleep for 5 minutes
 
     def set_index(self, index_name, conf_title, conf_key=None):
         pass
@@ -137,17 +198,13 @@ class ConfigManager:
     def get_index(self, index_name):
         pass
 
-async def _indexer():
-    logger.info("Indexer started.")
-    while True:
-        # Placeholder for indexing logic
-        await asyncio.sleep(300)  # Sleep for 5 minutes
+
 
 gconfig = ConfigManager("data/guilds")
 uconfig = ConfigManager("data/users")
-lang = ConfigManager("data/lang","data/lang/en.toml")
-themes = ConfigManager("data/themes","data/themes/Default.toml")
-levels = ConfigManager("data/levels","data/levels/global.toml")
+lang = ConfigManager("data/lang","data/lang/en.toml", cache_ttl=0)
+themes = ConfigManager("data/themes","data/themes/Default.toml", cache_ttl=0)
+levels = ConfigManager("data/levels","data/levels/global.toml", cache_ttl=0)
 
 def userlang(userid) -> str:
     return uconfig.get(userid,"APPEARANCE","language")
